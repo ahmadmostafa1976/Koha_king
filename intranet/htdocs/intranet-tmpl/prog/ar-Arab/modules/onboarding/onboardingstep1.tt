@@ -1,0 +1,62 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+
+<title>[% FILTER collapse %]
+ [% t("Create a library") | html %] &rsaquo;
+ [% t("Web installer") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'installer-doc-head-close.inc' %]
+</head>
+
+<body id="installer" class="installer">
+ <div class="container-fluid">
+ <div class="row">
+ <div id="onboarding-step1" class="installer-main col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
+ <div id="logo"><a href="#">كوها</a></div>
+ <h1>مثبت الويب &rsaquo; إنشاء مكتبة</h1>
+
+ [% INCLUDE 'onboarding_messages.inc' %]
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> تثبيت</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد <ol>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء مكتبة</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء فئة مستفيد</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء مستفيد مدير في كوها</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء نوع مادة جديد</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء قاعدة إعارة جديدة</li>
+ </ol>
+ </li>
+ </ol>
+ </div>
+
+ <form name="LibraryCreation" method="post" action="onboarding.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows" >
+ <input type="hidden" name="step" value="1"/>
+ <input type="hidden" name="op" value="cud-add_validate_library"/>
+ <ol>
+ <li>
+ <label for="branchcode" class="required">رمز المكتبة: </label>
+ <input type="text"  pattern="[0-9A-Za-z]{1,10}" name="branchcode" id="branchcode" size="10" maxlength="10" value="" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="branchname" class="required">الاسم: </label>
+ <input type="text" name="branchname" id="branchname" size="42" class="required" required="required">
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ <p>لإضافة مكتبة أخرى وللمزيد من الإعدادات، اذهب إلى: <span class="breadcrumbs"> الإدارة <strong>&rsaquo;</strong> المكتبات و المجموعات </span>
+ </p>
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ </fieldset>
+ </form>
+ </div> <!-- / #onboarding-step1 -->
+ </div> <!-- / .row -->
+ </div><!-- / .container-fluid -->
+
+[% INCLUDE 'installer-intranet-bottom.inc' %]

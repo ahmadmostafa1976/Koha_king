@@ -1,0 +1,504 @@
+[% USE raw %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op == 'add_form' %]
+ [% t("New SMTP server") | html %] &rsaquo;
+ [% ELSIF op == 'edit_form' %]
+ [% tx("Modify SMTP server '{smtp_server}'", { smtp_server = smtp_server.name }) | html %] &rsaquo;
+ [% END %]
+ [% t("SMTP servers") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_smtp_servers" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+
+ [% IF op == 'add_form' || op == 'edit_form' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/smtp_servers.pl">خوادم SMTP</a>
+ [% END %]
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>خادم SMTP جديد</span>
+ [% END %]
+
+ [% ELSIF op == 'edit_form' %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Modify SMTP server '{smtp_server}'", { smtp_server = smtp_server.name }) | html %]
+ [% END %]
+
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>خوادم SMTP</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% FOREACH m IN messages %]
+ <div class="dialog [% m.type | html %]" id="smtp_action_result_dialog">
+ [% SWITCH m.code %]
+ [% CASE 'error_on_update' %]
+ <span>حدث خطأ أثناء محاولة فتح الخادم للتحرير. المعرف الذي تم تمريره غير صالح.</span>
+ [% CASE 'error_on_insert' %]
+ <span>حدث خطأ أثناء إضافة الخادم. المكتبة لديها بالفعل مجموعة خادم SMTP.</span>
+ [% CASE 'success_on_update' %]
+ <span>تم تحديث الخادم بنجاح.</span>
+ [% CASE 'success_on_insert' %]
+ <span>تمت إضافة الخادم بنجاح.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+[% END %]
+
+ <div class="dialog message" id="smtp_delete_success" style="display: none;"></div>
+ <div class="dialog alert"   id="smtp_delete_error"   style="display: none;"></div>
+
+[% IF op == 'add_form' %]
+ <h1>خادم SMTP جديد</h1>
+ <form action="/cgi-bin/koha/admin/smtp_servers.pl" id="add" name="add" class="validated" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add" />
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="smtp_name" class="required">الاسم: </label>
+ <input type="text" name="smtp_name" id="smtp_name" size="60" class="required focus" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="smtp_host" class="required">المضيف: </label>
+ <input type="text" name="smtp_host" id="smtp_host" size="60" class="required"/>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="smtp_port" class="required">منفذ: </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" value="25" name="smtp_port" id="smtp_port" size="20" class="required"/>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="smtp_timeout">المهلة (ثوان): </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" value="120" name="smtp_timeout" id="smtp_timeout" size="20" />
+ </li>
+ <li>
+ <label for="smtp_ssl_mode">SSL: </label>
+ <select name="smtp_ssl_mode" id="smtp_ssl_mode">
+ <option value="disabled" selected="selected">معطّل</option>
+ <option value="ssl">SSL</option>
+ <option value="starttls">STARTTLS</option>
+ </select>
+ </li>
+ <li>
+ <label for="smtp_user_name">اسم المستخدم: </label>
+ <input type="text" name="smtp_user_name" id="smtp_user_name" size="60" autocomplete="off" />
+ </li>
+ <li>
+ <label for="smtp_password">كلمة المرور: </label>
+ <input type="password" name="smtp_password" id="smtp_password" size="60" autocomplete="off" />
+ </li>
+ <li>
+ <label for="smtp_debug_mode">نمط تصحيح الأخطاء: </label>
+ <select name="smtp_debug_mode" id="smtp_debug_mode">
+ <option value="1">مفعل</option>
+ <option value="0" selected="selected">معطّل</option>
+ </select>
+ <span>يفعل مخرجات تصحيح الأخطاء الإضافية في السجلات</span>
+ </li>
+ <li>
+ <label for="smtp_default">الخادم الافتراضي: </label>
+ <input type="checkbox" name="smtp_default" id="smtp_default" />
+ <span>يقوم بتعيين خادم SMTP هذا كخادم SMTP الافتراضي.</span>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ <a class="cancel" href="/cgi-bin/koha/admin/smtp_servers.pl">إلغاء</a>
+ </fieldset>
+ </form>
+[% END %]
+
+[% IF op == 'edit_form' %]
+ <h1>[% tx("Modify SMTP server '{smtp_server}'", { smtp_server = smtp_server.name }) | html %]</h1>
+
+ [% UNLESS smtp_server.is_default %]
+ [% PROCESS default_server_info %]
+ [% END %]
+
+ <form action="/cgi-bin/koha/admin/smtp_servers.pl" id="edit_save" name="edit_save" class="validated" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-edit_save" />
+ <input type="hidden" name="smtp_server_id" value="[%- smtp_server.id | html -%]" />
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="smtp_name" class="required">الاسم: </label>
+ <input type="text" name="smtp_name" id="smtp_name" size="60" class="required" required="required" value="[%- smtp_server.name | html -%]"/>
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="smtp_host" class="required">المضيف: </label>
+ <input type="text" name="smtp_host" id="smtp_host" size="60" class="required" value="[%- smtp_server.host | html -%]"/>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="smtp_port" class="required">منفذ: </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="smtp_port" id="smtp_port" size="20" class="required" value="[%- smtp_server.port | html -%]"/>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="smtp_timeout">المهلة (ثوان): </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="smtp_timeout" id="smtp_timeout" size="20" value="[%- smtp_server.timeout | html -%]"/>
+ </li>
+ <li>
+ <label for="smtp_ssl_mode">SSL: </label>
+ <select name="smtp_ssl_mode" id="smtp_ssl_mode">
+ [%- IF smtp_server.ssl_mode == 'disabled' -%]
+ <option value="disabled" selected="selected">معطّل</option>
+ <option value="ssl">SSL</option>
+ <option value="starttls">STARTTLS</option>
+ [%- ELSIF smtp_server.ssl_mode == 'ssl' -%]
+ <option value="disabled">معطّل</option>
+ <option value="ssl" selected="selected">SSL</option>
+ <option value="starttls">STARTTLS</option>
+ [%- ELSE -%]
+ <option value="disabled">معطّل</option>
+ <option value="ssl">SSL</option>
+ <option value="starttls" selected="selected">STARTTLS</option>
+ [%- END -%]
+ </select>
+ </li>
+ <li>
+ <label for="smtp_user_name">اسم المستخدم: </label>
+ <input type="text" name="smtp_user_name" id="smtp_user_name" size="60"  value="[%- smtp_server.user_name | html -%]" autocomplete="off" />
+ </li>
+ <li>
+ <label for="smtp_password">كلمة المرور: </label>
+ [% IF smtp_server.password %]
+ <input type="password" name="smtp_password" id="smtp_password" size="60" value="****" autocomplete="off"/>
+ [% ELSE %]
+ <input type="password" name="smtp_password" id="smtp_password" size="60" value="" autocomplete="off"/>
+ [% END %]
+ </li>
+ <li>
+ <label for="smtp_debug_mode">نمط تصحيح الأخطاء: </label>
+ <select name="smtp_debug_mode" id="smtp_debug_mode">
+ [%- IF smtp_server.debug == 1 -%]
+ <option value="1" selected="selected">مفعل</option>
+ <option value="0">معطّل</option>
+ [%- ELSE -%]
+ <option value="1">مفعل</option>
+ <option value="0" selected="selected">معطّل</option>
+ [%- END -%]
+ </select>
+ </li>
+ <li>
+ <label for="smtp_default">الخادم الافتراضي: </label>
+ [% IF smtp_server.is_default %]
+ <input type="checkbox" name="smtp_default" id="smtp_default" checked="checked"/>
+ [% ELSE %]
+ <input type="checkbox" name="smtp_default" id="smtp_default" />
+ [% END %]
+ <span>يقوم بتعيين خادم SMTP هذا كخادم SMTP الافتراضي.</span>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ <a class="cancel" href="/cgi-bin/koha/admin/smtp_servers.pl">إلغاء</a>
+ </fieldset>
+ </form>
+[% END %]
+
+[% IF op == 'list' %]
+
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="new_smtp_server" href="/cgi-bin/koha/admin/smtp_servers.pl?op=add_form"><i class="fa fa-plus"></i> خادم SMTP جديد</a>
+ </div>
+
+ <h1>خوادم SMTP</h1>
+
+ [% PROCESS default_server_info %]
+
+ [% IF servers_count > 0 %]
+ <div class="page-section">
+ <table id="smtp_servers">
+ <thead>
+ <tr>
+ <th>الاسم</th>
+ <th>المضيف</th>
+ <th>منفذ</th>
+ <th>المهلة (ثوان)</th>
+ <th>SSL</th>
+ <th>مستثاق</th>
+ <th>نمط تصحيح الأخطاء</th>
+ <th>هو الافتراضي</th>
+ <th data-class-name="actions noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ </table>
+ </div> <!-- /.page-section -->
+ [% END %]
+[% END %]
+
+ <div id="delete_confirm_modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirm_modal_label" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="delete_confirm_modal_label">حذف الخادم</h3>
+ </div>
+ <div class="modal-body">
+ <div id="delete_confirm_dialog"></div>
+ </div>
+ <div class="modal-footer">
+ <a href="#" class="btn btn-default" id="delete_confirm_modal_button" role="button" data-toggle="modal">حذف</a>
+ <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">إغلاق</button>
+ </div>
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </div> <!-- #delete_confirm_modal -->
+
+ <div id="default_confirm_modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="default_confirm_modal_label" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button type="button" class="default_confirm_modal_no closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="default_confirm_modal_label">تعيين الخادم الافتراضي</h3>
+ </div>
+ <div class="modal-body">
+ <div id="default_confirm_dialog">هل أنت متأكد أنك تريد تغيير خادم SMTP الافتراضي؟</div>
+ </div>
+ <div class="modal-footer">
+ <a id="default_confirm_dialog" href="#" class="btn btn-primary default_confirm_modal_yes" id="default_confirm_modal_button" role="button" data-toggle="modal">نعم</a>
+ <button class="btn btn-default default_confirm_modal_no" data-dismiss="modal" aria-hidden="true">لا</button>
+ </div>
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </div> <!-- #default_confirm_modal -->
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'datatables.inc' %]
+ <script>
+        $(document).ready(function() {
+
+            var smtp_servers_url = '/api/v1/config/smtp_servers';
+            window.smtp_servers = $("#smtp_servers").kohaTable({
+                "ajax": {
+                    "url": smtp_servers_url
+                },
+                'language': {
+                    'emptyTable': '<div class="dialog message">'+_("لم يتم تعريف أي مجموعات.")+'</div>'
+                },
+                "columnDefs": [ {
+                    "targets": [0,1],
+                    "render": function (data, type, row, meta) {
+                        if ( type == 'display' ) {
+                            if ( data != null ) {
+                                return data.escapeHtml();
+                            }
+                            else {
+                                return "Default";
+                            }
+                        }
+                        return data;
+                    }
+                } ],
+                "columns": [
+                    {
+                        "data": "name",
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "host",
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "port",
+                        "searchable": true,
+                        "orderable": false
+                    },
+                    {
+                        "data": "timeout",
+                        "searchable": true,
+                        "orderable": false
+                    },
+                    {
+                        "data": "ssl_mode",
+                        "render": function (data, type, row, meta) {
+                            if (data == 'disabled') {
+                                return _("معطّل");
+                            }
+                            else if (data == 'ssl') {
+                                return _("SSL");
+                            }
+                            else {
+                                return _("STARTTLS");
+                            }
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    },
+                    {
+                        "data": function( row, type, val, meta ) {
+                            if ( row.user_name != null ) {
+                                return _("نعم");
+                            }
+                            else {
+                                return _("لا");
+                            }
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    },
+                    {
+                        "data": function( row, type, val, meta ) {
+                            if ( row.debug ) {
+                                return _("تفعيل");
+                            }
+                            else {
+                                return _("إيقاف");
+                            }
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    },
+                    {
+                        "data": function( row, type, val, meta ) {
+                            if ( row.is_default ) {
+                                return _("نعم");
+                            }
+                            else {
+                                return _("لا");
+                            }
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    },
+                    {
+                        "data": function( row, type, val, meta ) {
+                            var result = '<a class="btn btn-default btn-xs" role="button" href="/cgi-bin/koha/admin/smtp_servers.pl?op=edit_form&amp;smtp_server_id='+ encodeURIComponent(row.smtp_server_id) +'"><i class="fa-solid fa-pencil" aria-hidden="true"></i> '+_("تحرير")+'</a>'+"\n";
+                            result += '<a class="btn btn-default btn-xs delete_server" role="button" href="#" data-toggle="modal" data-target="#delete_confirm_modal" data-smtp-server-id="'+ encodeURIComponent(row.smtp_server_id) +'" data-smtp-server-name="'+ encodeURIComponent(row.name.escapeHtml()) +'"><i class="fa fa-trash-can" aria-hidden="true"></i> '+_("حذف")+'</a>';
+                            return result;
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    }
+                ],
+                createdRow: function (row, data, dataIndex) {
+                    if ( data.is_default ) {
+                        $(row).addClass('default warn');
+                    }
+                    if ( data.debug ) {
+                        $(row).addClass('debug');
+                    }
+                },
+            });
+
+            $('#smtp_servers').on( "click", '.delete_server', function () {
+                var smtp_server_id   = $(this).data('smtp-server-id');
+                var smtp_server_name = decodeURIComponent($(this).data('smtp-server-name'));
+
+                $("#delete_confirm_dialog").html(
+                    _("أنت على وشك حذف خادم '%s' SMTP.").format(smtp_server_name)
+                );
+                $("#delete_confirm_modal_button").data('smtp-server-id', smtp_server_id);
+                $("#delete_confirm_modal_button").data('smtp-server-name', smtp_server_name);
+            });
+
+            $('#smtp_default').on( "click", function () {
+                $("#default_confirm_modal").modal('show');
+            });
+            $('.default_confirm_modal_yes').on( "click", function () {
+                $("#default_confirm_modal").modal('hide');
+            });
+            $('.default_confirm_modal_no').on( "click", function () {
+                $("#smtp_default").prop('checked', !$("#smtp_default").prop('checked') );
+                $("#default_confirm_modal").modal('hide');
+            });
+
+            $("#delete_confirm_modal_button").on( "click", function () {
+
+                var smtp_server_id   = $(this).data('smtp-server-id');
+                var smtp_server_name = $(this).data('smtp-server-name');
+
+                $.ajax({
+                    method: "DELETE",
+                    url: "/api/v1/config/smtp_servers/"+smtp_server_id
+                }).success(function() {
+                    window.smtp_servers.api().ajax.reload(function (data) {
+                        $("#smtp_action_result_dialog").hide();
+                        $("#smtp_delete_success").html(_("تم حذف الخادم '%s' بنجاح.").format(smtp_server_name)).show();
+                    });
+                }).fail(function () {
+                    $("#smtp_delete_error").html(_("خطأ أثناء حذف الخادم '%s'. يرجى التحقق من السجلات للتفاصيل.").format(smtp_server_name)).show();
+                }).done(function () {
+                    $("#delete_confirm_modal").modal('hide');
+                });
+            });
+        });
+    </script>
+[% END %]
+
+[% BLOCK default_server_info %]
+ <div class="dialog message" id="default_server_message">
+ <p>التهيئة الافتراضية الحالية:</p>
+
+ <ul>
+ <li><strong>المضيف</strong>: [%- default_config.host | html -%]</li>
+ <li><strong>منفذ</strong>: [%- default_config.port | html -%]</li>
+ <li><strong>المهلة (ثوان)</strong>: [%- default_config.timeout | html -%]</li>
+ <li><strong>SSL</strong>: [%- IF default_config.ssl_mode == 'disabled' -%]<span>معطّل</span>[%- ELSIF default_config.ssl_mode == 'ssl' -%]<span>SSL</span>[%- ELSE -%]<span>STARTTLS</span>[%- END -%]</li>
+ <li><strong>نمط تصحيح الأخطاء</strong>: [%- IF default_config.debug -%]نعم[%- ELSE -%]لا[%- END -%]</li>
+ </ul>
+ </div>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

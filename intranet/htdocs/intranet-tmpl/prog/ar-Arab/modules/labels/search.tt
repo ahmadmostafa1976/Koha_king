@@ -1,0 +1,157 @@
+[% SET footerjs = 1 %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+ <title>[% FILTER collapse %]
+ [% t("Search") | html %] &rsaquo;
+ [% t("Labels") | html %] &rsaquo;
+ [% t("Koha") | html %]
+ [% END %]</title>
+ [% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="labels_search" class="tools labels">
+ <div class="main container-fluid">
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>البحث عن المواد  [% IF ( batch_id ) %] لإضافتها إلى الدفعة [% batch_id | html %] [% END %] </h1>
+
+ <form name="f" method="get" action="/cgi-bin/koha/labels/label-item-search.pl">
+ <input type="hidden" name="op" value="do_search" />
+ <input type="hidden" name="batch_id" value="[% batch_id | html %]" />
+ <input type="hidden" name="type" value="[% type | html %]" />
+
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <select name="idx" > <!-- FIXME: script does keyword search regardless -->
+ [% IF idx == 'kw' %]
+ <option value="kw" selected="selected">الكلمة المفتاحية</option>
+ [% ELSE %]
+ <option value="kw">الكلمة المفتاحية</option>
+ [% END %]
+
+ [% IF idx == 'au'  %]
+ <option value="au" selected="selected">مؤلف</option>
+ [% ELSE %]
+ <option value="au">مؤلف</option>
+ [% END %]
+
+ [% IF idx == 'yr'  %]
+ <option value="yr" selected="selected">تاريخ النشر</option>
+ [% ELSE %]
+ <option value="yr">تاريخ النشر</option>
+ [% END %]
+
+ [% IF idx == 'sn' %]
+ <option value="ident" selected="selected">الرقم المعياري</option>
+ [% ELSE %]
+ <option value="sn">الرقم المعياري</option>
+ [% END %]
+
+ [% IF idx == 'nb' %]
+ <option value="nb" selected="selected">تدمك</option>
+ [% ELSE %]
+ <option value="nb">تدمك</option>
+ [% END %]
+
+ [% IF idx == 'ns' %]
+ <option value="ns" selected="selected">تدمد</option>
+ [% ELSE %]
+ <option value="ns">تدمد</option>
+ [% END %]
+
+ [% IF idx == 'lcn,phr' %]
+ <option value="lcn,phr" selected="selected">رقم الاستدعاء</option>
+ [% ELSE %]
+ <option value="lcn,phr">رقم الاستدعاء</option>
+ [% END %]
+
+ [% IF idx == 'su' %]
+ <option value="su" selected="selected">الموضوع</option>
+ [% ELSE %]
+ <option value="su">الموضوع</option>
+ [% END %]
+
+ [% IF idx == 'ti' %]
+ <option value="ti" selected="selected">عنوان</option>
+ [% ELSE %]
+ <option value="ti">عنوان</option>
+ [% END %]
+
+ [% IF idx == 'ti,phr' %]
+ <option value="ti,phr" selected="selected">عبارة العنوان</option>
+ [% ELSE %]
+ <option value="ti,phr">عبارة العنوان</option>
+ [% END %]
+
+ [% IF idx == 'se' %]
+ <option value="se" selected="selected">عنوان السلاسل</option>
+ [% ELSE %]
+ <option value="se">عنوان السلاسل</option>
+ [% END %]
+
+ [% IF idx == 'bc' or not idx %]
+ <option value="bc" selected="selected">الباركود</option>
+ [% ELSE %]
+ <option value="bc">الباركود</option>
+ [% END %]
+
+ [% IF idx == 'acqdate' %]
+ <option value="acqdate" selected="selected">تاريخ التزويد</option>
+ [% ELSE %]
+ <option value="acqdate">تاريخ التزويد</option>
+ [% END %]
+ </select>
+ <input class="focus" id="ccl_textbox" name="ccl_textbox" size="30" title="قم بإدخال مصطلحات البحث" type="text" value="" />
+ </li>
+ </ol>
+ </fieldset>
+
+ [% IF ( sort_by_loop ) %]
+ <fieldset>
+ <legend>فرز حسب: </legend>
+ <p>
+ <select id="sort_by" name="sort_by">
+ <option value="">تم وزن الحقل، ترتيب الصلة</option>
+ [% FOREACH sort_by_loo IN sort_by_loop %]
+ [% IF ( sort_by_loo.selected ) %]
+ <option value="[% sort_by_loo.value | html %]" selected="selected">[% sort_by_loo.label | html %]</option>
+ [% ELSE %]
+ <option value="[% sort_by_loo.value | html %]">[% sort_by_loo.label | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </p>
+ </fieldset>
+ [% END %]
+
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="from">تمت الإضافة في أو بعد تاريخ: </label>
+ <input type="text" size="10" id="from" name="datefrom" class="flatpickr" data-date_to="to" value="" />
+ <div class="hint">[% INCLUDE 'date-format.inc' %]</div>
+ </li>
+ <li>
+ <label for="to">تمت الإضافة في أو قبل تاريخ: </label>
+ <input type="text" size="10" id="to" name="dateto" class="flatpickr" value="" />
+ <div class="hint">[% INCLUDE 'date-format.inc' %]</div>
+ </li>
+ </ol>
+ </fieldset>
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="بحث" />
+ <button type="button" class="btn btn-default close_window">إغلاق النافذة</button>
+ </fieldset>
+ </div>
+ </nav>
+ </form>
+ </div>
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'calendar.inc' %]
+[% END %]
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

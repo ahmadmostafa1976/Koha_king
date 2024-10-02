@@ -1,0 +1,1061 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 126a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_126a" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 126a</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">شكل الإصدار:</label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">قرص</option>
+ [% ELSE %]
+ <option value="a">قرص</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">شريط (بكرة مفتوحة)</option>
+ [% ELSE %]
+ <option value="b">شريط (بكرة مفتوحة)</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">شريط (كاسيت)</option>
+ [% ELSE %]
+ <option value="c">شريط (كاسيت)</option>
+ [% END %]
+ [% IF ( f1d ) %]
+ <option value="d" selected="selected">شريط (خرطوشة)</option>
+ [% ELSE %]
+ <option value="d">شريط (خرطوشة)</option>
+ [% END %]
+ [% IF ( f1e ) %]
+ <option value="e" selected="selected">تسجيل سلكي</option>
+ [% ELSE %]
+ <option value="e">تسجيل سلكي</option>
+ [% END %]
+ [% IF ( f1f ) %]
+ <option value="f" selected="selected">أسطوانة</option>
+ [% ELSE %]
+ <option value="f">أسطوانة</option>
+ [% END %]
+ [% IF ( f1g ) %]
+ <option value="g" selected="selected">لفافة</option>
+ [% ELSE %]
+ <option value="g">لفافة</option>
+ [% END %]
+ [% IF ( f1h ) %]
+ <option value="h" selected="selected">فيلم (فيلم صوتي)</option>
+ [% ELSE %]
+ <option value="h">فيلم (فيلم صوتي)</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f2">السرعة:</label></td>
+ <td>
+ <select name="f2" id="f2">
+ [% IF ( f2u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f2x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f2z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ [% IF ( f2a ) %]
+ <option value="a" selected="selected">16 2/3 دورة في الدقيقة</option>
+ [% ELSE %]
+ <option value="a">16 2/3 دورة في الدقيقة</option>
+ [% END %]
+ [% IF ( f2b ) %]
+ <option value="b" selected="selected">33 1/3 دورة في الدقيقة</option>
+ [% ELSE %]
+ <option value="b">33 1/3 دورة في الدقيقة</option>
+ [% END %]
+ [% IF ( f2c ) %]
+ <option value="c" selected="selected">45 دورة في الدقيقة</option>
+ [% ELSE %]
+ <option value="c">45 دورة في الدقيقة</option>
+ [% END %]
+ [% IF ( f2d ) %]
+ <option value="d" selected="selected">78 دورة في الدقيقة</option>
+ [% ELSE %]
+ <option value="d">78 دورة في الدقيقة</option>
+ [% END %]
+ [% IF ( f2e ) %]
+ <option value="e" selected="selected">8 دورات في الدقيقة</option>
+ [% ELSE %]
+ <option value="e">8 دورات في الدقيقة</option>
+ [% END %]
+ [% IF ( f2g ) %]
+ <option value="g" selected="selected">1.4 m/sec (أقراص مضغوطة)</option>
+ [% ELSE %]
+ <option value="g">1.4 m/sec (أقراص مضغوطة)</option>
+ [% END %]
+ [% IF ( f2h ) %]
+ <option value="h" selected="selected">120 دورة في الدقيقة</option>
+ [% ELSE %]
+ <option value="h">120 دورة في الدقيقة</option>
+ [% END %]
+ [% IF ( f2i ) %]
+ <option value="i" selected="selected">160 دورة في الدقيقة</option>
+ [% ELSE %]
+ <option value="i">160 دورة في الدقيقة</option>
+ [% END %]
+ [% IF ( f2k ) %]
+ <option value="k" selected="selected">1 7/8 بوصة في الثانية</option>
+ [% ELSE %]
+ <option value="k">1 7/8 بوصة في الثانية</option>
+ [% END %]
+ [% IF ( f2l ) %]
+ <option value="l" selected="selected">15/16بوصة في الثانية</option>
+ [% ELSE %]
+ <option value="l">15/16بوصة في الثانية</option>
+ [% END %]
+ [% IF ( f2m ) %]
+ <option value="m" selected="selected">3 3/4 بوصة في الثانية</option>
+ [% ELSE %]
+ <option value="m">3 3/4 بوصة في الثانية</option>
+ [% END %]
+ [% IF ( f2n ) %]
+ <option value="n" selected="selected">7 1/2 بوصة بالثانية</option>
+ [% ELSE %]
+ <option value="n">7 1/2 بوصة بالثانية</option>
+ [% END %]
+ [% IF ( f2o ) %]
+ <option value="o" selected="selected">15 بوصة في الثانية</option>
+ [% ELSE %]
+ <option value="o">15 بوصة في الثانية</option>
+ [% END %]
+ [% IF ( f2p ) %]
+ <option value="p" selected="selected">30 بوصة في الثانية</option>
+ [% ELSE %]
+ <option value="p">30 بوصة في الثانية</option>
+ [% END %]
+ [% IF ( f2q ) %]
+ <option value="q" selected="selected">8/10 بوصة في الثانية</option>
+ [% ELSE %]
+ <option value="q">8/10 بوصة في الثانية</option>
+ [% END %]
+ [% IF ( f2r ) %]
+ <option value="r" selected="selected">4/10 بوصة بالثانية</option>
+ [% ELSE %]
+ <option value="r">4/10 بوصة بالثانية</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f3">نوع الصوت:</label></td>
+ <td>
+ <select name="f3" id="f3">
+ [% IF ( f3a ) %]
+ <option value="a" selected="selected">بإحدى الأذنين</option>
+ [% ELSE %]
+ <option value="a">بإحدى الأذنين</option>
+ [% END %]
+ [% IF ( f3b ) %]
+ <option value="b" selected="selected">مجسَّم الصوت</option>
+ [% ELSE %]
+ <option value="b">مجسَّم الصوت</option>
+ [% END %]
+ [% IF ( f3c ) %]
+ <option value="c" selected="selected">رباعي الصوت</option>
+ [% ELSE %]
+ <option value="c">رباعي الصوت</option>
+ [% END %]
+ [% IF ( f3u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f3z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f4">عرض الثلم:</label></td>
+ <td>
+ <select name="f4" id="f4">
+ [% IF ( f4a ) %]
+ <option value="a" selected="selected">خشن / قياسي</option>
+ [% ELSE %]
+ <option value="a">خشن / قياسي</option>
+ [% END %]
+ [% IF ( f4b ) %]
+ <option value="b" selected="selected">ثلم دقيق</option>
+ [% ELSE %]
+ <option value="b">ثلم دقيق</option>
+ [% END %]
+ [% IF ( f4u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f4x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f4z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f5">أبعاد (التسجيلات الصوتية):</label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5a ) %]
+ <option value="a" selected="selected">7.62 سم أو 3 بوصة.</option>
+ [% ELSE %]
+ <option value="a">7.62 سم أو 3 بوصة.</option>
+ [% END %]
+ [% IF ( f5b ) %]
+ <option value="b" selected="selected">12.7 سم أو 5 بوصة.</option>
+ [% ELSE %]
+ <option value="b">12.7 سم أو 5 بوصة.</option>
+ [% END %]
+ [% IF ( f5c ) %]
+ <option value="c" selected="selected">17.78 سم أو 7 بوصة.</option>
+ [% ELSE %]
+ <option value="c">17.78 سم أو 7 بوصة.</option>
+ [% END %]
+ [% IF ( f5d ) %]
+ <option value="d" selected="selected">25.4 سم أو 10 بوصة.</option>
+ [% ELSE %]
+ <option value="d">25.4 سم أو 10 بوصة.</option>
+ [% END %]
+ [% IF ( f5e ) %]
+ <option value="e" selected="selected">30.48 سم أو 12 بوصة.</option>
+ [% ELSE %]
+ <option value="e">30.48 سم أو 12 بوصة.</option>
+ [% END %]
+ [% IF ( f5f ) %]
+ <option value="f" selected="selected">40.64 سم أو 16 بوصة.</option>
+ [% ELSE %]
+ <option value="f">40.64 سم أو 16 بوصة.</option>
+ [% END %]
+ [% IF ( f5g ) %]
+ <option value="g" selected="selected">5.56 سم أو 14 بوصة.</option>
+ [% ELSE %]
+ <option value="g">5.56 سم أو 14 بوصة.</option>
+ [% END %]
+ [% IF ( f5h ) %]
+ <option value="h" selected="selected">12 سم أو 4 بوصات 3/4</option>
+ [% ELSE %]
+ <option value="h">12 سم أو 4 بوصات 3/4</option>
+ [% END %]
+ [% IF ( f5j ) %]
+ <option value="j" selected="selected">10 سم × 6.3 سم أو 3 بوصة 7/8 × 2 بوصة 1/2</option>
+ [% ELSE %]
+ <option value="j">10 سم × 6.3 سم أو 3 بوصة 7/8 × 2 بوصة 1/2</option>
+ [% END %]
+ [% IF ( f5o ) %]
+ <option value="o" selected="selected">13.2 سم x 9.7 سم أو 5 بوصة 1/4 x 3 بوصة 7/8</option>
+ [% ELSE %]
+ <option value="o">13.2 سم x 9.7 سم أو 5 بوصة 1/4 x 3 بوصة 7/8</option>
+ [% END %]
+ [% IF ( f5s ) %]
+ <option value="s" selected="selected">5.7 سم x 10 سم أو 2 بوصة 1/4 × 4 بوصات، اسطوانة</option>
+ [% ELSE %]
+ <option value="s">5.7 سم x 10 سم أو 2 بوصة 1/4 × 4 بوصات، اسطوانة</option>
+ [% END %]
+ [% IF ( f5u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f5x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f5z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f6">عرض الشريط:</label></td>
+ <td>
+ <select name="f6" id="f6">
+
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">1/4 بوصة.</option>
+ [% ELSE %]
+ <option value="a">1/4 بوصة.</option>
+ [% END %]
+ [% IF ( f6b ) %]
+ <option value="b" selected="selected">1/2 بوصة.</option>
+ [% ELSE %]
+ <option value="b">1/2 بوصة.</option>
+ [% END %]
+ [% IF ( f6c ) %]
+ <option value="c" selected="selected">1 بوصة.</option>
+ [% ELSE %]
+ <option value="c">1 بوصة.</option>
+ [% END %]
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">1/8 بوصة.</option>
+ [% ELSE %]
+ <option value="d">1/8 بوصة.</option>
+ [% END %]
+ [% IF ( f6e ) %]
+ <option value="e" selected="selected">2 بوصة.</option>
+ [% ELSE %]
+ <option value="e">2 بوصة.</option>
+ [% END %]
+ [% IF ( f6f ) %]
+ <option value="f" selected="selected">1/3بوصة (8 ملم)</option>
+ [% ELSE %]
+ <option value="f">1/3بوصة (8 ملم)</option>
+ [% END %]
+ [% IF ( f6u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f6x ) %]
+ <option value="x" selected="selected">التسجيل ليس شريط</option>
+ [% ELSE %]
+ <option value="x">التسجيل ليس شريط</option>
+ [% END %]
+ [% IF ( f6z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f7">شريط التهيئة:</label></td>
+ <td>
+ <select name="f7" id="f7">
+
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">مسار كامل</option>
+ [% ELSE %]
+ <option value="a">مسار كامل</option>
+ [% END %]
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">نصف مسار</option>
+ [% ELSE %]
+ <option value="b">نصف مسار</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">ربع المسار</option>
+ [% ELSE %]
+ <option value="c">ربع المسار</option>
+ [% END %]
+ [% IF ( f7d ) %]
+ <option value="d" selected="selected">المسار الثامن</option>
+ [% ELSE %]
+ <option value="d">المسار الثامن</option>
+ [% END %]
+ [% IF ( f7e ) %]
+ <option value="e" selected="selected">المسار الثاني عشر</option>
+ [% ELSE %]
+ <option value="e">المسار الثاني عشر</option>
+ [% END %]
+ [% IF ( f7f ) %]
+ <option value="f" selected="selected">مسار ستة عشر</option>
+ [% ELSE %]
+ <option value="f">مسار ستة عشر</option>
+ [% END %]
+ [% IF ( f7g ) %]
+ <option value="g" selected="selected">المسار الرابع والعشرون</option>
+ [% ELSE %]
+ <option value="g">المسار الرابع والعشرون</option>
+ [% END %]
+ [% IF ( f7h ) %]
+ <option value="h" selected="selected">مسار ستة</option>
+ [% ELSE %]
+ <option value="h">مسار ستة</option>
+ [% END %]
+ [% IF ( f7u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f7x ) %]
+ <option value="x" selected="selected">التسجيل ليس شريط</option>
+ [% ELSE %]
+ <option value="x">التسجيل ليس شريط</option>
+ [% END %]
+ [% IF ( f7z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f8">مادة نصية مرافقة 1:</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f8a ) %]
+ <option value="a" selected="selected">ديسكوغرافيا</option>
+ [% ELSE %]
+ <option value="a">ديسكوغرافيا</option>
+ [% END %]
+ [% IF ( f8b ) %]
+ <option value="b" selected="selected">ببليوغرافيا</option>
+ [% ELSE %]
+ <option value="b">ببليوغرافيا</option>
+ [% END %]
+ [% IF ( f8c ) %]
+ <option value="c" selected="selected">فهرس موضوعي</option>
+ [% ELSE %]
+ <option value="c">فهرس موضوعي</option>
+ [% END %]
+ [% IF ( f8d ) %]
+ <option value="d" selected="selected">اوبرا أو نص</option>
+ [% ELSE %]
+ <option value="d">اوبرا أو نص</option>
+ [% END %]
+ [% IF ( f8e ) %]
+ <option value="e" selected="selected">السيرة الذاتية للملحن</option>
+ [% ELSE %]
+ <option value="e">السيرة الذاتية للملحن</option>
+ [% END %]
+ [% IF ( f8f ) %]
+ <option value="f" selected="selected">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% ELSE %]
+ <option value="f">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% END %]
+ [% IF ( f8g ) %]
+ <option value="g" selected="selected">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% ELSE %]
+ <option value="g">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% END %]
+ [% IF ( f8h ) %]
+ <option value="h" selected="selected">معلومات تقنية عن الموسيقى</option>
+ [% ELSE %]
+ <option value="h">معلومات تقنية عن الموسيقى</option>
+ [% END %]
+ [% IF ( f8i ) %]
+ <option value="i" selected="selected">معلومات تاريخية حول الموسيقى</option>
+ [% ELSE %]
+ <option value="i">معلومات تاريخية حول الموسيقى</option>
+ [% END %]
+ [% IF ( f8j ) %]
+ <option value="j" selected="selected">معلومات تاريخية أخرى</option>
+ [% ELSE %]
+ <option value="j">معلومات تاريخية أخرى</option>
+ [% END %]
+ [% IF ( f8k ) %]
+ <option value="k" selected="selected">معلومات أثنولوجية</option>
+ [% ELSE %]
+ <option value="k">معلومات أثنولوجية</option>
+ [% END %]
+ [% IF ( f8l ) %]
+ <option value="l" selected="selected">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% ELSE %]
+ <option value="l">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% END %]
+ [% IF ( f8r ) %]
+ <option value="r" selected="selected">مادة تعليمية</option>
+ [% ELSE %]
+ <option value="r">مادة تعليمية</option>
+ [% END %]
+ [% IF ( f8s ) %]
+ <option value="s" selected="selected">نوتة موسيقية</option>
+ [% ELSE %]
+ <option value="s">نوتة موسيقية</option>
+ [% END %]
+ [% IF ( f8z ) %]
+ <option value="z" selected="selected">غيرها من المواد النصية المصاحبة</option>
+ [% ELSE %]
+ <option value="z">غيرها من المواد النصية المصاحبة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f9">مادة نصية مرافقة 2:</label></td>
+ <td>
+ <select name="f9" id="f9">
+
+ [% IF ( f9space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f9a ) %]
+ <option value="a" selected="selected">ديسكوغرافيا</option>
+ [% ELSE %]
+ <option value="a">ديسكوغرافيا</option>
+ [% END %]
+ [% IF ( f9b ) %]
+ <option value="b" selected="selected">ببليوغرافيا</option>
+ [% ELSE %]
+ <option value="b">ببليوغرافيا</option>
+ [% END %]
+ [% IF ( f9c ) %]
+ <option value="c" selected="selected">فهرس موضوعي</option>
+ [% ELSE %]
+ <option value="c">فهرس موضوعي</option>
+ [% END %]
+ [% IF ( f9d ) %]
+ <option value="d" selected="selected">اوبرا أو نص</option>
+ [% ELSE %]
+ <option value="d">اوبرا أو نص</option>
+ [% END %]
+ [% IF ( f9e ) %]
+ <option value="e" selected="selected">السيرة الذاتية للملحن</option>
+ [% ELSE %]
+ <option value="e">السيرة الذاتية للملحن</option>
+ [% END %]
+ [% IF ( f9f ) %]
+ <option value="f" selected="selected">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% ELSE %]
+ <option value="f">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% END %]
+ [% IF ( f9g ) %]
+ <option value="g" selected="selected">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% ELSE %]
+ <option value="g">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% END %]
+ [% IF ( f9h ) %]
+ <option value="h" selected="selected">معلومات تقنية عن الموسيقى</option>
+ [% ELSE %]
+ <option value="h">معلومات تقنية عن الموسيقى</option>
+ [% END %]
+ [% IF ( f9i ) %]
+ <option value="i" selected="selected">معلومات تاريخية حول الموسيقى</option>
+ [% ELSE %]
+ <option value="i">معلومات تاريخية حول الموسيقى</option>
+ [% END %]
+ [% IF ( f9j ) %]
+ <option value="j" selected="selected">معلومات تاريخية أخرى</option>
+ [% ELSE %]
+ <option value="j">معلومات تاريخية أخرى</option>
+ [% END %]
+ [% IF ( f9k ) %]
+ <option value="k" selected="selected">معلومات أثنولوجية</option>
+ [% ELSE %]
+ <option value="k">معلومات أثنولوجية</option>
+ [% END %]
+ [% IF ( f9l ) %]
+ <option value="l" selected="selected">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% ELSE %]
+ <option value="l">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% END %]
+ [% IF ( f9r ) %]
+ <option value="r" selected="selected">مادة تعليمية</option>
+ [% ELSE %]
+ <option value="r">مادة تعليمية</option>
+ [% END %]
+ [% IF ( f9s ) %]
+ <option value="s" selected="selected">نوتة موسيقية</option>
+ [% ELSE %]
+ <option value="s">نوتة موسيقية</option>
+ [% END %]
+ [% IF ( f9z ) %]
+ <option value="z" selected="selected">غيرها من المواد النصية المصاحبة</option>
+ [% ELSE %]
+ <option value="z">غيرها من المواد النصية المصاحبة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f10">مادة نصية مرافقة 3:</label></td>
+ <td>
+ <select name="f10" id="f10">
+
+ [% IF ( f10space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f10a ) %]
+ <option value="a" selected="selected">ديسكوغرافيا</option>
+ [% ELSE %]
+ <option value="a">ديسكوغرافيا</option>
+ [% END %]
+ [% IF ( f10b ) %]
+ <option value="b" selected="selected">ببليوغرافيا</option>
+ [% ELSE %]
+ <option value="b">ببليوغرافيا</option>
+ [% END %]
+ [% IF ( f10c ) %]
+ <option value="c" selected="selected">فهرس موضوعي</option>
+ [% ELSE %]
+ <option value="c">فهرس موضوعي</option>
+ [% END %]
+ [% IF ( f10d ) %]
+ <option value="d" selected="selected">اوبرا أو نص</option>
+ [% ELSE %]
+ <option value="d">اوبرا أو نص</option>
+ [% END %]
+ [% IF ( f10e ) %]
+ <option value="e" selected="selected">السيرة الذاتية للملحن</option>
+ [% ELSE %]
+ <option value="e">السيرة الذاتية للملحن</option>
+ [% END %]
+ [% IF ( f10f ) %]
+ <option value="f" selected="selected">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% ELSE %]
+ <option value="f">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% END %]
+ [% IF ( f10g ) %]
+ <option value="g" selected="selected">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% ELSE %]
+ <option value="g">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% END %]
+ [% IF ( f10h ) %]
+ <option value="h" selected="selected">معلومات تقنية عن الموسيقى</option>
+ [% ELSE %]
+ <option value="h">معلومات تقنية عن الموسيقى</option>
+ [% END %]
+ [% IF ( f10i ) %]
+ <option value="i" selected="selected">معلومات تاريخية حول الموسيقى</option>
+ [% ELSE %]
+ <option value="i">معلومات تاريخية حول الموسيقى</option>
+ [% END %]
+ [% IF ( f10j ) %]
+ <option value="j" selected="selected">معلومات تاريخية أخرى</option>
+ [% ELSE %]
+ <option value="j">معلومات تاريخية أخرى</option>
+ [% END %]
+ [% IF ( f10k ) %]
+ <option value="k" selected="selected">معلومات أثنولوجية</option>
+ [% ELSE %]
+ <option value="k">معلومات أثنولوجية</option>
+ [% END %]
+ [% IF ( f10l ) %]
+ <option value="l" selected="selected">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% ELSE %]
+ <option value="l">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% END %]
+ [% IF ( f10r ) %]
+ <option value="r" selected="selected">مادة تعليمية</option>
+ [% ELSE %]
+ <option value="r">مادة تعليمية</option>
+ [% END %]
+ [% IF ( f10s ) %]
+ <option value="s" selected="selected">نوتة موسيقية</option>
+ [% ELSE %]
+ <option value="s">نوتة موسيقية</option>
+ [% END %]
+ [% IF ( f10z ) %]
+ <option value="z" selected="selected">غيرها من المواد النصية المصاحبة</option>
+ [% ELSE %]
+ <option value="z">غيرها من المواد النصية المصاحبة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f11">مادة نصية مرافقة 4:</label></td>
+ <td>
+ <select name="f11" id="f11">
+
+ [% IF ( f11space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f11a ) %]
+ <option value="a" selected="selected">ديسكوغرافيا</option>
+ [% ELSE %]
+ <option value="a">ديسكوغرافيا</option>
+ [% END %]
+ [% IF ( f11b ) %]
+ <option value="b" selected="selected">ببليوغرافيا</option>
+ [% ELSE %]
+ <option value="b">ببليوغرافيا</option>
+ [% END %]
+ [% IF ( f11c ) %]
+ <option value="c" selected="selected">فهرس موضوعي</option>
+ [% ELSE %]
+ <option value="c">فهرس موضوعي</option>
+ [% END %]
+ [% IF ( f11d ) %]
+ <option value="d" selected="selected">اوبرا أو نص</option>
+ [% ELSE %]
+ <option value="d">اوبرا أو نص</option>
+ [% END %]
+ [% IF ( f11e ) %]
+ <option value="e" selected="selected">السيرة الذاتية للملحن</option>
+ [% ELSE %]
+ <option value="e">السيرة الذاتية للملحن</option>
+ [% END %]
+ [% IF ( f11f ) %]
+ <option value="f" selected="selected">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% ELSE %]
+ <option value="f">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% END %]
+ [% IF ( f11g ) %]
+ <option value="g" selected="selected">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% ELSE %]
+ <option value="g">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% END %]
+ [% IF ( f11h ) %]
+ <option value="h" selected="selected">معلومات تقنية عن الموسيقى</option>
+ [% ELSE %]
+ <option value="h">معلومات تقنية عن الموسيقى</option>
+ [% END %]
+ [% IF ( f11i ) %]
+ <option value="i" selected="selected">معلومات تاريخية حول الموسيقى</option>
+ [% ELSE %]
+ <option value="i">معلومات تاريخية حول الموسيقى</option>
+ [% END %]
+ [% IF ( f11j ) %]
+ <option value="j" selected="selected">معلومات تاريخية أخرى</option>
+ [% ELSE %]
+ <option value="j">معلومات تاريخية أخرى</option>
+ [% END %]
+ [% IF ( f11k ) %]
+ <option value="k" selected="selected">معلومات أثنولوجية</option>
+ [% ELSE %]
+ <option value="k">معلومات أثنولوجية</option>
+ [% END %]
+ [% IF ( f11l ) %]
+ <option value="l" selected="selected">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% ELSE %]
+ <option value="l">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% END %]
+ [% IF ( f11r ) %]
+ <option value="r" selected="selected">مادة تعليمية</option>
+ [% ELSE %]
+ <option value="r">مادة تعليمية</option>
+ [% END %]
+ [% IF ( f11s ) %]
+ <option value="s" selected="selected">نوتة موسيقية</option>
+ [% ELSE %]
+ <option value="s">نوتة موسيقية</option>
+ [% END %]
+ [% IF ( f11z ) %]
+ <option value="z" selected="selected">غيرها من المواد النصية المصاحبة</option>
+ [% ELSE %]
+ <option value="z">غيرها من المواد النصية المصاحبة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f12">مادة نصية مرافقة 5:</label></td>
+ <td>
+ <select name="f12" id="f12">
+ [% IF ( f12space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f12a ) %]
+ <option value="a" selected="selected">ديسكوغرافيا</option>
+ [% ELSE %]
+ <option value="a">ديسكوغرافيا</option>
+ [% END %]
+ [% IF ( f12b ) %]
+ <option value="b" selected="selected">ببليوغرافيا</option>
+ [% ELSE %]
+ <option value="b">ببليوغرافيا</option>
+ [% END %]
+ [% IF ( f12c ) %]
+ <option value="c" selected="selected">فهرس موضوعي</option>
+ [% ELSE %]
+ <option value="c">فهرس موضوعي</option>
+ [% END %]
+ [% IF ( f12d ) %]
+ <option value="d" selected="selected">اوبرا أو نص</option>
+ [% ELSE %]
+ <option value="d">اوبرا أو نص</option>
+ [% END %]
+ [% IF ( f12e ) %]
+ <option value="e" selected="selected">السيرة الذاتية للملحن</option>
+ [% ELSE %]
+ <option value="e">السيرة الذاتية للملحن</option>
+ [% END %]
+ [% IF ( f12f ) %]
+ <option value="f" selected="selected">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% ELSE %]
+ <option value="f">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% END %]
+ [% IF ( f12g ) %]
+ <option value="g" selected="selected">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% ELSE %]
+ <option value="g">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% END %]
+ [% IF ( f12h ) %]
+ <option value="h" selected="selected">معلومات تقنية عن الموسيقى</option>
+ [% ELSE %]
+ <option value="h">معلومات تقنية عن الموسيقى</option>
+ [% END %]
+ [% IF ( f12i ) %]
+ <option value="i" selected="selected">معلومات تاريخية حول الموسيقى</option>
+ [% ELSE %]
+ <option value="i">معلومات تاريخية حول الموسيقى</option>
+ [% END %]
+ [% IF ( f12j ) %]
+ <option value="j" selected="selected">معلومات تاريخية أخرى</option>
+ [% ELSE %]
+ <option value="j">معلومات تاريخية أخرى</option>
+ [% END %]
+ [% IF ( f12k ) %]
+ <option value="k" selected="selected">معلومات أثنولوجية</option>
+ [% ELSE %]
+ <option value="k">معلومات أثنولوجية</option>
+ [% END %]
+ [% IF ( f12l ) %]
+ <option value="l" selected="selected">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% ELSE %]
+ <option value="l">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% END %]
+ [% IF ( f12r ) %]
+ <option value="r" selected="selected">مادة تعليمية</option>
+ [% ELSE %]
+ <option value="r">مادة تعليمية</option>
+ [% END %]
+ [% IF ( f12s ) %]
+ <option value="s" selected="selected">نوتة موسيقية</option>
+ [% ELSE %]
+ <option value="s">نوتة موسيقية</option>
+ [% END %]
+ [% IF ( f12z ) %]
+ <option value="z" selected="selected">غيرها من المواد النصية المصاحبة</option>
+ [% ELSE %]
+ <option value="z">غيرها من المواد النصية المصاحبة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f13">مادة نصية مرافقة 6:</label></td>
+ <td>
+ <select name="f13" id="f13">
+ [% IF ( f13space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+
+ [% IF ( f13a ) %]
+ <option value="a" selected="selected">ديسكوغرافيا</option>
+ [% ELSE %]
+ <option value="a">ديسكوغرافيا</option>
+ [% END %]
+ [% IF ( f13b ) %]
+ <option value="b" selected="selected">ببليوغرافيا</option>
+ [% ELSE %]
+ <option value="b">ببليوغرافيا</option>
+ [% END %]
+ [% IF ( f13c ) %]
+ <option value="c" selected="selected">فهرس موضوعي</option>
+ [% ELSE %]
+ <option value="c">فهرس موضوعي</option>
+ [% END %]
+ [% IF ( f13d ) %]
+ <option value="d" selected="selected">اوبرا أو نص</option>
+ [% ELSE %]
+ <option value="d">اوبرا أو نص</option>
+ [% END %]
+ [% IF ( f13e ) %]
+ <option value="e" selected="selected">السيرة الذاتية للملحن</option>
+ [% ELSE %]
+ <option value="e">السيرة الذاتية للملحن</option>
+ [% END %]
+ [% IF ( f13f ) %]
+ <option value="f" selected="selected">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% ELSE %]
+ <option value="f">السيرة الذاتية للمؤدي أو سِجل الفرقة</option>
+ [% END %]
+ [% IF ( f13g ) %]
+ <option value="g" selected="selected">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% ELSE %]
+ <option value="g">معلومات تقنية أو تاريخية عن الآلات</option>
+ [% END %]
+ [% IF ( f13h ) %]
+ <option value="h" selected="selected">معلومات تقنية عن الموسيقى</option>
+ [% ELSE %]
+ <option value="h">معلومات تقنية عن الموسيقى</option>
+ [% END %]
+ [% IF ( f13i ) %]
+ <option value="i" selected="selected">معلومات تاريخية حول الموسيقى</option>
+ [% ELSE %]
+ <option value="i">معلومات تاريخية حول الموسيقى</option>
+ [% END %]
+ [% IF ( f13j ) %]
+ <option value="j" selected="selected">معلومات تاريخية أخرى</option>
+ [% ELSE %]
+ <option value="j">معلومات تاريخية أخرى</option>
+ [% END %]
+ [% IF ( f13k ) %]
+ <option value="k" selected="selected">معلومات أثنولوجية</option>
+ [% ELSE %]
+ <option value="k">معلومات أثنولوجية</option>
+ [% END %]
+ [% IF ( f13l ) %]
+ <option value="l" selected="selected">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% ELSE %]
+ <option value="l">السيرة الذاتية للمنظم أو الناسخ</option>
+ [% END %]
+ [% IF ( f13r ) %]
+ <option value="r" selected="selected">مادة تعليمية</option>
+ [% ELSE %]
+ <option value="r">مادة تعليمية</option>
+ [% END %]
+ [% IF ( f13s ) %]
+ <option value="s" selected="selected">نوتة موسيقية</option>
+ [% ELSE %]
+ <option value="s">نوتة موسيقية</option>
+ [% END %]
+ [% IF ( f13z ) %]
+ <option value="z" selected="selected">غيرها من المواد النصية المصاحبة</option>
+ [% ELSE %]
+ <option value="z">غيرها من المواد النصية المصاحبة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f14">تقنية التسجيل:</label></td>
+ <td>
+ <select name="f14" id="f14">
+ [% IF ( f14a ) %]
+ <option value="a" selected="selected">صوتي</option>
+ [% ELSE %]
+ <option value="a">صوتي</option>
+ [% END %]
+ [% IF ( f14b ) %]
+ <option value="b" selected="selected">كهربائي</option>
+ [% ELSE %]
+ <option value="b">كهربائي</option>
+ [% END %]
+ [% IF ( f14c ) %]
+ <option value="c" selected="selected">رقمي</option>
+ [% ELSE %]
+ <option value="c">رقمي</option>
+ [% END %]
+ [% IF ( f14u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f14z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f15">خصائص إعادة الإنتاج الخاصة:</label></td>
+ <td>
+ <select name="f15" id="f15">
+ [% IF ( f15a ) %]
+ <option value="a" selected="selected">NAB معيار</option>
+ [% ELSE %]
+ <option value="a">NAB معيار</option>
+ [% END %]
+ [% IF ( f15b ) %]
+ <option value="b" selected="selected">CCIR/IEC معيار</option>
+ [% ELSE %]
+ <option value="b">CCIR/IEC معيار</option>
+ [% END %]
+ [% IF ( f15c ) %]
+ <option value="c" selected="selected">DBX المعالجة</option>
+ [% ELSE %]
+ <option value="c">DBX المعالجة</option>
+ [% END %]
+ [% IF ( f15d ) %]
+ <option value="d" selected="selected">رقمي (قرص مضغوط)</option>
+ [% ELSE %]
+ <option value="d">رقمي (قرص مضغوط)</option>
+ [% END %]
+ [% IF ( f15e ) %]
+ <option value="e" selected="selected">‫ترميز دولبي-A</option>
+ [% ELSE %]
+ <option value="e">‫ترميز دولبي-A</option>
+ [% END %]
+ [% IF ( f15f ) %]
+ <option value="f" selected="selected">ترميز دولبي-B</option>
+ [% ELSE %]
+ <option value="f">ترميز دولبي-B</option>
+ [% END %]
+ [% IF ( f15g ) %]
+ <option value="g" selected="selected">ترميز دولبي-C</option>
+ [% ELSE %]
+ <option value="g">ترميز دولبي-C</option>
+ [% END %]
+ [% IF ( f15h ) %]
+ <option value="h" selected="selected">CX مرمز</option>
+ [% ELSE %]
+ <option value="h">CX مرمز</option>
+ [% END %]
+ [% IF ( f15x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f15u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f15z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+            field.value = document.f_pop.f1.value+document.f_pop.f2.value+document.f_pop.f3.value+document.f_pop.f4.value+document.f_pop.f5.value+document.f_pop.f6.value+document.f_pop.f7.value+document.f_pop.f8.value+document.f_pop.f9.value+document.f_pop.f10.value+document.f_pop.f11.value+document.f_pop.f12.value+document.f_pop.f13.value+document.f_pop.f14.value+document.f_pop.f15.value ;
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

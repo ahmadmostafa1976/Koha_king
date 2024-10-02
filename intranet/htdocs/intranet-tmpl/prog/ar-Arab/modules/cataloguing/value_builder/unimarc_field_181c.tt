@@ -1,0 +1,212 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 181c builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_181c" class="cat value_builder">
+
+ <h3>باني حقل يونيمارك 181c</h3>
+
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">نوع المحتوى </label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1 == "cri" ) %]
+ <option value=" " selected="selected">cri - صورة خرائطية</option>
+ [% ELSE %]
+ <option value=" ">cri - صورة خرائطية</option>
+ [% END %]
+
+ [% IF ( f1 == "crm" ) %]
+ <option value="crm" selected="selected">crm - صورة خرائطية متحركة</option>
+ [% ELSE %]
+ <option value="a">crm - صورة خرائطية متحركة</option>
+ [% END %]
+
+ [% IF ( f1 == "crt" ) %]
+ <option value="crt" selected="selected">crt - صورة خرائطية لمسية</option>
+ [% ELSE %]
+ <option value="crt">crt - صورة خرائطية لمسية</option>
+ [% END %]
+
+ [% IF ( f1 == "crn" ) %]
+ <option value="crn" selected="selected">crn - شكل خرائطي لمسي ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="crn">crn - شكل خرائطي لمسي ثلاثي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f1 == "cod" ) %]
+ <option value="d" selected="selected">cod - حزمة بيانات حوسبية</option>
+ [% ELSE %]
+ <option value="cod">cod - حزمة بيانات حوسبية</option>
+ [% END %]
+
+ [% IF ( f1 == "crd" ) %]
+ <option value="crd" selected="selected">crd - حزمة بيانات خرائطية</option>
+ [% ELSE %]
+ <option value="crd">crd - حزمة بيانات خرائطية</option>
+ [% END %]
+
+ [% IF ( f1 == "crf" ) %]
+ <option value="crf" selected="selected">crf  - شكل خرائطي ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="crf">crf  - شكل خرائطي ثلاثي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f1 == "tdi" ) %]
+ <option value="tdi" selected="selected">tdi - صورة متحركة ثنائية الأبعاد</option>
+ [% ELSE %]
+ <option value="tdi">tdi - صورة متحركة ثنائية الأبعاد</option>
+ [% END %]
+
+ [% IF ( f1 == "tdm" ) %]
+ <option value="tdm" selected="selected">tdm - صورة متحركة ثلاثية الأبعاد</option>
+ [% ELSE %]
+ <option value="tdm">tdm - صورة متحركة ثلاثية الأبعاد</option>
+ [% END %]
+
+ [% IF ( f1 == "sti" ) %]
+ <option value="sti" selected="selected">sti - صورة ثابتة</option>
+ [% ELSE %]
+ <option value="sti">sti - صورة ثابتة</option>
+ [% END %]
+
+ [% IF ( f1 == "tci" ) %]
+ <option value="tci" selected="selected">tci - صورة لمسية</option>
+ [% ELSE %]
+ <option value="tci">tci - صورة لمسية</option>
+ [% END %]
+
+ [% IF ( f1 == "prm" ) %]
+ <option value="prm" selected="selected">prm - موسيقى مؤداة</option>
+ [% ELSE %]
+ <option value="prm">prm - موسيقى مؤداة</option>
+ [% END %]
+
+ [% IF ( f1 == "ntv" ) %]
+ <option value="ntv" selected="selected">ntv - حركة منوّتة</option>
+ [% ELSE %]
+ <option value="ntv">ntv - حركة منوّتة</option>
+ [% END %]
+
+ [% IF ( f1 == "tcn" ) %]
+ <option value="tcn" selected="selected">tcn - حركة منوّتة لمسية</option>
+ [% ELSE %]
+ <option value="tcn">tcn - حركة منوّتة لمسية</option>
+ [% END %]
+
+ [% IF ( f1 == "tdf" ) %]
+ <option value="tdf" selected="selected">tdf - شكل ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="tdf">tdf - شكل ثلاثي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f1 == "tcf" ) %]
+ <option value="tcf" selected="selected">tcf - شكل لمسي ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="tcf">tcf - شكل لمسي ثلاثي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f1 == "ntm" ) %]
+ <option value="ntm" selected="selected">ntm - موسيقى منوّتة</option>
+ [% ELSE %]
+ <option value="ntm">ntm - موسيقى منوّتة</option>
+ [% END %]
+
+ [% IF ( f1 == "tcm" ) %]
+ <option value="tcm" selected="selected">tcm - موسيقى منوّتة لمسية</option>
+ [% ELSE %]
+ <option value="tcm">tcm - موسيقى منوّتة لمسية</option>
+ [% END %]
+
+ [% IF ( f1 == "cop" ) %]
+ <option value="cop" selected="selected">cop - برنامج حاسوب</option>
+ [% ELSE %]
+ <option value="cop">cop - برنامج حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "snd" ) %]
+ <option value="snd" selected="selected">snd - أصوات</option>
+ [% ELSE %]
+ <option value="snd">snd - أصوات</option>
+ [% END %]
+
+ [% IF ( f1 == "txt" ) %]
+ <option value="txt" selected="selected">txt - نص</option>
+ [% ELSE %]
+ <option value="txt">txt - نص</option>
+ [% END %]
+
+ [% IF ( f1 == "tct" ) %]
+ <option value="tct" selected="selected">tct - نص لمسي</option>
+ [% ELSE %]
+ <option value="tct">tct - نص لمسي</option>
+ [% END %]
+
+ [% IF ( f1 == "spw" ) %]
+ <option value="spw" selected="selected">spw - كلمة منطوقة</option>
+ [% ELSE %]
+ <option value="spw">spw - كلمة منطوقة</option>
+ [% END %]
+
+ [% IF ( f1 == "xxx" ) %]
+ <option value="xxx" selected="selected">xxx - أخرى</option>
+ [% ELSE %]
+ <option value="xxx">xxx - أخرى</option>
+ [% END %]
+
+ [% IF ( f1 == "zzz" ) %]
+ <option value="zzz" selected="selected">zzz - غير محدد</option>
+ [% ELSE %]
+ <option value="zzz">zzz - غير محدد</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="submitMyForm();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+<script>
+
+    function submitMyForm() {
+        var doc   = opener.document;
+        var field = doc.getElementById("[% index | html %]");
+        subfield();
+
+        function subfield() {
+            const tag = $(field).closest('.tag');
+            const sub = tag.find('[id*="tag_181_subfield_2_"]');
+            if ( field != 'undefined' ) {
+                sub[0].value = "RDAcontent";
+            }
+            return subfield;
+        }
+        field.value = document.f_pop.f1.value;
+        window.close();
+        return false;
+    }
+</script>
+
+[% INCLUDE 'popup-bottom.inc' %]

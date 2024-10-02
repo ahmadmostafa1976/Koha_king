@@ -1,0 +1,91 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 135a builder") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_135a" class="cat value_builder">
+ <h1>باني حقل يونيمارك 135a</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">نوع المورد الإلكتروني:</label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">عددي</option>
+ [% ELSE %]
+ <option value="a">عددي</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">برامج الحاسوب</option>
+ [% ELSE %]
+ <option value="b">برامج الحاسوب</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">تمثيلي</option>
+ [% ELSE %]
+ <option value="c">تمثيلي</option>
+ [% END %]
+ [% IF ( f1d ) %]
+ <option value="d" selected="selected">نص</option>
+ [% ELSE %]
+ <option value="d">نص</option>
+ [% END %]
+ [% IF ( f1u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f1v ) %]
+ <option value="v" selected="selected">تركيبة</option>
+ [% ELSE %]
+ <option value="v">تركيبة</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        var dateformat = "[% Koha.Preference('dateformat') | html %]";
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value =  document.f_pop.f1.value;
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

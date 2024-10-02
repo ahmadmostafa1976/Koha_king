@@ -1,0 +1,44 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE "doc-head-open.inc" %]
+<title>[% FILTER collapse %]
+ [% t("Add order") | html %] &rsaquo;
+ [% t("Acquisition") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE "doc-head-close.inc" %]
+</head>
+
+<body id="acq_addorder" class="acq">
+[% INCLUDE "header.inc" %]
+
+ <div class="container-fluid">
+ [% IF (not_enough_budget) %]
+ <form action="/cgi-bin/koha/acqui/addorder.pl" method="post">
+ <input type="hidden" name="op" value="cud-order"/>
+ [% INCLUDE 'csrf-token.inc' %]
+ [% FOREACH var IN vars_loop %]
+ [% FOREACH val IN var.values %]
+ <input type="hidden" name="[% var.name | html %]" value="[% val | html %]" />
+ [% END %]
+ [% END %]
+ <input type="hidden" name="op" value="cud-addorder">
+ <input type="hidden" name="confirm_budget_exceeding" value="1" />
+ <div class="dialog alert">
+ [% IF (budget_exceeded) %]
+ <p>تحذير! إجمالي مبلغ الطلبيات يتجاوز الميزانية المسموح بها.</p>
+ [% END %]
+ [% IF (encumbrance_exceeded) %]
+ <p>تحذير! سوف تتجاوز [% encumbrance | html %]% من تمويلك.</p>
+ [% END %]
+ [% IF (expenditure_exceeded) %]
+ <p>تحذير! سوف تتجاوز الحد الأقصى ([% expenditure | html %][% IF (currency) %] [% currency | html %][% END %]) من تمويلك.</p>
+ [% END %]
+ <p>هل تريد تأكيد الطلبية؟</p>
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> نعم، أؤكد</button>
+ <button type="button" class="deny" onclick="window.location.href = '[% referer | html %]'"><i class="fa fa-fw fa-times"></i> لا، لا أؤكد</button>
+ </div>
+ </form>
+ [% END %]
+
+[% INCLUDE "intranet-bottom.inc" %]

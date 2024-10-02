@@ -1,0 +1,131 @@
+---
+web_services.pref:
+  iLS-DI:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: ILS-DI
+    - 'خدمات ILS-DI لمستخدمي الأوباك (متاح في: /cgi-bin/koha/ilsdi.pl)'
+  - - السماح بعناوين IP
+    - class: Text
+      pref: ILS-DI:AuthorizedIPs
+    - لاستخدام خدمات ILS-DI (عند التفعيل). قم بفصل عناوين IP بالفاصلات وبلا مسافات.
+      اترك الحقل خالياً للسماح بأي عنوان IP .
+  idRef:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: IdRef
+    - خدمة الويب IdRef من صفحة تفاصيل الأوباك. تتيح لك IdRef طلب الاستنادات من قاعدة
+      بيانات Sudoc.
+    - يرجى ملاحظة أن هذه الخاصية متاحة فقط ليونيمارك.
+  oAI-PMH:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OAI-PMH
+    - الخاص بكوها
+    - '<a href="http://www.openarchives.org/pmh/">OAI-PMH</a> خادم. (متاح في: /cgi-bin/koha/oai.pl?verb=Identify)'
+  - - تعريف التسجيلات في هذا الموقع بواسطة البادئة
+    - pref: OAI-PMH:archiveID
+    - '. يرجى إدخال بادئة بدون نقطتي نهاية (":"). يجب أن يحترم معرّف الأرشيف مواصفات
+      OAI. انظر '
+    - '<a href="http://www.openarchives.org/OAI/2.0/guidelines-oai-identifier.htm">إرشادات
+      التنفيذ</a>. '
+    - 'مثال: "oai:example-library.org"'
+  - - إعادة فقط
+    - class: integer
+      pref: OAI-PMH:MaxCount
+    - تسجيلات في وقت واحد استجابة لاستعلام  a ListRecords أو ListIdentifiers.
+  - - 'yAML OAI ملف تهيئة خادم كوها:'
+    - class: file
+      pref: OAI-PMH:ConfFile
+    - . إذا كان فارغاً، يعمل خادم OAI في كوها في الوضع العادي، وإلا فسيعمل في الوضع
+      الموسع. في الوضع الموسع من الممكن ضبط تنسيقات أخرى غير  marcxml أو دبلن كور.
+      يقوم <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OAI-PMH:ConfFile">OAI-PMH:ConfFile</a>
+      بتحديد ملف تهيئة YAML الذي يسرد تنسيقات الميتاداتا المتاحة و ملفXSL المستخدم
+      في إنشائها من تسجيلات marcxml .
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OAI-PMH:AutoUpdateSets
+    - التحديث التلقائي من OAI-PMH يحدد متى يتم إنشاء أو تحديث التسجيلة الببليوغرافية
+      أو تسجيلة المادة.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OAI-PMH:AutoUpdateSetsEmbedItemData
+    - تضمين بيانات المادة عند تحديث حزم OAI-PMH تلقائياً.
+    - <br><strong>ملاحظة:</strong> يجب تفعيل تفضيل النظام <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OAI-PMH:AutoUpdateSets">OAI-PMH:AutoUpdateSets</a>.
+  - - جدول التسجيلات الببليوغرافية المحذوفة في كوها
+    - choices:
+        no: لن تحتوي على أي بيانات داخلها (لا)
+        persistent: لن يتم تفريغها أو اقتطاعها مطلقا (دائمة)
+        transient: قد يتم تفريغها أو اقتطاعها في مرحلة ما (انتقالية)
+      pref: OAI-PMH:DeletedRecord
+    - .
+  rEST API:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: RESTBasicAuth
+    - <a href="https://www.w3.org/Protocols/HTTP/1.0/spec.html#BasicAA" target="_blank">استيثاق
+      أساسي</a>لـ REST API.
+  - - ضبط العدد الافتراضي للنتائج بواسطة نقاط نهاية REST API إلى
+    - class: integer
+      pref: RESTdefaultPageSize
+    - لكل صفحة.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: RESTOAuth2ClientCredentials
+    - منح اعتمادات عميل OAuth2 لـ REST API. يتطلب تثبيت Net::OAuth2::AuthorizationServer.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: RESTPublicAnonymousRequests
+    - وصول بدون تعريف هوية للمسالك العامة (التي لا تتطلب استيثاق الوصول)
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: RESTPublicAPI
+    - / مساحة الاسم العامة لواجهة برمجة التطبيقات.
+  - - Use
+    - choices:
+        apirenew: '''APIRenew'''
+        apiuserbranch: the library of the API user
+        checkoutbranch: the library the item was checked out from
+        itemhomebranch: the item's home library
+        none: NULL
+        patronhomebranch: the patron's home library
+      pref: RESTAPIRenewalBranch
+    - as branchcode to store in the statistics table.
+  التقرير:
+  - - إعادة فقط
+    - class: integer
+      pref: SvcMaxReportRows
+    - صفوف التقارير قد طلبت عبر خدمة تقارير ويب.
+  عام:
+  - - تعيين رأس Access-Control-Allow-Origin إلى
+    - class: Text
+      pref: AccessControlAllowOrigin
+    - .
+  قاعدة معرفة مانا Mana:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+        '2': لا، دعني أفكر في
+      pref: Mana
+    - تقديمات إلى قاعدة معرفة مانا. تقوم مانا بمركزة المعلومات بين تثبيات كوها الأخرى
+      لتسهيل إنشاء اشتراكات، مزودين، تقارير جديدة، إلخ. يمكنك البحث، والمشاركة والاستيراد
+      والتعليق على محتوى مانا. تتم مشاركة المعلومات المشاركة مع قاعدة معرفة مانا أدنى
+      <a href="https://creativecommons.org/choose/zero/"> رخصة CC-0</a>
+  - - 'يستخدم رمز الحماية للاستيثاق في قاعدة معرفة مانا:'
+    - class: Text
+      pref: ManaToken
+    - احصل على رمز حماية من <a href="/cgi-bin/koha/admin/share_content.pl">صفحة إدارة
+      قاعدة معرفة مانا</a>.
+  - - 'الحقول التي تتم مشاركتا تلقائياً مع قاعدة معرفة مانا:'
+    - multiple:
+        subscription: الاشتراكات
+      pref: AutoShareWithMana

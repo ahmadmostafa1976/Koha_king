@@ -1,0 +1,389 @@
+[% USE raw %]
+[% USE Koha %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("000 - Leader builder") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_marc21_leader" class="cat value_builder">
+ <form method="get" name="f_pop" onsubmit="report()" action="">
+ <input type="hidden" name="plugin_name" value="marc21_leader.pl" />
+ <h1>000 - الفاتح</h1>
+
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><span class="label">0-4 حجم التسجيلة</span></td>
+ <td>(ملء تلقائي)</td>
+ </tr>
+ <tr>
+ <td><label for="f5">5- حالة التسجيلة</label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5a ) %]
+ <option value="a" selected="selected">a-زيادة في مستوى التشفير</option>
+ [% ELSE %]
+ <option value="a">a-زيادة في مستوى التشفير</option>
+ [% END %]
+
+ [% IF ( f5c ) %]
+ <option value="c" selected="selected">c- مصحح أو مراجع</option>
+ [% ELSE %]
+ <option value="c">c- مصحح أو مراجع</option>
+ [% END %]
+ [% IF ( f5d ) %]
+ <option value="d" selected="selected">d- محذوف</option>
+ [% ELSE %]
+ <option value="d">d- محذوف</option>
+ [% END %]
+ [% IF ( f5n ) %]
+ <option value="n" selected="selected">n- جديد</option>
+ [% ELSE %]
+ <option value="n">n- جديد</option>
+ [% END %]
+ [% IF ( f5p ) %]
+ <option value="p" selected="selected">p-زيادة في تشفير المستوى من قبل إعادة النشر</option>
+ [% ELSE %]
+ <option value="p">p-زيادة في تشفير المستوى من قبل إعادة النشر</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f6" title="يتحكم هذا في التهيئة الافتراضية للحقل 008">6- نوع التسجيلة</label></td>
+ <td>
+ <select id="f6" name="f6" title="يؤثر التحديد هنا على التهيئة الافتراضية للحقل 008">
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">a-مادة لغة</option>
+ [% ELSE %]
+ <option value="a">a-مادة لغة</option>
+ [% END %]
+ [% IF ( f6c ) %]
+ <option value="c" selected="selected">c- موسيقى منوتة</option>
+ [% ELSE %]
+ <option value="c">c- موسيقى منوتة</option>
+ [% END %]
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">d- نوتة موسيقية مخطوطة</option>
+ [% ELSE %]
+ <option value="d">d- نوتة موسيقية مخطوطة</option>
+ [% END %]
+ [% IF ( f6e ) %]
+ <option value="e" selected="selected">e- مادة خرائطية</option>
+ [% ELSE %]
+ <option value="e">e- مادة خرائطية</option>
+ [% END %]
+ [% IF ( f6f ) %]
+ <option value="f" selected="selected">f - مادة خرائطية مخطوطة</option>
+ [% ELSE %]
+ <option value="f">f - مادة خرائطية مخطوطة</option>
+ [% END %]
+ [% IF ( f6g ) %]
+ <option value="g" selected="selected">g - وسيط عرض</option>
+ [% ELSE %]
+ <option value="g">g - وسيط عرض</option>
+ [% END %]
+ [% IF ( f6i ) %]
+ <option value="i" selected="selected">i - تسجيل صوتي غير موسيقي</option>
+ [% ELSE %]
+ <option value="i">i - تسجيل صوتي غير موسيقي</option>
+ [% END %]
+ [% IF ( f6j ) %]
+ <option value="j" selected="selected">j - تسجيل صوت موسيقي</option>
+ [% ELSE %]
+ <option value="j">j - تسجيل صوت موسيقي</option>
+ [% END %]
+ [% IF ( f6k ) %]
+ <option value="k" selected="selected">k - رسم ثنائي الابعاد غير قابل للعرض</option>
+ [% ELSE %]
+ <option value="k">k - رسم ثنائي الابعاد غير قابل للعرض</option>
+ [% END %]
+ [% IF ( f6m ) %]
+ <option value="m" selected="selected">m - ملف الحاسب</option>
+ [% ELSE %]
+ <option value="m">m - ملف الحاسب</option>
+ [% END %]
+ [% IF ( f6o ) %]
+ <option value="o" selected="selected">o - عدة</option>
+ [% ELSE %]
+ <option value="o">o - عدة</option>
+ [% END %]
+ [% IF ( f6p ) %]
+ <option value="p" selected="selected">p - مواد متنوعة</option>
+ [% ELSE %]
+ <option value="p">p - مواد متنوعة</option>
+ [% END %]
+ [% IF ( f6r ) %]
+ <option value="r" selected="selected">r - قطعة أثرية ثلاثية الأبعاد أو كائن طبيعي التكوين</option>
+ [% ELSE %]
+ <option value="r">r - قطعة أثرية ثلاثية الأبعاد أو كائن طبيعي التكوين</option>
+ [% END %]
+ [% IF ( f6t ) %]
+ <option value="t" selected="selected">t - مادة لغة مخطوطة</option>
+ [% ELSE %]
+ <option value="t">t - مادة لغة مخطوطة</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f7">7- المستوى الببليوغرافي</label></td>
+ <td>
+ <select name="f7" id="f7">
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">a- جزء مكون لدراسة أحادية</option>
+ [% ELSE %]
+ <option value="a">a- جزء مكون لدراسة أحادية</option>
+ [% END %]
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">b-جزء مكوّن لدورية</option>
+ [% ELSE %]
+ <option value="b">b-جزء مكوّن لدورية</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">c- مجموعة</option>
+ [% ELSE %]
+ <option value="c">c- مجموعة</option>
+ [% END %]
+ [% IF ( f7d ) %]
+ <option value="d" selected="selected">d- وحدة فرعية</option>
+ [% ELSE %]
+ <option value="d">d- وحدة فرعية</option>
+ [% END %]
+ [% IF ( f7i ) %]
+ <option value="i" selected="selected">i- دمج الموارد</option>
+ [% ELSE %]
+ <option value="i">i- دمج الموارد</option>
+ [% END %]
+ [% IF ( f7m ) %]
+ <option value="m" selected="selected">m- دراسة أحادية/ مادة</option>
+ [% ELSE %]
+ <option value="m">m- دراسة أحادية/ مادة</option>
+ [% END %]
+ [% IF ( f7s ) %]
+ <option value="s" selected="selected">s- دورية</option>
+ [% ELSE %]
+ <option value="s">s- دورية</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f8">8-نوع التحكم</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8 ) %]
+ <option value=" " selected="selected">نوع غير محدد</option>
+ [% ELSE %]
+ <option value=" ">نوع غير محدد</option>
+ [% END %]
+ [% IF ( f8a ) %]
+ <option value="a" selected="selected">a- أرشيفي</option>
+ [% ELSE %]
+ <option value="a">a- أرشيفي</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>9- مخطط ترميز حرف</td>
+ <td>a - UCS/يونيكود (ملء تلقائي)</td>
+ </tr>
+ <tr>
+ <td>10-16 مؤشر/الحقول الفرعية/حجم</td>
+ <td>(ملء تلقائي)</td>
+ </tr>
+ <tr>
+ <td><label for="f17">17- مستوى الترميز</label></td>
+ <td>
+ <select name="f17" id="f17">
+ [% IF ( f17 ) %]
+ <option value=" " selected="selected">مستوى كامل</option>
+ [% ELSE %]
+ <option value=" ">المستوى الكامل</option>
+ [% END %]
+ [% IF ( f171 ) %]
+ <option value="1" selected="selected">1- المستوى الكامل، المادة غير مفحوصة</option>
+ [% ELSE %]
+ <option value="1">1- المستوى الكامل، المادة غير مفحوصة</option>
+ [% END %]
+ [% IF ( f172 ) %]
+ <option value="2" selected="selected">2 -أقل-من-المستوى الكامل, مادة غير مفحوصة</option>
+ [% ELSE %]
+ <option value="2">2 -أقل-من-المستوى الكامل، مادة غير مفحوصة</option>
+ [% END %]
+ [% IF ( f173 ) %]
+ <option value="3" selected="selected">3- المستوى المختصر</option>
+ [% ELSE %]
+ <option value="3">3- المستوى المختصر</option>
+ [% END %]
+ [% IF ( f174 ) %]
+ <option value="4" selected="selected">4-المستوى الرئيسى</option>
+ [% ELSE %]
+ <option value="4">4-المستوى الرئيسى</option>
+ [% END %]
+ [% IF ( f175 ) %]
+ <option value="5" selected="selected">5-المستوى الجزئى (التمهيدى)</option>
+ [% ELSE %]
+ <option value="5">5-المستوى الجزئى (التمهيدى)</option>
+ [% END %]
+ [% IF ( f177 ) %]
+ <option value="7" selected="selected">7- المستوى الأدنى</option>
+ [% ELSE %]
+ <option value="7">7- المستوى الأدنى</option>
+ [% END %]
+ [% IF ( f178 ) %]
+ <option value="8" selected="selected">8- مستوى ما قبل النشر</option>
+ [% ELSE %]
+ <option value="8">8- مستوى ما قبل النشر</option>
+ [% END %]
+ [% IF Koha.Preference('UseOCLCEncodingLevels') %]
+ [% IF ( f17I ) %]
+ <option value="I" selected="selected">I- مدخلات كاملة المستوى من قبل المشاركين في مركز المكتبة الرقمية على الإنترنت</option>
+ [% ELSE %]
+ <option value="I">I- مدخلات كاملة المستوى من قبل المشاركين في مركز المكتبة الرقمية على الإنترنت</option>
+ [% END %]
+ [% IF ( f17J ) %]
+ <option value="J" selected="selected">‫J- تسجيلة محذوفة</option>
+ [% ELSE %]
+ <option value="J">‫J- تسجيلة محذوفة</option>
+ [% END %]
+ [% IF ( f17K ) %]
+ <option value="K" selected="selected">K- مدخلات أقل من كاملة من قبل المشاركين في مركز المكتبة الرقمية على الإنترنت</option>
+ [% ELSE %]
+ <option value="K">K- مدخلات أقل من كاملة من قبل المشاركين في مركز المكتبة الرقمية على الإنترنت</option>
+ [% END %]
+ [% IF ( f17K ) %]
+ <option value="M" selected="selected">M- مضاف من عملية بالدفعة</option>
+ [% ELSE %]
+ <option value="M">M- مضاف من عملية بالدفعة</option>
+ [% END %]
+ [% END %]
+ [% IF ( f17u ) %]
+ <option value="u" selected="selected">u- غير معروف</option>
+ [% ELSE %]
+ <option value="u">u- غير معروف</option>
+ [% END %]
+ [% IF ( f17z ) %]
+ <option value="z" selected="selected">z- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="z">z- غير قابل للتطبيق</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f18">18 -نموذج الفهرسة الوصفي</label></td>
+ <td>
+ <select name="f18" id="f18">
+ [% IF ( f18 ) %]
+ <option value=" " selected="selected">بدون-تدوب</option>
+ [% ELSE %]
+ <option value=" ">بدون-تدوب</option>
+ [% END %]
+ [% IF ( f18a ) %]
+ <option value="a" selected="selected">a- AACR 2</option>
+ [% ELSE %]
+ <option value="a">a- AACR 2</option>
+ [% END %]
+ [% IF ( f18c ) %]
+ <option value="c" selected="selected">c- ISBD حذف ترقيم</option>
+ [% ELSE %]
+ <option value="c">c- ISBD حذف ترقيم</option>
+ [% END %]
+ [% IF ( f18i ) %]
+ <option value="i" selected="selected">i- ISBD شامل الترقيم</option>
+ [% ELSE %]
+ <option value="i">i- ISBD شامل الترقيم</option>
+ [% END %]
+ [% IF ( f18n ) %]
+ <option value="n" selected="selected">n- تم حذف ترقيم ليس ترقيم ISBD</option>
+ [% ELSE %]
+ <option value="n">n- تم حذف ترقيم ليس ترقيم ISBD</option>
+ [% END %]
+ [% IF ( f18u ) %]
+ <option value="u" selected="selected">u- غير معروف</option>
+ [% ELSE %]
+ <option value="u">u- غير معروف</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f19">19 - مستوى التسجيلة ذات المصدر متعدد الأجزاء</label></td>
+ <td>
+ <select name="f19" id="f19">
+ [% IF ( f19 ) %]
+ <option value=" " selected="selected">غير محدد أو غير قابل للتطبيق </option>
+ [% ELSE %]
+ <option value=" ">غير محدد أو غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f19a ) %]
+ <option value="a" selected="selected">a- حزمة</option>
+ [% ELSE %]
+ <option value="a">a- حزمة</option>
+ [% END %]
+ [% IF ( f19b ) %]
+ <option value="b" selected="selected">b- جزء بعنوان مستقل</option>
+ [% ELSE %]
+ <option value="b">b- جزء بعنوان مستقل</option>
+ [% END %]
+ [% IF ( f19c ) %]
+ <option value="c" selected="selected">c- جزء مع عنوان تابع</option>
+ [% ELSE %]
+ <option value="c">c- جزء مع عنوان تابع</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td>20-24 خريطة المدخل والأطوال</td>
+ <td>(ملء تلقائي)</td>
+ </tr>
+ </table>
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+ </div> <!-- /.page-section -->
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+            field.value =
+            '     '+
+            document.f_pop.f5.value +
+            document.f_pop.f6.value +
+            document.f_pop.f7.value +
+            document.f_pop.f8.value +
+            'a'+ // MARC21 UNICODE flag - must be 'a' for Koha
+            '22     '+
+            document.f_pop.f17.value +
+            document.f_pop.f18.value +
+            document.f_pop.f19.value +
+            '4500';
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

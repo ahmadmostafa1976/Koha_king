@@ -1,0 +1,1609 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE KohaDates %]
+[% USE Branches %]
+[% USE Categories %]
+[% USE ItemTypes %]
+[% USE CirculationRules %]
+[% USE Price %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+
+[% SET branchcode = humanbranch || undef %]
+
+[% SET categorycodes = used_categorycodes %]
+[% SET itemtypes = used_itemtypes %]
+
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Circulation and fine rules") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_smart-rules" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>قواعد الإعارة والغرامات</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+ <h1 class="parameters">
+ [% IF humanbranch %] تحديد قواعد الإعارة والغرامات لـِ "[% Branches.GetName( humanbranch ) | html %]" [% ELSE %] تحديد قواعد الإعارة والغرامات لكل المكتبات [% END %] </h1>
+
+ <div class="page-section bg-info">
+ <p>يتم تطبيق قواعد محددة من الأكثر تحديدا  إلى الأقل تحديدا، وذلك باستخدام الموجود الأول في هذا الطلب:</p>
+ <ul>
+ <li>نفس المكتبة، نفس فئة المستفيد، نفس نوع المادة</li>
+ <li>نفس المكتبة، نفس فئة المستفيد، كل أنواع المادة</li>
+ <li>نفس المكتبة، كل فئات المستفيد، نفس نوع المادة</li>
+ <li>نفس المكتبة، كل فئات  المستفيد، كل أنواع المادة</li>
+ <li>الافتراضي (كل المكتبات)، نفس فئة المستفيد، نفس نوع المادة</li>
+ <li>الافتراضي (كل المكتبات)، نفس فئة المستفيد، كل أنواع المادة</li>
+ <li>الافتراضي (كل المكتبات)، كل فئات المستفيد، نفس نوع المادة</li>
+ <li>الافتراضي (كل المكتبات)، كل فئات المستفيد، كل أنواع المادة</li>
+ </ul>
+
+ <p>حين يكون لنوع مادة أصل، سيتم عرض القاعدة كـ  "أصل->فرع" وسيتم حد عدد الإعارات الحالية إلى الحد الأقصى للأصل (بما في ذلك الأنواع المماثلة) أو نوع قاعدة محدد، أيهما أقل.</p>
+ <p>لتعديل القاعدة، قم بإنشاء قاعدة جديدة بنفس فئة المستفيد ونوع المادة.</p>
+ <p>The circulation and fine rules are applied based on the CircControl system preference which is set to <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CircControl">[% Koha.Preference('CircControl') | html %]</a> and the HomeOrHoldingBranch system preference which is set to <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=HomeOrHoldingBranch">[% Koha.Preference('HomeOrHoldingBranch') | html %]</a>.</p>
+ </div>
+
+ <div class="page-section">
+ [% UNLESS restricted_to_own_library %]
+ <form method="get" action="/cgi-bin/koha/admin/smart-rules.pl" id="selectlibrary">
+ حدد المكتبة: <select name="branch" id="branch" style="width:20em;">
+ <option value="*">القواعد القياسية لجميع المكتبات</option>
+ [% PROCESS options_for_libraries libraries => Branches.all( selected => current_branch, unfiltered => 1 ) %]
+ </select>
+ </form>
+ [% IF ( definedbranch ) %]
+ <form action="/cgi-bin/koha/admin/clone-rules.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <label for="tobranch"><strong>استنسخ هذه القواعد إلى:</strong></label>
+ <input type="hidden" name="frombranch" value="[% current_branch | html %]" />
+ <select name="tobranch" id="tobranch">
+ [% PROCESS options_for_libraries libraries => Branches.all( unfiltered => 1 ) %]
+ </select>
+ <input type="hidden" name="op" value="cud-clone" />
+ <input class="btn btn-primary" id="clone_rules" type="submit" value="نسخ" />
+ </form>
+ [% END %]
+ [% END %]
+ </div>
+
+ <div class="page-section">
+ <form method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table id="default-circulation-rules">
+ <thead>
+ <tr>
+ <th>&nbsp;</th>
+ <th class="fixed_sort">فئة المستفيد</th>
+ <th>&nbsp;</th>
+ <th class="fixed_sort">نوع المادة</th>
+ <th class="noExport">الإجراءات</th>
+ <th>ملاحظة</th>
+ <th>الإعارات الحالية المسموحة</th>
+ <th>الإعارات في الموقع الحالية المسموحة</th>
+ <th>فترة الإعارة</th>
+ <th>نمط الأيام</th>
+ <th>وحدة</th>
+ <th>تاريخ الإستحقاق الثابت</th>
+ <th>فترة الإعارة المخفصة للحجوزات المرتفعة (يوم)</th>
+ <th>مبلغ الغرامة</th>
+ <th>فترة تسديد الغرامة</th>
+ <th>متى يتم تحصيل</th>
+ <th>فترة سماح للغرامة/الإيقاف</th>
+ <th>غطاء الغرامات المتأخرى (المبلغ)</th>
+ <th>تغطية الغرامة بسعر الاستبدال</th>
+ <th>إيقاف العمل في أيام (يوم)</th>
+ <th>الحد الأقصى لمدة التوقف (باليوم)</th>
+ <th>فترة غرامة التعليق</th>
+ <th>التجديدات المسموحة (إحصاء)</th>
+ [% IF Koha.Preference('UnseenRenewals') %]
+ <th>التجديدات المسموحة (عد)</th>
+ [% END %]
+ <th>فترة التجديد</th>
+ <th>لا يوجد تجديد قبل</th>
+ <th>لا يوجد تجديد تلقائي قبل</th>
+ <th>التجديد التلقائي</th>
+ <th>لا تجديد تلقائي بعد</th>
+ <th>لا تجديد تلقائي بعد (حد ثابت)</th>
+ <th>الحجوزات المسموحة (الإجمالي)</th>
+ <th>الحجوزات المسموحة (يوميًا)</th>
+ <th>الحجوزات لكل تسجيلة (إحصاء)</th>
+ <th>الحجوزات على الرف المسموح بها</th>
+ <th>حجوزات على مستوى المادة في الأوباك</th>
+ <th>فترة التقاط الحجوزات (باليوم)</th>
+ [% IF Koha.Preference('ArticleRequests') %]
+ <th>طلبات المقال</th>
+ [% END %]
+ <th>حسم الإيجار (%)</th>
+ [% IF Koha.Preference('UseRecalls') %]
+ <th>الاستدعاءات المسموحة (الإجمالي)</th>
+ <th>الاستدعاءات لكل تسجيلة (إحصاء)</th>
+ <th>الاستدعاءات على الرف المسموح بها</th>
+ <th>الفاصل الزمني لتاريخ استحقاق الاستدعاء (باليوم)</th>
+ <th>مبلغ غرامة تأخير الاستدعاء</th>
+ <th>فترة التقاط الاستدعاء (باليوم)</th>
+ [% END %]
+ <th class="noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% SET row_count = 0 %]
+ [% FOREACH c IN categorycodes %]
+ [% SET c = '' UNLESS c.defined %]
+ [% FOREACH i IN itemtypes %]
+ [% SET i = '' UNLESS i.defined %]
+ [% SET note = all_rules.$c.$i.note %]
+ [% SET maxissueqty = all_rules.$c.$i.maxissueqty %]
+ [% SET maxonsiteissueqty = all_rules.$c.$i.maxonsiteissueqty %]
+ [% SET issuelength = all_rules.$c.$i.issuelength %]
+ [% SET daysmode = all_rules.$c.$i.daysmode %]
+ [% SET lengthunit = all_rules.$c.$i.lengthunit %]
+ [% SET hardduedate = all_rules.$c.$i.hardduedate %]
+ [% SET hardduedatecompare = all_rules.$c.$i.hardduedatecompare %]
+ [% SET fine = all_rules.$c.$i.fine %]
+ [% SET chargeperiod = all_rules.$c.$i.chargeperiod %]
+ [% SET chargeperiod_charge_at = all_rules.$c.$i.chargeperiod_charge_at %]
+ [% SET firstremind = all_rules.$c.$i.firstremind %]
+ [% SET overduefinescap = all_rules.$c.$i.overduefinescap %]
+ [% SET cap_fine_to_replacement_price = all_rules.$c.$i.cap_fine_to_replacement_price %]
+ [% SET finedays = all_rules.$c.$i.finedays %]
+ [% SET maxsuspensiondays = all_rules.$c.$i.maxsuspensiondays %]
+ [% SET suspension_chargeperiod = all_rules.$c.$i.suspension_chargeperiod %]
+ [% SET renewalsallowed = all_rules.$c.$i.renewalsallowed %]
+ [% SET unseenrenewalsallowed = all_rules.$c.$i.unseen_renewals_allowed %]
+ [% SET renewalperiod = all_rules.$c.$i.renewalperiod %]
+ [% SET norenewalbefore = all_rules.$c.$i.norenewalbefore %]
+ [% SET noautorenewalbefore = all_rules.$c.$i.noautorenewalbefore %]
+ [% SET auto_renew = all_rules.$c.$i.auto_renew %]
+ [% SET no_auto_renewal_after = all_rules.$c.$i.no_auto_renewal_after %]
+ [% SET no_auto_renewal_after_hard_limit = all_rules.$c.$i.no_auto_renewal_after_hard_limit %]
+ [% SET reservesallowed = all_rules.$c.$i.reservesallowed %]
+ [% SET holds_per_day = all_rules.$c.$i.holds_per_day %]
+ [% SET holds_per_record = all_rules.$c.$i.holds_per_record %]
+ [% SET onshelfholds = all_rules.$c.$i.onshelfholds %]
+ [% SET opacitemholds = all_rules.$c.$i.opacitemholds %]
+ [% SET article_requests = all_rules.$c.$i.article_requests %]
+ [% SET rentaldiscount = all_rules.$c.$i.rentaldiscount %]
+ [% SET decreaseloanholds = all_rules.$c.$i.decreaseloanholds %]
+ [% SET recalls_allowed = all_rules.$c.$i.recalls_allowed %]
+ [% SET recalls_per_record = all_rules.$c.$i.recalls_per_record %]
+ [% SET on_shelf_recalls = all_rules.$c.$i.on_shelf_recalls %]
+ [% SET recall_due_date_interval = all_rules.$c.$i.recall_due_date_interval %]
+ [% SET recall_overdue_fine = all_rules.$c.$i.recall_overdue_fine %]
+ [% SET recall_shelf_time = all_rules.$c.$i.recall_shelf_time %]
+ [% SET holds_pickup_period = all_rules.$c.$i.holds_pickup_period %]
+
+ [% SET show_rule = note || maxissueqty || maxonsiteissueqty || issuelength || daysmode || lengthunit || hardduedate || hardduedatecompare || fine || chargeperiod || chargeperiod_charge_at || firstremind || overduefinescap || cap_fine_to_replacement_price || finedays || maxsuspensiondays || suspension_chargeperiod || renewalsallowed || unseenrenewalsallowed || renewalperiod || norenewalbefore || noautorenewalbefore || auto_renew || no_auto_renewal_after || no_auto_renewal_after_hard_limit || reservesallowed || holds_per_day || holds_per_record || onshelfholds || opacitemholds || article_requests || rentaldiscount || decreaseloanholds || recalls_allowed || recalls_per_record || on_shelf_recalls || recall_due_date_interval || recall_overdue_fine || recall_shelf_time || holds_pickup_period %]
+ [% IF show_rule %]
+ [% SET row_count = row_count + 1 %]
+ <tr row_countd="row_[% row_count | html %]">
+ <td>[% IF ( c == undef ) %] 1 [% ELSE %] 0 [% END %]</td>
+ <td data-code="[% c | html %]">
+ [% IF c == undef %]
+ <em>الكل</em>
+ [% ELSE %]
+ [% Categories.GetName(c) | html %]
+ [% END %]
+ </td>
+ <td>[% IF ( i == undef ) %] 1 [% ELSE %] 0 [% END %]</td>
+ <td data-code="[% i | html %]">
+ [% IF i == undef %]
+ <em>الكل</em>
+ [% ELSE %]
+ [% ItemTypes.GetDescription(i,1) | html %]
+ [% END %]
+ </td>
+ <td class="actions">
+ <a href="#" class="editrule btn btn-default btn-xs"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a href="#" class="delete btn btn-default btn-xs" data-itemtype="[% i || '*' | html %]" data-categorycode="[% c || '*' | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ <td>
+ [% IF note.defined && note != '' %]
+ <a data-content="[% note | html %]" data-placement="top" data-toggle="popover" data-trigger="hover" id="viewnote" title="ملاحظة">عرض الملاحظة</a>
+ [% ELSE %]<span>&nbsp;</span>[% END %]
+ </td>
+ <td>
+ [% IF maxissueqty.defined && maxissueqty != '' %]
+ [% maxissueqty | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF maxonsiteissueqty.defined && maxonsiteissueqty != ''  %]
+ [% maxonsiteissueqty | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td>[% issuelength | html %]</td>
+ <td data-code="[% daysmode | html %]">
+ [% SWITCH daysmode %]
+ [% CASE 'Calendar' %]<span title="استخدم التقويم لتخطي جميع أيام إغلاق المكتبة">تخطي أيام الإغلاق</span>
+ [% CASE 'Datedue' %]<span title="قم بالبحث فى التقويم عن اليوم الذى ترغب في ضبطه كيوم عطلة">اليوم المفتوح التالي</span>
+ [% CASE 'Days' %]<span title="تجاهل التقويم">تجاهل التقويم</span>
+ [% CASE 'Dayweek' %]<span title="استخدم التقويم لتأخير تاريخ الاستحقاق إلى اليوم المفتوح التالي لمدد الإعارة الأسبوعية، أو اليوم التالي">نفس اليوم</span>
+ [% CASE %]<span title="استخدم تفضيل النظام 'useDaysMode' كقيمة افتراضية">إفتراضى</span>
+ [% END %]
+ </td>
+ <td data-code="[% lengthunit | html %]">
+ [% IF ( lengthunit == 'days' ) %]
+ <span>أيام</span>
+ [% ELSIF ( lengthunit == 'hours') %]
+ <span>ساعات</span>
+ [% ELSE %]
+ <span>غير معرّف</span>
+ [% END %]
+ </td>
+ <td data-code="[% hardduedatecompare | html %]" data-duedate="[% hardduedate | $KohaDates %]">
+ [% IF ( hardduedate ) %] [% IF ( hardduedatecompare == '-1' ) %] قبل[% hardduedate | $KohaDates %] [% ELSIF ( hardduedatecompare == '0' ) %] في[% hardduedate | $KohaDates %] [% ELSIF ( hardduedatecompare == '1' ) %] بعد[% hardduedate | $KohaDates %] [% END %] [% ELSE %] <span>غير محدد</span>
+ [% END %]
+ </td>
+ <td>[% decreaseloanholds | html %]</td>
+ <td>[% fine | $Price %]</td>
+ <td>[% chargeperiod | html %]</td>
+ <td>[% IF chargeperiod_charge_at %]بدء الفاصل الزمني[% ELSE %]نهاية الفاصل الزمني[% END %]</td>
+ <td>[% firstremind | html %]</td>
+ <td>[% IF overduefinescap %][% overduefinescap | $Price %][% ELSE %][% END %]</td>
+ <td>
+ [% IF cap_fine_to_replacement_price %]
+ <input type="checkbox" checked="checked" disabled="disabled" />
+ [% ELSE %]
+ <input type="checkbox" disabled="disabled" />
+ [% END %]
+ </td>
+ <td>[% finedays | html %]</td>
+ <td>[% maxsuspensiondays | html %]</td>
+ <td>[% suspension_chargeperiod | html %]</td>
+ <td>[% renewalsallowed | html %]</td>
+ [% IF Koha.Preference('UnseenRenewals') %]
+ <td>
+ [% IF unseenrenewalsallowed.defined && unseenrenewalsallowed != '' %]
+ [% unseenrenewalsallowed | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ [% END %]
+ <td>[% renewalperiod | html %]</td>
+ <td>[% norenewalbefore | html %]</td>
+ <td>[% noautorenewalbefore | html %]</td>
+ <td data-code="[%- IF auto_renew -%]yes[%- ELSE -%]no[%- END -%]">
+ [% IF auto_renew %]
+ <span>نعم</span>
+ [% ELSE %]
+ <span>لا</span>
+ [% END %]
+ </td>
+ <td>[% no_auto_renewal_after | html %]</td>
+ <td>[% no_auto_renewal_after_hard_limit | $KohaDates %]</td>
+ <td>
+ [% IF reservesallowed.defined && reservesallowed != '' %]
+ [% reservesallowed | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF holds_per_day.defined && holds_per_day != '' %]
+ [% holds_per_day | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF holds_per_record.defined && holds_per_record != '' %]
+ [% holds_per_record | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td data-code="[% onshelfholds | html %]">
+ [% IF onshelfholds == 1 %]
+ <span>نعم</span>
+ [% ELSIF onshelfholds == 2 %]
+ <span>إذا كان الكل غير متاح</span>
+ [% ELSE %]
+ <span>إذا كان أي منها غير متاح</span>
+ [% END %]
+ </td>
+ <td data-code="[% opacitemholds | html %]">
+ [% IF opacitemholds == 'F'%]
+ <span>فرض</span>
+ [% ELSIF opacitemholds == 'Y'%]
+ <span>السماح</span>
+ [% ELSE %]
+ <span>عدم السماح</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF holds_pickup_period == '' %]
+ <span title="سيتم استخدام قيمة تفضيل النظام ReservesMaxPickupDelay ([% Koha.Preference('ReservesMaxPickupDelay') | html %])">إفتراضى</span>
+ [% ELSE %]
+ [% holds_pickup_period | html %]
+ [% END %]
+ </td>
+ [% IF Koha.Preference('ArticleRequests') %]
+ <td data-code="[% article_requests | html %]">
+ [% IF article_requests == 'no' %]
+ <span>لا</span>
+ [% ELSIF article_requests == 'yes' %]
+ <span>نعم</span>
+ [% ELSIF article_requests == 'bib_only' %]
+ <span>التسجيلة فقط</span>
+ [% ELSIF article_requests == 'item_only' %]
+ <span>المادة فقط</span>
+ [% END %]
+ </td>
+ [% END %]
+ <td>[% rentaldiscount | html %]</td>
+ [% IF Koha.Preference('UseRecalls') %]
+ <td>[% recalls_allowed | html %]</td>
+ <td>[% recalls_per_record | html %]</td>
+ <td data-code="[% on_shelf_recalls | html %]">
+ [% IF on_shelf_recalls == 'all' %]
+ <span>إذا كان الكل غير متاح</span>
+ [% ELSE %]
+ <span>إذا كان أي منها غير متاح</span>
+ [% END %]
+ </td>
+ <td>[% recall_due_date_interval | html %]</td>
+ <td>[% recall_overdue_fine | $Price %]</td>
+ <td>[% recall_shelf_time | html %]</td>
+ [% END %]
+ <td class="actions">
+ <a href="#" class="editrule btn btn-default btn-xs"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a href="#" class="delete btn btn-default btn-xs" data-itemtype="[% i || '*' | html %]" data-categorycode="[% c || '*' | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ [% END %]
+ <tr class="noExport" id="edit_row">
+ <td>2</td>
+ <td>
+ <select name="categorycode" id="categorycode">
+ <option value="*">الكل</option>
+ [% FOREACH patron_category IN patron_categories%]
+ <option value="[% patron_category.categorycode | html %]">[% patron_category.description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td></td>
+ <td>
+ <select name="itemtype" id="matrixitemtype" style="width:13em;">
+ <option value="*">الكل</option>
+ [% FOREACH itemtypeloo IN itemtypeloop %]
+ [% NEXT IF itemtypeloo.parent_type %]
+ [% SET children = itemtypeloo.children_with_localization %]
+ [% IF children.count %]
+ <optgroup label="[% itemtypeloo.translated_description | html %]">
+ <option value="[% itemtypeloo.itemtype | html %]">[% itemtypeloo.translated_description | html %] (الكل)</option>
+ [% FOREACH child IN children %]
+ <option value="[% child.itemtype | html %]">[% child.translated_description | html %]</option>
+ [% END %]
+ </optgroup>
+ [% ELSE %]
+ <option value="[% itemtypeloo.itemtype | html %]">[% itemtypeloo.translated_description | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </td>
+ <td class="actions">
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-save"></i> حفظ</button>
+ <button name="cancel" class="clear_edit btn btn-default btn-xs"><i class="fa fa-undo"></i> مسح</button>
+ </td>
+ <td><input type="text" name="note" id="note" size="15" value="" maxlength="100"></td>
+ <td><input type="text" name="maxissueqty" id="maxissueqty" size="3" /></td>
+ <td><input type="text" name="maxonsiteissueqty" id="maxonsiteissueqty" size="3" /></td>
+ <td><input type="text" name="issuelength" id="issuelength" size="3" /> </td>
+ <td>
+ <select name="daysmode" id="daysmode">
+ <option title="استخدم تفضيل النظام 'useDaysMode' كقيمة افتراضية" value="">إفتراضى</option>
+ <option title="استخدم التقويم لتخطي جميع أيام إغلاق المكتبة" value="Calendar">تخطي أيام الإغلاق</option>
+ <option title="قم بالبحث فى التقويم عن اليوم الذى ترغب في ضبطه كيوم عطلة" value="Datedue">اليوم المفتوح التالي</option>
+ <option title="تجاهل التقويم" value="Days">تجاهل التقويم</option>
+ <option title="استخدم التقويم لتأخير تاريخ الاستحقاق إلى اليوم المفتوح التالي لمدد الإعارة الأسبوعية، أو اليوم التالي" value="Dayweek">نفس اليوم</option>
+ </select>
+ </td>
+ <td>
+ <select name="lengthunit" id="lengthunit">
+ <option value="days" selected="selected">أيام</option>
+ <option value="hours">ساعات</option>
+ </select>
+ </td>
+ <td>
+ <select name="hardduedatecompare" id="hardduedatecompare">
+ <option value="-1">قبل</option>
+ <option value="0">بالضبط على</option>
+ <option value="1">بعد</option>
+ </select>
+ <input type="text" size="10" id="hardduedate" name="hardduedate" class="flatpickr" />
+ <div class="hint">[% INCLUDE 'date-format.inc' %]</div>
+ </td>
+ <td><input type="text" name="decreaseloanholds" id="decreaseloanholds" size="2" /></td>
+ <td><input type="text" name="fine" id="fine" size="4" inputmode="decimal" pattern="^\d+(\.\d{2})?$" /></td>
+ <td><input type="text" name="chargeperiod" id="chargeperiod" size="2" /></td>
+ <td>
+ <select name="chargeperiod_charge_at" id="chargeperiod_charge_at">
+ <option value="0">نهاية الفترة</option>
+ <option value="1">بداية الفاصل الزمني</option>
+ </select>
+ </td>
+ <td><input type="text" name="firstremind" id="firstremind" size="2" /> </td>
+ <td><input type="text" name="overduefinescap" id="overduefinescap" size="6" inputmode="decimal" pattern="^\d+(\.\d{2})?$" /> </td>
+ <td><input type="checkbox" name="cap_fine_to_replacement_price" id="cap_fine_to_replacement_price" /></td>
+ <td><input type="text" name="finedays" id="fined" size="3" /> </td>
+ <td><input type="text" name="maxsuspensiondays" id="maxsuspensiondays" size="3" /> </td>
+ <td><input type="text" name="suspension_chargeperiod" id="suspension_chargeperiod" size="3" /> </td>
+ <td><input type="text" name="renewalsallowed" id="renewalsallowed" size="2" /></td>
+ [% IF Koha.Preference('UnseenRenewals') %]
+ <td><input type="text" name="unseen_renewals_allowed" id="unseen_renewals_allowed" size="2" /></td>
+ [% END %]
+ <td><input type="text" name="renewalperiod" id="renewalperiod" size="3" /></td>
+ <td><input type="text" name="norenewalbefore" id="norenewalbefore" size="3" /></td>
+ <td><input type="text" name="noautorenewalbefore" id="noautorenewalbefore" size="3" /></td>
+ <td>
+ <select name="auto_renew" id="auto_renew">
+ <option value="no" selected>لا</option>
+ <option value="yes">نعم</option>
+ </select>
+ </td>
+ <td><input type="text" name="no_auto_renewal_after" id="no_auto_renewal_after" size="3" /></td>
+ <td>
+ <input type="text" size="10" name="no_auto_renewal_after_hard_limit" id="no_auto_renewal_after_hard_limit" class="flatpickr"/>
+ <div class="hint">[% INCLUDE 'date-format.inc' %]</div>
+ </td>
+ <td><input type="text" name="reservesallowed"  id="reservesallowed"  size="2" /></td>
+ <td><input type="text" name="holds_per_day"    id="holds_per_day"    size="2" /></td>
+ <td><input type="text" name="holds_per_record" id="holds_per_record" size="2" /></td>
+ <td>
+ <select name="onshelfholds" id="onshelfholds">
+ <option value="1">نعم</option>
+ <option value="0">إذا كان أي منها غير متاح</option>
+ <option value="2">إذا كان الكل غير متاح</option>
+ </select>
+ </td>
+ <td>
+ <select id="opacitemholds" name="opacitemholds">
+ <option value="N">عدم السماح</option>
+ <option value="Y">السماح</option>
+ <option value="F">فرض</option>
+ </select>
+ </td>
+ <td><input type="text" name="holds_pickup_period" id="holds_pickup_period" size="2" /></td>
+ [% IF Koha.Preference('ArticleRequests') %]
+ <td>
+ <select id="article_requests" name="article_requests">
+ <option value="no">لا</option>
+ <option value="yes">نعم</option>
+ <option value="bib_only">التسجيلة فقط</option>
+ <option value="item_only">المادة فقط</option>
+ </select>
+ </td>
+ [% END %]
+ <td><input type="text" name="rentaldiscount" id="rentaldiscount" size="2" /></td>
+ [% IF Koha.Preference('UseRecalls') %]
+ <td><input type="text" name="recalls_allowed" id="recalls_allowed" size="3"></td>
+ <td><input type="text" name="recalls_per_record" id="recalls_per_record" size="3"></td>
+ <td>
+ <select name="on_shelf_recalls" id="on_shelf_recalls">
+ <option value="any">إذا كان أي منها غير متاح</option>
+ <option value="all">إذا كان الكل غير متاح</option>
+ </select>
+ </td>
+ <td><input type="text" name="recall_due_date_interval" id="recall_due_date_interval" size="3"></td>
+ <td><input type="text" name="recall_overdue_fine" id="recall_overdue_fine" size="6" inputmode="decimal" pattern="^\d+(\.\d{2})?$"></td>
+ <td><input type="text" name="recall_shelf_time" id="recall_shelf_time" size="3"></td>
+ [% END %]
+ <td class="actions">
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-save"></i> حفظ</button>
+ <button name="cancel" class="clear_edit btn btn-default btn-xs"><i class="fa fa-undo"></i> مسح</button>
+ </td>
+ </tr>
+ </tbody>
+ <tfoot>
+ <tr>
+ <th>&nbsp;</th>
+ <th>فئة المستفيد</th>
+ <th>&nbsp;</th>
+ <th>نوع المادة</th>
+ <th>&nbsp;</th>
+ <th>ملاحظة</th>
+ <th>الإعارات الحالية المسموحة</th>
+ <th>الإعارات في الموقع الحالية المسموحة</th>
+ <th>فترة الإعارة</th>
+ <th>نمط الأيام</th>
+ <th>وحدة</th>
+ <th>تاريخ الإستحقاق الثابت</th>
+ <th>فترة الإعارة المخفصة للحجوزات المرتفعة (يوم)</th>
+ <th>مبلغ الغرامة</th>
+ <th>فترة تسديد الغرامة</th>
+ <th>متي يتم فرض الرسوم؟</th>
+ <th>فترة سماح للغرامة/الإيقاف</th>
+ <th>غطاء الغرامات المتأخرى (المبلغ)</th>
+ <th>تغطية الغرامة بسعر الاستبدال</th>
+ <th>إيقاف العمل في أيام (يوم)</th>
+ <th>الحد الأقصى لمدة التوقف (باليوم)</th>
+ <th>فترة غرامة التعليق</th>
+ <th>التجديدات المسموحة (إحصاء)</th>
+ [% IF Koha.Preference('UnseenRenewals') %]
+ <th>التجديدات المسموحة (عد)</th>
+ [% END %]
+ <th>فترة التجديد</th>
+ <th>لا يوجد تجديد قبل</th>
+ <th>لا يوجد تجديد تلقائي قبل</th>
+ <th>التجديد التلقائي</th>
+ <th>لا تجديد تلقائي بعد</th>
+ <th>لا تجديد تلقائي بعد (حد ثابت)</th>
+ <th>الحجوزات المسموحة (الإجمالي)</th>
+ <th>الحجوزات المسموحة (يوميًا)</th>
+ <th>الحجوزات لكل تسجيلة (إحصاء)</th>
+ <th>الحجوزات على الرف المسموح بها</th>
+ <th>حجوزات على مستوى المادة في الأوباك</th>
+ <th>فترة التقاط الحجوزات (باليوم)</th>
+ [% IF Koha.Preference('ArticleRequests') %]
+ <th>طلبات المقال</th>
+ [% END %]
+ <th>حسم الإيجار (%)</th>
+ [% IF Koha.Preference('UseRecalls') %]
+ <th>الاستدعاءات المسموحة (الإجمالي)</th>
+ <th>الاستدعاءات لكل تسجيلة (إحصاء)</th>
+ <th>الاستدعاءات على الرف المسموح بها</th>
+ <th>الفاصل الزمني لتاريخ استحقاق الاستدعاء (باليوم)</th>
+ <th>مبلغ غرامة تأخير الاستدعاء</th>
+ <th>فترة التقاط الاستدعاء (باليوم)</th>
+ [% END %]
+ <th>&nbsp;</th>
+ </tr>
+ </tfoot>
+ </table>
+ </form>
+ </div><!-- ./page-section -->
+
+ <div id="defaults-for-this-library" class="page-section">
+ <h2>سياسة الإعارة، الحجز والرد الافتراضية[% IF humanbranch %] لـ [% Branches.GetName( humanbranch ) | html %][% END %]</h2>
+ <p>يمكنك ضبط حد أقصى لعدد الإعارات ،سياسة الحجز وسياسة الرد ليتم استخدامها في حالة عدم تعريف أي عدد لنوع أو فئة مادة معينة.</p>
+ <form method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-set-branch-defaults" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table>
+ <tr>
+ <th>&nbsp;</th>
+ <th>الإعارات القصوى المسموحة حالياً</th>
+ <th>الحد الأقصى المسموح به للإعارات في الموقع</th>
+ <th>الحد الأقصى المسموح به للحجوزات (إحصاء)</th>
+ <th>سياسة الحجز</th>
+ <th>مطابقة مكتبة التقاط الحجز</th>
+ <th>سياسة الإعادة</th>
+ <th class="noExport">الإجراءات</th>
+ </tr>
+ [% SET patron_maxissueqty = CirculationRules.Search( current_branch, undef, undef, 'patron_maxissueqty', { want_rule => 1 } ) %]
+ [% SET patron_maxonsiteissueqty = CirculationRules.Search( current_branch, undef, undef, 'patron_maxonsiteissueqty', { want_rule => 1 } ) %]
+ [% SET rule_value = CirculationRules.Search( current_branch, undef , undef, 'max_holds', { want_rule => 1 } ) %]
+ [% SET holdallowed = CirculationRules.Search( current_branch, undef, undef, 'holdallowed', { want_rule => 1 } ) %]
+ [% SET hold_fulfillment_policy = CirculationRules.Search( current_branch, undef, undef, 'hold_fulfillment_policy', { want_rule => 1 }) %]
+ [% SET returnbranch = CirculationRules.Search( current_branch, undef, undef, 'returnbranch', { want_rule => 1 }) %]
+ [% SET default_checkout_hold_and_return_policy = ( patron_maxissueqty || patron_maxonsiteissueqty || rule_value || holdallowed || hold_fulfillment_policy || returnbranch ) %]
+ <tr>
+ <td>
+ [% IF ( default_checkout_hold_and_return_policy ) %]
+ <em>
+ الإعدادات الافتراضية </em>
+ [% ELSE %] غير معين [% END %] </td>
+ <td>
+ <input name="patron_maxissueqty" placeholder="غير محدود" size="9" type="text" value="[% patron_maxissueqty.rule_value | html %]" />
+ </td>
+ <td>
+ <input name="patron_maxonsiteissueqty" placeholder="غير محدود" size="9" type="text" value="[% patron_maxonsiteissueqty.rule_value | html %]" />
+ </td>
+ <td>
+ <input name="max_holds" placeholder="غير محدود" size="9" value="[% rule_value.rule_value | html %]" />
+ </td>
+ <td>
+ <select name="holdallowed">
+ <option value="">
+ غير مضبوط </option>
+
+ [% IF holdallowed.rule_value == 'from_any_library' %]
+ <option value="from_any_library" selected="selected">
+ [% ELSE %]
+ <option value="from_any_library">
+ [% END %] من أي مكتبة </option>
+
+ [% IF holdallowed.rule_value == 'from_local_hold_group' %]
+ <option value="from_local_hold_group" selected="selected">
+ [% ELSE %]
+ <option value="from_local_hold_group">
+ [% END %] من مجموعة حجز محلية </option>
+
+ [% IF holdallowed.rule_value == 'from_home_library' %]
+ <option value="from_home_library" selected="selected">
+ [% ELSE %]
+ <option value="from_home_library">
+ [% END %] من المكتبة الرئيسية </option>
+
+ [% IF holdallowed.rule_value == 'not_allowed' %]
+ <option value="not_allowed" selected="selected">
+ [% ELSE %]
+ <option value="not_allowed">
+ [% END %] غير مسموح بالحجوزات </option>
+ </select>
+ </td>
+ <td>
+ <select name="hold_fulfillment_policy">
+
+ <option value="">
+ غير مضبوط </option>
+
+ [% IF hold_fulfillment_policy.rule_value == 'any' %]
+ <option value="any" selected="selected">
+ أي مكتبة </option>
+ [% ELSE %]
+ <option value="any">
+ أي مكتبة </option>
+ [% END %]
+
+ [% IF hold_fulfillment_policy.rule_value == 'holdgroup' %]
+ <option value="holdgroup" selected="selected">
+ مكتبة حجز المادة </option>
+ [% ELSE %]
+ <option value="holdgroup">
+ مكتبة حجز المادة </option>
+ [% END %]
+
+ [% IF hold_fulfillment_policy.rule_value == 'patrongroup' %]
+ <option value="patrongroup" selected="selected">
+ مجموعة حجز المستفيد </option>
+ [% ELSE %]
+ <option value="patrongroup">
+ مجموعة حجز المستفيد </option>
+ [% END %]
+
+ [% IF hold_fulfillment_policy.rule_value == 'homebranch' %]
+ <option value="homebranch" selected="selected">
+ مكتبة المادة الرئيسية </option>
+ [% ELSE %]
+ <option value="homebranch">
+ مكتبة المادة الرئيسية </option>
+ [% END %]
+
+ [% IF hold_fulfillment_policy.rule_value == 'holdingbranch' %]
+ <option value="holdingbranch" selected="selected">
+ المكتبة مقتنية المادة </option>
+ [% ELSE %]
+ <option value="holdingbranch">
+ المكتبة مقتنية المادة </option>
+ [% END %]
+ </select>
+ </td>
+ <td>
+ <select name="returnbranch">
+
+ <option value="">
+ غير مضبوط </option>
+
+ [% IF returnbranch.rule_value == 'homebranch' %]
+ <option value="homebranch" selected="selected">
+ [% ELSE %]
+ <option value="homebranch">
+ [% END %] إعادة المادة لمكتبتها الرئيسية </option>
+ [% IF returnbranch.rule_value == 'holdingbranch' %]
+ <option value="holdingbranch" selected="selected">
+ [% ELSE %]
+ <option value="holdingbranch">
+ [% END %] إعادة المادة للمكتبة المُعيرة </option>
+ [% IF returnbranch.rule_value == 'noreturn' %]
+ <option value="noreturn" selected="selected">
+ [% ELSE %]
+ <option value="noreturn">
+ [% END %] طواف المادة </option>
+ [% IF returnbranch.rule_value == 'returnbylibrarygroup' %]
+ <option value="returnbylibrarygroup" selected="selected">
+ [% ELSE %]
+ <option value="returnbylibrarygroup">
+ [% END %] طواف المادة حسب مجموعة المكتبة </option>
+ </select>
+ </td>
+ <td class="actions">
+ <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-save"></i> حفظ</button>
+ [% IF ( default_checkout_hold_and_return_policy ) %]
+ <a href="#" class="delete-branch-cat btn btn-default btn-xs" data-categorycode="[% c || '*' | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-undo"></i> إلغاء الضبط</a>
+ [% END %]
+ </td>
+ </tr>
+ </table>
+ </form>
+ </div>
+
+ [% IF ( show_branch_cat_rule_form ) %]
+ <div id="holds-policy-by-patron-category" class="page-section">
+ <h2>[% IF humanbranch %]إعارة، سياسة الحجز بواسطة فئة المستفيد لـ  [% Branches.GetName( humanbranch ) | html %][% ELSE %]الإعارة الافتراضية، سياسة الحجز بواسطة فئة المستفيد[% END %]</h2>
+ <p>لهذه المكتبة، يمكنك تعيين الحد الأقصى لعدد الإعارات التي يمكن أن تقم لفئة معينة بغض النظر عن نوع المادة. </p>
+ <p>إذا تم ترك العدد الإجمالي القابل للإعارة لفئة مستفيد ما فارغاً، فلن يتم تطبيق أي حد، باستثناء الحد الذي تقوم بتعريفه لنوع مادة محدد. </p>
+ <form method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add-branch-cat" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table>
+ <tr>
+ <th>فئة المستفيد</th>
+ <th>الإعارات القصوى المسموحة حالياً</th>
+ <th>الحد الأقصى المسموح به للإعارات في الموقع</th>
+ <th>إجمالي الحجوزات المسموحة</th>
+ <th>&nbsp;</th>
+ </tr>
+ [% FOREACH c IN categorycodes %]
+ [% NEXT UNLESS c %]
+ [% SET i = undef %]
+ [% SET patron_maxissueqty = all_rules.$c.$i.patron_maxissueqty %]
+ [% SET patron_maxonsiteissueqty = all_rules.$c.$i.patron_maxonsiteissueqty %]
+ [% SET max_holds = all_rules.$c.$i.max_holds %]
+
+ [% IF  ( patron_maxissueqty.defined && patron_maxissueqty != '' ) || ( patron_maxonsiteissueqty.defined && patron_maxonsiteissueqty != '' ) || ( max_holds.defined && max_holds != '' ) %]
+ <tr>
+ <td>
+ [% IF c == undef %]
+ <em>إفتراضى</em>
+ [% ELSE %]
+ [% Categories.GetName(c) | html %]
+ [% END %]
+ </td>
+ <td>
+ [% IF patron_maxissueqty.defined && patron_maxissueqty != '' %]
+ [% patron_maxissueqty | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF patron_maxonsiteissueqty.defined && patron_maxonsiteissueqty != '' %]
+ [% patron_maxonsiteissueqty | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF max_holds.defined && max_holds != '' %]
+ [% max_holds | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+
+ <td class="actions">
+ <a href="#" class="delete-branch-cat btn btn-default btn-xs" data-categorycode="[% c | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ <tr>
+ <td>
+ <select name="categorycode">
+ [% FOREACH patron_category IN patron_categories%]
+ <option value="[% patron_category.categorycode | html %]">[% patron_category.description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td><input name="patron_maxissueqty" size="3" type="text" /></td>
+ <td><input name="patron_maxonsiteissueqty" size="3" type="text" /></td>
+ <td><input name="max_holds" size="3" type="text" /></td>
+ <td class="actions"><button type="submit" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> إضافة</button></td>
+ </tr>
+ </table>
+ </form>
+ </div>
+ [% END %]
+
+ <div id="waiting-hold-cancel-category" class="page-section">
+ [% IF humanbranch %]
+ <h2>سياسة إلغاء الحجوزات في الانتظار لـ [% Branches.GetName( humanbranch ) | html %]</h2>
+ [% ELSE %]
+ <h2>سياسة إلغاء حجوزات في الانتظار الافتراضية</h2>
+ [% END %]
+ <p>تحديد ما إذا كان من الممكن إلغاء الحجوزات لفئة مستفيد معينة.</p>
+ <form id="set-waiting-hold-cancellation" method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-set-waiting-hold-cancellation" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table>
+ <tr>
+ <th>فئة المستفيد</th>
+ <th>نوع المادة</th>
+ <th>الإلغاء مسموح</th>
+ <th>&nbsp;</th>
+ </tr>
+ [% FOREACH c IN categorycodes %]
+ [% FOREACH i IN itemtypes %]
+ [% SET waiting_hold_cancellation = all_rules.$c.$i.waiting_hold_cancellation %]
+
+ [% IF ( waiting_hold_cancellation.defined && waiting_hold_cancellation != '' ) %]
+ <tr>
+ <td>
+ [% IF c == undef %]
+ <em>الكل</em>
+ [% ELSE %]
+ [% Categories.GetName(c) | html %]
+ [% END %]
+ </td>
+ <td>
+ [% IF i == undef %]
+ <em>الكل</em>
+ [% ELSE %]
+ [% ItemTypes.GetDescription(i,1) | html %]
+ [% END %]
+ </td>
+ <td>
+ [% IF waiting_hold_cancellation %]
+ <span>نعم</span>
+ [% ELSE %]
+ <span>لا</span>
+ [% END %]
+ </td>
+ <td class="actions">
+ <a href="#" class="del-waiting-hold-cancellation btn btn-default btn-xs" data-categorycode="[% c || '*' | html %]" data-itemtype="[% i|| '*' | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ [% END %]
+ <tr>
+ <td>
+ <select name="waiting_hold_cancellation_category" id="waiting_hold_cancellation_category">
+ <option value="*">الكل</option>
+ [% FOREACH patron_category IN patron_categories %]
+ <option value="[% patron_category.categorycode | html %]">[% patron_category.description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td>
+ <select name="waiting_hold_cancellation_itemtype" id="waiting_hold_cancellation_itemtype">
+ <option value="*">الكل</option>
+ [% FOREACH itemtype IN itemtypeloop %]
+ <option value="[% itemtype.itemtype | html %]">[% ItemTypes.GetDescription(itemtype.itemtype) | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td>
+ <select name="waiting_hold_cancellation_policy" id="waiting_hold_cancellation_policy">
+ <option value="0" selected>لا</option>
+ <option value="1">نعم</option>
+ </select>
+ </td>
+ <td class="actions"><button type="submit" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> إضافة</button></td>
+ </tr>
+ </table>
+ </form>
+ </div>
+
+ [% IF Koha.Preference('ArticleRequests') %]
+ <div id="open-article-requests-limit-patron-category" class="page-section">
+ [% IF humanbranch %]
+ <h2>حد طلبات المقال المفتوحة اليومي لـ  [% Branches.GetName( humanbranch ) | html %]</h2>
+ [% ELSE %]
+ <h2>حد طلبات المقال المفتوحة الافتراضي</h2>
+ [% END %]
+ <p>قم بتحديد الحد الأقصى لعدد طلبات المقال الحالية المتزامنة التي يمكن أن تكون لمستفيد من فئة معينة.</p>
+ <form id="set-article-requests-daily-limit" method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add-open-article-requests-limit" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table>
+ <tr>
+ <th>فئة المستفيد</th>
+ <th>إجمالي طلبات المقال</th>
+ <th>&nbsp;</th>
+ </tr>
+ [% FOREACH c IN categorycodes %]
+ [% NEXT UNLESS c %]
+ [% SET i = undef %]
+ [% SET open_article_requests_limit = all_rules.$c.$i.open_article_requests_limit %]
+
+ [% IF ( open_article_requests_limit.defined && open_article_requests_limit != '' ) %]
+ <tr>
+ <td>
+ [% Categories.GetName(c) | html %]
+ </td>
+ <td>
+ [% IF open_article_requests_limit.defined && open_article_requests_limit != '' %]
+ [% open_article_requests_limit | html %]
+ [% ELSE %]
+ <span>غير محدود</span>
+ [% END %]
+ </td>
+
+ <td class="actions">
+ <a href="#" class="del-open-article-requests-limit btn btn-default btn-xs" data-categorycode="[% c | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ <tr>
+ <td>
+ <select name="categorycode">
+ [% FOREACH patron_category IN patron_categories %]
+ <option value="[% patron_category.categorycode | html %]">[% patron_category.description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td><input name="open_article_requests_limit" size="3" type="text" /></td>
+ <td class="actions"><button type="submit" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> إضافة</button></td>
+ </tr>
+ </table>
+ </form>
+ </div>
+
+ <div id="article-request-fee-category" class="page-section">
+ [% IF humanbranch %]
+ <h2>رسم طلب المقال لـ [% Branches.GetName( humanbranch ) | html %]</h2>
+ [% ELSE %]
+ <h2>رسم طلب المقال الافتراضي</h2>
+ [% END %]
+ <p>حدد رسوم طلب المقال لفئة مستفيد معينة.</p>
+ <form id="set-article-request-fee" method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-set-article-request-fee" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table>
+ <tr>
+ <th>فئة المستفيد</th>
+ <th>رسم</th>
+ <th>&nbsp;</th>
+ </tr>
+ [% FOREACH c IN categorycodes %]
+ [% SET i = undef %]
+ [% SET article_request_fee = all_rules.$c.$i.article_request_fee %]
+
+ [% IF ( article_request_fee.defined && article_request_fee != '' ) %]
+ <tr>
+ <td>
+ [% IF c == '*' %]
+ <em>الكل</em>
+ [% ELSE %]
+ [% Categories.GetName(c) | html %]
+ [% END %]
+ </td>
+ <td>
+ [% IF article_request_fee.defined && article_request_fee != '' %]
+ [% article_request_fee | $Price %]
+ [% ELSE %]
+ <span></span>
+ [% END %]
+ </td>
+ <td class="actions">
+ <a href="#" class="del-article-request-fee btn btn-default btn-xs" data-categorycode="[% c | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ <tr>
+ <td>
+ <select name="article_request_fee_category" id="article_request_fee_category">
+ <option value="*">الكل</option>
+ [% FOREACH patron_category IN patron_categories%]
+ <option value="[% patron_category.categorycode | html %]">[% patron_category.description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td><input name="article_request_fee" size="5" type="text" inputmode="decimal" pattern="^\d+(\.\d{2})?$" /></td>
+ <td class="actions"><button type="submit" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> إضافة</button></td>
+ </tr>
+ </table>
+ </form>
+ </div>
+ [% END %]
+
+ <div id="refund-lost-item-fee-on-return" class="page-section">
+ [% IF current_branch == '*' %]
+ <h2>رسم رد المادة المفقودة الافتراضي في سياسة الرد</h2>
+ [% ELSE %]
+ <h2>سياسة رد رسم المادة الضائعة لـ [% Branches.GetName(current_branch) | html %]</h2>
+ [% END %]
+ <p>تحديد السياسة الافتراضية لرسوم المواد الضائعة عند الإعادة.</p>
+ <form method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-mod-refund-lost-item-fee-rule" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]" />
+ <table>
+ <tr>
+ <th>استرداد رسوم استبدال مادة ضائعة</th>
+ <th>استرداد رسوم معالجة مادة ضائعة</th>
+ <th>&nbsp;</th>
+ </tr>
+ <tr>
+ <td>
+ <select name="lostreturn">
+ [%# Default branch %]
+ [% IF ( current_branch == '*' ) %]
+ [% IF ( defaultRefundRule == 'refund' ) %]
+ <option value="refund" selected="selected">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( defaultRefundRule == 'refund_unpaid' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid" selected="selected">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( defaultRefundRule == 'charge' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge" selected="selected">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( defaultRefundRule == 'restore' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore" selected="selected">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( defaultRefundRule == 0 ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0" selected="selected">اترك رسم المادة الضائعة</option>
+ [% ELSE %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% END %]
+ [% ELSE %]
+ [%# Branch-specific %]
+ [% IF ( not refundLostItemFeeRule ) %]
+ <option value="*" selected="selected">
+ [% ELSE %]
+ <option value="*">
+ [% END %]
+ [% IF defaultRefundRule == 'refund' %]
+ <span>استخدام الافتراضي (استرداد رسوم المادة الضائعة)</span>
+ [% ELSIF defaultRefundRule == 'refund_unpaid' %] استخدم الافتراضي (استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)) [% ELSIF defaultRefundRule == 'charge' %] <span>استخدام الافتراضي (استرداد رسوم المادة الضائعة وتحصيل غرامة تأخير جديدة)</span>
+ [% ELSIF defaultRefundRule == 'restore' %]
+ <span>استخدام الافتراضي (استرداد رسوم المادة الضائعة واستعادة غرامة التأخير)</span>
+ [% ELSE %]
+ <span>استخدام الافتراضي (اترك رسوم المادة الضائعة)</span>
+ [% END %]
+ </option>
+ [% IF ( not refundLostItemFeeRule ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSE %]
+ [% IF ( refundLostItemFeeRule.rule_value == 'refund' ) %]
+ <option value="refund" selected="selected">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( refundLostItemFeeRule.rule_value == 'refund_unpaid' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid" selected="selected">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( refundLostItemFeeRule.rule_value == 'charge' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge" selected="selected">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( refundLostItemFeeRule.rule_value == 'restore' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore" selected="selected">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0">اترك رسم المادة الضائعة</option>
+ [% ELSIF ( refundLostItemFeeRule.rule_value == 0 ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم المادة الضائعة (فقط في حالة عدم الدفع)</option>
+ <option value="charge">استرداد رسم المادة الضائعة وفرض غرامة تأخير جديدة</option>
+ <option value="restore">استرداد رسم المادة الضائعة واستعادة غرامة التأخير</option>
+ <option value="0" selected="selected">اترك رسم المادة الضائعة</option>
+ [% END %]
+ [% END %]
+ [% END %]
+ </select>
+ </td>
+ <td>
+ <select name="processingreturn">
+ [%# Default branch %]
+ [% IF ( current_branch == '*' ) %]
+ [% IF ( defaultProcessingRefundRule == 'refund' ) %]
+ <option value="refund" selected="selected">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0">ترك رسوم معالجة المادة الضائعة</option>
+ [% ELSIF ( defaultProcessingRefundRule == 'refund_unpaid' ) %]
+ <option value="refund">استرداد رسم المادة الضائعة</option>
+ <option value="refund_unpaid" selected="selected">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0">ترك رسوم معالجة المادة الضائعة</option>
+ [% ELSIF ( defaultProcessingRefundRule == 0 ) %]
+ <option value="refund">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0" selected="selected">ترك رسوم معالجة المادة الضائعة</option>
+ [% ELSE %]
+ <option value="refund">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0">ترك رسوم معالجة المادة الضائعة</option>
+ [% END %]
+ [% ELSE %]
+ [%# Branch-specific %]
+ [% IF ( not refundProcessingFeeRule ) %]
+ <option value="*" selected="selected">
+ [% ELSE %]
+ <option value="*">
+ [% END %]
+ [% IF defaultProcessingRefundRule == 'refund' %]
+ <span>استخدام الافتراضي (استرداد رسوم معالجة المادة الضائعة)</span>
+ [% ELSIF defaultProcessingRefundRule == 'refund_unpaid' %] استخدم الافتراضي (استرداد رسوم معالجة المادة الضائعة (فقط في حالة عدم الدفع)) [% ELSE %] <span>ااستخدام الافتراضي (ترك رسوم معالجة المادة الضائعة)</span>
+ [% END %]
+ </option>
+ [% IF ( not refundProcessingFeeRule ) %]
+ <option value="refund">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0">ترك رسوم معالجة المادة الضائعة</option>
+ [% ELSE %]
+ [% IF ( refundProcessingFeeRule.rule_value == 'refund' ) %]
+ <option value="refund" selected="selected">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0">ترك رسوم معالجة المادة الضائعة</option>
+ [% ELSIF ( refundProcessingFeeRule.rule_value == 'refund_unpaid' ) %]
+ <option value="refund">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid" selected="selected">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0">ترك رسوم معالجة المادة الضائعة</option>
+ [% ELSIF ( refundProcessingFeeRule.rule_value == 0 ) %]
+ <option value="refund">استرداد رسوم معالجة المادة الضائعة</option>
+ <option value="refund_unpaid">استرداد رسوم معالجة المادة المفقودة (فقط في حالة عدم الدفع)</option>
+ <option value="0" selected="selected">ترك رسوم معالجة المادة الضائعة</option>
+ [% END %]
+ [% END %]
+ [% END %]
+ </select>
+ </td>
+ <td class="actions">
+ <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-save"></i> حفظ</button>
+ </td>
+ </tr>
+ </table>
+ </form>
+ </div>
+
+ <div id="holds-policy-by-item-type" class="page-section">
+ <h2>[% IF humanbranch %]سياسة الحجوزات حسب نوع المادة لـِ [% Branches.GetName( humanbranch ) | html %][% ELSE %]سياسة الحجوزات الافتراضية حسب نوع المادة [% END %]</h2>
+ <p>
+ لهذه المكتبة، يمكنك تعديل قواعد أنواع مادة"itemtypes " معينة بغض النظر عن فئة المستفيد. </p>
+ <p>
+ حاليا، وهذا يعني سياسات الحجز. مختلف السياسات لها التأثيرات التالية: </p>
+ <ul>
+ <li><strong>من أي مكتبة:</strong> يمكن للمستفيدين من أي مكتبة حجز هذه المادة. <cite>(الافتراضي إذا لم يتم تعريف شيء)</cite></li>
+ <li><strong>من مجموعة حجز محلية:</strong> يمكن للمستفيدين من المكتبات الموجودة في نفس مجموعات حجز المكتبة الرئيسية للمادة فقط وضع هذا الكتاب في الحجز.</li>
+ <li><strong>من المكتبة الرئيسية :</strong> يمكن للمستفيدين من مكتبة المادة الرئيسية فقط وضع حجز على هذا الكتاب.</li>
+ <li><strong>لا حجوز مسموحة:</strong> المستفيد ليس لديه هذا الكتاب في الحجز.</li>
+ </ul>
+
+ <p><strong>ملاحظة: </strong>عند تفعيل التفضيل  'AllowHoldPolicyOverride'، يمكن تخطي هذه السياسات بواسطة أي موظف إعارة.</p>
+ <p><strong>هام:</strong></p>
+
+ <ul>
+ <li>يتم تطبيق سياسات الحجز بناءً على تفضيل النظام ReservesControlBranch الذي تم تعيينه إلى <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ReservesControlBranch">[% Koha.Preference('ReservesControlBranch') | html %]</a>.</li>
+ <li>يتم تطبيق سياسة الإرجاع بناءً على تفضيل النظام CircControlReturnsBranch الذي تم تعيينه إلى <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CircControlReturnsBranch">[% Koha.Preference('CircControlReturnsBranch') | html %]</a>.</li>
+ <li>عند تعيين سياسة الإرجاع على 'طفو المواد حسب مجموعة المكتبة'، سيتم استخدام الفرع الرئيسي للمادة للعثور على المجموعات.</li>
+ </ul>
+
+ <form method="post" action="/cgi-bin/koha/admin/smart-rules.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add-branch-item" />
+ <input type="hidden" name="branch" value="[% current_branch | html %]"/>
+ <table>
+ <tr>
+ <th>نوع المادة</th>
+ <th>سياسة الحجز</th>
+ <th>مطابقة مكتبة التقاط الحجز</th>
+ <th>سياسة الإعادة</th>
+ <th>&nbsp;</th>
+ </tr>
+ [% FOREACH i IN itemtypeloop %]
+ [% SET it = i.itemtype %]
+ [% SET c = undef %]
+ [% SET holdallowed = all_rules.$c.$it.holdallowed %]
+ [% SET hold_fulfillment_policy = all_rules.$c.$it.hold_fulfillment_policy %]
+ [% SET returnbranch = all_rules.$c.$it.returnbranch %]
+
+ [% IF holdallowed || hold_fulfillment_policy || returnbranch %]
+ <tr>
+ <td>
+ [% i.translated_description | html %]
+ </td>
+ <td>
+ [% IF holdallowed == 'from_any_library' %]
+ <span>من أي مكتبة</span>
+ [% ELSIF holdallowed == 'from_local_hold_group' %]
+ <span>من مجموعة حجز محلية</span>
+ [% ELSIF holdallowed == 'from_home_library' %]
+ <span>من المكتبة الرئيسية</span>
+ [% ELSE %]
+ <span>لا حجوز مسموحة</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF hold_fulfillment_policy == 'any' %]
+ <span>أي مكتبة</span>
+ [% ELSIF hold_fulfillment_policy == 'homebranch' %]
+ <span>مكتبة المادة الرئيسية</span>
+ [% ELSIF hold_fulfillment_policy == 'holdgroup' %]
+ <span>مكتبة حجز المادة</span>
+ [% ELSIF hold_fulfillment_policy == 'patrongroup' %]
+ <span>مجموعة حجز المستفيد</span>
+ [% ELSIF hold_fulfillment_policy == 'holdingbranch' %]
+ <span>المكتبة المقتنية للمادة</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF returnbranch == 'homebranch' %]
+ <span>إعادة المادة لمكتبتها الرئيسية</span>
+ [% ELSIF returnbranch == 'holdingbranch' %]
+ <span>إعادة المادة إلى مكتبة الإصدار</span>
+ [% ELSIF returnbranch == 'noreturn' %]
+ <span>طواف المادة</span>
+ [% ELSIF returnbranch == 'returnbylibrarygroup'%]
+ <span>طواف المادة حسب مجموعة المكتبة</span>
+ [% END %]
+ </td>
+ <td class="actions">
+ <a href="#" class="delete-branch-item btn btn-default btn-xs" data-itemtype="[% i.itemtype | html %]" data-branch"[% current_branch | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ <tr>
+ <td>
+ <select name="itemtype">
+ [% FOREACH itemtypeloo IN itemtypeloop %]
+ <option value="[% itemtypeloo.itemtype | html %]">[% itemtypeloo.translated_description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ <td>
+ <select name="holdallowed">
+ <option value="from_any_library">من أي مكتبة</option>
+ <option value="from_local_hold_group">من مجموعة حجز محلية</option>
+ <option value="from_home_library">من المكتبة الرئيسية</option>
+ <option value="not_allowed">لا حجوز مسموحة</option>
+ </select>
+ </td>
+ <td>
+ <select name="hold_fulfillment_policy">
+ <option value="any">
+ أي مكتبة </option>
+
+ <option value="holdgroup">
+ مكتبة حجز المادة </option>
+
+ <option value="patrongroup">
+ مجموعة حجز المستفيد </option>
+
+ <option value="homebranch">
+ مكتبة المادة الرئيسية </option>
+
+ <option value="holdingbranch">
+ المكتبة مقتنية المادة </option>
+ </select>
+ </td>
+ <td>
+ <select name="returnbranch">
+ <option value="homebranch">إعادة المادة لمكتبتها الرئيسية</option>
+ <option value="holdingbranch">إعادة المادة إلى مكتبة الإصدار</option>
+ <option value="noreturn">طواف المادة</option>
+ <option value="returnbylibrarygroup">طواف المادة حسب مجموعة المكتبة</option>
+ </select>
+ </td>
+ <td class="actions"><button type="submit" class="btn btn-default btn-xs"><i class="fa fa-plus"></i> إضافة</button></td>
+ </tr>
+ </table>
+ </form>
+
+ <!-- This is a placeholder form to be filled by JS functions attached to buttons/links -->
+ <form id="delete_form" action="/cgi-bin/koha/admin/smart-rules.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-" />
+ <input type="hidden" name="itemtype" value="" />
+ <input type="hidden" name="categorycode" value="" />
+ <input type="hidden" name="branch" value="" />
+ </form>
+
+ </div>
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'calendar.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ [% INCLUDE 'format_price.inc' %]
+ <script>
+         $(document).ready(function() {
+            KohaTable("default-circulation-rules", {
+                "columnDefs": [
+                    { "visible": false, "targets": [ 0,2 ] },
+                    { "orderable": false, "targets": ["_all"] }
+                ],
+                "orderFixed": [ [0,'asc'], [1,'asc'], [2,'asc'], [3,'asc'] ],
+                "paginate": false,
+                "autoWidth": false
+            });
+        });
+
+        function clear_edit(){
+            var cancel = confirm(_("هل أنت متأكد من أنك تريد إلغاء التغييرات التي قمت بها؟"));
+            if ( !cancel ) return;
+            $('#default-circulation-rules td').removeClass('highlighted-row');
+            var edit_row = $("#edit_row");
+            $(edit_row).find("input").each(function(){
+                var type = $(this).attr("type");
+                if (type != "button" && type != "submit" ) {
+                    $(this).val("");
+                    $(this).prop('disabled', false);
+                }
+                if ( type == "checkbox" ) {
+                    $(this).prop('checked', false);
+                }
+            });
+            $(edit_row).find("select").prop('disabled', false);
+            $(edit_row).find("select option:first-child").attr("selected", "selected");
+            $(edit_row).find("td:last input[name='clear']").remove();
+        }
+
+        var MSG_CONFIRM_DELETE = _("هل انت متأكد انك تريد حذف هذه القاعدة؟ هذا الإجراء لا يمكن التراجع عنه.");
+
+        $(document).ready(function() {
+            $('[data-toggle="popover"]').popover();
+
+            $("#clone_rules").on("click",function(){
+                var library_dropdown = document.getElementById("branch");
+                var selected_library = library_dropdown.options[library_dropdown.selectedIndex].value;
+                var selected_library_text = $("#branch option:selected").text();
+                var to_library = $("#tobranch option:selected").text();
+                var MSG_CONFIRM_CLONE;
+                if (selected_library === "*") {
+                    MSG_CONFIRM_CLONE = _("هل أنت متأكد من أنك تريد نسخ هذه القاعدة القياسية إلى مكتبة %s؟ سيتخطى ذلك القواعد الحالية في هذه المكتبة.").format(to_library);
+                    return confirmClone(MSG_CONFIRM_CLONE);
+                } else {
+                    MSG_CONFIRM_CLONE = _("هل أنت متأكد من أنك تريد نسخ قاعدة الإعارة والغرامات تلك من %s إلى مكتبة %s؟ سيتخطى ذلك القواعد الحالية في هذه المكتبة.").format(selected_library_text, to_library);
+                    return confirmClone(MSG_CONFIRM_CLONE);
+                }
+            });
+
+            $('#selectlibrary').find("input:submit").hide();
+            $('#branch').change(function() {
+                    $('#selectlibrary').submit();
+            });
+            $(".editrule").click(function(){
+                if ( $("#edit_row").find("input[type='text']").filter(function(){return this.value.length > 0 }).length > 0 ) {
+                    var edit = confirm(_("هل أنت متأكد من أنك تريد تحرير قاعدة أخرى؟"));
+                    if (!edit) return false;
+                }
+                $('#default-circulation-rules td').removeClass('highlighted-row');
+                $(this).parent().parent().find("td").each(function (i) {
+
+                    $(this).addClass('highlighted-row');
+                    itm_code = $(this).data('code');
+                    itm_text = $(this).text();
+                    itm_text = itm_text.replace(/^\s*|\s*$/g,'');
+                    var current_column = $("#edit_row td:eq("+i+")");
+                    if ( i == 3 ) {
+                        // specific processing for the Note column
+                        var note = $(this).find("a[id='viewnote']").data("content");
+                        $(current_column).find("input[type='text']").val(note);
+                    } else if ( i == 9 ) {
+                        // specific processing for Hard due date
+                        $(current_column).find("select").val(itm_code);
+                        var hardduedate = $(this).data('duedate');
+                        if (hardduedate) {
+                            var fp = document.querySelector("#hardduedate")._flatpickr;
+                            hardduedate = fp.parseDate( hardduedate, flatpickr_dateformat_string );
+                            if( hardduedate) fp.setDate( hardduedate, 1 );
+                        }
+                    } else if ( i == 25 ) {
+                        // specific processing for No automatic renewal after (hard limit)
+                        var renewdate = itm_text;
+                        if (renewdate) {
+                            var fp = document.querySelector("#no_auto_renewal_after_hard_limit")._flatpickr;
+                            renewdate = fp.parseDate( renewdate, flatpickr_dateformat_string );
+                            if( renewdate) fp.setDate( renewdate, 1 );
+                        }
+                    } else if ( i == 16 ) {
+                        // specific processing for cap_fine_to_replacement_price
+                        var cap_fine_to_replacement_price = $(this).find("input[type='checkbox']");
+                        $('#cap_fine_to_replacement_price').prop('checked', cap_fine_to_replacement_price.is(':checked') );
+                        $('#overduefinescap').prop('disabled', cap_fine_to_replacement_price.is(':checked') );
+                    } else {
+                        $(current_column).find("input[type='text']").val(itm_text);
+                        // unformat prices
+                        $(current_column).find("input[inputmode='decimal']").each(function() {
+                          $(this).val(itm_text.unformat_price());
+                        });
+                        // select the corresponding option
+                        $(current_column).find("select option").each(function(){
+                            // Reset selection status for all options
+                            $(this).prop('selected', false);
+                            // Declare opt here to ensure it is scoped correctly within the loop
+                            let opt = $(this).val();
+
+                            // Select the matching option
+                            if (opt == itm_code) {
+                                $(this).prop('selected', true);
+                            }
+                        });
+
+                        // After setting the correct option, update the select to reflect the change
+                        $(current_column).find('select').trigger('change');
+                        var current_input_id = $(current_column).children('input').first().attr('id');
+                        if ( i == 0 || i == 1 ) {
+                            // Disable the 2 first columns, we cannot update them.
+                            var val = $(current_column).find("select option:selected").val();
+                            var name = "categorycode";
+                            if ( i == 1 ) {
+                                name="itemtype";
+                            }
+                            // Remove potential previous input added
+                            $(current_column).find("input").remove();
+                            $(current_column).append("<input type='hidden' name='"+name+"' value='"+val+"' />");
+                        } else if ( i == 5 || i == 6 || i == 26 || i == 27 || i == 28 || current_input_id === "holds_pickup_period" ) {
+                            // If the value is not an integer for
+                            //     - "Current checkouts allowed"
+                            //     - "Current on-site checkouts allowed"
+                            //     - "Holds allowed (total)"
+                            //     - "Holds allowed (daily)"
+                            //     - "Holds per record (count)"
+                            //     - "Holds pickup period (day)"
+                            // The value is "Unlimited" (or an equivalent translated string)
+                            // an it should be set to an empty string
+                            if( !((parseFloat(itm_text) == parseInt(itm_text)) && !isNaN(itm_text)) ) {
+                                $(current_column).find("input[type='text']").val("");
+                            }
+                        }
+                    }
+                });
+                $("#default-circulation-rules tr:last td:eq(0) select").prop('disabled', true);
+                $("#default-circulation-rules tr:last td:eq(1) select").prop('disabled', true);
+                return false;
+            });
+            $(".clear_edit").on("click",function(e){
+                e.preventDefault();
+                clear_edit();
+            });
+
+            $("#set-article-requests-daily-limit").on("submit", function(){
+                if (! $("input[name='open_article_requests_limit'").val().length){
+                    alert("Please set a daily limit for this patron's category");
+                    return false;
+                }
+                return true;
+            });
+
+            $("#set-article-request-fee").on("submit", function(){
+                if (! $("input[name='article_request_fee'").val().length){
+                    alert("Please set a valid value for the fee");
+                    return false;
+                }
+                return true;
+            });
+
+            $(".delete").on("click", function(e){
+                e.preventDefault();
+                if ( !confirmDelete(MSG_CONFIRM_DELETE) ) {
+                    return false;
+                }
+                let f = $("#delete_form");
+                f.find("[name='op']").val('cud-delete');
+                f.find("[name='itemtype']").val($(this).data('itemtype'));
+                f.find("[name='categorycode']").val($(this).data('categorycode'));
+                f.find("[name='branch']").val($(this).data('branch'));
+                return f.submit();
+            });
+
+            $(".delete-branch-cat").on("click", function(e){
+                e.preventDefault();
+                if ( !confirmDelete(MSG_CONFIRM_DELETE) ) {
+                    return false;
+                }
+                let f = $("#delete_form");
+                f.find("[name='op']").val('cud-delete-branch-cat');
+                f.find("[name='categorycode']").val($(this).data('categorycode'));
+                f.find("[name='branch']").val($(this).data('branch'));
+                return f.submit();
+            });
+
+            $(".del-waiting-hold-cancellation").on("click", function(e){
+                e.preventDefault();
+                if ( !confirmDelete(MSG_CONFIRM_DELETE) ) {
+                    return false;
+                }
+                let f = $("#delete_form");
+                f.find("[name='op']").val('cud-del-waiting-hold-cancellation');
+                f.find("[name='itemtype']").val($(this).data('itemtype'));
+                f.find("[name='categorycode']").val($(this).data('categorycode'));
+                f.find("[name='branch']").val($(this).data('branch'));
+                return f.submit();
+            });
+
+            $(".del-open-article-requests-limit").on("click", function(e){
+                e.preventDefault();
+                if ( !confirmDelete(MSG_CONFIRM_DELETE) ) {
+                    return false;
+                }
+                let f = $("#delete_form");
+                f.find("[name='op']").val('cud-del-open-article-requests-limit');
+                f.find("[name='categorycode']").val($(this).data('categorycode'));
+                f.find("[name='branch']").val($(this).data('branch'));
+                return f.submit();
+            });
+
+            $(".del-article-request-fee").on("click", function(e){
+                e.preventDefault();
+                if ( !confirmDelete(MSG_CONFIRM_DELETE) ) {
+                    return false;
+                }
+                let f = $("#delete_form");
+                f.find("[name='op']").val('cud-del-article-request-fee');
+                f.find("[name='categorycode']").val($(this).data('categorycode'));
+                f.find("[name='branch']").val($(this).data('branch'));
+                return f.submit();
+            });
+
+            $(".delete-branch-item").on("click", function(e){
+                e.preventDefault();
+                if ( !confirmDelete(MSG_CONFIRM_DELETE) ) {
+                    return false;
+                }
+                let f = $("#delete_form");
+                f.find("[name='op']").val('cud-delete-branch-item');
+                f.find("[name='itemtype']").val($(this).data('itemtype'));
+                f.find("[name='branch']").val($(this).data('branch'));
+                return f.submit();
+            });
+
+        });
+    </script>
+[% END %]
+[% INCLUDE 'intranet-bottom.inc' %]

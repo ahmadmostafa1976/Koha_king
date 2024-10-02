@@ -1,0 +1,53 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% tx("Error {error_number}", {error_number = errno }) | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="err_[% errno | html %]" class="err">
+
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="#" aria-current="page">
+ [% tx("Error {error_number}", {error_number = errno }) | html %]
+ </a>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-8 col-md-offset-2">
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>قد ظهر خطأ!</h1>
+ <h2><em>[% tx("Error {error_number}", {error_number = errno }) | html %]</em></h2>
+ [% IF ( csrf_error ) %]
+ [% INCLUDE 'blocking_errors.inc' blocking_error => csrf_error %]
+ [% ELSE %]
+ <h3>قد يكون سبب هذه الرسالة أحد الأسباب التالية:</h3>
+ <ul style="padding-bottom: 0.5em;">
+ <li>لقد قم باستخدام رابط خارجي لمادة لم تعد متاحة</li>
+ <li>لقد تتبعت رابطا قديما. مثال: من محرك البحث أو إشارة مرجعية</li>
+ <li>لقد حاولت الوصول إلى صفحة تحتاج إلى تأكيد الثقة</li>
+ <li>هناك رابط داخلي في برنامج العميل مكسور والصفحة غير موجودة</li>
+ </ul>
+ [% END %]
+ <h3>ما التالي؟</h3>
+ <ul style="margin-bottom: 1em; padding-bottom: 1em; border-bottom: 1px solid #CCC;">
+ <li>استخدم شريط القائمة العلوى للتنقل إلى جزء آخر من كوها.</li>
+ <li>للتبليغ عن رابط مكسور أو أي مشكلة أخرى، يرجى الاتصال بمدير كوها. <a href="mailto:[% admin | uri %]">إرسال بريد الكتروني</a></li>
+ </ul>
+
+ </div> <!-- /.col-md-8 -->
+ </div> <!-- /.row -->
+
+[% INCLUDE 'intranet-bottom.inc' %]

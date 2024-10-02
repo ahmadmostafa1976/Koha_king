@@ -1,0 +1,295 @@
+[% USE AuthorisedValues %]
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% SWITCH op %]
+ [% CASE 'add_form' %]
+ [% IF field %]
+ [% tx("Modify field '{field_name}'", { field_name = field.name }) | html %] &rsaquo;
+ [% ELSE %]
+ [% t("New field") | html %] &rsaquo;
+ [% END %]
+ [% tx("Table '{table_name}'", { table_name = tablename } ) | html %]
+ [% CASE 'list' %]
+ [% tx("Table '{table_name}'", { table_name = tablename } ) | html %]
+ [% END %] &rsaquo;
+ [% t("Additional fields") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+[% marcfield_tables = ['subscription', 'aqorders'] %]
+[% searchable_tables = ['subscription', 'aqbasket', 'aqinvoices'] %]
+[% show_marcfield = marcfield_tables.grep('^' _ tablename _ '$').size ? 1 : 0 %]
+[% show_searchable = searchable_tables.grep('^' _ tablename _ '$').size ? 1 : 0 %]
+
+<body id="ser_add_fields" class="ser">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+ [% SWITCH op %]
+ [% CASE 'add_form' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/additional-fields.pl">حقول إضافية</a>
+ [% END %]
+ [% IF field %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/additional-fields.pl?tablename=[% tablename | uri %]">[% tx("Table '{table_name}'", { table_name = tablename } ) | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Modify field '{field_name}'", { field_name = field.name }) | html %]
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/additional-fields.pl?tablename=[% tablename | uri %]">[% tx("Table '{table_name}'", { table_name = tablename } ) | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% t("New field" ) | html %]
+ [% END %]
+ [% END %]
+
+ [% CASE 'list' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/additional-fields.pl">حقول إضافية</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Table '{table_name}'", { table_name = tablename } ) | html %]
+ [% END %]
+
+ [% CASE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>حقول إضافية</span>
+ [% END %]
+
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% IF op == 'list' %]
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="newfields" href="?op=add_form&amp;tablename=[% tablename | uri %]"><i class="fa fa-plus"></i> حقل جديد</a>
+ </div>
+ [% END %]
+
+ [% IF messages %]
+ [% FOR message IN messages %]
+ [% IF message.code == 'insert' %]
+ [% IF message.number > 0 %]
+ <div class="dialog message">تمت إضافة الحقل.</div>
+ [% ELSE %]
+ <div class="dialog alert">تعذر إضافة الحقل. ربما كان الاسم موجوداً بالفعل؟</div>
+ [% END %]
+ [% ELSIF message.code == 'update' %]
+ [% IF message.number > 0 %]
+ <div class="dialog message">تم تحديث الحقل.</div>
+ [% ELSE %]
+ <div class="dialog alert">لم يتم تحديث الحقل. ربما يكون الاسم موجودا بالفعل؟</div>
+ [% END %]
+ [% ELSIF message.code == 'delete' %]
+ [% IF message.number > 0 %]
+ <div class="dialog message">تم حذف الحقل.</div>
+ [% ELSE %]
+ <div class="dialog alert">تعذر حذف الحقل. يرجى التحقق من السجل للتفاصيل.</div>
+ [% END %]
+ [% END %]
+ [% END %]
+ [% END %]
+
+ [% IF op == 'list_tables' %]
+ [% IF CAN_user_acquisitions_order_manage || CAN_user_serials_edit_subscription || CAN_user_updatecharges_remaining_permissions %]
+ <h1>حقول إضافية</h1>
+
+ <div class="page-section">
+ <h2>قم بتحديد جدول:</h2>
+ [% BLOCK table_option %]
+ <li><a href="?tablename=[% value | uri %]">[% content | $raw %] (<span class="ex">[% value | html %]</span>)</a></li>
+ [% END %]
+ <ul>
+ [% IF CAN_user_acquisition_order_manage %]
+ [% WRAPPER table_option value="aqbasket" %]<span>سلال الطلبيات</span>[% END %]
+ [% WRAPPER table_option value="aqorders" %]<span>سطور الطلبية</span>[% END %]
+ [% END %]
+ [% IF CAN_user_acquisition_edit_invoices %]
+ [% WRAPPER table_option value="aqinvoices" %]<span>فواتير</span>[% END %]
+ [% END %]
+ [% IF CAN_user_serials_edit_subscription %]
+ [% WRAPPER table_option value="subscription" %]<span>الاشتراكات</span>[% END %] [% END %] [% IF CAN_user_updatecharges_remaining_permissions %] [% WRAPPER table_option value="accountlines:credit" %]سطور الحساب (رصيد مدين)[% END %] [% WRAPPER table_option value="accountlines:debit" %]سطور الحساب (رصيد دائن)[% END %] [% END %]  </ul>
+ [% ELSE %] مطلوب صلاحيات إضافية لتحرير الحقول الإضافية [% END %] </div><!-- /.page-section -->
+ [% ELSIF op == 'list' %]
+ <h1>حقول إضافية لـ '[% tablename | html %]'</h1>
+ [% IF fields %]
+ <div class="page-section">
+ <table id="fieldst">
+ <thead>
+ <tr>
+ <th>الاسم</th>
+ <th>فئة قيمة الاستناد</th>
+ [% IF show_marcfield %]
+ <th>حقل مارك</th>
+ <th>وضع حقل مارك</th>
+ [% END %]
+ [% IF show_searchable %]
+ <th>قابل للبحث</th>
+ [% END %]
+ <th class="noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOR field IN fields %]
+ <tr>
+ <td>[% field.name | html %]</td>
+ <td>[% field.authorised_value_category | html %]</td>
+ [% IF show_marcfield %]
+ <td>[% field.marcfield | html %]</td>
+ <td>
+ [% SWITCH field.marcfield_mode %] [% CASE 'get' %]احصل على القيمة من تسجيلة مارك [% CASE 'set' %] احفظ القيمة في تسجيلة مارك [% END %] </td>
+ [% END %]
+ [% IF show_searchable %]
+ <td>
+ [% IF field.searchable %]نعم[% ELSE %]لا[% END %] </td>
+ [% END %]
+ <td class="actions">
+ <a class="btn btn-default btn-xs" href="?op=add_form&amp;field_id=[% field.id | html %]"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a class="confirmdelete btn btn-default btn-xs" href="?op=delete&amp;field_id=[% field.id | uri %]&amp;tablename=[% tablename | uri %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div><!-- /.page-section -->
+ [% ELSE %]
+ [% IF tablename %]There are no additional fields defined for this table.[% END %]
+ [% END %]
+ [% ELSIF op == 'add_form' %]
+ [% IF field %]
+ <h1>[% tx("Modify field '{field_name}' for table '{table_name}'", { field_name = field.name, table_name = tablename }) | html %]</h1>
+ [% ELSE %]
+ <h1>[% tx("New field for table '{table_name}'", { table_name = tablename } ) | html %]</h1>
+ [% END %]
+ <form action="" name="add_form" id="add_field" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="name" class="required">الاسم: </label>
+ <input type="text" name="name" id="name" value="[% field.name | html %]" class="required focus" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="av">فئة قيمة الاستناد: </label>
+ <select id="av" name="authorised_value_category">
+ <option value="">لا شيء</option>
+ [% PROCESS options_for_authorised_value_categories authorised_value_categories = AuthorisedValues.GetCategories({selected => field.authorised_value_category}) %]
+ </select>
+ </li>
+ [% IF show_marcfield %]
+ <li>
+ <label for="marcfield">حقل مارك: </label>
+ <input type="text" name="marcfield" id="marcfield" value="[% field.marcfield | html %]" />
+ <div class="hint">على سبيل المثال: 942$c</div>
+ </li>
+ <li>
+ <label for="marcfield_mode">وضع حقل مارك: </label>
+ <select id="marcfield_mode" name="marcfield_mode">
+ [% IF field.marcfield_mode == 'get' %]
+ <option value="get" selected>احصل على القيمة من تسجيلة مارك (غير قابل للتعديل)</option>
+ [% ELSE %]
+ <option value="get">احصل على القيمة من تسجيلة مارك (غير قابل للتعديل)</option>
+ [% END %]
+
+ [% IF field.marcfield_mode == 'set' %]
+ <option value="set" selected>حفظ القيمة في تسجيلة مارك</option>
+ [% ELSE %]
+ <option value="set">حفظ القيمة في تسجيلة مارك</option>
+ [% END %]
+ </select>
+ </li>
+ [% END %]
+ [% IF show_searchable %]
+ <li>
+ <label for="searchable">قابل للبحث: </label>
+ [% IF field.searchable %]
+ <input type="checkbox" name="searchable" id="searchable" checked="checked" />
+ [% ELSE %]
+ <input type="checkbox" name="searchable" id="searchable" />
+ [% END %]
+ </li>
+ [% END %]
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ [% IF field %]
+ <input type="hidden" name="field_id" value="[% field.id | html %]" />
+ [% END %]
+ <input type="hidden" name="tablename" value="[% tablename | html %]" />
+ <input type="hidden" name="op" value="cud-add" />
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a href="?tablename=[% tablename | uri %]" class="cancel">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE "datatables.inc" %]
+ <script>
+        $(document).ready(function(){
+            $('#selecttable').find(":submit").hide();
+            $('#selecttable select').change(function() {
+                $('#selecttable').submit();
+            });
+
+            $("#fieldst").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "autoWidth": false,
+                "dom": 't<"bottom pager"ilpf>',
+                "pagingType": 'full',
+                "lengthMenu": [[10, 20, 50, 100, -1], [10, 20, 50, 100, "All"]],
+                "pageLength": 20,
+                "order": [[ 0, "asc" ]],
+            }));
+
+            $(".confirmdelete").click(function(){
+                return confirm(_("هل أنت متأكد من أنك تريد حذف هذا الحقل؟"));
+            });
+
+            $("#add_field").on('submit', function() {
+                if ( $("#marcfield").length && $("select[name='authorised_value_category']").length ) {
+                    if ( $("#marcfield").val().length > 0
+                        && $("select[name='authorised_value_category']" ).val().length > 0 ) {
+                        alert(_("لا يمكنك تحديد فئة قيمة استناد وحقل مارك") );
+                        return false;
+                    }
+                }
+                return true;
+            });
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

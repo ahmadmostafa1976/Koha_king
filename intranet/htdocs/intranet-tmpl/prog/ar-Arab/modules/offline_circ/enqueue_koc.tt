@@ -1,0 +1,56 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Add offline circulations to queue") | html %] &rsaquo;
+ [% t("Circulation") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="ocirc_enqueue_koc" class="circ ocirc">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'circ-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+<nav aria-label="أثر التنقل التفصيلي (فتات الخبز)" class="breadcrumb" id="breadcrumbs">
+ <ol>
+ <li>
+ <a href="/cgi-bin/koha/mainpage.pl">الصفحة الرئيسية</a>
+ </li>
+ <li>
+ <a href="/cgi-bin/koha/circ/circulation-home.pl">الإعارة</a>
+ </li>
+ <li>
+ <a href="#" aria-current="page">إضافة إعارات بدون اتصال إلى الصف</a>
+ </li>
+ </ol>
+</nav>
+[% END %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>الإعارة دون إتصال</h1>
+ <div class="page-section">
+ <p>تم تحميل ملفك. بمجرد الانتهاء من تحميل كل الملفات، يرجى معالجتها في إجراءات الإعارة دون اتصال.</p>
+
+ [% FOREACH message IN messages %]
+ [% IF ( message.message ) %]
+ [% IF ( message.ERROR_file_version ) %]
+ <div class="dialog alert"><p>تحذير: إصدار هذا الملف [% message.upload_version | html %] ، وأنا فقط أعرف كيف أستورد الإصدارات  [% message.current_version | html %]. سأحاول بأفضل ما لدي.</div>
+ [% END %]
+ [% END %]
+ [% END %]
+
+ <p><a href="process_koc.pl">تحميل ملف KOC آخر</a></p>
+
+ <p><a href="list.pl">عرض إجراءات الإعارة دون الاتصال في الانتظار</a></p>
+ </div> <!-- /.page-section -->
+ </div>
+ </div>
+
+[% INCLUDE 'intranet-bottom.inc' %]

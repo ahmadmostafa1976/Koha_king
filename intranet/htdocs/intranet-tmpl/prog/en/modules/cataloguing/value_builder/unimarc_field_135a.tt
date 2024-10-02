@@ -1,0 +1,91 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+    [% t("UNIMARC field 135a builder") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_135a" class="cat value_builder">
+    <h1>UNIMARC field 135a builder</h1>
+    <form method="get" name="f_pop" action="">
+        <div class="page-section">
+            <table>
+                <tr>
+                    <td><label for="f1">Type of electronic resource:</label></td>
+                    <td>
+                        <select name="f1" id="f1">
+
+                            [% IF ( f1space ) %]
+                                <option value=" " selected="selected">non required value</option>
+                            [% ELSE %]
+                                <option value=" ">non required value</option>
+                            [% END %]
+                            [% IF ( f1a ) %]
+                                <option value="a" selected="selected">numeric</option>
+                            [% ELSE %]
+                                <option value="a">numeric</option>
+                            [% END %]
+                            [% IF ( f1b ) %]
+                                <option value="b" selected="selected">computer program(s)</option>
+                            [% ELSE %]
+                                <option value="b">computer program(s)</option>
+                            [% END %]
+                            [% IF ( f1c ) %]
+                                <option value="c" selected="selected">representational</option>
+                            [% ELSE %]
+                                <option value="c">representational</option>
+                            [% END %]
+                            [% IF ( f1d ) %]
+                                <option value="d" selected="selected">text</option>
+                            [% ELSE %]
+                                <option value="d">text</option>
+                            [% END %]
+                            [% IF ( f1u ) %]
+                                <option value="u" selected="selected">unknown</option>
+                            [% ELSE %]
+                                <option value="u">unknown</option>
+                            [% END %]
+                            [% IF ( f1v ) %]
+                                <option value="v" selected="selected">combination</option>
+                            [% ELSE %]
+                                <option value="v">combination</option>
+                            [% END %]
+                            [% IF ( f1z ) %]
+                                <option value="z" selected="selected">other</option>
+                            [% ELSE %]
+                                <option value="z">other</option>
+                            [% END %]
+                        </select>
+                    </td></tr>
+            </table>
+        </div> <!-- /.page-section -->
+
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <div class="container-fluid">
+                <fieldset class="action">
+                    <input type="button" class="btn btn-primary" onclick="report();" value="Save" />
+                    <button class="btn btn-default close_window">Cancel</button>
+                </fieldset>
+            </div>
+        </nav>
+
+    </form>
+
+[% MACRO jsinclude BLOCK %]
+    <script>
+        var dateformat = "[% Koha.Preference('dateformat') | html %]";
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value =  document.f_pop.f1.value;
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

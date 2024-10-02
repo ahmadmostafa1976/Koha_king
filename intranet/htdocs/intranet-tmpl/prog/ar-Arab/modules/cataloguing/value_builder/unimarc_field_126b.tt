@@ -1,0 +1,205 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 126b builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_126b" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 126b</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">نوع القرص، الأسطوانة أو الشريط:</label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">لحظي ( قطع، فريد في التو)</option>
+ [% ELSE %]
+ <option value="a">لحظي ( قطع، فريد في التو)</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">الكتلة المنتجة</option>
+ [% ELSE %]
+ <option value="b">الكتلة المنتجة</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">شريط رئيسي</option>
+ [% ELSE %]
+ <option value="c">شريط رئيسي</option>
+ [% END %]
+ [% IF ( f1d ) %]
+ <option value="d" selected="selected">شريط التكرار الرئيسي</option>
+ [% ELSE %]
+ <option value="d">شريط التكرار الرئيسي</option>
+ [% END %]
+ [% IF ( f1e ) %]
+ <option value="e" selected="selected">القرص الرئيسي (نيجاتيف)</option>
+ [% ELSE %]
+ <option value="e">القرص الرئيسي (نيجاتيف)</option>
+ [% END %]
+ [% IF ( f1f ) %]
+ <option value="f" selected="selected">أم (ايجابي)</option>
+ [% ELSE %]
+ <option value="f">أم (ايجابي)</option>
+ [% END %]
+ [% IF ( f1g ) %]
+ <option value="g" selected="selected">ختام (سلبي)</option>
+ [% ELSE %]
+ <option value="g">ختام (سلبي)</option>
+ [% END %]
+ [% IF ( f1h ) %]
+ <option value="h" selected="selected">اختبار ضغط</option>
+ [% ELSE %]
+ <option value="h">اختبار ضغط</option>
+ [% END %]
+ [% IF ( f1u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f2">نوع المادة:</label></td>
+ <td>
+ <select name="f2" id="f2">
+
+ [% IF ( f2u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f2x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f2z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ [% IF ( f2g ) %]
+ <option value="g" selected="selected">شمع (فوري)</option>
+ [% ELSE %]
+ <option value="g">شمع (فوري)</option>
+ [% END %]
+ [% IF ( f2h ) %]
+ <option value="h" selected="selected">البلاستيك (إنتاج شامل)</option>
+ [% ELSE %]
+ <option value="h">البلاستيك (إنتاج شامل)</option>
+ [% END %]
+ [% IF ( f2a ) %]
+ <option value="a" selected="selected">طلي (مثال الاسيتات)</option>
+ [% ELSE %]
+ <option value="a">طلي (مثال الاسيتات)</option>
+ [% END %]
+ [% IF ( f2b ) %]
+ <option value="b" selected="selected">معدن (مثال ألمنيوم)</option>
+ [% ELSE %]
+ <option value="b">معدن (مثال ألمنيوم)</option>
+ [% END %]
+ [% IF ( f2c ) %]
+ <option value="c" selected="selected">shellac pressing</option>
+ [% ELSE %]
+ <option value="c">shellac pressing</option>
+ [% END %]
+ [% IF ( f2d ) %]
+ <option value="d" selected="selected">بلاستيك الضغط</option>
+ [% ELSE %]
+ <option value="d">بلاستيك الضغط</option>
+ [% END %]
+ [% IF ( f2e ) %]
+ <option value="e" selected="selected">معدن وبلاستيك (قرص مضغوط)</option>
+ [% ELSE %]
+ <option value="e">معدن وبلاستيك (قرص مضغوط)</option>
+ [% END %]
+ [% IF ( f2i ) %]
+ <option value="i" selected="selected">بدعم الورقة</option>
+ [% ELSE %]
+ <option value="i">بدعم الورقة</option>
+ [% END %]
+ [% IF ( f2j ) %]
+ <option value="j" selected="selected">أسيتات (خلات)</option>
+ [% ELSE %]
+ <option value="j">أسيتات (خلات)</option>
+ [% END %]
+ [% IF ( f2k ) %]
+ <option value="k" selected="selected">P.V.C.</option>
+ [% ELSE %]
+ <option value="k">P.V.C.</option>
+ [% END %]
+ [% IF ( f2l ) %]
+ <option value="l" selected="selected">بوليستر</option>
+ [% ELSE %]
+ <option value="l">بوليستر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f3">نوع من القص:</label></td>
+ <td>
+ <select name="f3" id="f3">
+ [% IF ( f3a ) %]
+ <option value="a" selected="selected">قطع جانبي أو تزاوج قطع</option>
+ [% ELSE %]
+ <option value="a">قطع جانبي أو تزاوج قطع</option>
+ [% END %]
+ [% IF ( f3b ) %]
+ <option value="b" selected="selected">قطع عمودي (تل ودايل)</option>
+ [% ELSE %]
+ <option value="b">قطع عمودي (تل ودايل)</option>
+ [% END %]
+ [% IF ( f3u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f3x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value = document.f_pop.f1.value+document.f_pop.f2.value+document.f_pop.f3.value ;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

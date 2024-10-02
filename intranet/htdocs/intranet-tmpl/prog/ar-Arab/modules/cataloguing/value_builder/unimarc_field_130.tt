@@ -1,0 +1,363 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 130 builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_130" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 130</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">التحديد المخصص للمادة:</label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">فتحه بطاقة</option>
+ [% ELSE %]
+ <option value="a">فتحه بطاقة</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">خرطوشة ميكروفورم</option>
+ [% ELSE %]
+ <option value="b">خرطوشة ميكروفورم</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">كاسيت ميكروفيلم</option>
+ [% ELSE %]
+ <option value="c">كاسيت ميكروفيلم</option>
+ [% END %]
+ [% IF ( f1d ) %]
+ <option value="d" selected="selected">بكرة ميكروفيلم</option>
+ [% ELSE %]
+ <option value="d">بكرة ميكروفيلم</option>
+ [% END %]
+ [% IF ( f1e ) %]
+ <option value="e" selected="selected">ميكروفيش</option>
+ [% ELSE %]
+ <option value="e">ميكروفيش</option>
+ [% END %]
+ [% IF ( f1f ) %]
+ <option value="f" selected="selected">كاسيت ميكروفيش</option>
+ [% ELSE %]
+ <option value="f">كاسيت ميكروفيش</option>
+ [% END %]
+ [% IF ( f1g ) %]
+ <option value="g" selected="selected">ميكرو أوباك</option>
+ [% ELSE %]
+ <option value="g">ميكرو أوباك</option>
+ [% END %]
+ [% IF ( f1h ) %]
+ <option value="h" selected="selected">شريط ميكروفيلم</option>
+ [% ELSE %]
+ <option value="h">شريط ميكروفيلم</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f2">القطبية:</label></td>
+ <td>
+ <select name="f2" id="f2">
+
+ [% IF ( f2a ) %]
+ <option value="a" selected="selected">ايجابي</option>
+ [% ELSE %]
+ <option value="a">ايجابي</option>
+ [% END %]
+ [% IF ( f2b ) %]
+ <option value="b" selected="selected">نيجاتيف</option>
+ [% ELSE %]
+ <option value="b">نيجاتيف</option>
+ [% END %]
+ [% IF ( f2c ) %]
+ <option value="c" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="c">غير معروف</option>
+ [% END %]
+ [% IF ( f2d ) %]
+ <option value="d" selected="selected">قطبية مختلطة</option>
+ [% ELSE %]
+ <option value="d">قطبية مختلطة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f3">أبعاد:</label></td>
+ <td>
+ <select name="f3" id="f3">
+
+ [% IF ( f3space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f3a ) %]
+ <option value="a" selected="selected">8 ملم (ميكروفيلم)</option>
+ [% ELSE %]
+ <option value="a">8 ملم (ميكروفيلم)</option>
+ [% END %]
+ [% IF ( f3d ) %]
+ <option value="d" selected="selected">16 ملم (ميكروفيلم)</option>
+ [% ELSE %]
+ <option value="d">16 ملم (ميكروفيلم)</option>
+ [% END %]
+ [% IF ( f3f ) %]
+ <option value="f" selected="selected">35 ملم (ميكروفيلم)</option>
+ [% ELSE %]
+ <option value="f">35 ملم (ميكروفيلم)</option>
+ [% END %]
+ [% IF ( f3g ) %]
+ <option value="g" selected="selected">70 ملم (ميكروفيلم)</option>
+ [% ELSE %]
+ <option value="g">70 ملم (ميكروفيلم)</option>
+ [% END %]
+ [% IF ( f3h ) %]
+ <option value="h" selected="selected">105 ملم (ميكروفيلم)</option>
+ [% ELSE %]
+ <option value="h">105 ملم (ميكروفيلم)</option>
+ [% END %]
+ [% IF ( f3l ) %]
+ <option value="l" selected="selected">3x5 بوصة.</option>
+ [% ELSE %]
+ <option value="l">3x5 بوصة.</option>
+ [% END %]
+ [% IF ( f3m ) %]
+ <option value="m" selected="selected">4x6 بوصة.</option>
+ [% ELSE %]
+ <option value="m">4x6 بوصة.</option>
+ [% END %]
+ [% IF ( f3o ) %]
+ <option value="o" selected="selected">6X 9 بوصة.</option>
+ [% ELSE %]
+ <option value="o">6X 9 بوصة.</option>
+ [% END %]
+ [% IF ( f3p ) %]
+ <option value="p" selected="selected">9 x 19 سم</option>
+ [% ELSE %]
+ <option value="p">9 x 19 سم</option>
+ [% END %]
+ [% IF ( f3u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f3z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f4">تخفيض النسبة:</label></td>
+ <td>
+ <select name="f4" id="f4">
+ [% IF ( f4a ) %]
+ <option value="a" selected="selected">انخفاض قليل</option>
+ [% ELSE %]
+ <option value="a">انخفاض قليل</option>
+ [% END %]
+ [% IF ( f4b ) %]
+ <option value="b" selected="selected">عادى (16x - 30x)</option>
+ [% ELSE %]
+ <option value="b">عادى (16x - 30x)</option>
+ [% END %]
+ [% IF ( f4c ) %]
+ <option value="c" selected="selected">مرتفع (31x - 60x)</option>
+ [% ELSE %]
+ <option value="c">مرتفع (31x - 60x)</option>
+ [% END %]
+ [% IF ( f4d ) %]
+ <option value="d" selected="selected">مرتفع جداً (61x - 90x)</option>
+ [% ELSE %]
+ <option value="d">مرتفع جداً (61x - 90x)</option>
+ [% END %]
+ [% IF ( f4e ) %]
+ <option value="e" selected="selected">عالية جدا (91x -)</option>
+ [% ELSE %]
+ <option value="e">عالية جدا (91x -)</option>
+ [% END %]
+ [% IF ( f4u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f4v ) %]
+ <option value="v" selected="selected">تتباين</option>
+ [% ELSE %]
+ <option value="v">تتباين</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f5">نسبة تخفيض محددة</label></td>
+ <td><input type="text" name="f5" id="f5" maxlength="3" size="4"
+                        value="[% f5 | html %]" /></td>
+ </tr>
+
+ <tr>
+ <td><label for="f6">لون:</label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">أحادية اللون</option>
+ [% ELSE %]
+ <option value="a">أحادية اللون</option>
+ [% END %]
+ [% IF ( f6b ) %]
+ <option value="b" selected="selected">لون</option>
+ [% ELSE %]
+ <option value="b">لون</option>
+ [% END %]
+ [% IF ( f6u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f6v ) %]
+ <option value="v" selected="selected">تتباين</option>
+ [% ELSE %]
+ <option value="v">تتباين</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f7">الطبقة الحساسة على الفيلم:</label></td>
+ <td>
+ <select name="f7" id="f7">
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">هاليد الفضة</option>
+ [% ELSE %]
+ <option value="a">هاليد الفضة</option>
+ [% END %]
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">الديازين (صبغ ثنائي النيتروجين)‬</option>
+ [% ELSE %]
+ <option value="b">الديازين (صبغ ثنائي النيتروجين)‬</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">حويصلي</option>
+ [% ELSE %]
+ <option value="c">حويصلي</option>
+ [% END %]
+ [% IF ( f7u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f7v ) %]
+ <option value="v" selected="selected">طبقة حساسة مختلطة</option>
+ [% ELSE %]
+ <option value="v">طبقة حساسة مختلطة</option>
+ [% END %]
+ [% IF ( f7x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f7z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f8">توليد:</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8a ) %]
+ <option value="a" selected="selected">الجيل الأول (الأساسي)</option>
+ [% ELSE %]
+ <option value="a">الجيل الأول (الأساسي)</option>
+ [% END %]
+ [% IF ( f8b ) %]
+ <option value="b" selected="selected">طباعة رئيسية</option>
+ [% ELSE %]
+ <option value="b">طباعة رئيسية</option>
+ [% END %]
+ [% IF ( f8c ) %]
+ <option value="c" selected="selected">خدمة النسخ</option>
+ [% ELSE %]
+ <option value="c">خدمة النسخ</option>
+ [% END %]
+ [% IF ( f8u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f8v ) %]
+ <option value="v" selected="selected">أجيال مختلطة</option>
+ [% ELSE %]
+ <option value="v">أجيال مختلطة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f9">قاعدة الفيلم:</label></td>
+ <td>
+ <select name="f9" id="f9">
+ [% IF ( f9a ) %]
+ <option value="a" selected="selected">قاعدة أمان</option>
+ [% ELSE %]
+ <option value="a">قاعدة أمان</option>
+ [% END %]
+ [% IF ( f9b ) %]
+ <option value="b" selected="selected">ليس أساس سلامة</option>
+ [% ELSE %]
+ <option value="b">ليس أساس سلامة</option>
+ [% END %]
+ [% IF ( f9u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f9x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        var dateformat = "[% Koha.Preference('dateformat') | html %]";
+        function report() {
+            document.f_pop.f5.value=document.f_pop.f5.value+'   ';
+            document.f_pop.f5.value=document.f_pop.f5.value.substring(0,3);
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+            field.value =  document.f_pop.f1.value+document.f_pop.f2.value+document.f_pop.f3.value+document.f_pop.f4.value+document.f_pop.f5.value+document.f_pop.f6.value+document.f_pop.f7.value+document.f_pop.f8.value+document.f_pop.f9.value ;
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

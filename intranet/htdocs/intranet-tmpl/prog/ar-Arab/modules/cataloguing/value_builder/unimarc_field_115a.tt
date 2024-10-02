@@ -1,0 +1,1226 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 115a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="cat_unimarc_field_115a" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 115a</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">نوع المادة</label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">صورة متحركة</option>
+ [% ELSE %]
+ <option value="a">صورة متحركة</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">اسقاط بصري</option>
+ [% ELSE %]
+ <option value="b">اسقاط بصري</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">تسجيل فيديو</option>
+ [% ELSE %]
+ <option value="c">تسجيل فيديو</option>
+
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f2">الطول</label></td>
+ <td><input type="text" name="f2" id="f2" maxlength="3" size="4" value="[% f2 | html %]" /></td>
+
+ </tr>
+
+
+ <tr>
+ <td><label for="f3">مؤشر لون</label></td>
+ <td>
+ <select name="f3" id="f3">
+ [% IF ( f3pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f3a ) %]
+ <option value="a" selected="selected">أبيض وأسود</option>
+ [% ELSE %]
+ <option value="a">أبيض وأسود</option>
+ [% END %]
+
+ [% IF ( f3b ) %]
+ <option value="b" selected="selected">لون</option>
+ [% ELSE %]
+ <option value="b">لون</option>
+ [% END %]
+
+ [% IF ( f3c ) %]
+ <option value="c" selected="selected">مزيج من الأبيض والأسود والألوان</option>
+ [% ELSE %]
+ <option value="c">مزيج من الأبيض والأسود والألوان</option>
+
+ [% END %]
+
+ [% IF ( f3u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+
+ [% END %]
+
+ [% IF ( f3z ) %]
+ <option value="z" selected="selected">أخرى (بني داكن، ملون، إلخ.)</option>
+ [% ELSE %]
+ <option value="z">أخرى (بني داكن، ملون، إلخ.)</option>
+
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f4">المؤشرات الصوتية</label></td>
+ <td>
+ <select name="f4" id="f4">
+ [% IF ( f4pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+ [% IF ( f4a ) %]
+ <option value="a" selected="selected">الصوت متوسط</option>
+ [% ELSE %]
+ <option value="a">الصوت متوسط</option>
+
+ [% END %]
+
+ [% IF ( f4b ) %]
+ <option value="b" selected="selected">فصل مسار الصوت</option>
+ [% ELSE %]
+ <option value="b">فصل مسار الصوت</option>
+ [% END %]
+
+ [% IF ( f4u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+
+ [% IF ( f4y ) %]
+ <option value="y" selected="selected">لا صوت</option>
+ [% ELSE %]
+ <option value="y">لا صوت</option>
+
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+
+ <tr>
+ <td><label for="f5">الوسائط للصوت</label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+ [% IF ( f5a ) %]
+ <option value="a" selected="selected">مسار صوت بصري على فيلم صورة متحركة</option>
+ [% ELSE %]
+ <option value="a">مسار صوت بصري على فيلم صورة متحركة</option>
+
+ [% END %]
+
+ [% IF ( f5b ) %]
+ <option value="b" selected="selected">مسار صوتي مغناطيسي على فيلم صورة متحركة</option>
+ [% ELSE %]
+ <option value="b">مسار صوتي مغناطيسي على فيلم صورة متحركة</option>
+ [% END %]
+
+ [% IF ( f5c ) %]
+ <option value="c" selected="selected">شريط صوتي ممغنط في الخرطوشة</option>
+ [% ELSE %]
+ <option value="c">شريط صوتي ممغنط في الخرطوشة</option>
+ [% END %]
+
+ [% IF ( f5d ) %]
+ <option value="d" selected="selected">قرص صوتي</option>
+ [% ELSE %]
+ <option value="d">قرص صوتي</option>
+
+ [% END %]
+
+ [% IF ( f5g ) %]
+ <option value="g" selected="selected">مسار صوت مغناطيسي وبصري على فيلم صورة متحركة</option>
+ [% ELSE %]
+ <option value="g">مسار صوت مغناطيسي وبصري على فيلم صورة متحركة</option>
+
+ [% END %]
+
+ [% IF ( f5h ) %]
+ <option value="h" selected="selected">شريط فيديو</option>
+ [% ELSE %]
+ <option value="h">شريط فيديو</option>
+
+ [% END %]
+
+ [% IF ( f5i ) %]
+ <option value="i" selected="selected">قرص مرئي</option>
+ [% ELSE %]
+ <option value="i">قرص مرئي</option>
+
+ [% END %]
+
+ [% IF ( f5u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+
+ [% END %]
+
+ [% IF ( f5e ) %]
+ <option value="e" selected="selected">شريط صوتي ممغنط على بكرة</option>
+ [% ELSE %]
+ <option value="e">شريط صوتي ممغنط على بكرة</option>
+
+ [% END %]
+
+ [% IF ( f5f ) %]
+ <option value="f" selected="selected">شريط صوتي ممغنط في كاسيت</option>
+ [% ELSE %]
+ <option value="f">شريط صوتي ممغنط في كاسيت</option>
+
+ [% END %]
+ [% IF ( f5x ) %]
+ <option value="x" selected="selected">لا صوت</option>
+ [% ELSE %]
+ <option value="x">لا صوت</option>
+
+ [% END %]
+ [% IF ( f5z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f6">العرض أو الأبعاد</label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">صور متحركة وشرائط أفلام => 8مم</option>
+ [% ELSE %]
+ <option value="a">صور متحركة وشرائط أفلام => 8مم</option>
+ [% END %]
+
+ [% IF ( f6b ) %]
+ <option value="b" selected="selected">صور متحركة وشرائط أفلام =>سوبر 8مم</option>
+ [% ELSE %]
+ <option value="b">صور متحركة وشرائط أفلام =>سوبر 8مم</option>
+ [% END %]
+
+ [% IF ( f6c ) %]
+ <option value="c" selected="selected">صور متحركة وشرائط أفلام => 9.5مم</option>
+ [% ELSE %]
+ <option value="c">صور متحركة وشرائط أفلام => 9.5مم</option>
+ [% END %]
+
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">صور متحركة وشرائط أفلام => 16مم</option>
+ [% ELSE %]
+ <option value="d">صور متحركة وشرائط أفلام => 16مم</option>
+ [% END %]
+
+ [% IF ( f6e ) %]
+ <option value="e" selected="selected">صور متحركة وشرائط أفلام => 28مم</option>
+ [% ELSE %]
+ <option value="e">صور متحركة وشرائط أفلام => 28مم</option>
+ [% END %]
+
+ [% IF ( f6f ) %]
+ <option value="f" selected="selected">صور متحركة وشرائط أفلام =>35مم</option>
+ [% ELSE %]
+ <option value="f">صور متحركة وشرائط أفلام =>35مم</option>
+ [% END %]
+
+ [% IF ( f6g ) %]
+ <option value="g" selected="selected">صور متحركة وشرائط أفلام => 70مم</option>
+ [% ELSE %]
+ <option value="g">صور متحركة وشرائط أفلام => 70مم</option>
+ [% END %]
+
+ [% IF ( f6k ) %]
+ <option value="k" selected="selected">الشرائح  21⁄4 x 21⁄4 in. (5.5*5.5 cm)</option>
+ [% ELSE %]
+ <option value="k">الشرائح  21⁄4 x 21⁄4 in. (5.5*5.5 cm)</option>
+ [% END %]
+
+ [% IF ( f6l ) %]
+ <option value="l" selected="selected">الشرائح 2 x 2in. (5*5 cm)</option>
+ [% ELSE %]
+ <option value="l">الشرائح 2 x 2in. (5*5 cm)</option>
+ [% END %]
+
+ [% IF ( f6m ) %]
+ <option value="m" selected="selected">Videotapes 1/4 in. (2 cm)</option>
+ [% ELSE %]
+ <option value="m">Videotapes 1/4 in. (2 cm)</option>
+ [% END %]
+
+ [% IF ( f6n ) %]
+ <option value="n" selected="selected">Videotapes 1/4 in. (1/2 cm)</option>
+ [% ELSE %]
+ <option value="n">Videotapes 1/4 in. (1/2 cm)</option>
+ [% END %]
+
+ [% IF ( f6o ) %]
+ <option value="o" selected="selected">Videotapes 1/2 in. (1 cm 1/3) </option>
+ [% ELSE %]
+ <option value="o">Videotapes 1/2 in. (1 cm 1/3)</option>
+ [% END %]
+
+ [% IF ( f6p ) %]
+ <option value="p" selected="selected">Videotapes 1 in. (2 cm 1/2)</option>
+ [% ELSE %]
+ <option value="p">Videotapes 1 in. (2 cm 1/2)</option>
+ [% END %]
+
+ [% IF ( f6q ) %]
+ <option value="q" selected="selected">Videotapes 2 in. (5 cm)</option>
+ [% ELSE %]
+ <option value="q">Videotapes 2 in. (5 cm)</option>
+ [% END %]
+
+ [% IF ( f6r ) %]
+ <option value="r" selected="selected">شفافيات 8 * 10 بو. (20 * 25 سم)</option>
+ [% ELSE %]
+ <option value="r">شفافيات 8 * 10 بو. (20 * 25 سم)</option>
+ [% END %]
+
+ [% IF ( f6s ) %]
+ <option value="s" selected="selected">شفافيات 4 * 5 بو. (10 * 12.5 سم.)</option>
+ [% ELSE %]
+ <option value="s">شفافيات 4 * 5 بو. (10 * 12.5 سم.)</option>
+
+ [% END %]
+ [% IF ( f6t ) %]
+ <option value="t" selected="selected">شفافيات 5 * 7 بو. (12.5 * 17.5 سم)</option>
+ [% ELSE %]
+ <option value="t">شفافيات 5 * 7 بو. (12.5 * 17.5 سم)</option>
+
+ [% END %]
+ [% IF ( f6u ) %]
+ <option value="u" selected="selected">شفافيات 7 * 7 بو. (17.5 * 17.5 سم)</option>
+ [% ELSE %]
+ <option value="u">شفافيات 7 * 7 بو. (17.5 * 17.5 سم)</option>
+
+ [% END %]
+ [% IF ( f6v ) %]
+ <option value="v" selected="selected">شفافيات 8 * 8 بو. (20 * 20 سم)</option>
+ [% ELSE %]
+ <option value="v">شفافيات 8 * 8 بو. (20 * 20 سم)</option>
+
+ [% END %]
+ [% IF ( f6w ) %]
+ <option value="w" selected="selected">شفافيات 9 * 9 بو. (22.5 * 22.5 سم)</option>
+ [% ELSE %]
+ <option value="w">شفافيات 8 * 10 بو. (20 * 25 سم)</option>
+
+ [% END %]
+ [% IF ( f6x ) %]
+ <option value="x" selected="selected">شفافيات 10 * 10 بو. (25 * 25 سم.)</option>
+ [% ELSE %]
+ <option value="x">شفافيات 10 * 10 بو. (25 * 25 سم.)</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f7">شكل الإصدار - إنتاج بصري، صور متحركة</label></td>
+ <td>
+ <select name="f7" id="f7">
+ [% IF ( f7pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">بكرة فيلم</option>
+ [% ELSE %]
+ <option value="a">بكرة فيلم</option>
+
+ [% END %]
+
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">خرطوشة فيلم</option>
+ [% ELSE %]
+ <option value="b">خرطوشة فيلم</option>
+ [% END %]
+
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">فيلم كاسيت</option>
+ [% ELSE %]
+ <option value="c">فيلم كاسيت</option>
+ [% END %]
+
+ [% IF ( f7d ) %]
+ <option value="d" selected="selected">نوع فيلم آخر</option>
+ [% ELSE %]
+ <option value="d">نوع فيلم آخر</option>
+
+ [% END %]
+
+ [% IF ( f7g ) %]
+ <option value="g" selected="selected">خرطوشة فيلم ثابت</option>
+ [% ELSE %]
+ <option value="g">خرطوشة فيلم ثابت</option>
+
+ [% END %]
+
+ [% IF ( f7h ) %]
+ <option value="h" selected="selected">منزلقة فيلمية</option>
+ [% ELSE %]
+ <option value="h">منزلقة فيلمية</option>
+ [% END %]
+
+ [% IF ( f7i ) %]
+ <option value="i" selected="selected">نوع آخر للمقاطع السينمائية</option>
+ [% ELSE %]
+ <option value="i">نوع آخر للمقاطع السينمائية</option>
+ [% END %]
+
+ [% IF ( f7j ) %]
+ <option value="j" selected="selected">لفافة شريط الفيلم</option>
+ [% ELSE %]
+ <option value="j">لفافة شريط الفيلم</option>
+ [% END %]
+
+ [% IF ( f7k ) %]
+ <option value="k" selected="selected">شريحة، تعيين شريحة، صورة مجسمة</option>
+ [% ELSE %]
+ <option value="k">شريحة، تعيين شريحة، صورة مجسمة</option>
+ [% END %]
+
+ [% IF ( f7l ) %]
+ <option value="l" selected="selected">شفاف</option>
+ [% ELSE %]
+ <option value="l">شفاف</option>
+
+ [% END %]
+ [% IF ( f7u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+
+ [% IF ( f7x ) %]
+ <option value="x" selected="selected">ليست صورة متحركة أو اسقاط بصري</option>
+ [% ELSE %]
+ <option value="x">ليست صورة متحركة أو اسقاط بصري</option>
+ [% END %]
+
+ [% IF ( f7z ) %]
+ <option value="z" selected="selected">أشكال أخرى من الاصدار</option>
+ [% ELSE %]
+ <option value="z">أشكال أخرى من الاصدار</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f8">تقنية - تسجيلة فيديو، صور متحركة</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f8a ) %]
+ <option value="a" selected="selected">صور متحركة</option>
+ [% ELSE %]
+ <option value="a">صور متحركة</option>
+ [% END %]
+
+ [% IF ( f8b ) %]
+ <option value="b" selected="selected">حركة حية</option>
+ [% ELSE %]
+ <option value="b">حركة حية</option>
+ [% END %]
+
+ [% IF ( f8c ) %]
+ <option value="c" selected="selected">تحريك وحركة حية</option>
+ [% ELSE %]
+ <option value="c">تحريك وحركة حية</option>
+ [% END %]
+
+ [% IF ( f8u ) %]
+ <option value="u" selected="selected">غير محدد/غيرمعروف</option>
+ [% ELSE %]
+ <option value="u">غير محدد/غيرمعروف</option>
+
+ [% END %]
+
+ [% IF ( f8x ) %]
+ <option value="x" selected="selected">ليست صورة متحركة أو تسجيل فيديو</option>
+ [% ELSE %]
+ <option value="x">ليست صورة متحركة أو تسجيل فيديو</option>
+
+ [% END %]
+
+ [% IF ( f8z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+
+ [% END %]
+
+ </select>
+ </td>
+
+ </tr>
+
+ <tr>
+ <td><label for="f9">شكل العرض - فيلم سينمائي</label></td>
+ <td>
+ <select name="f9" id="f9">
+ [% IF ( f9pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f9a ) %]
+ <option value="a" selected="selected">منفذ قياسي صوتي (خفض التهيئة)</option>
+ [% ELSE %]
+ <option value="a">منفذ قياسي صوتي (خفض التهيئة)</option>
+ [% END %]
+
+ [% IF ( f9b ) %]
+ <option value="b" selected="selected">صورة غير مشوشة (شاشة واسعة)</option>
+ [% ELSE %]
+ <option value="b">صورة غير مشوشة (شاشة واسعة)</option>
+ [% END %]
+
+ [% IF ( f9c ) %]
+ <option value="c" selected="selected">ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="c">ثلاثي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f9d ) %]
+ <option value="d" selected="selected">صورة بصرية مشوهة ( شاشة عريضة)</option>
+ [% ELSE %]
+ <option value="d">صورة بصرية مشوهة ( شاشة عريضة)</option>
+ [% END %]
+
+ [% IF ( f9e ) %]
+ <option value="e" selected="selected">منفذ قياسي صامت</option>
+ [% ELSE %]
+ <option value="e">منفذ قياسي صامت</option>
+ [% END %]
+
+ [% IF ( f9f ) %]
+ <option value="f" selected="selected">تنسيق آخر لشاشة واسعة</option>
+ [% ELSE %]
+ <option value="f">تنسيق آخر لشاشة واسعة</option>
+ [% END %]
+
+ [% IF ( f9x ) %]
+ <option value="x" selected="selected">ليست صورة متحركة</option>
+ [% ELSE %]
+ <option value="x">ليست صورة متحركة</option>
+ [% END %]
+
+ [% IF ( f9u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f10">مادة مرافقة 1</label></td>
+ <td>
+ <select name="f10" id="f10">
+ [% IF ( f10pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f10a ) %]
+ <option value="a" selected="selected">لقطات</option>
+ [% ELSE %]
+ <option value="a">لقطات</option>
+
+ [% END %]
+
+ [% IF ( f10b ) %]
+ <option value="b" selected="selected">مادة مخطوطة</option>
+ [% ELSE %]
+ <option value="b">مادة مخطوطة</option>
+ [% END %]
+
+ [% IF ( f10c ) %]
+ <option value="c" selected="selected">ملاحظات</option>
+ [% ELSE %]
+ <option value="c">ملاحظات</option>
+ [% END %]
+
+ [% IF ( f10d ) %]
+ <option value="d" selected="selected">البرامج والكتب الصحفية</option>
+ [% ELSE %]
+ <option value="d">البرامج والكتب الصحفية</option>
+
+ [% END %]
+
+ [% IF ( f10e ) %]
+ <option value="e" selected="selected">بطاقات اللوبي</option>
+ [% ELSE %]
+ <option value="e">بطاقات اللوبي</option>
+
+ [% END %]
+
+ [% IF ( f10f ) %]
+ <option value="f" selected="selected">مواد تعليمية</option>
+ [% ELSE %]
+ <option value="f">مواد تعليمية</option>
+
+ [% END %]
+
+ [% IF ( f10g ) %]
+ <option value="g" selected="selected">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% ELSE %]
+ <option value="g">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% END %]
+
+ [% IF ( f10h ) %]
+ <option value="h" selected="selected">مجموعة أو تصاميم زي</option>
+ [% ELSE %]
+ <option value="h">مجموعة أو تصاميم زي</option>
+
+ [% END %]
+ [% IF ( f10z ) %]
+ <option value="z" selected="selected">المواد الأخرى المصاحبة</option>
+ [% ELSE %]
+ <option value="z">المواد الأخرى المصاحبة</option>
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f11">مادة مرافقة 2</label></td>
+ <td>
+ <select name="f11" id="f11">
+ [% IF ( f11pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f11a ) %]
+ <option value="a" selected="selected">لقطات</option>
+ [% ELSE %]
+ <option value="a">لقطات</option>
+ [% END %]
+
+ [% IF ( f11b ) %]
+ <option value="b" selected="selected">مادة مخطوطة</option>
+ [% ELSE %]
+ <option value="b">مادة مخطوطة</option>
+ [% END %]
+
+ [% IF ( f11c ) %]
+ <option value="c" selected="selected">ملاحظات</option>
+ [% ELSE %]
+ <option value="c">ملاحظات</option>
+ [% END %]
+
+ [% IF ( f11d ) %]
+ <option value="d" selected="selected">البرامج والكتب الصحفية</option>
+ [% ELSE %]
+ <option value="d">البرامج والكتب الصحفية</option>
+ [% END %]
+
+ [% IF ( f11e ) %]
+ <option value="e" selected="selected">بطاقات اللوبي</option>
+ [% ELSE %]
+ <option value="e">بطاقات اللوبي</option>
+
+ [% END %]
+
+ [% IF ( f11f ) %]
+ <option value="f" selected="selected">مواد تعليمية</option>
+ [% ELSE %]
+ <option value="f">مواد تعليمية</option>
+ [% END %]
+
+ [% IF ( f11g ) %]
+ <option value="g" selected="selected">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% ELSE %]
+ <option value="g">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% END %]
+
+ [% IF ( f11h ) %]
+ <option value="h" selected="selected">مجموعة أو تصاميم زي</option>
+ [% ELSE %]
+ <option value="h">مجموعة أو تصاميم زي</option>
+
+ [% END %]
+ [% IF ( f11z ) %]
+ <option value="z" selected="selected">المواد الأخرى المصاحبة</option>
+ [% ELSE %]
+ <option value="z">المواد الأخرى المصاحبة</option>
+
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f12">مادة مرافقة 3</label></td>
+ <td>
+ <select name="f12" id="f12">
+ [% IF ( f12pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f12a ) %]
+ <option value="a" selected="selected">لقطات</option>
+ [% ELSE %]
+ <option value="a">لقطات</option>
+ [% END %]
+
+ [% IF ( f12b ) %]
+ <option value="b" selected="selected">مادة مخطوطة</option>
+ [% ELSE %]
+ <option value="b">مادة مخطوطة</option>
+ [% END %]
+
+ [% IF ( f12c ) %]
+ <option value="c" selected="selected">ملاحظات</option>
+ [% ELSE %]
+ <option value="c">ملاحظات</option>
+ [% END %]
+
+ [% IF ( f12d ) %]
+ <option value="d" selected="selected">البرامج والكتب الصحفية</option>
+ [% ELSE %]
+ <option value="d">البرامج والكتب الصحفية</option>
+
+ [% END %]
+
+ [% IF ( f12e ) %]
+ <option value="e" selected="selected">بطاقات اللوبي</option>
+ [% ELSE %]
+ <option value="e">بطاقات اللوبي</option>
+
+ [% END %]
+
+ [% IF ( f12f ) %]
+ <option value="f" selected="selected">مواد تعليمية</option>
+ [% ELSE %]
+ <option value="f">مواد تعليمية</option>
+ [% END %]
+
+ [% IF ( f12g ) %]
+ <option value="g" selected="selected">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% ELSE %]
+ <option value="g">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% END %]
+
+ [% IF ( f12h ) %]
+ <option value="h" selected="selected">مجموعة أو تصاميم زي</option>
+ [% ELSE %]
+ <option value="h">مجموعة أو تصاميم زي</option>
+
+ [% END %]
+ [% IF ( f12z ) %]
+ <option value="z" selected="selected">المواد الأخرى المصاحبة</option>
+ [% ELSE %]
+ <option value="z">المواد الأخرى المصاحبة</option>
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f13">مادة مرافقة 4</label></td>
+ <td>
+ <select name="f13" id="f13">
+ [% IF ( f13pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f13a ) %]
+ <option value="a" selected="selected">لقطات</option>
+ [% ELSE %]
+ <option value="a">لقطات</option>
+ [% END %]
+
+ [% IF ( f13b ) %]
+ <option value="b" selected="selected">مادة مخطوطة</option>
+ [% ELSE %]
+ <option value="b">مادة مخطوطة</option>
+ [% END %]
+
+ [% IF ( f13c ) %]
+ <option value="c" selected="selected">ملاحظات</option>
+ [% ELSE %]
+ <option value="c">ملاحظات</option>
+ [% END %]
+
+ [% IF ( f13d ) %]
+ <option value="d" selected="selected">البرامج والكتب الصحفية</option>
+ [% ELSE %]
+ <option value="d">البرامج والكتب الصحفية</option>
+
+ [% END %]
+
+ [% IF ( f13e ) %]
+ <option value="e" selected="selected">بطاقات اللوبي</option>
+ [% ELSE %]
+ <option value="e">بطاقات اللوبي</option>
+
+ [% END %]
+
+ [% IF ( f13f ) %]
+ <option value="f" selected="selected">مواد تعليمية</option>
+ [% ELSE %]
+ <option value="f">مواد تعليمية</option>
+
+ [% END %]
+
+
+ [% IF ( f13g ) %]
+ <option value="g" selected="selected">نوتة موسيقية أو شكل موسيقي آخر</option>
+ [% ELSE %]
+ <option value="g">نوتة موسيقية أو شكل موسيقي آخر</option>
+
+ [% END %]
+
+
+ [% IF ( f13h ) %]
+ <option value="h" selected="selected">مجموعة أو تصاميم زي</option>
+ [% ELSE %]
+ <option value="h">مجموعة أو تصاميم زي</option>
+
+ [% END %]
+ [% IF ( f13z ) %]
+ <option value="z" selected="selected">المواد الأخرى المصاحبة</option>
+ [% ELSE %]
+ <option value="z">المواد الأخرى المصاحبة</option>
+
+ [% END %]
+
+ </select>
+ </td>
+
+ </tr>
+
+ <tr><td><label for="f14">شكل الإصدار - تسجيل فيديو</label></td>
+ <td>
+ <select name="f14" id="f14">
+ [% IF ( f14pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f14a ) %]
+ <option value="a" selected="selected">خرطوشة فيديو</option>
+ [% ELSE %]
+ <option value="a">خرطوشة فيديو</option>
+ [% END %]
+
+ [% IF ( f14b ) %]
+ <option value="b" selected="selected">قرص مرئي</option>
+ [% ELSE %]
+ <option value="b">قرص مرئي</option>
+ [% END %]
+
+ [% IF ( f14c ) %]
+ <option value="c" selected="selected">كاسيت فيديو</option>
+ [% ELSE %]
+ <option value="c">كاسيت فيديو</option>
+ [% END %]
+
+ [% IF ( f14d ) %]
+ <option value="d" selected="selected">بكرة فيديو</option>
+ [% ELSE %]
+ <option value="d">بكرة فيديو</option>
+ [% END %]
+
+ [% IF ( f14e ) %]
+ <option value="e" selected="selected">تسجيل فيديو الكتروني (EVR)</option>
+ [% ELSE %]
+ <option value="e">تسجيل فيديو الكتروني (EVR)</option>
+
+ [% END %]
+
+ [% IF ( f14x ) %]
+ <option value="x" selected="selected">ليس تسجيل فيديو</option>
+ [% ELSE %]
+ <option value="x">ليس تسجيل فيديو</option>
+ [% END %]
+
+ [% IF ( f14z ) %]
+ <option value="z" selected="selected">نوع فيديو آخر</option>
+ [% ELSE %]
+ <option value="z">نوع فيديو آخر</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr><td><label for="f15">شكل العرض - تسجيل فيديو</label></td>
+ <td>
+ <select name="f15" id="f15">
+ [% IF ( f15pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f15a ) %]
+ <option value="a" selected="selected">بيتا</option>
+ [% ELSE %]
+ <option value="a">بيتا</option>
+ [% END %]
+
+ [% IF ( f15b ) %]
+ <option value="b" selected="selected">VHS</option>
+ [% ELSE %]
+ <option value="b">VHS</option>
+ [% END %]
+
+ [% IF ( f15c ) %]
+ <option value="c" selected="selected">U-matic</option>
+ [% ELSE %]
+ <option value="c">U-matic</option>
+ [% END %]
+
+ [% IF ( f15d ) %]
+ <option value="d" selected="selected">EIAJ (بكرة)</option>
+ [% ELSE %]
+ <option value="d">EIAJ (بكرة)</option>
+
+ [% END %]
+
+ [% IF ( f15e ) %]
+ <option value="e" selected="selected">نوع C (بكرة)</option>
+ [% ELSE %]
+ <option value="e">نوع C (بكرة)</option>
+
+ [% END %]
+
+ [% IF ( f15f ) %]
+ <option value="f" selected="selected">رباعي (بكرة)</option>
+ [% ELSE %]
+ <option value="f">رباعي (بكرة)</option>
+ [% END %]
+
+
+ [% IF ( f15g ) %]
+ <option value="g" selected="selected">قرص ضوئي</option>
+ [% ELSE %]
+ <option value="g">قرص ضوئي</option>
+
+ [% END %]
+ [% IF ( f15h ) %]
+ <option value="h" selected="selected">CED (سعة القرص الالكتروني) قرص الفيديو</option>
+ [% ELSE %]
+ <option value="h">CED (سعة القرص الالكتروني) قرص الفيديو</option>
+
+ [% END %]
+ [% IF ( f15i ) %]
+ <option value="i" selected="selected">V2000 (فيديو كاسيت)</option>
+ [% ELSE %]
+ <option value="i">V2000 (فيديو كاسيت)</option>
+
+ [% END %]
+ [% IF ( f15j ) %]
+ <option value="j" selected="selected">Video8 (videocassette)</option>
+ [% ELSE %]
+ <option value="j">Video8 (videocassette)</option>
+
+ [% END %]
+ [% IF ( f15k ) %]
+ <option value="k" selected="selected">DVD - فيديو</option>
+ [% ELSE %]
+ <option value="k">DVD - فيديو</option>
+
+ [% END %]
+ [% IF ( f15u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+
+ [% END %]
+ [% IF ( f15x ) %]
+ <option value="x" selected="selected">ليس تسجيل فيديو</option>
+ [% ELSE %]
+ <option value="x">ليس تسجيل فيديو</option>
+
+ [% END %]
+ [% IF ( f15z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr><td><label for="f16">أساس مادة المستحلب - إسقاط مرئي</label></td>
+ <td>
+ <select name="f16" id="f16">
+ [% IF ( f16pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f16a ) %]
+ <option value="a" selected="selected">فيلم الأمان</option>
+ [% ELSE %]
+ <option value="a">فيلم الأمان</option>
+ [% END %]
+
+ [% IF ( f16b ) %]
+ <option value="b" selected="selected">قاعدة فيلم آخر من الفيلم الآمن</option>
+ [% ELSE %]
+ <option value="b">قاعدة فيلم آخر من الفيلم الآمن</option>
+ [% END %]
+
+ [% IF ( f16c ) %]
+ <option value="c" selected="selected">مواد تركيبية (البلاستيك، الفينيل، إلخ)</option>
+ [% ELSE %]
+ <option value="c">مواد تركيبية (البلاستيك، الفينيل، إلخ)</option>
+ [% END %]
+
+ [% IF ( f16u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+
+ [% END %]
+
+ [% IF ( f16v ) %]
+ <option value="v" selected="selected">مجموعة مختلطة ( تحتوي على أكثر من نوع اساس)</option>
+ [% ELSE %]
+ <option value="v">مجموعة مختلطة ( تحتوي على أكثر من نوع اساس)</option>
+
+ [% END %]
+
+ [% IF ( f16x ) %]
+ <option value="x" selected="selected">ليس اسقاط بصري</option>
+ [% ELSE %]
+ <option value="x">ليس اسقاط بصري</option>
+
+ [% END %]
+
+
+ [% IF ( f16z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr><td><label for="f17">مادة دعم ثانوية - عرض مرئي</label></td>
+ <td>
+ <select name="f17" id="f17">
+ [% IF ( f17pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f17a ) %]
+ <option value="a" selected="selected">لوح كارتوني</option>
+ [% ELSE %]
+ <option value="a">لوح كارتوني</option>
+
+ [% END %]
+
+ [% IF ( f17b ) %]
+ <option value="b" selected="selected">زجاج</option>
+ [% ELSE %]
+ <option value="b">زجاج</option>
+ [% END %]
+
+ [% IF ( f17c ) %]
+ <option value="c" selected="selected">مواد تركيبية (البلاستيك، الفينيل، إلخ)</option>
+ [% ELSE %]
+ <option value="c">مواد تركيبية (البلاستيك، الفينيل، إلخ)</option>
+ [% END %]
+
+ [% IF ( f17d ) %]
+ <option value="d" selected="selected">معدن</option>
+ [% ELSE %]
+ <option value="d">معدن</option>
+
+ [% END %]
+
+ [% IF ( f17e ) %]
+ <option value="e" selected="selected">معدن وزجاج</option>
+ [% ELSE %]
+ <option value="e">معدن وزجاج</option>
+
+ [% END %]
+
+ [% IF ( f17f ) %]
+ <option value="f" selected="selected">مواد تركيبية (البلاستيك، الفينيل، إلخ) والزجاج</option>
+ [% ELSE %]
+ <option value="f">مواد تركيبية (البلاستيك، الفينيل، إلخ) والزجاج</option>
+
+ [% END %]
+
+
+ [% IF ( f17u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+
+ [% END %]
+ [% IF ( f17x ) %]
+ <option value="x" selected="selected">ليس اسقاط بصري</option>
+ [% ELSE %]
+ <option value="x">ليس اسقاط بصري</option>
+
+ [% END %]
+ [% IF ( f17y ) %]
+ <option value="y" selected="selected">غير موجود ( لا يوجد دعم ثانوي)</option>
+ [% ELSE %]
+ <option value="y">غير موجود ( لا يوجد دعم ثانوي)</option>
+
+ [% END %]
+ [% IF ( f17z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr><td><label for="f18">البث المعياري - تسجيل الفيديو</label></td>
+ <td>
+ <select name="f18" id="f18">
+ [% IF ( f18pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+ [% IF ( f18a ) %]
+ <option value="a" selected="selected">405</option>
+ [% ELSE %]
+ <option value="a">405</option>
+
+ [% END %]
+
+ [% IF ( f18b ) %]
+ <option value="b" selected="selected">525 (مثال: NTSC)</option>
+ [% ELSE %]
+ <option value="b">525 (مثال: NTSC)</option>
+ [% END %]
+
+ [% IF ( f18c ) %]
+ <option value="c" selected="selected">625 PAL</option>
+ [% ELSE %]
+ <option value="c">625 PAL</option>
+ [% END %]
+
+ [% IF ( f18d ) %]
+ <option value="d" selected="selected">625 SECAM</option>
+ [% ELSE %]
+ <option value="d">625 SECAM</option>
+
+ [% END %]
+
+ [% IF ( f18g ) %]
+ <option value="g" selected="selected">1125</option>
+ [% ELSE %]
+ <option value="g">1125</option>
+
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            document.f_pop.f2.value=document.f_pop.f2.value+'   ';
+            document.f_pop.f2.value=document.f_pop.f2.value.substring(0,3);
+
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value =  document.f_pop.f1.value +document.f_pop.f2.value+document.f_pop.f3.value+document.f_pop.f4.value+document.f_pop.f5.value+document.f_pop.f6.value+document.f_pop.f7.value+document.f_pop.f8.value+document.f_pop.f9.value+document.f_pop.f10.value+document.f_pop.f11.value+document.f_pop.f12.value+document.f_pop.f13.value+document.f_pop.f14.value+document.f_pop.f15.value+document.f_pop.f16.value+document.f_pop.f17.value+document.f_pop.f18.value;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

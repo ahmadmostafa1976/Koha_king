@@ -1,0 +1,86 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Cancel order") | html %] &rsaquo;
+ [% t("Acquisition") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="acq_cancelorder" class="acq">
+[% INCLUDE 'header.inc' %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/acqui/acqui-home.pl">التزويد</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/acqui/supplier.pl?booksellerid=[% basket.bookseller.id | uri %]">[% basket.bookseller.name | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/acqui/basket.pl?basketno=[% basket.basketno | uri %]">السلة [% basket.basketname | html %] ([% basket.basketno | html %]) لـ [% basket.bookseller.name | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>إلغاء الطلبية</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+ [% INCLUDE 'messages.inc' %]
+
+ [% UNLESS ( confirmcancel ) %]
+ <form method="post" action="">
+ [% INCLUDE 'csrf-token.inc' %]
+ <div class="dialog alert">
+ <h1>هل أنت متأكد من أنك تريد الغاء هذه الطلبية ([% ordernumber | html %])</h1>
+ <p>
+ [% IF (del_biblio) %]
+ <span>سيتم حذف التسجيلة الببليوغرافية أيضاً.</span>
+ [% ELSE %]
+ <span>لن يتم حذف التسجيلة الببليوغرافية.</span>
+ [% END %]
+ </p>
+ <p>
+ [% PROCESS 'av-build-dropbox.inc' name="reason", category="ORDER_CANCELLATION_REASON" default="0" %]
+ </p>
+ <input type="hidden" name="op" value="cud-confirmcancel" />
+ <input type="hidden" value="[% ordernumber | html %]" name="ordernumber" />
+ <input type="hidden" value="[% biblionumber | html %]" name="biblionumber" />
+ <input type="hidden" value="[% basket.basketno | html %]" name="basketno" />
+ <input type="hidden" value="[% referrer | html %]" name="referrer" />
+ [% IF (del_biblio) %]
+ <input type="hidden" value="1" name="del_biblio" />
+ [% END %]
+ <button type="submit" class="approve" accesskey="y"><i class="fa fa-fw fa-check"></i> نعم، إلغاء (Y)</button>
+ <button class="deny" accesskey="n" onclick="window.location='[% referrer | html %]';return false;"><i class="fa fa-fw fa-times"></i> لا، لا تقم بالإلغاء (N)</button>
+ </div>
+ </form>
+ [% ELSE %]
+ [% IF ( success_cancelorder ) %]
+ <div class="dialog message">
+ تم الغاء الطلبية بنجاح [% ELSE %] <div class="dialog alert">
+ لقد حدث خطأ. [% IF error_order_already_cancelled %] <p>تم إلغاء الطلبية بالفعل.</p>
+ [% ELSIF error_order_not_found %]
+ <p>تعذر العثور على الطلبية.</p>
+ [% END %]
+ [% IF ( error_delitem ) %]
+ <p>تم الغاء الطلبية، بالرغم من عدم حذف مادة أو أكثر.</p>
+ [% END %]
+ [% IF ( error_delbiblio ) %]
+ <p>تم الغاء الطلبية، بالرغم من عدم حذف التسجيلة.</p>
+ [% END %]
+ [% END %]
+ <p><a href="[% referrer | url %]">صحيح</a></p>
+ </div>
+ [% END %]
+
+ </div>
+ </div>
+
+[% INCLUDE 'intranet-bottom.inc' %]

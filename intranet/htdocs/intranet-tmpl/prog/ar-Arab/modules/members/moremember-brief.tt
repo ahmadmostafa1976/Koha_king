@@ -1,0 +1,104 @@
+[% USE raw %]
+[% USE Koha %]
+[% USE KohaDates %]
+[% PROCESS 'member-display-address-style.inc' %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Check duplicate patron") | html %] &rsaquo;
+ [% t("Patrons") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="pat_moremember-brief" class="pat">
+ <div class="container-fluid">
+ <div class="row">
+ <div class="col-xs-12">
+ <h1>[% INCLUDE 'patron-title.inc' %]</h1>
+ </div>
+ </div>
+ <div class="row">
+ <div class="col-xs-6">
+ <div id="patron-information">
+
+ [% IF ( patron.othernames ) %]&ldquo;[% patron.othernames | html %]&rdquo;[% END %]
+ <div class = "address">
+ <ul>
+ [% PROCESS 'display-address-style' %]
+ </ul>
+ </div>
+ <div class="rows">
+ <ol>
+ [% IF ( patron.phone ) %]<li><span class="label">رقم الهاتف الأساسي: </span>[% patron.phone | html %]</li>[% END %]
+ [% IF ( patron.phonepro ) %]<li><span class="label">رقم هاتف ثانوي: </span>[% patron.phonepro | html %]</li>[% END %]
+ [% IF ( patron.mobile ) %]<li><span class="label">هاتف آخر: </span>[% patron.mobile | html %]</li>[% END %]
+ [% IF ( patron.fax ) %]<li><span class="label">فاكس: </span>[% patron.fax | html %]</li>[% END %]
+ [% IF ( patron.email ) %]<li class="email"><span class="label">البريد الكتروني الأساسي:</span><a href="mailto:[% email | uri %]">[% patron.email | html %]</a></li>[% END %]
+ [% IF ( patron.emailpro ) %]<li class="email"><span class="label">بريد إلكتروني ثانوي: </span><a href="mailto:[% emailpro | uri %]">[% patron.emailpro | html %]</a></li>[% END %]
+ [% UNLESS ( I ) %]
+ [% IF ( patron.initials ) %]<li><span class="label">الأحرف الأولى للاسم: </span>[% patron.initials | html %]</li>[% END %]
+ [% IF ( patron.dateofbirth ) %]<li><span class="label">تاريخ الميلاد:</span>[% patron.dateofbirth | $KohaDates %]</li>[% END %]
+ [% IF ( patron.sex ) %]<li><span class="label">النوع:</span>[% IF ( patron.sex == 'F' ) %]<span class="patronsex-female">أنثى</span>[% ELSIF ( patron.sex == 'M' ) %]<span class="patronsex-male">ذكر</span>[% ELSIF ( patron.sex == 'O' ) %]<span class="patronsex-other">[% tp('gender', 'Other') | html %]</span>[% ELSE %][% patron.sex | html %][% END %]</li>[% END %]
+ [% END %]
+
+ [% IF guarantees %]
+ <li>
+ <span class="label">ضمانات:</span>
+ <ul>
+ [% FOREACH guarantee IN guarantees %]
+ <li><a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% guarantee.borrowernumber | uri %]">[% guarantee.firstname | html %] [% guarantee.surname | html %]</a></li>
+ [% END %]
+ </ul>
+ </li>
+ [% ELSIF guarantor_relationships %]
+ [% FOREACH gr IN guarantor_relationships %]
+ <li>
+ <span class="label">الكفيل:</span>
+ [% SET guarantor = gr.guarantor %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% guarantor.id | uri %]">[% guarantor.firstname | html %] [% guarantor.surname | html %]</a>
+ </li>
+ [% END %]
+ [% END %]
+ </ol>
+ </div>
+</div>
+</div>
+
+ <div class="col-xs-6">
+ <div id="patron-library-details">
+ <h3>استخدام المكتبة</h3>
+ <div class="rows">
+ <ol>
+ <li><span class="label">رقم البطاقة: </span>[% patron.cardnumber | html %]</li>
+ <li><span class="label">رقم المستعير: </span> [% patron.borrowernumber | html %]</li>
+ <li><span class="label">فئة: </span>[% patron.category.description | html %] ([% patron.category.categorycode | html %])</li>
+ <li><span class="label">تاريخ التسجيل: </span>[% patron.dateenrolled | $KohaDates %]</li>
+ <li><span class="label">تاريخ الانتهاء: </span>
+ [% IF ( was_renewed ) %]
+ <strong class="reregistrinfo">[% patron.dateexpiry | $KohaDates %]</strong>
+ [% ELSE %]
+ [% patron.dateexpiry | $KohaDates %]
+ [% END %]
+ </li>
+ <li><span class="label">المكتبة: </span>[% patron.library.branchname | html %]</li>
+ [% IF ( patron.sort1 ) %]<li><span class="label">فرز الحقل 1:</span>[% AuthorisedValues.GetByCode('Bsort1', patron.sort1) | html %]</li>[% END %]
+ [% IF ( patron.sort2 ) %]<li><span class="label">فرز الحقل 2:</span>[% AuthorisedValues.GetByCode('Bsort2', patron.sort2) | html %]</li>[% END %]
+ [% UNLESS ( patron.autorenew_checkouts ) %]<li>التجديد التلقائي: اختار المستفيد عدم المشاركة</li>[% END %]
+ </ol>
+ </div>
+ </div>
+ </div>
+</div>
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <button type="button" class="btn btn-default close_window focus">إغلاق النافذة</button>
+ </fieldset>
+ </div>
+ </nav>
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

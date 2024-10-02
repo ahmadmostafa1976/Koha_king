@@ -1,0 +1,157 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %] [% UNLESS ( language ) %] اختر لغتك [% END %] [% IF ( language ) %] [% UNLESS ( checkmodule ) %] [% IF ( missing_modules ) %] [% t("Perl modules missing") | html %] [% END %] [% IF ( problems ) %] [% t("Perl version obsolete") | html %] [% END %] [% END %] [% t("Check Perl dependencies") | html %] [% END %] &rsaquo; [% t("Web installer") | html %] &rsaquo; [% t("Koha") | html %] [% END %]</title>
+[% INCLUDE 'installer-doc-head-close.inc' %]
+</head>
+
+
+<body id="installer" class="installer">
+ <div class="container-fluid">
+ <div class="row">
+ <div id="installer-step1" class="installer-main col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
+
+ <div id="logo"><a href="#">كوها</a></div>
+
+ [% UNLESS ( language ) %]
+ <h1>مثبت الويب &rsaquo; اختر لغتك</h1>
+
+ <div id="steps">
+ <ol>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> اختر لغتك</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> التحقق من تبعيات بيرل</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إعدادات قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تنصيب_قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تثبيت إعدادات التهيئة الأساسية</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <p>يرجى اختيار لغتك من القائمة التالية. إذا لم تكن لغتك مدرجة بها، يرجى إخبار مدير نظامك.</p>
+
+ <form name="language" action="install.pl" method="get">
+ <div class="form-group">
+ <label for="language">اختر اللغة: </label>
+ <select id="language" name="language">
+ [% IF ( installer_languages_loop ) %]
+ [% FOREACH installer_languages_loo IN installer_languages_loop %]
+ [% IF ( installer_languages_loo.plural ) %]
+ <optgroup label="[% installer_languages_loo.language | html %]">
+ [% FOREACH sublanguages_loo IN installer_languages_loo.sublanguages_loop %]
+ <option value="[% sublanguages_loo.rfc4646_subtag | html %]">[% IF ( sublanguages_loo.native_description ) %][% sublanguages_loo.native_description | html %][% ELSE %][% sublanguages_loo.rfc4646_subtag | html %][% END %]</option>
+ [% END %]
+ </optgroup>
+ [% ELSE %]
+ <option value="[% installer_languages_loo.rfc4646_subtag | html %]">[% IF ( installer_languages_loo.native_description ) %][% installer_languages_loo.native_description | html %][% ELSE %][% installer_languages_loo.rfc4646_subtag | html %][% END %]</option>
+ [% END %]
+ [% END %]
+ [% END %]
+ </select>
+ </div>
+ <p><input class="btn btn-primary" type="submit" value="تابع إلى الخطوة التالية" /></p>
+ </form>
+ [% END %]
+
+ [% IF ( language ) %]
+ [% UNLESS ( checkmodule ) %]
+ [% IF ( missing_modules ) %]
+ <h1>مثبت الويب &rsaquo; أنظمة بيرل الفرعية مفقودة</h1>
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> اختر لغتك</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> التحقق من تبعيات بيرل</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إعدادات قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تنصيب_قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تثبيت إعدادات التهيئة الأساسية</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <p>بعض أنظمة بيرل الفرعية مفقودة. <span class="label label-danger">هام: </span>يجب تثبيت النظام الفرعي المطلوب قبل أن تتمكن من المتابعة.<br />
+ <ul>
+ [% FOREACH missing_module IN missing_modules %]
+ <li><strong>[% missing_module.name | html %]</strong> [% IF ( missing_module.require ) %]<span class="label label-danger">مطلوب</span>[% END %]
+ <br /> الإصدار: [% missing_module.min_version | html %] </li>
+ [% END %]
+ </ul>
+ [% END %]
+
+ [% IF ( upgrade_modules ) %]
+ <h1>حان وقت ترقية أنظمة بيرل &rsaquo; ومثبت الويب</h1>
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> اختر لغتك</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> التحقق من تبعيات بيرل</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إعدادات قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تنصيب_قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تثبيت إعدادات التهيئة الأساسية</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <p>بعض أنظمة بيرل الفرعية تتطلب الترقية. <span class="label label-danger">هام: </span>يجب تثبيت الأنظمة الفرعية المطلوبة في الإصدار الصحيح قبل المتابعة.<br />
+ <ul>
+ [% FOREACH upgrade_module IN upgrade_modules %]
+ <li><strong>[% upgrade_module.name | html %]</strong> [% IF ( upgrade_module.require ) %]<span class="label label-danger">مطلوب</span>[% END %]
+ <br /> الإصدار المثبت: [% upgrade_module.version | html %] <br /> الحد الأدنى للإصدار: [% upgrade_module.min_version | html %] <br /> الحد الأقصى للإصدار: [% upgrade_module.max_version | html %] </li>
+ [% END %]
+ </ul>
+ [% END %]
+
+ [% IF ( problems ) %]
+ <h1>مثبت الويب &rsaquo; إصدار بيرل قديم للغاية</h1>
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> اختر لغتك</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> التحقق من تبعيات بيرل</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إعدادات قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تنصيب_قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تثبيت إعدادات التهيئة الأساسية</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <p>صادفت بعض المشاكل.</p>
+ <ul>
+ [% IF ( perlversion ) %]
+ <li>لقد انتهت صلاحية نسختك من بيرل. يرجى ترقيتها للإصدار الأحدث من بيرل (على الأقل الإصدار 5.10).</li>
+ [% END %]
+ </ul>
+ [% END %]
+
+ <form method="get" name="checkmodules" action="install.pl">
+ <input type="hidden" name="step" value="1" />
+ <p> <input class="btn btn-primary" type="submit" value="إعادة التحقق من التبعيات" /></p>
+ </form>
+
+ [% ELSE # IF checkmodule %]
+ <h1>مثبت الويب &rsaquo;التحقق من اعتماديات بيرل</h1>
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> اختر لغتك</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> التحقق من تبعيات بيرل</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إعدادات قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تنصيب_قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تثبيت إعدادات التهيئة الأساسية</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <p>جميع أنظمة بيرل الفرعية المطلوبة تبدو مثبتة.</p>
+ <p> كل الاعتمادات قد ثبتت.</p>
+
+ <form method="get" name="checkmodules" role="form" action="install.pl">
+ <input type="hidden" name="step" value="2" />
+ <p> <input class="btn btn-primary" type="submit" value="تابع إلى الخطوة التالية" /> </p>
+ </form>
+ [% END # IF checkmodule%]
+ [% END # IF language %]
+ </div> <!-- / #installer-step1 -->
+ </div> <!-- / .row -->
+ </div><!-- / .container-fluid -->
+
+[% INCLUDE 'installer-intranet-bottom.inc' %]

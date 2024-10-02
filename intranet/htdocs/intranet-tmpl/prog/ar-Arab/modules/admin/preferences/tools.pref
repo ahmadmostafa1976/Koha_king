@@ -1,0 +1,48 @@
+---
+tools.pref:
+  أرقام الباركود:
+  - - تقسيم الباركود على الأحرف الفاصلة التالية
+    - default: \s\r\n
+      pref: BarcodeSeparators
+    - 'في تعديل المواد بالدفعة والجرد. <br/>ملاحظة: قم بكتابة \r للإرجاع، \n للسطر
+      الجديد و\s للمسافة. المرشحون المحتملون للإدراج أيضاً: علامة |، الواصلة (تسبق
+      بخط مائل عكسي)، الفاصلة، الفاصلة المنقوطة، النقطة ، إلخ.'
+  الأخبار:
+  - - 'عرض المؤلف لمواد الأخبار:'
+    - choices:
+        both: كل من الأوباك وواجهة الموظف
+        none: على الإطلاق
+        opac: الأوباك فقط
+        staff: واجهة الموظف فقط
+      pref: NewsAuthorDisplay
+    - .
+  - - افتراضياً، قم بتحرير المحتويات الإضافية ومواد الأخبار بـ
+    - choices:
+        codemirror: محرر نص (CodeMirror)
+        tinymce: محرر WYSIWYG (TinyMCE)
+      pref: AdditionalContentsEditor
+    - .
+  بطاقات المستفيد:
+  - - تحديد عدد صور المنشئ المخزنة في قاعدة البيانات إلى
+    - class: Integer
+      pref: ImageLimit
+    - صور.
+  تحميل:
+  - - الحذف التلقائي للمرفوعات المؤقتة الأقدم من
+    - class: integer
+      pref: UploadPurgeTemporaryFilesDays
+    - 'يوما في كرون cleanup_database. ملاحظة: إذا تركت هذا الحقل فارغا، لن يقوم الكرون
+      بحذف أي ملفات. من ناحية أخرى، فإن القيمة 0 تعني: حذف كل الملفات المؤقتة.'
+  دفعة المواد:
+  - - معالجة حتى
+    - class: integer
+      pref: MaxItemsToProcessForBatchMod
+    - المواد في دفعة تعديل واحدة للمواد.
+  - - اعرض حتى
+    - class: integer
+      pref: MaxItemsToDisplayForBatchDel
+    - المواد في دفعة حذف واحدة للمواد.
+  - - اعرض حتى
+    - class: integer
+      pref: MaxItemsToDisplayForBatchMod
+    - المواد في دفعة تعديل واحدة للمواد.

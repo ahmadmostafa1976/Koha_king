@@ -1,0 +1,84 @@
+[% USE raw %]
+[% USE Koha %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF ( nopermission ) %]
+ [% t("Access denied") | html %]
+ [% END %]
+ [% IF ( timed_out ) %]
+ [% t("Session timed out") | html %]
+ [% END %]
+ [% IF ( different_ip ) %]
+ [% t("IP address change") | html %]
+ [% END %]
+ [% IF ( invalid_username_or_password ) %]
+ [% t("Invalid username or password") | html %]
+ [% END %]
+ [% IF ( loginprompt ) %]
+ [% t("Log in to the Koha web installer") | html %]
+ [% END %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'installer-doc-head-close.inc' %]
+</head>
+
+<body id="installer" class="installer">
+ <div class="container-fluid">
+ <div class="row">
+ <div id="installer-login" class="installer-main col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
+
+ <div id="logo"><a href="#">كوها</a></div>
+
+ [% IF ( nopermission ) %]
+ <div id="login_error" class="alert alert-danger"><strong>خطأ: </strong>مستخدم غير مصرح له <a href="/cgi-bin/koha/mainpage.pl?logout.x=1">انقر لتسجيل الخروج</a></div>
+ [% END %]
+
+ [% IF ( timed_out ) %]
+ <div id="login_error" class="alert alert-danger"><strong>خطأ: </strong>انتهى وقت الجلسة، يرجي إعادة تسجيل الدخول مرة أخرى</div>
+ [% END %]
+
+ [% IF ( different_ip ) %]
+ <div id="login_error" class="alert alert-danger"><strong>خطأ: </strong>تم تغيير IP، يرجى إعادة تسجيل الدخول مرة أخرى </div>
+ [% END %]
+
+ [% IF ( invalid_username_or_password ) %]
+ <div id="login_error" class="alert alert-danger"><strong>خطأ: </strong>خطأ في اسم المستخدم أو كلمة المرور</div>
+ [% END %]
+
+ [% IF ( loginprompt ) %]
+ <h1>مرحبا بكم في مثبت ويب [%- Koha.Version.release | html -%] كوها</h1>
+
+ <p>قبل أن نبدأ، يرجى التأكد من أن لديك الاعتمادات الصحيحة للاستمرار . من يرجى تسجيل الدخول باسم المستخدم و كلمة المرور الممنوحة لك بواسطة مدير النظام الخاص بك والموجودة في  <code>koha-conf.xml</code> ملف التهيئة.</p>
+
+ <form action="[% url | html %]" method="post" id="mainform">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-login" />
+ [% FOREACH INPUT IN INPUTS %]
+ [% NEXT IF INPUT.name == "op" %]
+ [% NEXT IF INPUT.name == "csrf_token" %]
+ [% NEXT IF INPUT.name == "login_userid" %]
+ [% NEXT IF INPUT.name == "login_password" %]
+ <input type="hidden" name="[% INPUT.name | html %]" value="[% INPUT.value | html %]" />
+ [% END %]
+
+ <fieldset>
+ <legend>يرجى إدخال اسم المستخدم وكلمة المرور</legend>
+
+ <div class="form-group">
+ <label>اسم المستخدم:</label>
+ <input type="text" class="form-control" name="login_userid" id="userid" value="[% userid | html %]" size="20" tabindex="1" />
+ </div>
+ <div class="form-group">
+ <label>كلمة المرور:</label>
+ <input type="password" class="form-control" name="login_password" id="password" value="" size="20" tabindex="2" />
+ </div>
+ <input class="btn btn-primary" id="submit" tabindex="3" type="submit" value="تسجيل الدخول" />
+ </fieldset>
+ </form>
+ [% END %]
+ </div> <!-- / #installer-login -->
+ </div> <!-- / .row -->
+ </div><!-- / .container-fluid -->
+
+[% INCLUDE 'installer-intranet-bottom.inc' %]

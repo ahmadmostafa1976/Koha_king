@@ -1,0 +1,422 @@
+[% USE raw %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF ( add_form ) %]
+ [% t("Edit subfield constraints") | html %] &rsaquo;
+ [% END %]
+
+ [% IF ( delete_confirm ) %]
+ [% tx("Confirm deletion of subfield '{subfield}'", {subfield = mss.tagsubfield }) | html %] &rsaquo;
+ [% END %]
+
+ [% IF ( add_form || delete_confirm || else ) %]
+ [% tx("Tag {tag}", { tag = tagfield}) | html %] &rsaquo;
+ [% END %]
+
+ [% IF ( frameworkcode ) %]
+ [% framework.frameworktext | html %] ([% framework.frameworkcode | html %])
+ [% ELSE %]
+ [% t("Default framework") | html %]
+ [% END %] &rsaquo;
+
+ [% t("MARC bibliographic frameworks") | html %] &rsaquo;
+
+ [% t("Administration") | html %] &rsaquo;
+
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+<style>.constraints::after { content:  " "; clear: both; display:block; }</style>
+</head>
+
+<body id="admin_marc_subfields_structure" class="admin">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+ [% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/biblio_framework.pl">إطارات مارك الببليوغرافية</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/marctagstructure.pl?frameworkcode=[% frameworkcode | uri %]&amp;searchfield=[% tagfield | uri %]">
+ [% IF ( frameworkcode ) %]
+ [% framework.frameworktext | html %] ([% framework.frameworkcode | html %])
+ [% ELSE %]
+ <span>إطار إفتراضى</span>
+ [% END %]
+ </a>
+ [% END %]
+
+ [% IF ( add_form ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/marc_subfields_structure.pl?tagfield=[% tagfield | uri %]&amp;frameworkcode=[% frameworkcode | uri %]">[% tx("Tag {tag}", { tag = tagfield}) | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تحرير قيود الحقول الفرعية</span>
+ [% END %]
+ [% END %]
+
+ [% IF ( delete_confirm ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/marc_subfields_structure.pl?tagfield=[% mss.tagfield | uri %]&amp;frameworkcode=[% mss.frameworkcode | uri %]">[% tx("Tag {tag}", { tag = tagfield}) | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Confirm deletion of subfield '{subfield}'?", {subfield = mss.tagsubfield }) | html %]
+ [% END %]
+ [% END %]
+
+ [% IF ( else ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>[% tx("Tag {tag} subfield structure", { tag = tagfield}) | html %]</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+ [% END #/ WRAPPER sub-header.inc %]
+
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% IF ( add_form ) %]
+ <h1>
+ [% tx("Tag {tag} subfield constraints", { tag = tagfield}) | html %]
+ </h1>
+ <div class="hint">يمكنك سحب وإفلات تبويبات الحقول الفرعية لتغيير الترتيب.</div>
+
+ <form action="[% script_name | html %]" name="Aform" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add_validate" />
+ <input type="hidden" name="tagfield" value="[% tagfield | html %]" />
+ <input type="hidden" name="frameworkcode" value="[% frameworkcode | html %]" />
+
+ [% BLOCK outputsubfield %][% FILTER collapse %] [% SWITCH ( subfieldanchor ) %] [%   CASE "@" %] في [%   CASE "%" %] % [%   CASE  %] [% subfieldanchor | html %] [% END %] [% END %][% END %] <div id="subfieldtabs" class="toptabs numbered">
+ <ul class="nav nav-tabs" role="tablist">
+ [% FOREACH loo IN loop %]
+ <li id="tab_subfield_[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]" class="tab-item" role="presentation">
+ [% IF ( loo.new_subfield ) %]
+ <a href="#sub[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]field" aria-controls="sub[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]field" role="tab" data-toggle="tab" title="[% loo.liblibrarian | html_entity %]">جديد</a>
+ [% ELSE %]
+ <a href="#sub[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]field" aria-controls="sub[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]field" role="tab" data-toggle="tab" title="[% loo.liblibrarian | html_entity %]">
+ [% loo.subfieldcode | html %]
+ </a>
+ [% END %]
+ </li>
+ [% END %]
+ </ul>
+
+ <div class="tab-content">
+
+ [% FOREACH loo IN loop %]
+ <div class="constraints tab-pane" role="tabpanel" id="sub[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]field">
+ <input type="hidden" name="tab_id" value="[% loo.row | html %]" />
+ <div id="basic[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]" class="contraints">
+ <fieldset class="rows">
+ <legend>القيود الأساسية</legend>
+ <ol>
+ [% IF ( loo.subfieldcode == 0 || loo.subfieldcode ) %]
+ <li>
+ <span class="label">رمز حقل فرعي:</span>
+ [% loo.subfieldcode | html %]
+ <input type="hidden" id="tagsubfield[% loo.row | html %]" name="tagsubfield" value="[% loo.subfieldcode | html %]" />
+ </li>
+ [% ELSE %]
+ <li>
+ <label for="tagsubfield[% loo.row | html %]">رمز حقل فرعي:</label>
+ <input type="text" id="tagsubfield[% loo.row | html %]" name="tagsubfield" value="[% loo.subfieldcode | html %]" />
+ </li>
+ [% END %]
+ <li>
+ <label for="liblibrarian[% loo.row | html %]">الوصف في واجهة الموظفين: </label>
+ <input id="liblibrarian[% loo.row | html %]" type="text" name="liblibrarian_[% loo.row | html %]" value="[% loo.liblibrarian | html_entity %]" size="40" maxlength="80" />
+ </li>
+ <li>
+ <label for="libopac[% loo.row | html %]">الوصف في الأوباك: </label>
+ <input type="text" id="libopac[% loo.row | html %]" name="libopac_[% loo.row | html %]" value="[% loo.libopac | html_entity %]" size="40" maxlength="80" />
+ </li>
+ <li>
+ <label for="repeatable[% loo.row | html %]">مكرر: </label>
+ [% IF loo.repeatable %]
+ <input type="checkbox" id="repeatable[% loo.row | html %]" name="repeatable_[% loo.row | html %]" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="repeatable[% loo.row | html %]" name="repeatable_[% loo.row | html %]" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="mandatory[% loo.row | html %]">إلزامى: </label>
+ [% IF loo.mandatory %]
+ <input type="checkbox" id="mandatory[% loo.row | html %]" name="mandatory_[% loo.row | html %]" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="mandatory[% loo.row | html %]" name="mandatory_[% loo.row | html %]" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="important[% loo.row | html %]">هام: </label>
+ [% IF loo.important %]
+ <input type="checkbox" id="important[% loo.row | html %]" name="important_[% loo.row | html %]" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="important[% loo.row | html %]" name="important_[% loo.row | html %]" value="1" />
+ [% END %]
+ </li>
+ <li><label for="tab[% loo.row | html %]">مدار في التبويب: </label>
+ <select name="tab_[% loo.row | html %]" tabindex="" id="tab[% loo.row | html %]">
+ [%- IF ( loo.tab ==  -1 ) -%]
+ <option value="-1" selected="selected">تجاهل</option>
+ [%- ELSE -%]
+ <option value="-1">تجاهل</option>
+ [%- END -%]
+ [%- FOREACH t IN [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'] -%]
+ [%- IF ( loo.tab ==  t ) -%]
+ <option value="[%- t | html -%]" selected="selected">[%- t | html -%]</option>
+ [%- ELSE -%]
+ <option value="[%- t | html -%]">[%- t | html -%]</option>
+ [%- END -%]
+ [%- END -%]
+ [%- IF ( loo.tab ==  10 ) -%]
+ <option value="10" selected="selected">مواد (10)</option>
+ [%- ELSE -%]
+ <option value="10">مواد (10)</option>
+ [%- END -%]
+ </select>
+ <div class="hint"><i class="fa-solid fa-triangle-exclamation"></i> <span>التجاهل يعني أن الحقل الفرعي لا يتم عرضه في محرر التسجيلة وأن قيمته، إن وجدت، سيتم حذفها من التسجيلة</span></div>
+ </li>
+ </ol>
+ </fieldset> <!-- /.rows -->
+ </div> <!-- /#basic[%- PROCESS outputsubfield subfieldanchor = subfieldcode -%] -->
+
+ <div id="advanced[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]" class="contraints">
+ <fieldset class="rows">
+ <legend>قيود متقدمة</legend>
+ <ol>
+ <li>
+ <label for="defaultvalue[% loo.row | html %]">القيمة الافتراضية:</label>
+ <input type="text" name="defaultvalue_[% loo.row | html %]" id="defaultvalue[% loo.row | html %]" value="[% loo.defaultvalue | html %]" />
+ </li>
+ <li>
+ <label for="maxlength[% loo.row | html %]">الحد الأقصى للطول:</label>
+ <input type="text" id="maxlength[% loo.row | html %]" name="maxlength_[% loo.row | html %]" value="[% loo.maxlength | html %]" size="4" />
+ </li>
+ <li>
+ [% IF loo.hidden_protected %]
+ <input type="hidden" id="hidden-[% loo.row | html %]" name="hidden_[% loo.row | html %]" value="[% loo.hidden | html %]" data-koha-protected="1" />
+ [% ELSE %]
+ <input type="hidden" id="hidden-[% loo.row | html %]" name="hidden_[% loo.row | html %]" value="[% loo.hidden | html %]" />
+ [% END %]
+ <label for="hidden[% loo.row | html %]">الرؤية: </label>
+ <input type="checkbox" id="hidden_opac_[% loo.row | html %]" class="inclusive_[% loo.row | html %]" name="hidden_opac_[% loo.row | html %]"/>
+ <label for="hidden_opac_[% loo.row | html %]" style="float: none;">أوباك</label>
+ <input type="checkbox" id="hidden_intranet_[% loo.row | html %]" class="inclusive_[% loo.row | html %]" name="hidden_intranet_[% loo.row | html %]"/>
+ <label for="hidden_intranet_[% loo.row | html %]" style="float: none;">واجهة الموظف</label>
+ <input type="checkbox" id="hidden_editor_[% loo.row | html %]" class="inclusive_[% loo.row | html %]" name="hidden_editor_[% loo.row | html %]"/>
+ <label for="hidden_editor_[% loo.row | html %]" style="float: none;">المحرر</label>
+ <input type="checkbox" id="hidden_collapsed_[% loo.row | html %]" class="inclusive_[% loo.row | html %]" name="hidden_collapsed_[% loo.row | html %]"/>
+ <label for="hidden_collapsed_[% loo.row | html %]" style="float: none;">مطوي</label>
+ <input type="checkbox" id="hidden_flagged_[% loo.row | html %]" name="flagged_[% loo.row | html %]"/>
+ <label for="hidden_flagged_[% loo.row | html %]" style="float: none;">ذو علامة</label>
+ </li>
+ <li>
+ <label for="isurl[% loo.row | html %]">هو عنوان URL:</label>
+ [% IF loo.isurl %]
+ <input type="checkbox" id="isurl[% loo.row | html %]" name="isurl_[% loo.row | html %]" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="isurl[% loo.row | html %]" name="isurl_[% loo.row | html %]" value="1" />
+ [% END %]
+ <span class="hint">إذا تم تحديده، فهذا يعني أن الحقل الفرعي هو عنوان URL وقابل للنقر عليه</span>
+ </li>
+ <li>
+ <label for="link[% loo.row | html %]">رابط:</label>
+ <input type="text" id="link[% loo.row | html %]" name="link_[% loo.row | html %]" value="[% loo.link | html %]" size="10" maxlength="80" />
+ <div class="hint">اسم الفهرس، مثال: عنوان أو رقم محلي</div>
+ </li>
+ <li>
+ <label for="kohafield[% loo.row | html %]">رابط كوها:</label>
+ <!-- This select should be DISABLED; value is submitted by the following hidden input -->
+ [% loo.kohafield | html %]
+ <!-- Do NOT remove this next hidden input! We need it to save kohafield. -->
+ <input type="hidden" name="kohafield_[% loo.row | html %]" value="[% loo.kohafield | html %]"/>
+ <div class="hint">تحرير في 'تخطيط كوها إلى مارك'</div>
+ </li>
+ </ol>
+ </fieldset> <!-- /.rows -->
+ </div> <!-- /#advanced[%- PROCESS outputsubfield subfieldanchor = subfieldcode -%] -->
+
+ <div id="oth[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%]" class="constraints">
+ <fieldset class="rows">
+ <legend>خيارات أخرى (اختر واحداً)</legend>
+ <ol>
+ <li>
+ <label for="authorised_value[% loo.row | html %]">قيمة الاستناد:</label>
+ <select name="authorised_value_[% loo.row | html %]" id="authorised_value[% loo.row | html %]">
+ <option value=""></option>
+ [% FOREACH value IN loo.authorised_values %]
+ [% IF ( value == loo.authorised_value ) %]
+ <option value="[% value | html %]" selected="selected">[% value | html %]</option>
+ [% ELSE %]
+ <option value="[% value | html %]">[% value | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="authtypecode[% loo.row | html %]">مكنز:</label>
+ <select name="authtypecode_[% loo.row | html %]" id="authtypecode[% loo.row | html %]">
+ [% FOREACH value IN loo.authtypes %]
+ [% IF ( value == loo.authtypecode ) %]
+ <option value="[% value | html %]" selected="selected">[% value | html %]</option>
+ [% ELSE %]
+ <option value="[% value | html %]">[% value | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="value_builder[% loo.row | html %]">البرنامج المساعد:</label>
+ <select name="value_builder_[% loo.row | html %]" id="value_builder[% loo.row | html %]">
+ [% FOREACH value IN loo.value_builders %]
+ [% IF ( value == loo.value_builder ) %]
+ <option value="[% value | html %]" selected="selected">[% value | html %]</option>
+ [% ELSE %]
+ <option value="[% value | html %]">[% value | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ </ol>
+ </fieldset> <!-- /.rows -->
+ </div> <!-- /#oth[%- PROCESS outputsubfield subfieldanchor = loo.subfieldcode -%] -->
+ </div><!-- /constraints -->
+ [% END # /FOREACH loo %]
+ </div> <!-- /.tab-content -->
+ </div><!-- /subfieldtabs -->
+
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ التغييرات" /> <a href="/cgi-bin/koha/admin/marc_subfields_structure.pl?tagfield=[% tagfield  | uri %]&amp;frameworkcode=[% frameworkcode | uri %]" class="cancel">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END # /IF ( add_form ) %]
+
+ [% IF ( delete_confirm ) %]
+ <div class="dialog alert">
+ <h1>[% tx("Confirm deletion of subfield '{subfield}'?", {subfield = mss.tagsubfield }) | html %]</h1>
+ <p>حقل فرعي: [% mss.tagsubfield | html %]</p>
+ <p>وصف: [% mss.liblibrarian | html_entity %]</p>
+
+ <form action="[% delete_link | html %]" method="post"><input type="hidden" name="op" value="cud-delete_confirmed" />
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="tagfield" value="[% mss.tagfield | html %]" />
+ <input type="hidden" name="tagsubfield" value="[% mss.tagsubfield | html %]" />
+ <input type="hidden" name="frameworkcode" value="[% mss.frameworkcode | html %]" />
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> نعم، حذف هذا الحقل الفرعي</button>
+ </form>
+
+
+ <form action="[% script_name | html %]" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="tagfield" value="[% mss.tagfield | html %]" />
+ <input type="hidden" name="tagsubfield" value="[% mss.tagsubfield | html %]" />
+ <input type="hidden" name="frameworkcode" value="[% mss.frameworkcode | html %]" />
+ <button type="submit" class="deny"><i class="fa fa-fw fa-times"></i> لا ، لا تقم بالحذف</button>
+ </form>
+ </div> <!-- /.dialog.alert -->
+ [% END # /IF ( delete_confirm ) %]
+
+ [% IF ( else ) %]
+ [% IF ( frameworkcode ) %]
+ <h1>[% tx("Tag {tag} subfield structure (framework {frameworkcode})", { tag = tagfield, frameworkcode = frameworkcode }) | html %]</h1>
+ [% ELSE %]
+ <h1>[% tx("Tag {tag} subfield structure (default framework)", { tag = tagfield}) | html %]</h1>
+ [% END %]
+
+ <p>تعرض هذه الشاشة الحقول الفرعية المرتبطة بالوسم المحدد. يمكنك تحرير الحقول الفرعية أو إضافة حقل جديد بالنقر على تحرير.</p>
+ <p>يظهر عمود "حقل كوها" أن الحقل الفرعي مرتبط بحقل كوها.</p>
+
+ <div class="page-section">
+ <table id="table_marcsubfieldstructure">
+ <thead>
+ <tr>
+ <th>حقل فرعى</th>
+ <th>نص</th>
+ <th>القيود</th>
+ <th class="NoSort noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH loo IN loop %]
+ <tr>
+ <td><a href="/cgi-bin/koha/admin/marc_subfields_structure.pl?op=add_form&amp;tagfield=[% loo.tagfield | uri %]&amp;frameworkcode=[% frameworkcode | uri %]#sub[% loo.tagsubfield | uri %]field">[% loo.tagsubfield | html %]</a></td>
+ <td>
+ [% IF loo.tab == -1 %]
+ <em>[% loo.liblibrarian | html_entity %]</em>
+ [% ELSE %]
+ [% loo.liblibrarian | html_entity %]
+ [% END %]
+ </td>
+ <td>
+ [% IF loo.tab == -1 %]
+ <em>تم تجاهل الحقل الفرعي</em>
+ [% ELSE %]
+ <span>تبويب:</span>[% loo.tab | html %],
+ [% IF ( loo.kohafield ) %] | <span>حقل كوها:</span> [% loo.kohafield | html %], [% END %]
+ [% IF ( loo.repeatable ) %]<span>مكرر</span>, [% ELSE %]<span>غير قابل للتكرار</span>,[% END %]
+ [% IF ( loo.mandatory ) %]<span>إلزامى</span>, [% ELSE %]<span>غير إلزامى</span>,[% END %]
+ [% IF ( loo.important ) %]<span>هام</span>, [% ELSE %]<span>غير هام</span>,[% END %]
+ [% IF ( loo.seealso ) %] | <span>انظر أيضاً:</span> [% loo.seealso | html %],[% END %]
+ [% IF ( loo.hidden ) %]<span>مخفي</span>,[% END %]
+ [% IF ( loo.isurl ) %]<span>هو عنوان URL</span>,[% END %]
+ [% IF ( loo.authorised_value ) %] | <span>قيمة الاستناد:</span>[% loo.authorised_value | html %],[% END %]
+ [% IF ( loo.authtypecode ) %] | <span>الاستناد:</span>[% loo.authtypecode | html %],[% END %]
+ [% IF ( loo.value_builder ) %] | <span>البرنامج المساعد:</span>[% loo.value_builder | html %],[% END %]
+ [% IF ( loo.link ) %] | <span>رابط:</span>[% loo.link | html %],[% END %]
+ [% END %]
+ </td>
+ <td class="actions">
+ <a href="/cgi-bin/koha/admin/marc_subfields_structure.pl?op=add_form&amp;tagfield=[% loo.tagfield | uri %]&tagsubfield=[% loo.tagsubfield | uri %]&amp;frameworkcode=[% frameworkcode | uri %]#sub[% loo.tagsubfield | uri %]field" class="btn btn-default btn-xs"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a href="/cgi-bin/koha/admin/marc_subfields_structure.pl?op=delete_confirm&amp;tagfield=[% loo.tagfield | uri %]&amp;tagsubfield=[% loo.tagsubfield | uri %]&amp;frameworkcode=[% frameworkcode | uri %]" class="btn btn-default btn-xs"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- /#table_marcsubfieldstructure -->
+ </div><!-- /.page-section -->
+
+ <form action="[% script_name | html %]" method="get">
+ <fieldset class="action"><input type="hidden" name="op" value="add_form" />
+ <input type="hidden" name="tagfield" value="[% edit_tagfield | html %]" />
+ <input type="hidden" name="frameworkcode" value="[% edit_frameworkcode | html %]" />
+ <input class="btn btn-primary" type="submit" value="تحرير الحقول الفرعية" />
+ <a class="cancel" href="marctagstructure.pl?searchfield=[% tagfield | uri %]&amp;frameworkcode=[% frameworkcode | html %]">إلغاء</a>
+ </fieldset>
+ </form>
+
+ [% END # /IF else %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+ [% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'datatables.inc' %]
+ [% Asset.js( "lib/sortable/Sortable.min.js" ) | $raw %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ <script>
+            var tagsubfield = "[% tagsubfield | html %]";
+        </script>
+ [% Asset.js("js/marc_subfields_structure.js") | $raw %]
+ [% END %]
+
+ [% INCLUDE 'intranet-bottom.inc' %]

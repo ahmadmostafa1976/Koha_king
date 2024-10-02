@@ -1,0 +1,376 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Branches %]
+[% USE Koha %]
+[% USE KohaDates %]
+[% USE Price %]
+[% USE AuthorisedValues %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+[% SET destination = "circ" %]
+<title>[% FILTER collapse %]
+ [% IF patron %]
+ [% patron_in_title = INCLUDE 'patron-title.inc' invert_name = 1 no_html = 1 %]
+ [% tx("Batch check out to {patron}", { patron = patron_in_title }) | html %] &rsaquo;
+ [% END %]
+ [% t("Circulation") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="circ_circulation_batch_checkouts" class="circ">
+
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'circ-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/circ/circulation-home.pl">الإعارة</a>
+ [% END %]
+ [% IF patron %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/circ/circulation.pl?borrowernumber=[% borrowernumber | uri %]">معارة إلى [% INCLUDE 'patron-title.inc' %]</a>
+ [% END %]
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>إعارة بالدفعة</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ [% IF patron %]
+ <div class="col-sm-10 col-sm-push-2">
+ [% ELSE %]
+ <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+ [% END %]
+ <main>
+ [% INCLUDE 'messages.inc' %]
+ [% IF patron %]
+ [% INCLUDE 'members-toolbar.inc' %]
+ [% END %]
+
+ <h1>إعارة بالدفعة</h1>
+
+[% IF patron and not batch_allowed %]
+ <div class="dialog alert">غير مسموح لك باستخدام الإعارة بالدفعة لهذا المستفيد</div>
+[% ELSIF patron and noissues and not checkout_infos %]
+ <div class="dialog alert">
+ لا يمكن الإعارة! [% IF ( charges ) %] [% INCLUDE 'blocked-fines.inc' fines = chargesamount %] [% END %] [% IF ( charges_guarantors_guarantees ) %] <li>
+ <span class="circ-hlt">الرسوم:</span> يدين كفيلي المستفيد ومكفوليهم بشكل إجمالي [% charges_guarantors_guarantees | $Price %]. [% IF noissues %] <span class="circ-hlt">تم حظر الإعارات لأن رصيد الغرامة قد تجاوز الحد المسموح به.</span>
+ [% END %]
+ </li>
+ [% END %]
+ [% IF ( charges_guarantees ) %]
+ <li>
+ <span class="circ-hlt">الرسوم:</span> يدين ضامني المستفيد بشكل إجمالي بـ  [% chargesamount_guarantees | $Price %].[% IF noissues %] <span class="circ-hlt">تم حظر الإعارات لأن رصيد الغرامة قد تجاوز الحد المسموح به.</span>
+ [% END %]
+ </li>
+ [% END %]
+ </div>
+[% ELSIF patron and not checkout_infos %]
+ <form method="post" enctype="multipart/form-data" action="/cgi-bin/koha/circ/circulation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <div id="circ_circulation_issue">
+ <fieldset>
+ <legend>عملية الإعارة ل [% INCLUDE 'patron-title.inc' %]</legend>
+ <ol>
+ <li>
+ <label for="barcodelist">قم بإدخال أرقام الباركود (باركود واحد لكل سطر): </label>
+ <textarea rows="10" cols="30" id="barcodelist" name="barcodelist"></textarea>
+ </li>
+ <li>
+ <label for="uploadfile">أو استخدم ملف </label>
+ <input type="file" id="uploadfile" name="uploadfile" />
+ </li>
+ </ol>
+ </fieldset>
+
+ [% IF Koha.Preference('SpecifyDueDate') || Koha.Preference('OnSiteCheckouts') %]
+ <fieldset>
+ <ol>
+ [% IF Koha.Preference('SpecifyDueDate') %]
+ <li>
+ <label for="duedatespec">تحديد تاريخ الاستحقاق: [% INCLUDE 'date-format.inc' %]</label>
+ <input type="text" size="20" id="duedatespec" name="duedatespec" value="[% duedatespec | html %]" class="flatpickr" data-flatpickr-enable-time="true"/>
+ </li>
+ [% END %]
+ [% IF Koha.Preference('OnSiteCheckouts') %]
+ <li class="radio">
+ <div id="onsite_checkout-select">
+ <input type="checkbox" id="onsite_checkout" name="onsite_checkout" class="circ_setting"/>
+ <label for="onsite_checkout">إعارة في الموقع</label>
+ </div>
+ </li>
+ [% END %]
+ </ol>
+ </fieldset>
+ [% END %]
+ </div>
+
+ <fieldset class="action">
+ <input type="hidden" name="borrowernumber" id="borrowernumber" value="[% patron.borrowernumber | html %]" />
+ <input type="hidden" name="branch" value="[% branch | html %]" />
+ <input type="hidden" name="batch" value="1" />
+ <input type="hidden" name="op" value="cud-checkout" />
+ <input class="btn btn-primary" type="submit" value="إعارة" />
+ </fieldset>
+ </form>
+
+[% ELSIF patron %]
+ [% IF confirmation_needed && CAN_user_circulate_force_checkout %]
+ <h3>تأكيد الإعارة بالدفعة</h3>
+ <form method="post" action="/cgi-bin/koha/circ/circulation.pl" id="mainform" name="mainform" autocomplete="off">
+ [% INCLUDE 'csrf-token.inc' %]
+ [% ELSE %]
+ <h3>نتائج الإعارة بالدفعة</h3>
+ [% END %]
+ <div class="page-section">
+ <table id="checkout_infos">
+ <thead>
+ <tr>
+ [% IF confirmation_needed && CAN_user_circulate_force_checkout %]
+ <th class="NoSort"></th>
+ [% END %]
+ <th>الباركود</th>
+ <th class="anti-the">عنوان</th>
+ <th>معلومات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOR checkout_info IN checkout_infos %]
+ <tr>
+ [% IF confirmation_needed && CAN_user_circulate_force_checkout %]
+ <td>
+ [% IF checkout_info.NEEDSCONFIRMATION %]
+ <input type="checkbox" name="barcodes" value="[% checkout_info.barcode | html %]" checked="checked" />
+ [% END %]
+ </td>
+ [% END %]
+ <td>[% checkout_info.barcode | html %]</td>
+ <td>
+ [% INCLUDE 'biblio-title.inc' biblio=checkout_info.biblio link = 1 %] [% IF checkout_info.biblio.author %], بواسطة [% checkout_info.biblio.author | html %][% END %][% IF ( checkout_info.item.itemnotes ) %]- <span class="circ-hlt">[% checkout_info.item.itemnotes | $raw %]</span>[% END %] <a href="/cgi-bin/koha/catalogue/moredetail.pl?biblionumber=[% checkout_info.biblio.biblionumber | uri %]&amp;itemnumber=[% checkout_info.item.itemnumber | uri %]#item[% checkout_info.item.itemnumber | uri %]">[% checkout_info.item.barcode | html %]</a>
+ </td>
+ <td>
+ [% IF checkout_info.NEEDSCONFIRMATION %]
+ <ul class="fa-ul warn">
+ [% IF checkout_info.AGE_RESTRICTION %]
+ <li><i class="fa fa-li fa-warning"></i>قيود العمر [% checkout_info.AGE_RESTRICTION | html %].</li>
+ [% END %]
+ [% IF checkout_info.RENEW_ISSUE %]
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة معارة حاليا إلى هذا المستفيد. تجديد؟</li>
+ [% END %]
+ [% IF checkout_info.RESERVE_WAITING %]
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة في انتظار مستفيد آخر.</li>
+ [% END %]
+ [% IF checkout_info.TRANSFERRED %]
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة في الحجز وجاري نقلها إلى مستفيد آخر.</li>
+ [% END %]
+ [% IF checkout_info.PROCESSING %]
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة في الحجز وجاري معالجتها إلى مستفيد آخر.</li>
+ [% END %]
+ [% IF checkout_info.ISSUED_TO_ANOTHER %]
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة معارة إلى مستفيد آخر [% IF CAN_user_circulate_force_checkout %] ردها ثم إعارتها؟ [% END %]</li>
+ [% END %]
+ [% IF checkout_info.TOO_MANY %]
+ <li><i class="fa fa-li fa-warning"></i>عدد كبير جدا من الإعارات.</li>
+ [% END %]
+ [% IF checkout_info.BORRNOTSAMEBRANCH %]
+ <li><i class="fa fa-li fa-warning"></i>هذا المستفيد من مكتبة مختلفة ([% Branches.GetName( checkout_info.BORRNOTSAMEBRANCH ) | html %])</li>
+ [% END %]
+ [% IF checkout_info.PATRON_CANT %]
+ <li><i class="fa fa-li fa-warning"></i>هذا المستفيد لا يمكنه استعارة هذه المادة في سياسة إعارة المكتبة.</li>
+ [% END %]
+ [% IF checkout_info.NOT_FOR_LOAN_FORCING %]
+ [% IF checkout_info.itemtype_notforloan %]
+ <li><i class="fa fa-li fa-warning"></i>نوع المادة ليس للإعارة عادةً.</li>
+ [% ELSIF checkout_info.item_notforloan %]
+ [% item_notforloan_lib = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.notforloan', authorised_value => checkout_info.item_notforloan ) %]
+ <li><i class="fa fa-li fa-warning"></i>المادة ليست للإعارة عادة [% IF item_notforloan_lib %]([% item_notforloan_lib | html %])[% END %].</li>
+ [% END %]
+ [% END %]
+ [% IF checkout_info.USERBLOCKEDOVERDUE %]
+ <li><i class="fa fa-li fa-warning"></i>المستفيد [% checkout_info.USERBLOCKEDOVERDUE | html %] لديه مواد متأخرة.</li>
+ [% END %]
+ [% IF checkout_info.ITEM_LOST %]
+ <li><i class="fa fa-li fa-warning"></i>لقد تم فقد هذه المادة بحالة "[% checkout_info.ITEM_LOST | html %]".</li>
+ [% END %]
+ [% IF checkout_info.HIGHHOLDS %]
+ <li><i class="fa fa-li fa-warning"></i>مادة عالية الطلب. تم تقصير مدة الإعارة إلى  [% checkout_info.HIGHHOLDS.duration | html %]يوما  (مستحقة [% checkout_info.HIGHHOLDS.returndate | html %]).</li>
+ [% END %]
+ [% IF checkout_info.HIGHHOLDS %] <!-- FIXME -->
+ <script>
+                          $(document).ready(function() {
+                              $("input[name=duedatespec]:hidden").val('[% checkout_info.HIGHHOLDS.returndate | html %]');
+                          });
+                      </script>
+ [% END %]
+
+ [% IF NOT checkout_info.IMPOSSIBLE && ( CAN_user_circulate_force_checkout || checkout_info.HIGHHOLDS ) && ( checkout_info.RESERVED || checkout_info.RESERVE_WAITING || checkout_info.TRANSFERRED || checkout_info.PROCESSING ) %] <!-- arbitrary choice, revert the hold is not possible-->
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة في الحجز لمستفيد آخر. سيتم تخطي الحجز، لكن لن يتم الغائه.</li>
+ [% ELSIF checkout_info.RESERVED %]
+ <li><i class="fa fa-li fa-warning"></i>هذه المادة في الحجز لمستفيد آخر.</li>
+ [% END %]
+
+ [% IF checkout_info.PREVISSUE %]
+ <li>تمت إعارة هذه المادة سابقا إلى هذا المستفيد.</li>
+ [% END %]
+ </ul>
+ [% END %]
+
+
+ [% IF checkout_info.alert.ITEM_LOST || checkout_info.alert.OTHER_CHARGES %]
+ <ul class="info">
+ [% IF checkout_info.alert.ITEM_LOST %]
+ <li>لقد تم فقد هذه المادة بحالة "[% checkout_info.alert.ITEM_LOST | html %]".</li>
+ [% END %]
+ [% IF checkout_info.alert.OTHER_CHARGES %]
+ <li>هذا المستفيد لديه رسوم غير مدفوعة للحجوزات، الإيجارات، إلخ لـ  [% checkout_info.alert.OTHER_CHARGES | $Price %].</li>
+ [% END %]
+ </ul>
+ [% END %]
+
+ [% IF checkout_info.alert.RETURNED_FROM_ANOTHER %]
+ <div class="dialog alert">تمت إعارة المادة إلى [% INCLUDE 'patron-title.inc' patron = checkout_info.alert.RETURNED_FROM_ANOTHER.patron %] وإعادتها تلقائيًا.</div>
+ [% END %]
+
+ [% IF checkout_info.IMPOSSIBLE %]
+ <ul class="fa-ul error">
+ [% IF checkout_info.STATS  %]
+ <li><i class="fa fa-li fa-exclamation"></i>تم تسجيل الاستخدام المحلي.</li>
+ [% END %]
+
+ [% IF checkout_info.NOT_FOR_LOAN %]
+ [% IF checkout_info.itemtype_notforloan %]
+ <li><i class="fa fa-li fa-exclamation"></i>نوع المادة ليس للإعارة.</li>
+ [% ELSIF checkout_info.item_notforloan %]
+ [% item_notforloan_lib = AuthorisedValues.GetDescriptionByKohaField( kohafield => 'items.notforloan', authorised_value => checkout_info.item_notforloan ) %]
+ <li><i class="fa fa-li fa-exclamation"></i>المادة ليست للإعارة [% IF item_notforloan_lib %]([% item_notforloan_lib | html %])[% END %].</li>
+ [% END %]
+ [% END %]
+ [% IF checkout_info.WTHDRAWN %]
+ <li><i class="fa fa-li fa-exclamation"></i>تم سحب المادة.</li>
+ [% END %]
+ [% IF checkout_info.RESTRICTED %]
+ <li><i class="fa fa-li fa-exclamation"></i>المادة مقيدة.</li>
+ [% END %]
+ [% IF checkout_info.GNA %]
+ <li><i class="fa fa-li fa-exclamation"></i>عنوان المستفيد مشكوك فيه.</li>
+ [% END %]
+ [% IF checkout_info.CARD_LOST %]
+ <li><i class="fa fa-li fa-exclamation"></i>بطاقة المستفيد مفقودة.</li>
+ [% END %]
+ [% IF checkout_info.DEBARRED %]
+ <li><i class="fa fa-li fa-exclamation"></i>المستفيد مقيد.</li>
+ [% END %]
+ [% IF checkout_info.NO_MORE_RENEWALS %]
+ <li><i class="fa fa-li fa-exclamation"></i>لا يمكن التجديد أكثر من ذلك.</li>
+ [% END %]
+ [% IF checkout_info.EXPIRED %]
+ <li><i class="fa fa-li fa-exclamation"></i>لقد انتهت بطاقة المتسفيد.</li>
+ [% END %]
+ [% IF checkout_info.ITEMNOTSAMEBRANCH %]
+ <li><i class="fa fa-li fa-exclamation"></i>تنتمي هذه المادة إلى [% Branches.GetName( checkout_info.itemhomebranch ) | html %] ولا يمكن إعارتها من هذا الموقع.</li>
+ [% END %]
+ [% IF checkout_info.USERBLOCKEDREMAINING %]
+ <li><i class="fa fa-li fa-exclamation"></i>لدى المستفيد مواد متأخرة ومحظور لمدة [% checkout_info.USERBLOCKEDREMAINING | html %] يوما.</li>
+ [% END %]
+ [% IF checkout_info.USERBLOCKEDOVERDUE %]
+ <li><i class="fa fa-li fa-exclamation"></i>حظر اﻹعارات ﻷن المستفيد لديه مواد متأخرة.</li>
+ [% END %]
+ [% IF checkout_info.TOO_MANY %]
+ <li><i class="fa fa-li fa-exclamation"></i>عدد كبير جدا من الإعارات.</li>
+ [% END %]
+ [% IF checkout_info.UNKNOWN_BARCODE %]
+ <li><i class="fa fa-li fa-exclamation"></i>لم يتم العثور على الباركود[% checkout_info.barcode | html %].</li>
+ [% END %]
+ [% IF checkout_info.DEBT %]
+ <li><i class="fa fa-li fa-exclamation"></i>المستفيد مدين بـ [% checkout_info.DEBT | $Price %].</li> <!-- Need debt_confirmed -->
+ [% END %]
+ </p>
+ [% END %]
+
+ [% IF checkout_info.issue.date_due %]
+ <ul>
+ <li>مستحق في [% checkout_info.issue.date_due | $KohaDates as_due_date => 1 %]</li>
+ </ul>
+ [% END %]
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div>
+
+ [% IF confirmation_needed && CAN_user_circulate_force_checkout %]
+ <fieldset>
+ <legend>يرجى تأكيد الإعارة</legend>
+ <input type="hidden" name="borrowernumber" value="[% patron.borrowernumber | html %]" />
+ <input type="hidden" name="issueconfirmed" value="1" />
+ <input type="hidden" name="debt_confirmed" value="1" />
+ <input type="hidden" name="branch" value="[% branch | html %]" />
+ <input type="hidden" name="duedatespec" value="[% duedatespec | html %]" />
+ <input type="hidden" name="batch" value="1" />
+ <input type="hidden" name="onsite_checkout" value="[% onsite_checkout | html %]" />
+ <input class="btn btn-primary" id="checkoutrenew" type="submit" value="إعارة أو تجديد" />
+ </fieldset>
+ </form>
+ [% END %]
+
+[% ELSE %]
+ <div class="dialog message">هذا المستفيد غير موجود. <a href="/cgi-bin/koha/members/members-home.pl">العثور على مستفيد آخر؟</a></div>
+[% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+ [% IF patron %]
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'circ-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ [% END %]
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'calendar.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ <script>
+        $(document).ready(function() {
+            if($('#barcodelist').length) {
+                $('#barcodelist').focus();
+            } else if ($('#checkoutrenew').length) {
+                $('#checkoutrenew').focus();
+            }
+            $("#checkout_infos").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "dom": 't',
+                "order": [],
+                "columnDefs": [
+                    { "orderable": false, "searchable":  false, "targets": [ 'NoSort' ] },
+                    { "type": "anti-the", "targets":  [ "anti-the" ] }
+                ],
+                "paginate": false
+            }));
+        });
+        // On-site batch checkout
+        function toggle_onsite_checkout(){
+            if ( $("#onsite_checkout").prop('checked') ) {
+                const duedatespec_fp = document.querySelector("#duedatespec")._flatpickr;
+                duedatespec_fp.setDate("[% today_due_date_and_time | $KohaDates dateformat => 'iso', with_hours => 1 %]");
+            };
+        };
+
+        $("#onsite_checkout").click(function(){
+            toggle_onsite_checkout();
+        });
+    </script>
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

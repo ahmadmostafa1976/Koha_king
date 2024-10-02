@@ -1,0 +1,101 @@
+[% USE raw %]
+[% USE Koha %]
+[% USE KohaDates %]
+[% USE AdditionalContents %]
+[% SET OpacNav = AdditionalContents.get( location => "OpacNav", lang => lang, library => logged_in_user.branchcode || default_branch, blocktitle => 0 ) %]
+[% SET OpacNavBottom = AdditionalContents.get( location => "OpacNavBottom", lang => lang, library => logged_in_user.branchcode || default_branch, blocktitle => 0 ) %]
+[% SET consentview = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>موافقاتك &rsaquo; [% IF ( LibraryNameTitle ) %][% LibraryNameTitle | html %][% ELSE %]كوها أونلاين[% END %] الفهرس</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% BLOCK cssinclude %][% END %]
+</head>
+[% INCLUDE 'bodytag.inc' bodyid='opac-patron-consent' %]
+[% INCLUDE 'masthead.inc' %]
+
+<div class="main">
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/opac-user.pl">[% patron.firstname | html %] [% patron.surname | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>موافقاتك</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+
+ <div class="container-fluid">
+ <div class="row">
+ <div class="col-lg-2">
+ <div id="navigation">
+ [% INCLUDE 'navigation.inc' IsPatronPage=1 %]
+ </div>
+ </div>
+ <div class="col-lg-10 order-first order-md-first order-lg-2">
+ <div id="patronconsents" class="maincontent">
+ <form action="/cgi-bin/koha/opac-patron-consent.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-save"/>
+ <input type="hidden" name="borrowernumber" value="[% patron.borrowernumber | html %]"/>
+ <h1>موافقاتك</h1>
+ [% FOREACH consent IN consents %]
+ [% SET consent_type = consent.type %]
+ [% IF consent_type == 'GDPR_PROCESSING' %]
+ <legend><h2>الموافقة على سياسة الخصوصية</h2></legend>
+ <div class="alert alert-warning">
+ <p>من أجل الإبقاء على تسجيل دخولك، نحتاج إلى موافقتك على معالجة البيانات الشخصيةكما هو محدد في سياسة الخصوصية في الرابط أدناه.</p>
+ <p>إذا اخترت سحب موافقتك، فسنقوم <strong>بإزالة حسابك</strong> خلال فترة زمنية معقولة ويجب عليك تسجيل الخروج الآن.</p>
+ </div>
+ <p>لقد قمت بقراءة <a target="_blank" href="[% Koha.Preference('PrivacyPolicyURL') | url %]">سياسة الخصوصية</a> وأوافق على معالجتك لبياناتي الشخصية كما هو موضح هنا.</p>
+ [% ELSIF consent_types.$consent_type %]
+ [% SET consent_title = ( consent_types.$consent_type.title.$lang || consent_types.$consent_type.title.en ) %]
+ [% SET consent_desc  = ( consent_types.$consent_type.description.$lang || consent_types.$consent_type.description.en )  %]
+ <legend><h2>[% consent_title | html %]</h2></legend>
+ <p>[% consent_desc | html %]</p>
+ <p>هل توافق؟</p>
+ [% ELSE %]
+ <legend><h2>موافقة لـ [% consent_type | html %]</h2></legend>
+ <p>هل توافق؟</p>
+ [% END %]
+ <fieldset>
+ [% IF consent.given_on %]
+ <input type="radio" name="check_[% consent_type | html %]" value="1" checked="checked"> نعم<br>
+ <input type="radio" name="check_[% consent_type | html %]" value="0"> لا [% ELSIF consent.refused_on %] <input type="radio" name="check_[% consent_type | html %]" value="1"> نعم<br>
+ <input type="radio" name="check_[% consent_type | html %]" value="0" checked="checked"> لا [% ELSE %] <input type="radio" name="check_[% consent_type | html %]" value="1"> نعم<br>
+ <input type="radio" name="check_[% consent_type | html %]" value="0"> لا [% END %] [% IF consent.given_on %] <p class="consent_info"><strong>تم تسجيل موافقتك في [% consent.given_on | html %].</strong></p>
+ [% ELSIF consent.refused_on %]
+ <p class="dissent_info"><strong>لقد سجلنا أنك لم توافق على [% consent.refused_on | html %].</strong></p>
+ [% END %]
+ </fieldset>
+ [% END %]
+ <fieldset class="action">
+ <input class="btn btn-primary" id="saveconsent" type="submit" value="حفظ" />
+ </fieldset>
+ </form>
+ </div> <!-- / #patronconsents -->
+ </div> <!-- / .col-lg-10 -->
+ </div> <!-- / .row -->
+ </div> <!-- / .container-fluid -->
+</div> <!-- / .main -->
+
+[% INCLUDE 'opac-bottom.inc' %]
+[% BLOCK jsinclude %]
+ <script>
+        $(document).ready(function() {
+            // Initially no choice is made or no change, so disable button
+            $("#saveconsent").prop('disabled', true);
+
+            $("input[type='radio']").click(function() {
+                $("#saveconsent").prop('disabled', false);
+                var v = $(this).val();
+                // If former registration info present, toggle
+                if( v == 1 ) {
+                    $(this).siblings('.consent_info').show();
+                    $(this).siblings('.dissent_info').hide();
+                } else {
+                    $(this).siblings('.consent_info').hide();
+                    $(this).siblings('.dissent_info').show();
+                }
+            });
+        });
+    </script>
+[% END %]

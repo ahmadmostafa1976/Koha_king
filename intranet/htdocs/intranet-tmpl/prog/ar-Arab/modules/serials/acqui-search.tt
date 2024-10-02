@@ -1,0 +1,30 @@
+[% INCLUDE 'doc-head-open.inc' %]
+<title>ابحث عن مزود &rsaquo; الدوريات &rsaquo; كوها</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="ser_acqui-search" class="ser">
+
+<div class="container-fluid">
+
+<h1>الاشتراك بالدورية: البحث عن المزود </h1>
+ <form action="/cgi-bin/koha/serials/acqui-search-result.pl" method="get">
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="text">اسم المزود: </label>
+ <input id="text" type="text"  size="25" name="supplier" autofocus="autofocus" />
+ </li>
+ </ol>
+ </fieldset>
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="بحث" />
+ <button type="button" class="btn btn-default close_window">إغلاق النافذة</button>
+ </fieldset>
+ </div>
+ </nav>
+ </form>
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

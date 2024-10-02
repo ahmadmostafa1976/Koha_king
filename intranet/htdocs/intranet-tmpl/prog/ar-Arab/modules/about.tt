@@ -1,0 +1,1271 @@
+[% USE raw %]
+[% USE HtmlTags %]
+[% USE Koha %]
+[% USE Asset %]
+[% USE KohaDates %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("About Koha") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="about_about" class="about">
+[% INCLUDE 'header.inc' %]
+[% PROCESS 'about-team.inc' %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="#" aria-current="page">حول كوها</a>
+ [% END %]
+ [% END %]
+[% END %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-12">
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>حول كوها</h1>
+
+ [% WRAPPER tabs id= "abouttabs" %]
+ [% WRAPPER tabs_nav %]
+ [% WRAPPER tab_item linktab = 1 tabname = "about" bt_active = tab == "about" %] <span>معلومات المخدم</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "perl" bt_active = tab == "perl" %] <span>أنظمة بيرل الفرعية</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "sysinfo" bt_active = tab == "sysinfo" %] <span>معلومات النظام</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "team" bt_active = tab == "team" %] <span>فريق كوها</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "licenses" bt_active = tab == "licenses" %] <span>التراخيص</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "translations" bt_active = tab == "translations" %] <span>تراجم</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "history" bt_active = tab == "history" %] <span>الخط الزمني</span> [% END %]
+ [% WRAPPER tab_item linktab = 1 tabname = "dedications" bt_active = tab == "dedications" %] <span>الإهداءات</span> [% END %]
+ [% END %]
+ [% WRAPPER tab_panels %]
+ [% SWITCH tab %]
+ [% CASE 'about' %] [% PROCESS about_panel %]
+ [% CASE 'perl' %] [% PROCESS perl_panel %]
+ [% CASE 'sysinfo' %] [% PROCESS sysinfo_panel %]
+ [% CASE 'team' %] [% PROCESS team_panel %]
+ [% CASE 'licenses' %] [% PROCESS licenses_panel %]
+ [% CASE 'translations' %] [% PROCESS translations_panel %]
+ [% CASE 'history' %] [% PROCESS history_panel %]
+ [% CASE 'dedications' %] [% PROCESS dedications_panel %]
+ [% CASE %] [% PROCESS about_panel %]
+ [% END %]
+ [% END %]
+ [% END # /WRAPPER abouttabs %]
+ </div> <!-- /.col-md-12 -->
+ </div> <!-- /.row -->
+<!-- the main div is closed in intranet-bottom.inc -->
+[% INCLUDE 'intranet-bottom.inc' %]
+
+[% BLOCK about_panel %]
+ [% WRAPPER tab_panel tabname= "about" bt_active = 1 %]
+ <table>
+ <caption>معلومات المخدم</caption>
+ <tr>
+ <th scope="row">إصدارة كوها: </th>
+ <td>[% kohaVersion | html %][% IF kohaCodename %] <strong>[% kohaCodename | html %]</strong>[% END %]</td>
+ </tr>
+ <tr>
+ <th scope="row">إصدار نظام التشغيل ('اسم المستخدم -a'): </th>
+ <td>[% osVersion | html %]</td>
+ </tr>
+ <tr>
+ <th scope="row">مترجم بيرل: </th>
+ <td>[% perlPath | html %]</td>
+ </tr>
+ <tr>
+ <th scope="row">إصدار بيرل: </th>
+ <td>[% perlVersion | html %]</td>
+ </tr>
+ <tr>
+ <th scope="row">Perl @INC: </th>
+ <td>
+ [% FOREACH perlIncPat IN perlIncPath %]
+ [% perlIncPat.perlinc | html %] <br />
+ [% END %]
+ </td>
+ </tr>
+ <tr>
+ <th scope="row">إصدارة MySQL: </th>
+ <td>[% mysqlVersion | html %]</td>
+ </tr>
+ <tr>
+ <th scope="row">نسخة أباتشي: </th>
+ <td>[% apacheVersion | html %]</td>
+ </tr>
+ [% IF (is_psgi) %]
+ <tr>
+ <th scope="row">PSGI: </th>
+ <td>[% psgi_server | html %]</td>
+ </tr>
+ [% END %]
+ [% IF Koha.Preference('SearchEngine') == 'Elasticsearch' %]
+ <tr>
+ <th scope="row">Elasticsearch: </th>
+ [% IF elasticsearch_fatal_config_error %]
+ <td><span class="bg-warning">[% elasticsearch_fatal_config_error | html %]</span></td>
+ [% ELSE %]
+ [% IF elasticsearch_status.running %]
+ <td class="bg-success">
+ [% ELSE %]
+ <td>
+ [% END %]
+ <span>الإصدار:</span>
+ <span>[% elasticsearch_status.version | html %]</span>
+ |
+ <span>العقد:</span>
+ <span>[% elasticsearch_status.nodes.join(' / ') | html %]</span>
+ |
+ <span>حالة:</span>
+ [% IF elasticsearch_status.running %]
+ <span>جاري التشغيل</span>
+ |
+ <span>الفهارس:</span>
+ [% FOREACH index IN elasticsearch_status.indexes %]
+ [% index.index_name | html %]
+ (<span>العدد:</span> <em>[% index.index_count | html %]</em>)
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ [% ELSE %]
+ <span class="bg-warning">متوقف عن التشغيل</span>
+ [% END %]
+ </td>
+ [% END # /IF elasticsearch_fatal_config_error %]
+ </tr>
+ [% END %]
+ <tr>
+ <th scope="row">تخبأة الذاكرة: </th>
+ [% IF memcached_running AND is_memcached_still_active AND where_is_memcached_config == 'config_only' %]
+ <td class="bg-success">
+ [% ELSE %]
+ <td>
+ [% END %]
+ <span>خوادم:</span>
+ [% IF memcached_servers %]
+ <span>[% memcached_servers | html %]</span>
+ [% ELSE %]
+ <span>غير معرّف</span>
+ [% END %] |
+ <span>مسافة الاسم:</span>
+ [% IF memcached_namespace %]
+ <span>[% memcached_namespace | html %]</span>
+ [% ELSE %]
+ <span>غير معرّف</span>
+ [% END %] |
+ <span>حالة:</span>
+ [% IF memcached_servers %]
+ [% IF memcached_running and is_memcached_still_active %]
+ <span class="bg-success">جاري التشغيل</span>.
+ [% ELSE %]
+ <span class="bg-warning">متوقف عن التشغيل</span>.
+ [% IF is_psgi %]
+ <span>تذكر أن التخبأة يجب أن تبدأ قبل Plack.</span>
+ [% END %]
+ [% END %]
+ [% ELSE %]
+ <span>غير معروف</span>
+ [% END %] |
+ <span>تهيئة قراءة من:</span>
+ [% SWITCH where_is_memcached_config %]
+ [% CASE 'config_only' %]
+ <span class="bg-success">koha-conf.xml</span>
+ [% CASE 'ENV_only' %]
+ <span class="bg-warning">ENV</span> <span>لاحظ أن المكان الصحيح لتعريف التهيئة المخبأة هي ملف $KOHA_CONF الخاص بك</span>
+ [% CASE 'both' %]
+ <span class="bg-warning">ENV and koha-conf.xml</span> <span>لاحظ أن المكان المناسب لتعريف التهيئة المخبأة هو ملف $KOHA_CONF الخاص بك. لتجنب أي سوء فهم لا يجب عليك تصدير التهيئة المخبأة من ENV.</span>
+ [% CASE # nowhere %]
+ <span class="bg-warning">لامكان</span> <span>لاحظ أن المكان المناسب لتعريف التهيئة المخبأة هو ملف $KOHA_CONF الخاص بك. في الوقت الحالي لا يوجد لديك أي تهيئة تخبأة صالحة معرفة.</span>
+ [% END %]
+ [% IF effective_caching_method != 'Cache::Memcached::Fast::Safe' %]
+ | <span>طريقة التخزين المؤقت الفعالة:</span> [% effective_caching_method | html %]
+ [% END %]
+ </td>
+ </tr>
+ <tr>
+ <th scope="row">نسخة زيبرا: </th>
+ <td>[% zebraVersion | html %]</td>
+ </tr>
+ <tr>
+ <th scope="row">حالة زيبرا: </th>
+ [% IF (errZebraConnection == 10000) %]
+ <td class="bg-danger"><strong>يبدو أن خادم زيبرا غير متاح. هل بدأ؟</strong></td>
+ [% ELSIF (errZebraConnection) %]
+ <td class="bg-warning"><strong>رسالة خطأ من زيبرا: [% ( errZebraConnection ) | html %]</strong></td>
+ [% ELSE %]
+ <td class="bg-success">جاري التشغيل</td>
+ [% END %]
+ </tr>
+ <tr>
+ <th scope="row">وسيط الرسائل: </th>
+ [% IF warnConnectBroker %]
+ <td class="bg-warning"><strong>استخدام استقصاء SQL</strong></td>
+ [% ELSE %]
+ <td class="bg-success">اسنخدام RabbitMQ</td>
+ [% END %]
+ </tr>
+ <tr>
+ <th scope="row">التاريخ والوقت: </th>
+ <td>[% current_date_and_time | $KohaDates  with_hours => 1 %]</td>
+ </tr>
+ <tr>
+ [% timezone_config_class = (time_zone.config_invalid) ? 'bg-warning' : '' %]
+ [% timezone_env_class    = (time_zone.env_invalid)    ? 'bg-warning' : '' %]
+ <th scope="row">المنطقة الزمنية: </th>
+ <td>
+ <span>مستخدم:</span> <span>[% time_zone.actual | html %]</span>
+ [% IF time_zone.actual_bad_tz_fallback %]
+ <span>(هذه قيمة بديلة نتيجة لتهيئة خاطئة)</span>
+ [% END %]
+ |
+ <span>تهيئة:</span>
+ [% IF time_zone.config != '' %]
+ <span class="[% timezone_config_class | html %]">[% time_zone.config | html %]</span>
+ [% ELSE %]
+ <span>غير معرّف</span>
+ [% END %] |
+ <span>البيئة (المنطقة الزمنية):</span>
+ [% IF time_zone.environment != '' %]
+ <span class="[% timezone_env_class | html %]">[% time_zone.environment | html %]</span>
+ [% ELSE %]
+ <span>غير معرّف</span>
+ [% END %]
+ </td>
+ </tr>
+ </table>
+ [% END # tab=about %]
+[% END %]
+
+[% BLOCK perl_panel %]
+ [% WRAPPER tab_panel tabname= "perl" bt_active = 1 %]
+ <table style="cursor:pointer">
+ <caption>أنظمة بيرل الفرعية</caption>
+ [% FOREACH tabl IN table %]
+ <tr>
+ [% FOREACH ro IN tabl.row %]
+ [% IF ( ro.current ) %]
+ [% IF ( ro.require ) %]
+ <th scope="row" style="font-weight:bold;" title="النظام الفرعي الحالي">
+ [% ELSE %]
+ <th scope="row" style="font-weight:normal" title="النظام الفرعي الحالي">
+ [% END %]
+ [% ELSIF ( ro.upgrade ) %]
+ [% IF ( ro.require ) %]
+ <th scope="row" style="background-color:#FFCB2F;font-weight:bold;" title="ترقية النظام الفرعي مطلوبة">
+ [% ELSE %]
+ <th scope="row" style="background-color:#FFCB2F;font-weight:normal" title="ترقية النظام الفرعي مطلوبة">
+ [% END %]
+ [% ELSE %]
+ [% IF ( ro.name == '' ) %]
+ <th>
+ [% ELSIF ( ro.require ) %]
+ <th scope="row" style="background-color:#FF8A8A;font-weight:bold;" title="الوحدة النمطية المفقودة مطلوبة">
+ [% ELSE %]
+ <th scope="row" style="background-color:#FF8A8A;font-weight:normal" title="النظام الفرعي الاختياري مفقود">
+ [% END %]
+ [% END # /IF ro.current %]
+ [% IF ( ro.name ) %]
+ [% ro.name | html %]
+ <span style="font-weight:normal; font-size:smaller">
+ ([% ro.reqversion | html %]
+ [% IF ro.maxversion %] - [% ro.maxversion | html %][% END %]
+ [% IF ro.excversion %][% FOR v IN ro.excversion %], ![% v | html %][% END %][% END %])
+ </span>
+ [% END %]
+ </th>
+ [% IF ( ro.name == '' ) %]
+ <td>
+ [% ELSIF ( ro.version ) %]
+ <td>[% ro.version | html %]
+ [% ELSE %]
+ <td style="font-weight:bold">غير مثبت [% END %] </td>
+ [% END # /FOREACH ro %]
+ </tr>
+ [% END # /FOREACH tabl %]
+ </table>
+ [% END # tab=perl %]
+[% END %]
+
+[% BLOCK sysinfo_panel %]
+ [% IF Asset.css("css/staff-global.css") == "" || Asset.js("js/vue/dist/erm.js") == "" %]
+ [% SET warnMissingCompiledFiles = 1 %]
+ [% END %]
+ [% WRAPPER tab_panel tabname= "sysinfo" bt_active = 1 %]
+ [% IF weasyprint_missing || warnPrefRequireChoosingExistingAuthority || warnPrefEasyAnalyticalRecords || warnPrefAnonymousPatronOPACPrivacy || warnPrefAnonymousPatronAnonSuggestions || warnPrefAnonymousPatronOPACPrivacy_PatronDoesNotExist || warnPrefAnonymousPatronAnonSuggestions_PatronDoesNotExist || warnPrefKohaAdminEmailAddress || warnPrefOpacHiddenItems || warnPrefPatronSelfRegistrationDefaultCategory || invalid_yesno.count || warnNoActiveCurrency || warnIsRootUser || xml_config_warnings.size || warnI18nMissing || AutoSelfCheckPatronDoesNotHaveSelfCheckPerm || AutoSelfCheckPatronHasTooManyPerm || warnStatisticsFieldsError || warnNoTemplateCaching || warnILLConfiguration || has_ai_issues || oauth2_missing_deps || bad_yaml_prefs || warnRelationships || log4perl_errors || config_bcrypt_settings_no_set || warnHiddenBiblionumbers.size || warnConnectBroker || elasticsearch_has_missing || warnMissingCompiledFiles || warnDbRowFormat %]
+ [% IF ( warnDbRowFormat ) %]
+ <h2>تنسيق صف قاعدة البيانات غير صحيح</h2>
+ <p>جداول قاعدة البيانات ذات تنسيق صف آخر غير 'DYNAMIC': [% warnDbRowFormat | html %]</p>
+ <p>قد تواجه مشكلات في الترقية إلى الإصدارات الأحدث من كوها ما لم تقم بتحديث تنسيق الصف لجداول قاعدة البيانات الخاصة بك.</p>
+ <p>لمعرفة كيفية تجنب هذه المشكلة انظر صفحة ويكي ذات الصلة: <a href="https://wiki.koha-community.org/wiki/Database_row_format">تنسيق صف قاعدة البيانات</a>
+ </p>
+ [% END %]
+
+ [% IF (warnIsRootUser) %]
+ <h2>تحذير بخصوص المستخدم الحالي</h2>
+ <p>أنت مسجل الدخول كمستخدم إداري لقاعدة البيانات. لا ينصح بذلك لأن بعض أجزاء كوها لن تعمل كما هو متوقع عند استخدام هذا الحساب.</p>
+ <p>يرجى تسجيل الدخول بدلا من ذلك باستخدام حساب موظف عادي. لإنشاء حساب موظف، قم بإنشاء مكتبة، فئة مستفيد "موظف" وإضافة مستفيد جديد. ثم امنح هذا المستفيد صلاحيات من "المزيد" في شريط الأدوات.</p>
+ [% END # /IF warnIsRootUser %]
+
+ [% IF has_ai_issues %]
+ <h2>مشكلات البيانات</h2>
+ <p>
+ تواجه بعض جداولك مشكلات في قيم auto_increment الخاصة بها مما قد يؤدي إلى فقدان البيانات. </p>
+ <p>
+ <strong>لا يجب عليك تجاهل هذا التحذير.</strong>
+ </p>
+ <p>
+ . المشكلة هي عدم احتفاظ InnoDB بـauto_increment عبر إعادة بدء خادم SQL (يتم ضبطها في الذاكرة فقط). لذا عند بدء الخادم يتم ضبط قيم auto_increment إلى max(table.id)+1. </p>
+ <p>لمعرفة كيفية تجنب هذه المشكلة انظر صفحة ويكي ذات الصلة: <a href="https://wiki.koha-community.org/wiki/DBMS_auto_increment_fix">إصلاح الزيادة التلقائية لنظام إدارة قواعد البيانات</a>
+ </p>
+
+ <h3>تم العثور على مشكلات</h3>
+ [% IF ai_patrons %]
+ <h4>المستفيدين</h4>
+ <p>المعرفات التالية موجودة في كل من الجدولين [% "borrowers" | $HtmlTags tag="strong" %]و [% "deletedborrowers" | $HtmlTags tag="strong" %]:</p>
+ <p>
+ [% FOR p IN ai_patrons %]
+ [% p.borrowernumber | html %]
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ </p>
+ [% END %]
+ [% IF ai_biblios %]
+ <h4>التسجيلات الببليوغرافية</h4>
+ <p>المعرفات التالية موجودة في كل من الجدولين [% "biblio" | $HtmlTags tag="strong" %]و [% "deletedbiblio" | $HtmlTags tag="strong" %]:</p>
+ <p>
+ [% FOR b IN ai_biblios %]
+ [% b.biblionumber | html %]
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ </p>
+ [% END %]
+ [% IF ai_biblioitems %]
+ <h4>التسجيلات الببليوغرافية</h4>
+ <p>المعرفات التالية موجودة في كل من الجدولين [% "biblio" | $HtmlTags tag="strong" %]و [% "deletedbiblioitems" | $HtmlTags tag="strong" %]:</p>
+ <p>
+ [% FOR b IN ai_biblioitems %]
+ [% b.biblioitemnumber | html %]
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ </p>
+ [% END %]
+ [% IF ai_items %]
+ <h4>مواد</h4>
+ <p>المعرفات التالية موجودة في كل من الجدولين [% "items" | $HtmlTags tag="strong" %]و [% "deleteditems" | $HtmlTags tag="strong" %]:</p>
+ <p>
+ [% FOR i IN ai_items %]
+ [% i.itemnumber | html %]
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ </p>
+ [% END %]
+ [% IF ai_checkouts %]
+ <h4>الإعارات</h4>
+ <p>المعرفات التالية موجودة في كل من الجدولين [% "issues" | $HtmlTags tag="strong" %]و [% "old_issues" | $HtmlTags tag="strong" %]:</p>
+ <p>
+ [% FOR c IN ai_checkouts %]
+ [% c.issue_id | html %]
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ </p>
+ [% END %]
+ [% IF ai_holds %]
+ <h4>حجوزات</h4>
+ <p>المعرفات التالية موجودة في كل من الجدولين [% "reserves" | $HtmlTags tag="strong" %]و [% "old_reserves" | $HtmlTags tag="strong" %]:</p>
+ <p>
+ [% FOR h IN ai_holds %]
+ [% h.reserve_id | html %]
+ [% UNLESS loop.last %], [% END %]
+ [% END %]
+ </p>
+ [% END %]
+ <br/>
+ [% END # /IF has_ai_issues %]
+
+ [% IF warnRelationships %]
+ <h2>مشكلات علاقات المستفيد</h2>
+ [% IF bad_relationships_count %]
+ <p>تحتوي قاعدة بيانات على أزواج من المكفولين/الكفلاء بدون علاقة معرفة. تم ضبطهم إلى القيمة '_bad_data' في أعمدة [% "borrowers.relationship" | $HtmlTags tag="strong" %] و/أو [% "borrower_relationships.relationship" | $HtmlTags tag="strong" %]. قم بإصلاحها يدويًا عن طريق إعادة إنشاء هذه العلاقات، أو اطلب من مدير النظام تصحيح القيم.</p>
+ [% END # /IF bad_relationships_count %]
+
+ [% IF wrong_relationships %]
+ <p>تم استخدام القيم التالية لعلاقات المكفول/الكفيل، لكنها غير موجودة في التفضيل 'borrowerRelationship':</p>
+ <ul>
+ [% FOR rel IN wrong_relationships %]
+ <li>[% rel.0 | html %]</li>
+ [% END %]
+ </ul>
+ <p>إذا كانت العلاقة هي التي تريدها، فيرجى إضافتها إلى تفضيل النظام 'borrowerRelationship'، وإلا اجعل مسؤول النظام يقوم بتصحيح القيم في [% "borrowers.relationship" | $HtmlTags tag="strong" %] أو [% "borrower_relationships.relationship" | $HtmlTags tag="strong" %]في قاعدة البيانات.</p>
+ [% END # /IF wrong_relationships %]
+ [% END # /IF warnRelationships %]
+
+ [% IF log4perl_errors %]
+ <h2>نظام التسجيل لا يعمل بشكل صحيح</h2>
+ [% FOR e IN log4perl_errors %]
+ [% SWITCH e %]
+ [% CASE 'missing_config_entry' %]<span>لا يوجد إدخال 'log4perl_conf' في ملف التهيئة.</span>
+ [% CASE 'cannot_read_config_file' %]<span>لا يمكن فتح ملف التهيئة log4perl.</span>
+ [% CASE 'logfile_not_writable' %]<span>أحد ملفات السجل المدرجة في ملف التهيئة غير قابل للكتابة.</span>
+ [% CASE 'cannot_init_module' %]<span>لا يمكن بدء نظام Koha::Logger الفرعي بشكل صحيح (تحقق من ملف السجل)</span>
+ [% CASE %]<span>خطأ غير معروف '[% e | html %]'.</span>
+ [% END %]
+ [% END # /FOR e %]
+ [% END # /IF log4perl_errors %]
+
+ [% IF warnConnectBroker %]
+ <h2>من المستحيل الاتصال بوسيط الرسائل</h2>
+ حدث خطأ أثناء محاولة الاتصال بوسيط الرسائل (RabbitMQ)، تحقق من ملفات سجل كوها. <br/>
+ ربما لم يتم تثبيته وتهيئته بشكل صحيح؟ <br/>
+ يرجى الاتصال بمدير النظام. [% END # /IF warnConnectBroker %] [% IF weasyprint_missing || warnPrefRequireChoosingExistingAuthority || warnPrefEasyAnalyticalRecords || warnPrefAnonymousPatronOPACPrivacy || warnPrefAnonymousPatronAnonSuggestions || warnPrefAnonymousPatronOPACPrivacy_PatronDoesNotExist || warnPrefAnonymousPatronAnonSuggestions_PatronDoesNotExist || warnPrefKohaAdminEmailAddress || warnPrefOpacHiddenItems || warnPrefPatronSelfRegistrationDefaultCategory || invalid_yesno.count || warnNoActiveCurrency || AutoSelfCheckPatronDoesNotHaveSelfCheckPerm || AutoSelfCheckPatronHasTooManyPerm || warnStatisticsFieldsError || warnNoTemplateCaching || warnILLConfiguration || warnXSLT || oauth2_missing_deps || bad_yaml_prefs || warnIssuingRules || config_bcrypt_settings_no_set || warnHiddenBiblionumbers.size || warnFastCataloging %] <h2>تنبيهات بخصوص تهيئة النظام</h2>
+ <table>
+ <caption>التفضيلات والضوابط</caption>
+ [% IF (warnFastCataloging) %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>لا يوجد إطار "إضافة سريعة" (FA) معرف في الإدارة->إطارات مارك. يؤدي هذا إلى تعطيل ميزة 'الفهرسة السريعة' في الفهرسة/الإعارة.</td>
+ </tr>
+ [% END %]
+ [% IF (warnPrefRequireChoosingExistingAuthority) %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>تم تعطيل تفضيل النظام 'RequireChoosingExistingAuthority'، ولكنه يحتاج إلى تفعيل 'AutoCreateAuthorites'. وبخلاف ذلك، يمكن للمفهرسين إضافة العناوين التي لن يتم ربطها بالاستنادات.</td>
+ </tr>
+ [% END %]
+ [% IF (warnPrefEasyAnalyticalRecords) %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>تم ضبط تفضيل النظام 'EasyAnalyticalRecords، لكن التفضيل UseControlNumber تم ضبطه إلى "استخدام". قم بضبطه إلى "عدم استخدام" وإلا سيتم كسر روابط "عرض التحليلات" بين برنامج العميل والأوباك.</td>
+ </tr>
+ [% END %]
+ [% IF warnPrefAnonymousPatronOPACPrivacy %]
+ <tr>
+ <th scope="row"><strong class="error">خطأ</strong> </th>
+ <td>تم ضبط التفضيل 'OPACPrivacy'، لكن التفضيل AnonymousPatron تم ضبطه إلى "0". قم بضبطه إلى رقم مستعير صحيح وإلا فسوف تفشل عمليات الرد لهؤلاء المستفيدين.</td>
+ </tr>
+ [% END %]
+ [% IF warnPrefAnonymousPatronAnonSuggestions %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>تم ضبط التفضيل 'AnonSuggestions'، لكن تم ضبط التفضيل AnonymousPatron إلى '0'. قم بضبطه إلى رقم مستعير صالح إذا كنت ترغب في عمل هذه الخاصية بشكل صحيح.</td>
+ </tr>
+ [% END %]
+ [% IF warnPrefAnonymousPatronOPACPrivacy_PatronDoesNotExist %]
+ <tr>
+ <th scope="row"><strong class="error">خطأ</strong> </th>
+ <td>قام بعض المستفيدين بطلب الخصوصية بعد رد المواد الخاصة بهم، ولكن لم يتم تعيين تفضيل AnonymousPatron بشكل صحيح. قم بتعيينه على رقم مستعير صالح وإلا ستفشل عمليات الرد لهؤلاء المستفيدين.</td>
+ </tr>
+ [% END %]
+ [% IF warnPrefAnonymousPatronAnonSuggestions_PatronDoesNotExist %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>تم ضبط التفضيل 'AnonSuggestions'، لكن لم يتم ضبط التفضيل AnonymousPatron بشكل صحيح. قم بضبطه إلى رقم مستعير صالح إذا كنت ترغب في عمل هذه الخاصية بشكل صحيح.</td>
+ </tr>
+ [% END %]
+ [% IF warnPrefKohaAdminEmailAddress %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>لا يحتوي التفضيل 'KohaAdminEmailAddress' على عنوان بريد إلكتروني صالح. لن يتم إرسال رسائل البريد الإلكترونية.</td>
+ </tr>
+ [% END %]
+ [% IF warnPrefOpacHiddenItems %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>يقوم تفضيل النظام 'OpacHiddenItems' بتوليد تحذير والتسبب في سلوكيات غير متوقعة: [% warnPrefOpacHiddenItems | html %]</th></tr>
+ [% END %]
+ [% IF warnPrefPatronSelfRegistrationDefaultCategory %]
+ <tr><th scope="row"><strong>تحذير</strong> </th><td>تم تعيين تفضيل النظام 'PatronSelfRegistration'، لكن 'PatronSelfRegistrationDefaultCategory' لا يحتوي على رمز فئة مستفيد صالح. تم تعطيل التسجيل الذاتي للمستفيد.</td></tr>
+ [% END %]
+ [% IF warnXSLT %]
+ [% FOR p IN warnXSLT %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>تفضيل النظام '[% p.syspref | html %]' هو '[% p.value | html %]', لكن الملف '[% p.filename | html %]' غير موجود.</th></tr>
+ [% END %]
+ [% END %]
+ [% IF invalid_yesno.count %]
+ [% FOR p IN invalid_yesno %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>تفضيل النظام '[% p.variable | html %]' يجب أن يكون '0' أو '1', لكن [% IF p.value.defined %]'[% p.value | html%]'[% ELSE %]NULL[% END %].</td>
+ </tr>
+ [% END %]
+ [% END %]
+ [% IF warnNoActiveCurrency %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>لم يتم تعريف عملة نشطة. يرجى الذهاب إلى <a href="/cgi-bin/koha/admin/currency.pl">الإدارة &gt; العملات وأسعار الصرف</a> وحدد عملة واحدة نشطة.</td>
+ </tr>
+ [% END %]
+ [% IF warnStatisticsFieldsError %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>يحتوي تفضيل النظام 'StatisticsFields' أسماء حقول لا تنتمي إلى جدول قاعدة بيانات المواد: [% warnStatisticsFieldsError | html %] </td>
+ </tr>
+ [% END %]
+ [% IF AutoSelfCheckPatronDoesNotHaveSelfCheckPerm %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ المستفيد المستخدم لنظام الإعارة الذاتي الفرعي في الأوباك لا يملك صلاحية self_check => self_checkout_module. </td>
+ </tr>
+ [% END %]
+ [% IF AutoSelfCheckPatronHasTooManyPerm %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ المستفيد المستخدم لنظام الإعارة الذاتي الفرعي في الأوباك لديه عدد كبير جدا من الصلاحيات. يجب أن يمتلك فقط صلاحية self_check => self_checkout_module. </td>
+ </tr>
+ [% END %]
+ [% IF warnNoTemplateCaching %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ مدخل  &lt;template_cache_dir&gt; مفقود في ملف koha-conf.xml  الخاص بك. سوف تؤدي تفعيله إلى تحميل الأداء. </td>
+ </tr>
+ [% END %]
+ [% IF warnI18nMissing %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ لم يتم العثور على دليل أمر الشراء. انظر <a href="https://wiki.koha-community.org/wiki/Translation_files">صفحة ويكي المخصصة</a> للمزيد من المعلومات. </td>
+ </tr>
+ [% END %]
+ [% IF warnILLConfiguration %]
+ [% IF no_ill_backends %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم تفعيل نظام الإعارة بين المكتبات الفرعي، لكن لا تتوافر أي خلفيات. </td>
+ </tr>
+ [% END %]
+ [% IF ill_partner_code_not_defined %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم تفعيل نظام الإعارة البينية الفرعي، لكن تفضيل النظام ILLPartnerCode  فارغ. الرجوع إلى 'IL' المشفر. </td>
+ </tr>
+ [% END %]
+ [% IF ill_partner_code_no_patrons %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم تفعيل نظام الإعارة البينية الفرعي وتهيئة تفضيل النظام ILLPartnerCode، ولكن لا يوجد مستفيدون في فئة [% ill_partner_code_no_patrons | html %]. </td>
+ </tr>
+ [% END %]
+ [% IF ill_branch_not_defined %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم تفعيل نظام الإعارة بين المكتبات الفرعي، لكن لم يتم تعريف كتلة ' الفرع' في koha-conf.xml. يجب عليك تعريف هذه الكتلة قبل الاستخدام. </td>
+ </tr>
+ [% END %]
+ [% IF ill_partner_code_doesnt_exist %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم تفعيل نظام الإعارة البينية الفرعي، لكن لم يتم تعريف ILLPartnerCode ([% ill_partner_code_doesnt_exist | html %]) المهيأ في النظام. </td>
+ </tr>
+ [% END %]
+ [% END %]
+
+ [% IF weasyprint_missing %]
+ <tr><th scope="row"><strong>تحذير</strong> </th><td>
+ ال <strong>weasyprint</strong> لم يتم تثبيت الأداة. </td></tr>
+ [% END %]
+
+ [% IF oauth2_missing_deps %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم ضبط التفضيل 'RESTOAuth2ClientCredentials'، لكن تبعية Net::OAuth2::AuthorizationServer المطلوبة مفقودة. تم تعطيل الخاصية. </td>
+ </tr>
+ [% END %]
+ [% IF bad_yaml_prefs %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ بعض تفضيلات النظام بها محتوى YAML سيء التنسيق: [% bad_yaml_prefs.join(', ') | html %] </td>
+ </tr>
+ [% END %]
+ [% IF config_bcrypt_settings_no_set %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ تم ضبط التفضيل 'Pseudonymization'، لكن لا يوجد مدخل 'bcrypt_settings' معرّف في ملف $KOHA_CONF. </td>
+ </tr>
+ [% END %]
+ [% IF warnHiddenBiblionumbers.size %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong> </th>
+ <td>
+ [% FOR w IN warnHiddenBiblionumbers %]
+ <span>الإطار الببليوغرافي "[% w.frameworkcode | html %]" يخفي حقل الرقم الببليوغرافي في الواجهة [% w.interface | html %]</span><br/>
+ [% END %]
+ </td>
+ </tr>
+ [% END %]
+ [% IF Koha.Preference('SearchEngine') == 'Elasticsearch' && elasticsearch_status.version.substr(0,1) < 6 %]
+ <tr>
+ <th scope="row"><strong>تحذير الانتقاص</strong></th>
+ <td>
+ Elasticsearch الإصدارة 5.x غير مدعومة في كوها 20.11 وما فوق. يرجى ترقية مجموعة Elasticsearch الخاصة بك </td>
+ </tr>
+ [% END %]
+ </table>
+ [% END # /IF warnPrefRequireChoosingExistingAuthority %]
+
+ [% IF xml_config_warnings.size %]
+ <table>
+ <caption>XML ملف تهيئة</caption>
+ [% FOREACH config_entry IN xml_config_warnings %]
+ [% IF config_entry.error == 'zebra_bib_index_mode_is_grs1' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ المدخل &lt;zebra_bib_index_mode&gt; تم ضبطه إلى 'grs1'، والذي لم يعد مدعومًا. يرجى استخدام DOM بدلا منه. للتحويل اتبع صفحة ويكي: <a href="https://wiki.koha-community.org/wiki/Switching_to_dom_indexing">التحويل إلى فهرسة dom</a>
+ </td>
+ </tr>
+ [% ELSIF config_entry.error == 'zebra_auth_index_mode_is_grs1' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ المدخل &lt;zebra_auth_index_mode&gt; تم ضبطه إلى 'grs1'، والذي لم يعد مدعومًا. يرجى استخدام DOM بدلا منه. للتحويل اتبع صفحة ويكي: <a href="https://wiki.koha-community.org/wiki/Switching_to_dom_indexing">التحويل إلى فهرسة dom</a>
+ </td>
+ </tr>
+ [% ELSIF config_entry.error == 'use_zebra_facets_entry_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ ال&lt;use_zebra_facets&gt; مدخل مفقود في ملف تهيئتك. الارتداد إلى حساب واجهة legacy. </td>
+ </tr>
+ [% ELSIF config_entry.error == 'log4perl_entry_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ المدخل &lt;log4perl_conf&gt; مفقود في ملف koha-conf.xml الخاص بك. يرجى إضافته، والإشارة إلى ملف  log4perl.conf لمثال كوها الخاص بك. </td>
+ </tr>
+ [% ELSIF config_entry.error == 'lockdir_entry_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ مدخل &lt;lockdir&gt; مفقود في ملف koha-conf.xml الخاصة بك. يرجى إضافته، مشيراً إلى lock dir الخاص بتثبيت كوها الخاص بك. </td>
+ </tr>
+ [% ELSIF config_entry.error == 'lockdir_not_writable' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ المدخل &lt;lockdir&gt; الذي تم تهيئته في ملف koha-conf.xml الخاص بك يشير إلى دليل غير قابل للكتابة ([% config_entry.lockdir | html %]). </td>
+ </tr>
+ [% ELSIF config_entry.error == 'uploadpath_entry_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ لا يوجد لديك &lt;upload_path&gt;  مدخل في ملف  koha-conf.xml الخاص بك. يرجى إضافته، الإشارة إلى مسار تحميل الملف المهيأ لمثال كوها الخاص بك. </td>
+ </tr>
+ [% ELSIF config_entry.error == 'uploadpath_and_opacbaseurl_entry_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ لا يوجد لديك &lt;upload_path&gt;  مدخل في ملف  koha-conf.xml الخاص بك. يرجى إضافته، الإشارة إلى مسار تحميل الملف المهيأ لمثال كوها الخاص بك. لاحظ أيضا أنك تحتاج إلى ضبط التفضيل OPACBaseURL جيدا لكي يعمل برنامج تحميل الملف المدمج. </td>
+ </tr>
+ [% ELSIF config_entry.error == 'tmp_path_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ مدخل &lt;tmp_path&gt; مفقود في ملف koha-conf.xml الخاص بك. يرجى إضافته، والإشارة إلى المسار المؤقت المهيأ لتثبيت كوها الخاص بك. المسار المؤقت ساري المفعول هو '[% config_entry.effective_tmp_dir | html %]'. </td>
+ </tr>
+ [% ELSIF config_entry.error == 'encryption_key_missing' %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ مدخل&lt;encryption_key&gt; مفقود في ملف koha-conf.xml الخاص بك. يرجى توليد مفتاح. نوصي بواحد من 32 بايت على الأقل. (يمكنك استخدام 'pwgen 32' للقيام بذلك). </td>
+ </tr>
+ [% END # /IF config_entry.error %]
+ [% END # /FOREACH config_entry %]
+ </table>
+ [% END # /IF xml_config_warnings.size %]
+
+ [% IF warnIssuingRules %]
+ <table>
+ <caption>قواعد الإعارة</caption>
+ [% FOREACH unit IN ir_units %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ ستقع قاعدة إصدار [% unit.branchcode || 'branchcode=default' | html %], [% unit.categorycode || 'categorycode=default' | html %], [% unit.itemtype || 'itemtype=default' | html %]في 'يومًا' ل 'lengthunit' حيث أنها معرفة بشكل غير صحيح كـ [% unit.rule_value | html %]. </td>
+ </tr>
+ [% END # /FOREACH unit %]
+ </table>
+ [% END # /IF warnIssuingRules %]
+
+ [% IF elasticsearch_has_missing %]
+ <table>
+ <caption>التسجيلات غير مفهرسة في Elasticsearch</caption>
+ [% FOREACH index IN elasticsearch_status.indexes %]
+ [% IF index.missing_count %]
+ <tr>
+ <th scope="row"><strong>تحذير</strong></th>
+ <td>
+ [% index.missing_count | html %] تسجيلة مفقودة من إجمالي[% index.index_count | html %] في الفهرس [% index.index_name | html %]. </td>
+ </tr>
+ [% END %]
+ [% END %]
+ </table>
+ [% END # /IF elasticsearch_has_missing %]
+
+ [% IF warnMissingCompiledFiles %]
+ <tr><th scope="row"><strong class="error">خطأ</strong></th><td>
+ ملفات CSS أو جافاسكريبت المجمعة غير موجودة. يرجى تشغيل `yarn build` لتوليدها. </td></tr>
+ [% END # /IF warnMissingCompiledFiles %]
+
+ [% ELSE %]
+ <p>لا توجد تحذيرات.</p>
+ [% END # /IF warnRequireChoosingExistingAuthority... %]
+ [% END # tab=sysinfo %]
+[% END %]
+
+[% BLOCK team_panel %]
+ [% WRAPPER tab_panel tabname= "team" bt_active = 1 %]
+ <h2>شكر خاص للمنظمات التالية</h2>
+ <ul>
+ <li>
+ <a href="http://library.org.nz">Horowhenua Library Trust</a>, نيوزيلاند, وروزالي بليك,رئيس المكتبات, (كوها 1.0) </li>
+ <li>
+ ال <a href="http://www.myacpl.org/">مكتبات مقاطعة أثينا العامة</a>, أوهايو و الولايات التحدة الأمريكية (الضمان المالى لمارك, التوثيق, صيانة طبعة)</li>
+ <li>
+ <a href="http://www.emn.fr">EMN (Ecole des Mines de Nantes)</a>، فرنسا (مقترحات، معالج إحصائيات ومحسّن ضمان LDAP المالي) </li>
+ <li>
+ <a href="http://www.mines-paristech.fr">Mines Paristech (previously Ecole Nationale Supérieure des Mines de Paris)</a>, فرنسا (القوالب الببليوغرافية، استنادات مارك، سلة الأوباك، رعاية الدوريات) </li>
+ <li>
+ <a href="http://www.mediathequeouestprovence.fr/">SAN-Ouest Provence</a>، فرنسا (تحسينات نظام كوها الإصدار 3.0 على أنظمة المستفيد والحجوزات الفرعية) </li>
+ <li>
+ ال <a href="http://ccfls.org">نظام مكتبة محافظة كراوفورد الموحد</a>، بنسلفانيا، الولايات المتحدة الأمريكية (كوها 3.0 رعاية تكامل زيبرا)</li>
+ <li>
+ ال <a href="http://www.geauga.lib.oh.us/">مكتبة مقاطعة جوجا العامة</a>أوهايو والولايات المتحدة الأمريكية ( اختبار بيتا لكوها الإصدار 3,0 )</li>
+ <li>
+ ال <a href="http://library.neu.edu.tr">جامعة الشرق الأدنى</a>، قبرص</li>
+ <li>
+ OPUS International Consultants, Wellington, New Zealand (Corporate Serials sponsorship)</li>
+ <li>
+ <a href="http://www.famfamfam.com/">famfamfam.com</a> المطور مارك جيمس، ومقره برمنغهام (المملكة المتحدة)، لمجموعة أيقونات فامفام سيلك. </li>
+ <li>
+ <a href="http://www.ashs.school.nz/">مدرسة ألباني الثانوية العليا</a>، أوكلاند، نيوزيلندا (رعاية 'تقييم النجوم' للأوباك) </li>
+ </ul>
+
+ <h2>فرق إصدار كوها</h2>
+ [% IF maintenance_team %]
+ <div class="row">
+ <div class="col-md-6">
+ <h3>كوها [% short_version | html %][% IF kohaCodename %] ([% kohaCodename | html %])[% END %] فريق الإصدار</h3>
+ [% IF development_version %]
+ <p>أنت تقوم بتشغيل إصدار تطويري من كوها</p>
+ [% ELSE %]
+ [% INCLUDE team t=release_team v='release' %]
+ [% END %]
+ </div>
+
+ <div class="col-md-6">
+ <h3>فريق الصيانة الحالي</h3>
+ [% INCLUDE team t=maintenance_team v=short_version %]
+ [% IF development_version %]
+ <li><strong>مسئولي صيانة الإصدار:</strong>
+ <ul>
+ [% FOREACH m IN maintenance_team.maintainer %]
+ <li>[% m.version | html %] - [% INCLUDE person p=m %]</li>
+ [% IF maintenance_team.maintainer_assistants %]
+ [% FOREACH ma IN maintenance_team.maintainer_assistants %]
+ [% IF ma.version == ( m.version ) %]
+ <ul><li><strong>مساعد:</strong> [% INCLUDE person p=ma %]</li></ul>
+ [% END %]
+ [% END %]
+ [% END %]
+
+ [% IF maintenance_team.maintainer_mentors %]
+ [% FOREACH mm IN maintenance_team.maintainer_mentors %]
+ [% IF m.version == ( mm.version ) %]
+ <ul><li><strong>معلم:</strong> [% INCLUDE person p=mm %]</li></ul>
+ [% END %]
+ [% END %]
+ [% END %]
+ [% END %]
+ </ul>
+ </li>
+ [% END %]
+ </div>
+ </div>
+ [% ELSE %]
+ <div class="dialog alert">
+ تعذّر قراءة ملف teams.yaml. يرجى التأكد &lt;docdir&gt; من تعريفه بشكل صحيح في koha-conf.xml. </div>
+ [% END # /maintenance_team %]
+
+ <h2>فريق تطوير كوها</h2>
+ [% IF contributors.size %]
+ <ul class="columns-4">
+ [% FOREACH contributor IN contributors %]
+ <li>[% INCLUDE person p=contributor %][% INCLUDE contributions p=contributor %]</li>
+ [% END %]
+ </ul>
+ [% ELSE %]
+ <div class="dialog alert">
+ تعذّر قراءة ملف contributors.yaml. يرجى التأكد &lt;docdir&gt; من تعريفه بشكل صحيح في koha-conf.xml. </div>
+ [% END # /IF contributors.size %]
+ <hr>
+
+ <h2>مساهمة الشركات والمؤسسات</h2>
+ <ul class="columns-4">
+ <li>مكتبة Allen Ginsberg، الولايات المتحدة</li>
+ <li>مكتبة Alingsås العامة، السويد</li>
+ <li>الجمعية الأمريكية للعملات، الولايات المتحدة</li>
+ <li>مكتبة أركاديا العامة، الولايات المتحدة</li>
+ <li>مكتبات مقاطعة أثينا العامة، الولايات المتحدة</li>
+ <li>مكتبة ميوز العامة، فرنسا</li>
+ <li>المكتبة الحرة، فرنسا</li>
+ <li>Biblioteca Provincial Fr. Mamerto Esquiú (Provincia Franciscana de la Asunción), Argentina</li>
+ <li>Bibliotheksservice-Zentrum Baden-Württemberg (BSZ), Germany</li>
+ <li>جامعة بريار كليف، الولايات المتحدة</li>
+ <li>مجلس مدينة بريمبانك، أستراليا</li>
+ <li>جامعة كلية الحقوق ببروكلين، الولايات المتحدة</li>
+ <li>مكتبة الجامعة للغات والحضارات (<a href="https://www.bulac.fr">BULAC</a>)، فرنسا</li>
+ <li>ByWater Solutions, USA</li>
+ <li>كلية الآداب بكاليفورنيا، الولايات المتحدة</li>
+ <li>مقاطعة كامدن، الولايات المتحدة</li>
+ <li>مكتبة كارينغي ستاوت، الولايات المتحدة</li>
+ <li>كالاس, استراليا</li>
+ <li>المحفز لتكنولوجيا المعلومات، نيوزيلندا</li>
+ <li>نظام مكتبة كنساس المركزية (CKLS)، الولايات المتحدة</li>
+ <li>المركز الجامعي للخدمات المجمعة (CCSR)، كندا</li>
+ <li>مكتبات تشيشاير، المملكة المتحدة</li>
+ <li>مكتبة Coeur d'Alene العامة، الولايات المتحدة</li>
+ <li>مكتبات Corpus Christi العامة، الولايات المتحدة</li>
+ <li>C &amp; P خدمات بيبلوغرافية، الولايات المتحدة الأمريكية</li>
+ <li>داتالي تك، اليونان</li>
+ <li>ديفينيم، تركيا</li>
+ <li>Do Space، الولايات المتحدة</li>
+ <li>DoverNet، الولايات المتحدة</li>
+ <li>doXulting</li>
+ <li>مكتبة مقاطعة دوتشيسن، الولايات المتحدة الأمريكية</li>
+ <li>Escuela de Orientacion Lacaniana، الأرجنتين</li>
+ <li>مؤسسة مكتبة فينواي، الولايات المتحدة الأمريكية</li>
+ <li>مكتبة فارغو العامة، الولايات المتحدة الأمريكية</li>
+ <li>مكتبة فارمينغتون العامة، الولايات المتحدة الأمريكية</li>
+ <li>FIT</li>
+ <li>مدرسة &amp; وجمعيات الكتاب المقدس، الولايات المتحدة</li>
+ <li>معهد جوته، ألمانيا</li>
+ <li>مكتبة جامعة غوتنبرغ، السويد</li>
+ <li>مكتبة مقاطعة هلاند، السويد</li>
+ <li>مكتبة هاريسون كارمل العامة، الولايات المتحدة</li>
+ <li>مكتبات منطقة هوراكي، نيوزلندا</li>
+ <li>مكتبات التعليم العالي بماساتشوستس، الولايات المتحدة الأمريكية</li>
+ <li>Hochschule für Gesundheit (hsg)، ألمانيا</li>
+ <li>مدرسة Hotchkiss، الولايات المتحدة</li>
+ <li>Katipo Communications, New Zealand</li>
+ <li>KEEP SOLUTIONS، البرتغال</li>
+ <li>كوهاألوها، نيوزلندا</li>
+ <li>Koha-Suomi Oy، فنلندا</li>
+ <li>LibLime، الولايات المتحدة الأمريكية</li>
+ <li>مكتبة جوزيف بلسودسكي معهد أمريكا، الولايات المتحدة</li>
+ <li>ليبريوتك، النرويج</li>
+ <li>مكتبة لوس غاتوس العامة، الولايات المتحدة</li>
+ <li>مكتبة جامعة لوند، السويد</li>
+ <li>MassCat، الولايات المتحدة</li>
+ <li>مكتبة ميدلتاون تاونشب العامة، الولايات المتحدة</li>
+ <li>مكتبة فنلندا الوطنية، فنلندا</li>
+ <li>مجلس مدينة نيوكاسل، المملكة المتحدة</li>
+ <li>مكتبة وكالات نيوزلندا المركزية، نيوزلندا</li>
+ <li>مكتبة وزارة التعليم النيوزلندية، نيوزلندا</li>
+ <li>المكتبة الإقليمية الشمالية المركزية (NCRL) ، الولايات المتحدة</li>
+ <li>نظام مكتبة شمال شرق كنساس (NEKLS)، الولايات المتحدة</li>
+ <li>OPUS</li>
+ <li>Orex Digital، أسبانيا</li>
+ <li>مكتبة أوسلو العامة، النرويج</li>
+ <li>مدرسة بلانو المستقلة، الولايات المتحدة</li>
+ <li>بحوث النباتات والأغذية المحدودة، نيوزيلندا</li>
+ <li>أنظمة Prosentient ، استراليا</li>
+ <li>PTFS, Maryland, USA</li>
+ <li>PTFS Europe Ltd، المملكة المتحدة</li>
+ <li>المتحف الوطني, امستردام، هولندا</li>
+ <li>مكتبات رولينغ هيلز الموحدة، الولايات المتحدة</li>
+ <li>مكتبة راوند روك العامة، الولايات المتحدة</li>
+ <li>SAN-Ouest Provence, فرنسا</li>
+ <li>مجلس سيفتون، المملكة المتحدة</li>
+ <li>software.coop, المملكة المتحدة</li>
+ <li>نظام مكتبة جنوب شرق كنساس (SEKLS)، الولايات المتحدة</li>
+ <li>مجلس مقاطعة جنوب تاراناكي، نيوزيلندا</li>
+ <li>مكتبة جامعة ستوكهولم، السويد</li>
+ <li>اتحاد مكتبات SWITCH، الولايات المتحدة</li>
+ <li>Talking Tech، الدولية</li>
+ <li>التاميل، فرنسا</li>
+ <li>ثيك سولوشنز، الأرجنتين</li>
+ <li>Tulong Aklatan، الفلبين</li>
+ <li>نظام مكتبة يونيتاه، الولايات المتحدة الأمريكية</li>
+ <li>جامعة السلفادور، السلفادور</li>
+ <li>Universidad Empresarial Siglo 21، الأرجنتين</li>
+ <li>Universidad Nacional de Córdoba، الأرجنتين</li>
+ <li>Universidad ORT Uruguay</li>
+ <li>جامعة أيكس-مارسيليا، فرنسا</li>
+ <li>جامعة ليون 3، فرنسا</li>
+ <li>جامعة الرن 2، فرنسا</li>
+ <li>جامعة سان إتين، فرنسا</li>
+ <li>جامعة الآداب بلندن، المملكة المتحدة</li>
+ <li>Vaara-kirjastot، فنلندا</li>
+ <li>كلية فانير، كندا</li>
+ <li>مؤسسة فيرمونت لمكتبات كوها المؤتمتة (VOKAL)، الولايات المتحدة</li>
+ <li>مدينة فيكتوريافيل، كندا</li>
+ <li>فرجينيا تك، الولايات المتحدة الأمريكية</li>
+ <li>نظام مكتبة مقاطعة واشو، الولايات المتحدة</li>
+ <li>Xercode, أسبانيا</li>
+ </ul>
+
+ <h2>شكر إضافي إلى...</h2>
+ <ul>
+ <li>Irma Birchall</li>
+ <li>راتشيل هاميلتون ويليامز (Kaitiaki من 2004 حتى الآن)</li>
+ <li>Stephen Hedges (مدير التوثيق)</li>
+ <li>Brooke Johnson</li>
+ <li>Jo Ransom</li>
+ <li>Nicholas Rosasco، (مجمّع توثيق)</li>
+ <li>Regula Sebastiao</li>
+ </ul>
+ [% END # tab=team %]
+[% END %]
+
+[% BLOCK licenses_panel %]
+ [% WRAPPER tab_panel tabname= "licenses" bt_active = 1 %]
+ <h2>كوها</h2>
+ <p>
+ هذا البرنامج هو برنامج مجاني: يمكنك إعادة توزيعه أو تعديله بموجب شروط <a rel="license" href="https://www.gnu.org/licenses/gpl-3.0.html">رخصة GNU العمومية العامة</a> كما نشرتها مؤسسة البرمجيات الحرة، إما الإصدارة 3 من الترخيص، أو أي إصدار لاحق (حسب اختيارك). </p>
+
+ <h2>بوتستراب</h2>
+ <p>
+ <a href="https://getbootstrap.com/">بوتستراب</a>, <a href="https://glyphicons.com">Glyphicons Free</a>: <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE">MIT License</a>
+ </p>
+
+ <h2>أيقونات بوتستراب</h2>
+ <p>
+ <a href="https://icons.getbootstrap.com/">أيقونات بوتستراب</a>: <a href="https://github.com/twbs/icons/blob/main/LICENSE">MIT License</a>
+ </p>
+
+ <h2>مجموعة أيقونات نوع مادة الجسر</h2>
+ <p>
+ <a href="http://apps.carleton.edu/campus/library/bridge_icons/">Bridge Material Type Icons Project</a>: <a href="https://creativecommons.org/licenses/by-sa/2.5/">الاستناد -ShareAlike 2.5 ترخيص</a>
+ </p>
+
+ <h2>Chocolat.js</h2>
+ <p>
+ <a href="http://chocolat.insipi.de">Chocolat.js v1.1.2</a>: <a href="https://github.com/nicolas-t/Chocolat/blob/v1.1.2/LICENSE">رخصة GNU العمومية العامة الإصدارة 3.0</a>
+ </p>
+
+ <h2>CodeMirror</h2>
+ <p>
+ <a href="https://codemirror.net/">CodeMirror v5.40.2</a>: <a href="https://github.com/codemirror/codemirror5/blob/5.40.2/LICENSE">MIT License</a>
+ </p>
+
+ <h2>C3.js</h2>
+ <p>
+ <a href="https://c3js.org/">مكتبة المخططات القابلة لإعادة الاستخدام المستندة إلى C3.js D3 الإصدار 0.4.11</a>: <a href="https://github.com/c3js/c3/blob/0.4.11/LICENSE">ترخيص MIT</a>
+ </p>
+
+ <h2>CSSLint</h2>
+ <p>
+ <a href="">CSSLint v0.9.8</a>: <a href="https://github.com/CSSLint/csslint/blob/v0.9.8/LICENSE">ترخيص</a>
+ </p>
+
+ <h2>D3</h2>
+ <p>
+ <a href="https://d3js.org/">مكتبة D3 JavaScript لتصور البيانات v3.5.17</a>: <a href="https://github.com/d3/d3/blob/v3.5.17/LICENSE">ترخيص ISC</a>
+ </p>
+
+ <h2>جداول البيانات</h2>
+ <p>
+ <a href="https://datatables.net/">DataTables v.1.10.18</a>: <a href="https://datatables.net/license/mit">ترخيص MIT</a>
+ </p>
+
+ <h2>Day.js</h2>
+ <p>
+ <a href="https://day.js.org/">Day.js v1.11.2</a>: <a href="https://github.com/iamkun/dayjs/blob/v1.11.2/LICENSE">MIT License</a>
+ </p>
+
+ <h2>Enquire.js</h2>
+ <p>
+ <a href="https://wicky.nillia.ms/enquire.js">Enquire.js v2.1.6</a>: <a href="https://github.com/WickyNilliams/enquire.js/blob/v2.1.6/LICENSE">MIT License</a>
+ </p>
+
+ <h2>Maskito</h2>
+ <a href="https://maskito.dev/getting-started/what-is-maskito">Maskito</a> All Maskito packages are covered by <a href="https://github.com/taiga-family/maskito/blob/main/LICENSE">Apache 2.0</a>
+ <p>
+
+ </p>
+
+ <h2>أيقونات Famfamfam</h2>
+ <p>
+ <a href="https://web.archive.org/web/20221224123234/http://www.famfamfam.com/lab/icons/silk/">أيقونات FamFamFam Silk</a>: <a href="https://creativecommons.org/licenses/by/2.5/">إسناد 2.5 الترخيص</a>
+ </p>
+
+ <h2>FileSaver.js</h2>
+ <p>
+ <a href="https://github.com/eligrey/FileSaver.js">FileSaver.js v2.0.4</a>: <a href="https://github.com/eligrey/FileSaver.js/blob/v2.0.4/LICENSE.md">MIT License</p>
+
+ <h2>Flatpicker</h2>
+ <p>
+ <a href="https://flatpickr.js.org/">Flatpickr v4.6.9</a>: <a href="https://github.com/flatpickr/flatpickr/blob/v4.6.9/LICENSE.md">MIT License</a>
+ </p>
+
+ <h2>الخط رائع</h2>
+ <p>
+ <a href="https://fontawesome.com/">الخط Awesome v6.3.0</a>: <a href="https://github.com/FortAwesome/Font-Awesome/blob/6.3.0/LICENSE.txt">ترخيص إسناد المشاع الإبداعي الدولي الإصدارة 4.0، وترخيص الخط المفتوح SIL الإصدارة 1.1، وترخيصMIT </a>
+ </p>
+
+ <h2>مراقب واجهة الخط</h2>
+ <p>
+ <a href="https://github.com/bramstein/fontfaceobserver">Font Face Observer JavaScript library v2.3.0</a>: <a href="https://github.com/bramstein/fontfaceobserver/blob/v2.3.0/LICENSE">BSD 2-Clause "Simplified" License</a>
+ </p>
+
+ <h2>GreyBox</h2>
+ <p>
+ <a href="https://web.archive.org/web/20160819153233/http://orangoo.com:80/labs/GreyBox">GreyBox JavaScript Library v5.54</a>: <a href="https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">رخصة GNU العمومية العامة الصغرى، الإصدارة 2.1</a>
+ </p>
+
+ <h2>HC Sticky</h2>
+ <p>
+ <a href="https://somewebmedia.github.io/hc-sticky/">HC Sticky JavaScript library v2.2.7</a>: <a href="https://github.com/somewebmedia/hc-sticky/blob/v2.2.7/LICENSE">MIT License</a>
+ </p>
+
+ <h2>تمييز</h2>
+ <p>
+ <a href="https://johannburkard.de/blog/programming/javascript/highlight-javascript-text-higlighting-jquery-plugin.html">Highlight jQuery Plugin v5.0</a>: MIT ترخيص </p>
+
+ <h2>HTMLHint</h2>
+ <p>
+ <a href="https://htmlhint.com/">HTMLHint v0.9.12</a>: <a href="https://github.com/htmlhint/HTMLHint/blob/v0.9.12/LICENSE.md">MIT License</a>
+ </p>
+
+ <h2>Humanized Messages</h2>
+ <p>
+ <a href="https://code.google.com/archive/p/humanmsg/">Humanized Messages v1.0</a>: <a href="https://www.apache.org/licenses/LICENSE-2.0">ترخيص أباتشي، الإصدار 2.0</a>
+ </p>
+
+ <h2>ملف تعريف الارتباط لجافاسكريبت</h2>
+ <p>
+ <a href="https://github.com/js-cookie/js-cookie">ملف تعريف الارتباط لجافاسكريبت v3.0.1</a>: <a href="https://github.com/js-cookie/js-cookie/blob/v3.0.1/LICENSE">MIT License</a>
+ </p>
+
+ <h2>لوغاريتم اختلاف جافاسكريبت</h2>
+ <p>
+ <a href="https://johnresig.com/projects/javascript-diff-algorithm/">لوغاريتم اختلاف جافاسكريبت</a>: <a href="https://opensource.org/license/mit/">MIT License</a>
+ </p>
+
+ <h2>jQuery وjQuery Migrate وjQuery UI</h2>
+ <p>
+ <a href="https://jquery.com/">jQuery v3.6.0</a>, <a href="https://github.com/jquery/jquery-migrate">jQuery Migrate</a>, <a href="https://jqueryui.com/">jQuery UI v1.13.2</a>: <a href="https://github.com/jquery/jquery/blob/3.6.0/LICENSE.txt">MIT License</a>
+ </p>
+
+ <h2>برنامج تقييم شريط jQuery المساعد</h2>
+ <p>
+ <a href="https://antennaio.github.io/jquery-bar-rating/">برنامج تقييم شريط jQuery المساعد v1.22</a>: <a href="https://github.com/antennaio/jquery-bar-rating/blob/v1.2.2/LICENSE.txt">MIT License</a>
+ </p>
+
+ <h2>إضافة jQuery Emojiarea البرمجية</h2>
+ <p>
+ <a href="https://github.com/diy/jquery-emojiarea">إضافة Emojiarea البرمجية لـ JQuery</a>: <a href="http://www.apache.org/licenses/LICENSE-2.0">ترخيص أباتشي، الإصدار 2.0</a>
+ </p>
+
+ <h2>jQuery insertAtCaret برنامج مساعد</h2>
+ <p>
+ jQuery InsertAtCaret Plugin v1.0 بواسطة فريق تطوير phpMyAdmin: <a href="https://www.gnu.org/licenses/gpl-3.0.html">رخصة GNU العمومية العامة</a>
+ </p>
+
+ <h2>jQuery jEditable</h2>
+ <p>
+ <a href="https://github.com/NicolasCARPi/jquery_jeditable">jQuery jEditable</a>: <a href="https://github.com/NicolasCARPi/jquery_jeditable/blob/master/LICENSE">ترخيص MIT</a>
+ </p>
+
+ <h2>إضافة jQuery jsTree البرمجية</h2>
+ <p>
+ <a href="https://www.jstree.com/">jQuery jsTree Plugin v3.3.12</a>: <a href="https://github.com/vakata/jstree/blob/3.3.12/LICENSE-MIT">MIT License</a>
+ </p>
+
+ <h2>برنامج مساعد اختيار من متعدد jQuery</h2>
+ <p>
+ <a href="https://multiple-select.wenzhixin.net.cn/">إضافة jQuery Multiple Select البرمجية الإصدارة 1.6.0</a>: <a href="https://github.com/wenzhixin/multiple-select/blob/1.6.0/LICENSE">MIT License</a>
+ </p>
+
+ <h2>إضافة jQuery Treetable البرمجية</h2>
+ <p>
+ <a href="https://github.com/ludo/jquery-treetable">إضافة jQuery Treetable البرمجية الإصدارة 3.1.0</a>: <a href="https://github.com/ludo/jquery-treetable/blob/3.1.0/GPL-LICENSE.txt"> رخصة GNU العمومية العامة الإصدارة 2.0</a>, <a href="https://github.com/ludo/jquery-treetable/blob/3.1.0/MIT-LICENSE.txt">MIT License</a>
+ </p>
+
+ <h2>برنامج مصادقة jQuery  المساعد</h2>
+ <p>
+ <a href="https://jqueryvalidation.org/">jQuery Validation Plugin v1.19.3</a>: <a href="https://github.com/jquery-validation/jquery-validation/blob/1.19.3/LICENSE.md">MIT License</a>
+ </p>
+
+ <h2>JS-YAML</h2>
+ <p>
+ <a href="https://nodeca.github.io/js-yaml/">JS-YAML v3.13.1</a>: <a href="https://github.com/nodeca/js-yaml/blob/3.13.1/LICENSE">MIT License</a>
+ </p>
+
+ <h2>JSHint</h2>
+ <p>
+ <a href="https://jshint.com/">JSHint v2.9.7</a>: <a href="https://github.com/jshint/jshint/blob/2.9.7/LICENSE">MIT License</a>
+ </p>
+
+ <h2>JSZip</h2>
+ <p>
+ <a href="https://stuk.github.io/jszip/">JSZip JavaScript library v3.1.3</a>: <a href="https://github.com/Stuk/jszip/blob/v3.1.3/LICENSE.markdown">MIT License, GNU General Public License v3.0</a>
+ </p>
+
+ <h2>kjua</h2>
+ <p>
+ <a href="https://larsjung.de/kjua/">kjua JavaScript library v0.6.0</a>: <a href="https://github.com/lrsjng/kjua/blob/v0.6.0/README.md">MIT License</a>
+ </p>
+
+ <h2>نشرة</h2>
+ <p>
+ <a href="https://leafletjs.com/">Leaflet JavaScript library v1.9.4</a>: <a href="https://github.com/Leaflet/Leaflet/blob/v1.9.4/LICENSE">BSD رخصة</a>
+ </p>
+
+ <h2>خطوط Noto</h2>
+ <p>
+ <a href="https://github.com/googlei18n/noto-fonts">Noto</a>: <a href="https://github.com/notofonts/noto-fonts/blob/main/LICENSE">إصدارة ترخيص الخط المفتوح SIL 1.1</a>
+ </p>
+
+ <h2>ورقة أنماط OAI XSLT</h2>
+ <p>
+ مقتبس من <a href="https://dspace.lyrasis.org/">مشروع ديسبيس</a>: <a href="https://dspace.lyrasis.org/license/">BSD رخصة</a>
+ </p>
+
+ <h2>مخطط OpenAPI 2.0</h2>
+ <p>
+ <a href="https://github.com/OAI/OpenAPI-Specification/blob/master/schemas/v2.0/schema.json">مخطط JSON لـ Swagger 2.0 API</a>: <a href="https://github.com/OAI/OpenAPI-Specification/tree/master/schemas/v2.0">ترخيص أباتشي، الإصدار 2.0</a>, <a href="https://www.openapis.org/about">مبادرة OpenAPI (OAI)</a>
+ </p>
+
+ <h2>OpenJS مكتبة اختصارات لوحة المفاتيح</h2>
+ <p>
+ <a href="http://www.openjs.com/scripts/events/keyboard_shortcuts/">OpenJS مكتبة اختصارات لوحة المفاتيح</a>: BSD ترخيص </p>
+
+ <h2>RequireJS</h2>
+ <p>
+ <a href="https://requirejs.org/">RequireJS ملف جافا سكريبت ومحمل الوحدة v2.1.8</a>: <a href="https://github.com/requirejs/requirejs/blob/2.1.8/LICENSE">ترخيص BSD أو ترخيص MIT</a>
+ </p>
+
+ <h2>تحديد2</h2>
+ <p>
+ <a href="https://select2.github.io/select2/">Select2 library v4.0.13</a>: <a href="https://github.com/select2/select2/blob/4.0.13/LICENSE">ترخيص أباتشي، الإصدارة 2.0 أو رخصة GNU العمومية العامة الإصدارة 2.0</a>
+ </p>
+
+ <h2>قابل للفرز</h2>
+ <p>
+ <a href="https://sortablejs.github.io/Sortable/">Sortable JavaScript Library v1.15.0</a>: <a href="https://github.com/SortableJS/Sortable/blob/1.15.0/LICENSE">ترخيص MIT</a>
+ </p>
+
+ <h2>محرر TinyMCE WYSIWYG</h2>
+ <p>
+ <a href="https://www.tiny.cloud/">محرر TinyMCE WYSIWYG الإصدارة 5.9.2</a>: <a href="https://github.com/tinymce/tinymce/blob/5.9.2/LICENSE.TXT">رخصة GNU العمومية العامة الصغرى الإصدارة 2.1</a>
+ </p>
+
+ <h2>Verovio</h2>
+ <p>
+ <a href="https://www.verovio.org/">Verovio</a>: <a href="https://github.com/rism-digital/verovio/blob/develop/COPYING">رخصة GNU العمومية العامة الإصدارة 3.0</a>, <a href="https://github.com/rism-digital/verovio/blob/develop/COPYING.LESSER">رخصة GNU العمومية العامة الصغرى الإصدارة 3.0</a>
+ </p>
+
+ <h2>لوحة المفاتيح الافتراضية</h2>
+ <p>
+ <a href="https://mottie.github.io/Keyboard/index.html">Virtual Keyboard v1.30.1</a>: <a href="https://github.com/Mottie/Keyboard/blob/v1.30.1/LICENSE">ترخيص MIT</a>
+ </p>
+
+ [% END # tab=licenses %]
+[% END %]
+
+[% BLOCK translations_panel %]
+ [% WRAPPER tab_panel tabname= "translations" bt_active = 1 %]
+ <h2>ترجمة</h2>
+ <ul>
+ <li>العربية (العربية) دينا هاشم من مؤسسة تقنية المعارف للتجارة. <li>&#4768;&#4635;&#4653;&#4763; (الأمهرية) Getway II Ethiopia Co. (Yohannes Mulugeta (Team Leader), Tegene Assefa, Abiyot Bayou)</li>
+ <li>الأرمنية تيغران زرقريان</li>
+ <li>&#1041;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080; (Bulgarian) Radoslav Kolev</li>
+ <li>euskara (Basque) Fernando Berrizbeitia, the librarians of Eima Katalogoa, Tabakalera International Contemporary Culture Centre, and Nere Erkiaga</li>
+ <li>&#2476;&#2494;&#2434;&#2482;&#2494; (البنغالية) Parthasarathi Mukhopadhyay</li>
+ <li>&#20013;&#25991; (الصينية)</li>
+ <li>Hrvatski (Croatian)</li>
+ <li>&#x010D;e&#353;tina (التشيكية)</li>
+ <li>D&aelig;nsk (الدنماركية)</li>
+ <li>الهولندية - هولندا (الهولندية - هولندا) رونالد ويلينز ، جامعة ساكسيون</li>
+ <li>Nederlands-Belgi&euml; (Dutch-Belgium)</li>
+ <li>الإنجليزية</li>
+ <li>الفنلندية، اللغة الفنلندية (الفنلندية) باسي كوركالو</li>
+ <li>Fran&ccedil;ais (الفرنسية) <a href="http://www.koha-fr.org/content/lassociation-kohala">كوهالا</a>, باسكال نالون (ENSMP), وآخرون </li>
+ <li>Galego (Galician) Ignacio Javier</li>
+ <li>Deutsch (German) Friedrich zur Hellen, Robert Hillig, Katrin Fischer, Beda Szukics, Mirko Tietgen and Marc Véron</li>
+ <li>&#949;&#955;&#955;&#951;&#957;&#953;&#954;&#940; (Greek, Modern [1453- ]) مجموعة مستخدمي كوها الهيلانية (Georgia Katsarou, Dimitris Antonakis, Eugenios Papadopoulos), Theodoros Theodoropoulos, Panoraia Gaitanou and Kiriaki Roditi</li>
+ <li>&#1506;&#1489;&#1512;&#1497;&#1514; (العبرية)</li>
+ <li>&#2361;&#2367;&#2344;&#2381;&#2342;&#2368; (الهندية)</li>
+ <li>Magyar (Hungarian)Agnes Imecs</li>
+ <li>Norsk Bokmål (Norwegian) Axel Bojer and Thomas Gramstad</li>
+ <li>Norsk Nynorsk (Norwegian) Unni Knutsen and Marit Kristine Ådland</li>
+ <li>(الإندونيسية)</li>
+ <li>Italiano (Italian) for 3.2: Zeno Tajoli, Pietro Gozzetti and Paolo Pozzan; for 3.4 and more: Zeno Tajoli, Stefano Bargioni, Paolo Bizzarri</li>
+ <li>&#26085;&#26412;&#35486; (اليابانية)</li>
+ <li>&#54620;&#44397;&#50612; (الكورية)</li>
+ <li>&#3221;&#3240;&#3277;&#3240;&#3233; (kanna&#7693;a)</li>
+ <li>اللاتيني (اللاتينية)</li>
+ <li>Lao Anousak Anthony Souphavanh</li>
+ <li>M&#257;ori</li>
+ <li>&#3374;&#3378;&#3375;&#3390;&#3379;&#3330; (Malayalam)</li>
+ <li>&#1601;&#1575;&#1585;&#1587;&#1609; (الفارسية)</li>
+ <li>&#2835;&#2908;&#2879;&#2822; (&#x014D;&#7771;iy&#257;)</li>
+ <li>البولندية (البولندية)</li>
+ <li>Portugu&ecirc;s (البرتغالية)</li>
+ <li>Rom&acirc;n&#259; (رومانيا)</li>
+ <li>&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081; (Russian) Victor Titarchuk and Serhij Dubyk</li>
+ <li>Espa&ntilde;ol (الأسبانية) Bernardo González Kriegel, Héctor Castro and Tomás Cohen Arazi,بمساعدة مجتمع كوها الأسباني.</li>
+ <li>Svenska (السويدية)</li>
+ <li>Tetun (Tetum) Karen Myers</li>
+ <li>&#3616;&#3634;&#3625;&#3634;&#3652;&#3607;&#3618; (التايلاندية)</li>
+ <li>T&uuml;rk&ccedil;e (التركية) pre-3.8: Selma Aslan; for 3.8+, Suleyman Demirel University (Ugur Bulgan, Onur Erdem, Kemal Caner Bayrakci, and Alper Tutunsatar)</li>
+ <li>&#1575;&#1585;&#1583;&#1608;(الأردية) Ata ur Rehman</li>
+ <li>&#1059;&#1082;&#1088;&#1072;&#1111;&#1085;&#1089;&#1100;&#1082;&#1072; (الأوكرانية) Victor Titarchuk and Serhij Dubyk</li>
+ </ul>
+ [% END #tab=translations %]
+[% END %]
+
+[% BLOCK history_panel %]
+ [% WRAPPER tab_panel tabname= "history" bt_active = 1 %]
+ <h2>سِجل الجدول الزمني لكوها</h2>
+ [% IF ! timeline_read_error %]
+ <table style="cursor:pointer">
+ <thead>
+ <tr>
+ <td  style="font-weight:bold;" >التاريخ</td>
+ <td  style="font-weight:bold;" >الوصف</td>
+ </tr>
+ </thead>
+ [% FOREACH tabl IN table2 %]
+ <tr class="[% loop.parity | html %]">
+ [% FOREACH ro IN tabl.row2 %]
+ <td>[% ro.date | html %]</td>
+ <td>[% ro.desc | html %]</td>
+ [% END %]
+ </tr>
+ [% END %]
+ </table>
+ [% ELSE %]
+ <div class="dialog alert">
+ لم نتمكن من قراءة الملف  history.txt . يرجي التأكد &lt;docdir&gt; معرف بشكل صحيح في koha-conf.xml. </div>
+ [% END %]
+ [% END %]
+[% END %]
+
+[% BLOCK dedications_panel %]
+ [% WRAPPER tab_panel tabname= "dedications" bt_active = 1 %]
+ <h2>22.11</h2>
+ <p>
+ يود مجتمع كوها أن يهدي إصدار كوها 22.11 إلى روزالي بليك. </p>
+ <p>
+ كانت روزالي هي أمينة المكتبة الرئيسية في صندوق مكتبة هوروهينوا Horowhenua Library Trust عندما بدأ نظام كوها، وبدونها لم يكن لكوها وجود. لقد كانت قائدة ملهمة ومبتكرة وخاطرت بحياتها المهنية بتكليف كريس وجوان وراشيل وسيمون بتقديم المشروع الأصلي الذي حقق النجاح الدولي الساحق الذي نعرفه ونحبه جميعًا. </p>
+ <p>
+ كما كانت قاضية صلح ممارسة، ونصيرة قوية في نادي ليفين للفخار، وأماً محبوبة جدًا لسيمون وجيريمي، وجدة بن وتوبي وآنا وشارلوت وبيلي. </p>
+ [% END # tab=dedications %]
+[% END %]

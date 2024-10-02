@@ -1,0 +1,2532 @@
+---
+description:
+- عينة الإخطارات
+tables:
+- letter:
+    multiline:
+    - content
+    rows:
+    - branchcode: ''
+      code: ACQ_NOTIF_ON_RECEIV
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - ' تم استلام الطلبية <<aqorders.ordernumber>> (<<biblio.title>>)'
+      - ''
+      - مكتبتك.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: acquisition
+      name: إشعار حول استلام
+      title: تم استلام الطلبية
+    - branchcode: ''
+      code: TICKET_ACKNOWLEDGE
+      content:
+      - '[%- PROCESS ''html_helpers.inc'' -%]'
+      - تحية طيبة [%- INCLUDE 'patron-title.inc' patron => ticket.reporter -%],<br>
+      - <br>
+      - شكرا لك على بلاغك بخصوص [%- INCLUDE 'biblio-title.inc' biblio=ticket.biblio
+        link = 0 -%].<br>
+      - <br>
+      - 'لقد قمت بالإبلاغ عن: <br>'
+      - '[%- ticket.body -%]<br>'
+      - <br>
+      - مع جزيل الشكر
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: catalogue
+      name: إقرار الشكوى
+      title: إقرار شكوى الفهرس
+    - branchcode: ''
+      code: TICKET_RESOLVE
+      content:
+      - '[%- PROCESS ''html_helpers.inc'' -%]'
+      - تحية طيبة [%- INCLUDE 'patron-title.inc' patron => ticket_update.ticket.reporter
+        -%],<br>
+      - <br>
+      - لقد حددت المكتبة الآن شكواك بـ [%- INCLUDE 'biblio-title.inc' biblio=ticket_update.ticket.biblio
+        link = 0 -%] بأنه تم حلها.<br>
+      - <br>
+      - 'تم ترك التعليق التالي: <br>'
+      - '[%- ticket_update.message -%]<br>'
+      - <br>
+      - مع جزيل الشكر
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: catalogue
+      name: تم حل الشكوى
+      title: تم حل شكوى الفهرس
+    - branchcode: ''
+      code: TICKET_UPDATE
+      content:
+      - '[%- PROCESS ''html_helpers.inc'' -%]'
+      - تحية طيبة [%- INCLUDE 'patron-title.inc' patron => ticket_update.ticket.reporter
+        -%],<br>
+      - <br>
+      - أضافت المكتبة تحديثاً للشكوى التي قمت بالإبلاغ عنها [%- INCLUDE 'biblio-title.inc'
+        biblio=ticket_update.ticket.biblio link = 0 -%].<br>
+      - <br>
+      - 'تم ترك التعليق التالي: <br>'
+      - '[%- ticket_update.message -%]<br>'
+      - <br>
+      - مع جزيل الشكر
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: catalogue
+      name: تم تحديث الشكوى
+      title: تم تحديث شكوى الفهرس
+    - branchcode: ''
+      code: TICKET_NOTIFY
+      content:
+      - '[%- PROCESS ''html_helpers.inc'' -%]'
+      - '[%- USE Koha -%]'
+      - عزيزي المستفيد
+      - '[%- INCLUDE ''patron-title.inc'' patron => ticket.reporter -%] قام بالإبلاغ
+        عن الشكوى التالية مع <a href=''[%- Koha.Preference(''staffClientBaseURL'')
+        -%]/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% ticket.biblio.biblionumber
+        %]'' >[%- INCLUDE ''biblio-title.inc'' biblio=ticket.biblio link = 0 -%]</a><br>'
+      - <br>
+      - '[%- ticket.body -%]<br>'
+      - <br>
+      - يمكنك وضع علامة على هذه الشكوى على أنها تم حلها من <a href='[%- Koha.Preference('staffClientBaseURL')
+        -%]/cgi-bin/koha/cataloguing/concerns.pl'>صفحة إدارة الشكاوى</a>.
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: catalogue
+      name: إشعار الشكوى
+      title: تم الإبلاغ عن شكوى الفهرس
+    - branchcode: ''
+      code: ACCOUNT_CREDIT
+      content:
+      - '[%- USE AuthorisedValues -%]'
+      - '[%- USE KohaDates -%]'
+      - '[%- USE Price -%]'
+      - '[%- PROCESS "accounts.inc" -%]'
+      - <table>
+      - '    [% IF ( LibraryName ) %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h3>[% LibraryName | html %]</h3>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% IF credit.library %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h2>[% credit.library.branchname | html %]</h2>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h3>[% today | $KohaDates %]</h3>'
+      - '      </th>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>معرف المعاملة: </td>'
+      - '      <td>[% credit.accountlines_id %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>معرف المشغل: </td>'
+      - '      <td>[% credit.manager_id %]</td>'
+      - '    </tr>'
+      - '    [% IF credit.payment_type %]'
+      - '    <tr>'
+      - '      <td>نوع الدفع: </td>'
+      - '      <td>[% AuthorisedValues.GetByCode(''PAYMENT_TYPE'', credit.payment_type)
+        %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h2><u>[%- PROCESS credit_type_description credit_type = credit.credit_type
+        -%] إيصال</u></h2>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% IF ( credit.credit_type_code == ''PAYMENT'' ) %]'
+      - '    <tr>'
+      - '      <th colspan="2">'
+      - '        تم استلامه مع الشكر من  [% credit.patron.firstname | html %] [% credit.patron.surname
+        | html %] <br>'
+      - '        رقم البطاقة: [% credit.patron.cardnumber | html %]<br>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% ELSIF ( credit.credit_type_code == ''CREDIT'' ) %]'
+      - '    <tr>'
+      - '      <th colspan="2">'
+      - '        تمت إضافة الرصيد إلى الحساب [% credit.patron.firstname | html %]
+        [% credit.patron.surname | html %] <br>'
+      - '        رقم البطاقة: [% credit.patron.cardnumber | html %]<br>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% ELSIF ( credit.credit_type_code == ''WRITEOFF'' ) %]'
+      - '    <tr>'
+      - '      <th colspan="2">'
+      - '        شطب تمت إضافة إلى الحساب لـ [% credit.patron.firstname | html %]
+        [% credit.patron.surname | html %] <br>'
+      - '        رقم البطاقة: [% credit.patron.cardnumber | html %]<br>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% IF credit.amountoutstanding + 0 != 0 %]'
+      - '    <tr>'
+      - '      <th>وصف الائتمان</th>'
+      - '      <th>المبلغ</th>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>[%- PROCESS credit_type_description credit_type = credit.credit_type
+        -%]</td>'
+      - '      <td>[% credit.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <th style="text-align:right;">إجمالي المتاح:</th>'
+      - '      <td>[% credit.amountoutstanding * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% IF credit.amount != credit.amountoutstanding %]'
+      - '    <tr>'
+      - '      <th>وصف الرسوم</th>'
+      - '      <th>المبلغ</th>'
+      - '    </tr>'
+      - '    [% FOREACH offset IN credit.credit_offsets %]'
+      - '    <tr>'
+      - '      <td>[% PROCESS account_type_description account=offset.debit %][% IF
+        ( offset.debit.itemnumber ) %] - [% offset.debit.item.biblio.title %][% END
+        %]</td>'
+      - '      <td>[% offset.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% END %]'
+      - '  <tfoot>'
+      - '    <tr class="highlight">'
+      - '      <td>الإجمالي:</td>'
+      - '      <td>[% credit.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    [% IF change.defined %]'
+      - '    <tr>'
+      - '      <td>التغيير المعطى: </td>'
+      - '      <td>[% change | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr>'
+      - '      <td colspan="2"></td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>رصيد الحساب كما في التاريخ:</td>'
+      - '      <td>[% credit.patron.account.balance * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '  </tfoot>'
+      - </table>
+      is_html: 1
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: مدفوعات الحساب
+      title: مدفوعات الحساب
+    - branchcode: ''
+      code: ACCOUNT_DEBIT
+      content:
+      - '[% USE Price %]'
+      - '[% USE KohaDates %]'
+      - '[% PROCESS "accounts.inc" %]'
+      - <table>
+      - '    [% IF ( LibraryName ) %]'
+      - '    <tr>'
+      - '      <th colspan="3" class="centerednames">'
+      - '        <h3>[% LibraryName | html %]</h3>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% IF debit.library %]'
+      - '    <tr>'
+      - '      <th colspan="3" class="centerednames">'
+      - '        <h2>[% debit.library.branchname | html %]</h2>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr>'
+      - '      <td colspan="2" style="text-align:right;">معرف الرسم: </td>'
+      - '      <td>[% debit.accountlines_id %]</td>'
+      - '    </tr>'
+      - '    [% IF credit.manager_id %]'
+      - '    <tr>'
+      - '      <td colspan="2" style="text-align:right;">معرف المشغل: </td>'
+      - '      <td>[% credit.manager_id %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr>'
+      - '      <th colspan="3" class="centerednames">'
+      - '        <h2><u>الفاتورة</u></h2>'
+      - '      </th>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <th colspan="3" >'
+      - '        إصدار فاتورة إلى: [% debit.patron.firstname | html %] [% debit.patron.surname
+        | html %] <br>'
+      - '        رقم البطاقة: [% debit.patron.cardnumber | html %]<br>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% IF debit.amountoutstanding != 0 %]'
+      - '    <tr>'
+      - '      <th>تاريخ</th>'
+      - '      <th>وصف الرسوم</th>'
+      - '      <th>المبلغ</th>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>[% debit.date | $KohaDates %]</td>'
+      - '      <td>[% PROCESS account_type_description account=debit %]</td>'
+      - '      <td>[% debit.amount | $Price %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td colspan="2" style="text-align:right;">إجمالي المستحق:</td>'
+      - '      <td>[% debit.amount | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% IF debit.amount != debit.amountoutstanding %]'
+      - '    <tr>'
+      - '      <th>تاريخ</th>'
+      - '      <th>وصف المدفوعات</th>'
+      - '      <th>المبلغ</th>'
+      - '    </tr>'
+      - '    [% FOREACH offset IN debit.debit_offsets %]'
+      - '    <tr>'
+      - '      <td>[% offset.credit.date | $KohaDates %]</td>'
+      - '      <td>[% PROCESS account_type_description account=offset.credit %]</td>'
+      - '      <td>[% offset.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr class="highlight">'
+      - '      <td colspan="2" style="text-align:right;">إجمالي المدفوع:</td>'
+      - '      <td>[% debit.amount - debit.amountoutstanding | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    </tr>'
+      - '      <td colspan="3"></td>'
+      - '    <tr>'
+      - '  <tfoot>'
+      - '    <tr>'
+      - '      <th colspan="2" style="text-align:right;">إجمالي غير المسدد:</th>'
+      - '      <td>[% debit.amountoutstanding | $Price %]</td>'
+      - '    </tr>'
+      - '  </tfoot>'
+      - </table>
+      is_html: 1
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: رسم الحساب
+      title: رسم الحساب
+    - branchcode: ''
+      code: ACCOUNT_PAYMENT
+      content:
+      - '[%- USE Price -%]'
+      - تم تطبيق مبلغ [% credit.amount * -1 | $Price %] تم دفعه في حسابك.
+      - ''
+      - 'أثرت هذه الدفعة على الرسوم التالية:'
+      - '[%- FOREACH o IN offsets %]'
+      - 'الوصف: [% o.debit.description %]'
+      - 'المبلغ المدفوع: [% o.amount * -1 | $Price %]'
+      - 'المبلغ المتبقي: [% o.debit.amountoutstanding | $Price %]'
+      - '[% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: مدفوعات الحساب
+      title: مدفوعات الحساب
+    - branchcode: ''
+      code: ACCOUNT_WRITEOFF
+      content:
+      - '[%- USE Price -%]'
+      - تم شطب مبلغ [% credit.amount * -1 | $Price %] تم تطبيقه على حسابك.
+      - ''
+      - 'لقد أثر هذا الشطب على الرسوم التالية:'
+      - '[%- FOREACH o IN offsets %]'
+      - 'الوصف: [% o.debit.description %]'
+      - 'المبلغ المدفوع: [% o.amount * -1 | $Price %]'
+      - 'المبلغ المتبقي: [% o.debit.amountoutstanding | $Price %]'
+      - '[% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: شطب الحساب
+      title: شطب الحساب
+    - branchcode: ''
+      code: AR_CANCELED
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>)،
+      - ''
+      - 'تم إلغاء طلبك بمقال من <<biblio.title>> (<<items.barcode>>) للسبب التالي:'
+      - ''
+      - <<reason>>
+      - ''
+      - 'المقال المطلوب:'
+      - 'عنوان: <<article_requests.title>>'
+      - 'المؤلف: <<article_requests.author>>'
+      - 'المجلد: <<article_requests.volume>>'
+      - 'العدد: <<article_requests.issue>>'
+      - 'التاريخ: <<article_requests.date>>'
+      - 'TOC: [% IF article_request.toc_request %]Yes[% ELSE %]لا[% END %]'
+      - 'صفحات: <<article_requests.pages>>'
+      - 'فصول: <<article_requests.chapters>>'
+      - 'ملاحظات: <<article_requests.patron_notes>>'
+      - 'التنسيق: [% IF article_request.format == ''PHOTOCOPY'' %]نسخ[% ELSIF article_request.format
+        == ''SCAN'' %]مسح ضوئي[% END %]'
+      - ''
+      - مكتبتك
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: طلب مقال - ملغي
+      title: تم إلغاء طلب المقال
+    - branchcode: ''
+      code: AR_COMPLETED
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>)،
+      - ''
+      - لقد قمنا بإتمام طلبك لمقال من <<biblio.title>> (<<items.barcode>>).
+      - ''
+      - 'المقال المطلوب:'
+      - 'عنوان: <<article_requests.title>>'
+      - 'المؤلف: <<article_requests.author>>'
+      - 'المجلد: <<article_requests.volume>>'
+      - 'العدد: <<article_requests.issue>>'
+      - 'التاريخ: <<article_requests.date>>'
+      - 'TOC: [% IF article_request.toc_request %]Yes[% ELSE %]لا[% END %]'
+      - 'صفحات: <<article_requests.pages>>'
+      - 'فصول: <<article_requests.chapters>>'
+      - 'ملاحظات: <<article_requests.patron_notes>>'
+      - 'التنسيق: [% IF article_request.format == ''PHOTOCOPY'' %]نسخ[% ELSIF article_request.format
+        == ''SCAN'' %]مسح ضوئي[% END %]'
+      - ''
+      - '[% IF article_request.format == ''PHOTOCOPY'' %]يمكنك التقاط مقالتك من [%
+        branch.branchname %].[% ELSIF article_request.format == ''SCAN'' %]يمكنك تنزيل
+        المواد الممسوحة ضوئياً عبر عناوين URL التالية: [% article_request.urls %].[%
+        END %]'
+      - ''
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: طلب مقال - مكتمل
+      title: تم طلب المقال
+    - branchcode: ''
+      code: AR_PENDING
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>)
+      - ''
+      - طلبك للحصول على مقال من <<biblio.title>> (<<items.barcode>>) قيد الانتظار
+        حالياً.
+      - ''
+      - 'المقال المطلوب:'
+      - 'عنوان: <<article_requests.title>>'
+      - 'المؤلف: <<article_requests.author>>'
+      - 'المجلد: <<article_requests.volume>>'
+      - 'العدد: <<article_requests.issue>>'
+      - 'التاريخ: <<article_requests.date>>'
+      - 'TOC: [% IF article_request.toc_request %]Yes[% ELSE %]لا[% END %]'
+      - 'صفحات: <<article_requests.pages>>'
+      - 'فصول: <<article_requests.chapters>>'
+      - 'ملاحظات: <<article_requests.patron_notes>>'
+      - ''
+      - ''
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: طلب مقال - قيد الانتظار
+      title: طلب مقال في الانتظار
+    - branchcode: ''
+      code: AR_REQUESTED
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>)
+      - ''
+      - لقد تلقينا طلبك لمقال من <<biblio.title>> (<<items.barcode>>).
+      - ''
+      - 'المقال المطلوب:'
+      - 'عنوان: <<article_requests.title>>'
+      - 'المؤلف: <<article_requests.author>>'
+      - 'المجلد: <<article_requests.volume>>'
+      - 'العدد: <<article_requests.issue>>'
+      - 'التاريخ: <<article_requests.date>>'
+      - 'TOC: [% IF article_request.toc_request %]Yes[% ELSE %]لا[% END %]'
+      - 'صفحات: <<article_requests.pages>>'
+      - 'فصول: <<article_requests.chapters>>'
+      - 'ملاحظات: <<article_requests.patron_notes>>'
+      - 'التنسيق: [% IF article_request.format == ''PHOTOCOPY'' %]نسخ[% ELSIF article_request.format
+        == ''SCAN'' %]مسح ضوئي[% END %]'
+      - ''
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: طلب مقال - جديد
+      title: تم استلام طلب المقال
+    - branchcode: ''
+      code: AR_PROCESSING
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>)،
+      - ''
+      - نحن نقوم حالياً بمعالجة طلبك لمقال من <<biblio.title>> (<<items.barcode>>).
+      - ''
+      - 'المقال المطلوب:'
+      - 'عنوان: <<article_requests.title>>'
+      - 'المؤلف: <<article_requests.author>>'
+      - 'المجلد: <<article_requests.volume>>'
+      - 'العدد: <<article_requests.issue>>'
+      - 'التاريخ: <<article_requests.date>>'
+      - 'TOC: [% IF article_request.toc_request %]Yes[% ELSE %]لا[% END %]'
+      - 'صفحات: <<article_requests.pages>>'
+      - 'فصول: <<article_requests.chapters>>'
+      - 'ملاحظات: <<article_requests.patron_notes>>'
+      - 'التنسيق: [% IF article_request.format == ''PHOTOCOPY'' %]نسخ[% ELSIF article_request.format
+        == ''SCAN'' %]مسح ضوئي[% END %]'
+      - ''
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: طلب مقال - جاري المعالجة
+      title: جاري معالجة طلب المقال
+    - branchcode: ''
+      code: AR_SLIP
+      content:
+      - 'طلب مقال:'
+      - ''
+      - <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>),
+      - ''
+      - 'عنوان: <<biblio.title>>'
+      - 'الباركود: <<items.barcode>>'
+      - ''
+      - 'المقال المطلوب:'
+      - 'عنوان: <<article_requests.title>>'
+      - 'المؤلف: <<article_requests.author>>'
+      - 'المجلد: <<article_requests.volume>>'
+      - 'العدد: <<article_requests.issue>>'
+      - 'التاريخ: <<article_requests.date>>'
+      - 'TOC: [% IF article_request.toc_request %]Yes[% ELSE %]لا[% END %]'
+      - 'صفحات: <<article_requests.pages>>'
+      - 'فصول: <<article_requests.chapters>>'
+      - 'ملاحظات: <<article_requests.patron_notes>>'
+      - 'التنسيق: [% IF article_request.format == ''PHOTOCOPY'' %]نسخ[% ELSIF article_request.format
+        == ''SCAN'' %]مسح ضوئي[% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: طلب مقال - طباعة الكعب
+      title: طلب مقال
+    - branchcode: ''
+      code: CHECKIN
+      content:
+      - 'تم رد المواد التالية:'
+      - '----'
+      - '[% biblio.title %]'
+      - '----'
+      - مع جزيل الشكر.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: رد المادة (ملخص)
+      title: عمليات الرد
+    - branchcode: ''
+      code: CHECKIN
+      content:
+      - 'تم رد المواد التالية:'
+      - '----'
+      - '[% biblio.title %]'
+      - '----'
+      - مع جزيل الشكر.
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: circulation
+      name: رد المادة (ملخص)
+      title: عمليات الرد
+    - branchcode: ''
+      code: CHECKOUT
+      content:
+      - 'تمت إعارة المواد التالية:'
+      - '----'
+      - '[% biblio.title %]'
+      - '----'
+      - شكراً لك على زيارة [% branch.branchname %].
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إعارة المادة (ملخص)
+      title: الإعارات
+    - branchcode: ''
+      code: CHECKOUT
+      content:
+      - 'تمت إعارة المواد التالية:'
+      - '----'
+      - '[% biblio.title %]'
+      - '----'
+      - شكراً لك على زيارة [% branch.branchname %].
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: circulation
+      name: إعارة المادة (ملخص)
+      title: الإعارات
+    - branchcode: ''
+      code: CHECKOUT_NOTE
+      content:
+      - <<borrowers.firstname>> <<borrowers.surname>> قام بإضافة ملاحظة إلى المادة
+        <<biblio.title>> - <<biblio.author>> (<<biblio.biblionumber>>).
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: ملاحظة الإعارة مادة بواسطة مستفيد
+      title: ملاحظة الإعارة
+    - branchcode: ''
+      code: DUE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'المادة التالية مستحقة الآن:'
+      - ''
+      - '[% biblio.title %], [% biblio.author %] ([% item.barcode %])'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: تذكير استحقاق المادة
+      title: تذكير استحقاق المادة
+    - branchcode: ''
+      code: DUE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'المادة التالية مستحقة الآن:'
+      - ''
+      - '[% biblio.title %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: circulation
+      name: تذكير استحقاق المادة
+      title: تذكير استحقاق المادة
+    - branchcode: ''
+      code: DUEDGST
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - 'المواد التالية مستحقة الآن:'
+      - ''
+      - <<items.content>>
+      - ''
+      - مع جزيل الشكر.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: تذكير استحقاق المادة (ملخص)
+      title: تذكير استحقاق المادة
+    - branchcode: ''
+      code: DUEDGST
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - لديك <<count>> مادة أصبحت مستحقة الآن
+      - ''
+      - مع جزيل الشكر.
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: circulation
+      name: تذكير استحقاق المادة (ملخص)
+      title: تذكير استحقاق المادة
+    - branchcode: ''
+      code: HOLD_SLIP
+      content:
+      - '<h5>التاريخ: [% today | $KohaDates %]</h5>'
+      - <br>
+      - <h3> نقل إلى/حجز في [% branch.branchname %]</h3>
+      - <br>
+      - <h3>[% borrower.surname %], [% borrower.firstname %]</h3>
+      - <br>
+      - <ul>
+      - '    <li>[% borrower.cardnumber %]</li>'
+      - '    <li>[% borrower.phone %]</li>'
+      - '    <li> [% borrower.address %]<br>'
+      - '         [% borrower.address2 %]<br>'
+      - '         [% borrower.city %] [% borrower.zipcode %]'
+      - '    </li>'
+      - '    <li>[% borrower.email %]</li>'
+      - </ul>
+      - <br>
+      - <h3>مادة في الحجز</h3>
+      - <h4>[% biblio.title %]</h4>
+      - <h5>[% biblio.author %]</h5>
+      - <ul>
+      - '   <li>[% item.barcode %]</li>'
+      - '   <li>[% item.itemcallnumber %]</li>'
+      - '   <li>[% reserve.waitingdate | $KohaDates %]</li>'
+      - </ul>
+      - '<p>ملاحظات:'
+      - <pre>[% reserve.reservenotes %]</pre>
+      - </p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: كعب الحجز
+      title: كعب الحجز
+    - branchcode: ''
+      code: ISSUEQSLIP
+      content:
+      - '[%~ USE KohaDates ~%]'
+      - <h3><<branches.branchname>></h3>
+      - معار إلى <<borrowers.title>> <<borrowers.firstname>> <<borrowers.initials>>
+        <<borrowers.surname>> <br>
+      - (<<borrowers.cardnumber>>) <br>
+      - <br>
+      - <<today>><br>
+      - <br>
+      - <h4>معارة اليوم</h4>
+      - <checkedout>
+      - <p>
+      - <<biblio.title>> <br>
+      - 'الباركود: <<items.barcode>><br>'
+      - 'تاريخ الاستحقاق: <<issues.date_due>><br>'
+      - </p>
+      - </checkedout>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: كعب العدد السريع
+      title: كعب العدد السريع
+    - branchcode: ''
+      code: ISSUESLIP
+      content:
+      - <h3><<branches.branchname>></h3>
+      - معار إلى <<borrowers.title>> <<borrowers.firstname>> <<borrowers.initials>>
+        <<borrowers.surname>> <br>
+      - (<<borrowers.cardnumber>>) <br>
+      - <br>
+      - <<today>><br>
+      - <br>
+      - <h4>معارة</h4>
+      - <checkedout>
+      - <p>
+      - <<biblio.title>> <br>
+      - 'الباركود: <<items.barcode>><br>'
+      - 'تاريخ الاستحقاق: <<issues.date_due>><br>'
+      - </p>
+      - </checkedout>
+      - <br>
+      - <h4>المتأخرات</h4>
+      - <overdue>
+      - <p>
+      - <<biblio.title>> <br>
+      - 'الباركود: <<items.barcode>><br>'
+      - 'تاريخ الاستحقاق: <<issues.date_due>><br>'
+      - </p>
+      - </overdue>
+      - <br>
+      - <hr>
+      - <br>
+      - '[% IF additional_contents.count %]'
+      - '<h4 style="text-align: center; font-style:italic;">الأخبار</h4>'
+      - '[% FOREACH content IN additional_contents %]'
+      - <div class="newsitem">
+      - '<h5 style="margin-bottom: 1px; margin-top: 1px"><b>[% content.title %]</b></h5>'
+      - '<p style="margin-bottom: 1px; margin-top: 1px">[% content.content %]</p>'
+      - '<p class="newsfooter" style="font-size: 8pt; font-style:italic; margin-bottom:
+        1px; margin-top: 1px">منشور في [% content.published_on | $KohaDates %]</p>'
+      - <hr />
+      - </div>
+      - '[% END %]'
+      - '[% END %]'
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: كعب العدد
+      title: كعب العدد
+    - branchcode: ''
+      code: ODUE
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - وفقًا لسجلاتنا الحالية، لديك مواد متأخرة. لا تفرض مكتبتك غرامات تأخير، لكن
+        يرجى إعادتها أو تجديدها في الفرع أدناه في أقرب وقت ممكن.
+      - ''
+      - <<branches.branchname>>
+      - <<branches.branchaddress1>>
+      - <<branches.branchaddress2>> <<branches.branchaddress3>>
+      - 'الهاتف: <<branches.branchphone>>'
+      - فاكس <<branches.branchfax>>
+      - 'البريد الإلكتروني: <<branches.branchemail>>'
+      - ''
+      - إذا قمت بتسجيل كلمة مرور بالمكتبة، ولديك تجديد متاح، يمكنك التجديد عبر الإنترنت.
+        إذا أصبحت مادة متأخرة بأكثر من 30 يوماً، لن تتمكن من استخدام بطاقتك المكتبية
+        حتى إعادة المادة.
+      - ''
+      - 'المواد التالية متأخرة حالياً:'
+      - ''
+      - '<item>"<<biblio.title>>" by <<biblio.author>>, <<items.itemcallnumber>>,
+        Barcode: <<items.barcode>> Fine: <<items.fine>></item>'
+      - ''
+      - شكراً لك على اهتمامك السريع بهذا الأمر.
+      - ''
+      - <<branches.branchname>> موظف
+      - ''
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إخطار التأخير
+      title: المادة متأخرة
+    - branchcode: ''
+      code: OVERDUES_SLIP
+      content:
+      - 'المواد التالية متأخرة حالياً:'
+      - ''
+      - '<item>"<<biblio.title>>" by <<biblio.author>>, <<items.itemcallnumber>>,
+        Barcode: <<items.barcode>> Fine: <<items.fine>></item>'
+      - ''
+      is_html: 0
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: كعب المتأخرات
+      title: كعب المتأخرات
+    - branchcode: ''
+      code: PREDUE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'ستكون المادة التالية مستحقة عما قريب:'
+      - ''
+      - '[% biblio.title %], [% biblio.author %] ([% item.barcode %])'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إخطار متقدم لمادة مستحقة
+      title: إخطار متقدم لمادة مستحقة
+    - branchcode: ''
+      code: PREDUE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'ستكون المادة التالية مستحقة عما قريب:'
+      - ''
+      - '[% biblio.title %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: circulation
+      name: إخطار متقدم لمادة مستحقة
+      title: إخطار متقدم لمادة مستحقة
+    - branchcode: ''
+      code: PREDUEDGST
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - 'ستكون المواد التالية مستحقة عما قريب:'
+      - ''
+      - <<items.content>>
+      - ''
+      - مع جزيل الشكر.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إخطار متقدم لمادة مستحقة (ملخص)
+      title: إخطار متقدم لمادة مستحقة
+    - branchcode: ''
+      code: PREDUEDGST
+      content:
+      - تحية طيبة <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - لديك <<count>> مادة ستكون مستحقة قريباً.
+      - ''
+      - مع جزيل الشكر.
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: circulation
+      name: إخطار متقدم لمادة مستحقة (ملخص)
+      title: إخطار متقدم لمادة مستحقة
+    - branchcode: ''
+      code: RENEWAL
+      content:
+      - 'تم تجديد المواد التالية:'
+      - '----'
+      - '[% biblio.title %]'
+      - '----'
+      - شكراً لك على زيارة [% branch.branchname %].
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: تجديدات المادة
+      title: تجديدات المادة
+    - branchcode: ''
+      code: SR_SLIP
+      content:
+      - 'تقرير تدوير المخزون لـ [% branch.name %]:'
+      - ''
+      - '[% IF branch.items.size %][% branch.items.size %] مادة للمعالجة لهذا الفرع.'
+      - '[% ELSE %] لا توجد مواد للمعالجة لهذا الفرع'
+      - '[% END %][% FOREACH item IN branch.items %][% IF item.reason != ''in-demand''
+        %]العنوان: [% item.title %]'
+      - 'المؤلف: [% item.author %]'
+      - 'رقم الاستدعاء: [% item.callnumber %]'
+      - 'الموقع: [% item.location %]'
+      - 'الباركود: [% item.barcode %]'
+      - 'قيد الإعارة؟: [% item.onloan %]'
+      - 'الحالة: [% item.reason %]'
+      - 'المكتبة الحالية: [% item.branch.branchname %] [% item.branch.branchcode %]'
+      - ''
+      - '[% END %][% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: كعب تدوير المخزون
+      title: تقرير تدوير المخزون
+    - branchcode: ''
+      code: TRANSFERSLIP
+      content:
+      - '<h5>التاريخ: <<today>></h5>'
+      - <br>
+      - <h3>نقل إلى <<branches.branchname>></h3>
+      - <br>
+      - <h3>مادة</h3>
+      - <h4><<biblio.title>></h4>
+      - <h5><<biblio.author>></h5>
+      - <ul>
+      - '   <li><<items.barcode>></li>'
+      - '   <li><<items.itemcallnumber>></li>'
+      - </ul>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: كعب النقل
+      title: كعب النقل
+    - branchcode: ''
+      code: ACQCLAIM
+      content:
+      - <<aqbooksellers.name>>
+      - <<aqbooksellers.address1>>
+      - <<aqbooksellers.address2>>
+      - <<aqbooksellers.address3>>
+      - <<aqbooksellers.address4>>
+      - <<aqbooksellers.phone>>
+      - ''
+      - <order>رقم الطلبية <<aqorders.ordernumber>> (<<biblio.title>>) (<<aqorders.quantity>>
+        مطلوب) ($<<aqorders.listprice>> كل) لم يتم استلامها.</order>
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: claimacquisition
+      name: مطالبة التزويد
+      title: لم يتم استلام المادة
+    - branchcode: ''
+      code: ILL_PICKUP_READY
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'طلب الإعارة البينية رقم [% illrequest.illrequest_id %] التي قمت بوضعه لـ:'
+      - ''
+      - '- [% ill_bib_title %] - [% ill_bib_author %]'
+      - ''
+      - جاهزة للالتقاط من [% branch.branchname %].
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: ill
+      name: طلب الإعارة البينية جاهز للالتقاط
+      title: طلب الإعارة البينية جاهز للالتقاط
+    - branchcode: ''
+      code: ILL_REQUEST_UNAVAIL
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - طلب الإعارة البينية رقم [% illrequest.illrequest_id %] التي قمت بوضعه لـ
+      - ''
+      - '- [% ill_bib_title %] - [% ill_bib_author %]'
+      - ''
+      - غير متاحة للأسف.
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: ill
+      name: طلب الإعارة البنية غير متاح
+      title: طلب الإعارة البينية غير متاح
+    - branchcode: ''
+      code: ILL_REQUEST_CANCEL
+      content:
+      - 'المستفيد لطلب الإعارة البينية [% illrequest.illrequest_id %]، بالتفاصيل التالية،
+        قام بطلب إلغاء طلب الإعارة البينية هذا:'
+      - ''
+      - '[% ill_full_metadata %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: ill
+      name: تم إلغاء طلب الإعارة البينية
+      title: تم إلغاء طلب الإعارة البينية
+    - branchcode: ''
+      code: ILL_REQUEST_MODIFIED
+      content:
+      - 'المستفيد لطلب الإعارة البينية [% illrequest.illrequest_id %]، بالتفاصيل التالية،
+        قام بتعديل طلب الإعارة البينية هذا:'
+      - ''
+      - '[% ill_full_metadata %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: ill
+      name: تم تعديل طلب الإعارة البينية
+      title: تم تعديل طلب الإعارة البينية
+    - branchcode: ''
+      code: ILL_PARTNER_REQ
+      content:
+      - تحية طيبة وبعد،
+      - ''
+      - 'نرغب في طلب إعارة بينية لعنوان يطابق الوصف التالي:'
+      - ''
+      - '[% ill_full_metadata %]'
+      - ''
+      - يرجى إعلامنا إذا كان بإمكانك توريد ذلك لنا.
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: ill
+      name: طلب إعارة بينية إلى شركاء
+      title: طلب إعارة بينية إلى شركاء
+    - branchcode: ''
+      code: ILL_REQUEST_UPDATE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - طلب الإعارة البينية رقم [% illrequest.illrequest_id %] التي قمت بوضعه لـ
+      - ''
+      - '- [% ill_bib_title %] - [% ill_bib_author %]'
+      - ''
+      - تم التحديث.
+      - ''
+      - 'تفاصيل التحديث أدناه:'
+      - ''
+      - '[% additional_text %]'
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: ill
+      name: تحديث طلب إعارة بينية
+      title: تحديث طلب إعارة بينية
+    - branchcode: ''
+      code: ILL_PICKUP_READY
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'طلب الإعارة البينية رقم [% illrequest.illrequest_id %] التي قمت بوضعه لـ:'
+      - ''
+      - '- [% ill_bib_title %] - [% ill_bib_author %]'
+      - ''
+      - جاهزة للالتقاط من [% branch.branchname %].
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: ill
+      name: طلب الإعارة البينية جاهز للالتقاط
+      title: طلب الإعارة البينية جاهز للالتقاط
+    - branchcode: ''
+      code: ILL_REQUEST_UNAVAIL
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - طلب الإعارة البينية رقم [% illrequest.illrequest_id %] التي قمت بوضعه لـ
+      - ''
+      - '- [% ill_bib_title %] - [% ill_bib_author %]'
+      - ''
+      - غير متاحة للأسف.
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: ill
+      name: طلب الإعارة البنية غير متاح
+      title: طلب الإعارة البينية غير متاح
+    - branchcode: ''
+      code: ILL_REQUEST_CANCEL
+      content:
+      - 'المستفيد لطلب الإعارة البينية [% illrequest.illrequest_id %]، بالتفاصيل التالية،
+        قام بطلب إلغاء طلب الإعارة البينية هذا:'
+      - ''
+      - '[% ill_full_metadata %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: ill
+      name: تم إلغاء طلب الإعارة البينية
+      title: تم إلغاء طلب الإعارة البينية
+    - branchcode: ''
+      code: ILL_REQUEST_MODIFIED
+      content:
+      - 'المستفيد لطلب الإعارة البينية [% illrequest.illrequest_id %]، بالتفاصيل التالية،
+        قام بتعديل طلب الإعارة البينية هذا:'
+      - ''
+      - '[% ill_full_metadata %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: ill
+      name: تم تعديل طلب الإعارة البينية
+      title: تم تعديل طلب الإعارة البينية
+    - branchcode: ''
+      code: ILL_PARTNER_REQ
+      content:
+      - تحية طيبة وبعد،
+      - ''
+      - 'نرغب في طلب إعارة بينية لعنوان يطابق الوصف التالي:'
+      - ''
+      - '[% ill_full_metadata %]'
+      - ''
+      - يرجى إعلامنا إذا كان بإمكانك توريد ذلك لنا.
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: ill
+      name: طلب إعارة بينية إلى شركاء
+      title: طلب إعارة بينية إلى شركاء
+    - branchcode: ''
+      code: ILL_REQUEST_UPDATE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - طلب الإعارة البينية رقم [% illrequest.illrequest_id %] التي قمت بوضعه لـ
+      - ''
+      - '- [% ill_bib_title %] - [% ill_bib_author %]'
+      - ''
+      - تم التحديث.
+      - ''
+      - 'تفاصيل التحديث أدناه:'
+      - ''
+      - '[% additional_text %]'
+      - ''
+      - مع أطيب التحيات
+      - ''
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %]'
+      - '[% branch.branchstate %]'
+      - '[% branch.branchzip %]'
+      - '[% branch.branchphone %]'
+      - '[% branch.branchillemail %]'
+      - '[% branch.branchemail %]'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: ill
+      name: تحديث طلب إعارة بينية
+      title: تحديث طلب إعارة بينية
+    - branchcode: ''
+      code: DISCHARGE
+      content:
+      - ''
+      - <<today>>
+      - <h1>تأكيد إخلاء الطرف</h1>
+      - <p><<branches.branchname>> يشهد أن المستعيرالتالي:<br>
+      - '<<borrowers.firstname>> <<borrowers.surname>> (رقم البطاقة: <<borrowers.cardnumber>>)<br>'
+      - قام بإعادة كل المواد. </p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: تأكيد إخلاء الطرف
+      title: إخلاء طرف لـ <<borrowers.firstname>> <<borrowers.surname>>
+    - branchcode: ''
+      code: MEMBERSHIP_EXPIRY
+      content:
+      - تحية طيبة <<borrowers.title>> <<borrowers.firstname>> <<borrowers.surname>>،
+      - ''
+      - 'سوف تنتهي صلاحية بطاقتك المكتبية قريباً، في:'
+      - ''
+      - <<borrowers.dateexpiry>>
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - موظف المكتبة
+      - ''
+      - <<branches.branchname>>
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: انتهاء الحساب
+      title: انتهاء الحساب
+    - branchcode: ''
+      code: MEMBERSHIP_RENEWED
+      content:
+      - '[%- USE Price -%]'
+      - تحية طيبة [% borrower.title %] [% borrower.firstname %] [% borrower.surname
+        %]،
+      - ''
+      - 'لقد تم تجديد حساب مكتبتك. تاريخ الانتهاء الجديد هو: [% borrower.dateexpiry
+        %].'
+      - |-
+        [% IF borrower.category.enrolmentfee > 0 %]
+        An enrollment fee of [% borrower.category.enrolmentfee | $Price with_symbol => 1 %] has been applied.
+        [% END %]
+      - مع جزيل الشكر،
+      - ''
+      - مكتبتك،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: تجديد الحساب
+      title: تجديد الحساب
+    - branchcode: ''
+      code: OPAC_REG_VERIFY
+      content:
+      - مرحباً!
+      - ''
+      - 'تم إنشاء حساب المكتبة الخاص بك. يرجى تأكيد بريدك الإلكتروني عن طريق الضغط
+        على الرابط لإتمام عملية التسجيل:'
+      - ''
+      - <<OPACBaseURL>>/cgi-bin/koha/opac-registration-verify.pl?token=<<borrower_modifications.verification_token>>
+      - ''
+      - إذا لم تقم بإنشاء هذا الطلب، فيمكنك تجاهل هذه الرسالة بأمان. ستنتهي صلاحية
+        الطلب بعد قليل.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: رسالة البريد الإلكتروني لتأكيد التسجيل الذاتي في الأوباك
+      title: قم بتأكيد حسابك
+    - branchcode: ''
+      code: PASSWORD_CHANGE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - نود إخطارك بأنه قد تم تغيير كلمة المرور الخاصة بك. إذا لم تقم بتغييرها بنفسك
+        (أو لم تقم بطلب هذا التغيير)، فيرجى الاتصال بموظفي المكتبة.
+      - ''
+      - مكتبتك.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: إشعار بتغيير كلمة المرور
+      title: إشعار بتغيير كلمة مرور حساب المكتبة
+    - branchcode: ''
+      code: PASSWORD_RESET
+      content:
+      - <p>تم إرسال هذا البريد الإلكتروني رداً على طلب استعادة كلمة المرور الخاصة
+        بحسابك <strong><<user>></strong>.
+      - </p>
+      - <p>
+      - 'يمكنك الآن إنشاء كلمة المرور الخاصة بك باستخدام الرابط التالي:'
+      - <br><a href="<<passwordreseturl>>"><<passwordreseturl>></a>
+      - </p>
+      - <p>سيكون هذا الرابط صالحاً لمدة يومين من تاريخ استلام هذا البريد الإلكتروني،
+        بعدها يجب عليك إعادة تقديم الطلب إذا لم تقم بتغيير كلمة المرور الخاصة بك.</p>
+      - <p>مع جزيل الشكر.</p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: إعادة تعيين كلمة المرور على الإنترنت
+      title: استرجاع كلمة مرور كوها
+    - branchcode: ''
+      code: STAFF_PASSWORD_RESET
+      content:
+      - <p>قام أحد موظفي المكتبة بإعادة تعيين كلمة المرور للحساب <strong><<user>></strong>.
+      - </p>
+      - <p>
+      - 'يرجى إنشاء كلمة المرور الجديدة الخاصة بك باستخدام الرابط التالي:'
+      - <br><a href="<<passwordreseturl>>"><<passwordreseturl>></a>
+      - </p>
+      - <p>سيكون هذا الرابط صالحاً لمدة 5 أيام من تاريخ استلام هذا البريد الإلكتروني،
+        بعدها يجب عليك إعادة تقديم الطلب إذا لم تقم بتغيير كلمة المرور الخاصة بك.</p>
+      - <p>مع جزيل الشكر.</p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: إعادة تعيين كلمة المرور على الإنترنت
+      title: إعادة تعيين كلمة المرور
+    - branchcode: ''
+      code: SHARE_ACCEPT
+      content:
+      - عزيزي المستفيد،
+      - ''
+      - نود إعلامك بأن <<borrowers.firstname>> <<borrowers.surname>> قد قبل دعوتك
+        لمشاركة قائمتك <<listname>> في فهرس مكتبتنا.
+      - ''
+      - مع جزيل الشكر.
+      - ''
+      - مكتبتك.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: إشعار حول مشاركة مقبولة
+      title: تم قبول مشاركة القائمة <<listname>>
+    - branchcode: ''
+      code: SHARE_INVITE
+      content:
+      - عزيزي المستفيد،
+      - ''
+      - أحد مستفيديك، <<borrowers.firstname>> <<borrowers.surname>>، يدعوك لمشاركة
+        قائمة <<listname>> في فهرس مكتبتنا.
+      - ''
+      - للوصول إلى هذه القائمة المشتركة، يرجى النقر فوق عنوان URL التالي أو نسخه ولصقه
+        في شريط عنوان المتصفح.
+      - ''
+      - <<shareurl>>
+      - ''
+      - في حالة عدم كونك مستفيدًا في مكتبتنا أو لا تريد قبول هذه الدعوة، يرجى تجاهل
+        هذا البريد. لاحظ أيضًا أن هذه الدعوة ستنتهي في غضون أسبوعين.
+      - ''
+      - مع جزيل الشكر.
+      - ''
+      - مكتبتك.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: دعوة لمشاركة قائمة
+      title: مشاركة قائمة <<listname>>
+    - branchcode: ''
+      code: WELCOME
+      content:
+      - '[% USE Koha %]'
+      - مرحباً [% borrower.title %] [% borrower.firstname %] [% borrower.surname %].<br>
+      - <br>
+      - شكراً جزيلاً على انضمامك إلى[% IF Koha.Preference('LibraryName') %][% Koha.Preference('LibraryName')
+        %][% ELSE %]المكتبة[% END %]<br>
+      - <br>
+      - يمكنك البحث عن جميع المواد في<a href='[% Koha.Preference('OPACBaseURL') %]'>الفهرس
+        الخاص بنا</a>.<br>.
+      - <br>
+      - رقم بطاقتك المكتبة هو [% borrower.cardnumber %]<br>
+      - <br>
+      - إذا كانت لديك أي مشكلة أو أسئلة بخصوص حسابك، يرجى الاتصال بالمكتبة.
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: 'إخطار الترحيب '
+      title: '[% USE Koha %][% IF Koha.Preference(''LibraryName'') %]مرحباً في [%
+        Koha.Preference(''LibraryName'') %][% ELSE %]مرحباً في مكتبة[% END %]'
+    - branchcode: ''
+      code: 2FA_OTP_TOKEN
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %] ([% borrower.cardnumber
+        %])
+      - ''
+      - رمز الاستيثاق الخاص بك هو [% otp_token %].
+      - صالح لمدة دقيقة واحدة.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: رمز خطوة الاستيثاق الثنائي
+      title: رمز الاستيثاق الثنائي
+    - branchcode: ''
+      code: ACCOUNTS_SUMMARY
+      content:
+      - '[% USE Branches %]'
+      - '[% USE Koha %]'
+      - '[% USE KohaDates %]'
+      - '[% USE Price %]'
+      - '[% PROCESS ''accounts.inc'' %]'
+      - <table>
+      - '  [% IF ( Koha.Preference(''LibraryName'') ) %]'
+      - '    <tr>'
+      - '      <th colspan=''4'' class=''centerednames''>'
+      - '        <h1>[% Koha.Preference(''LibraryName'') | html %]</h1>'
+      - '      </th>'
+      - '    </tr>'
+      - '  [% END %]'
+      - ''
+      - '  <tr>'
+      - '    <th colspan=''4'' class=''centerednames''>'
+      - '      <h2>[% Branches.GetName( borrower.branchcode ) | html %]</h2>'
+      - '    </th>'
+      - '  </tr>'
+      - ''
+      - '  <tr>'
+      - '    <th colspan=''4'' class=''centerednames''>'
+      - '      <h3>الحسابات غير المسددة</h3>'
+      - '    </th>'
+      - '  </tr>'
+      - ''
+      - '  <tr>'
+      - '    <th colspan=''4'' class=''centerednames''>'
+      - '      <h4>ديون</h4>'
+      - '    </th>'
+      - '  </tr>'
+      - '  [% IF borrower.account.outstanding_debits.total_outstanding %]'
+      - '  <tr>'
+      - '    <th>التاريخ</th>'
+      - '    <th>رسوم</th>'
+      - '    <th>المبلغ</th>'
+      - '    <th>غير المسدد</th>'
+      - '  </tr>'
+      - '  [% FOREACH debit IN borrower.account.outstanding_debits %]'
+      - '  <tr>'
+      - '    <td>[% debit.date | $KohaDates %]</td>'
+      - '    <td>'
+      - '      [% PROCESS account_type_description account=debit %]'
+      - '      [%- IF debit.description %], [% debit.description | html %][% END %]'
+      - '    </td>'
+      - '    <td class=''debit''>[% debit.amount | $Price %]</td>'
+      - '    <td class=''debit''>[% debit.amountoutstanding | $Price %]</td>'
+      - '  </tr>'
+      - '  [% END %]'
+      - '  [% ELSE %]'
+      - '  <tr>'
+      - '    <td colspan=''4''>لا توجد ديون مستحقة على حسابك</td>'
+      - '  </tr>'
+      - '  [% END %]'
+      - ''
+      - '  <tr>'
+      - '    <th colspan=''4'' class=''centerednames''>'
+      - '      <h4>الائتمان</h4>'
+      - '    </th>'
+      - '  </tr>'
+      - '  [% IF borrower.account.outstanding_credits.total_outstanding %]'
+      - '  <tr>'
+      - '    <th>التاريخ</th>'
+      - '    <th>الائتمان</th>'
+      - '    <th>المبلغ</th>'
+      - '    <th>غير المسدد</th>'
+      - '  </tr>'
+      - '  [% FOREACH credit IN borrower.account.outstanding_credits %]'
+      - '  <tr>'
+      - '    <td>[% credit.date | $KohaDates%]</td>'
+      - '    <td>'
+      - '      [% PROCESS account_type_description account=credit %]'
+      - '      [%- IF credit.description %], [% credit.description | html %][% END
+        %]'
+      - '    </td>'
+      - '    <td class=''credit''>[% credit.amount *-1 | $Price %]</td>'
+      - '    <td class=''credit''>[% credit.amountoutstanding *-1 | $Price %]</td>'
+      - '  </tr>'
+      - '  [% END %]'
+      - '  [% ELSE %]'
+      - '  <tr>'
+      - '    <td colspan=''4''>لا توجد أرصدة مستحقة على حسابك</td>'
+      - '  </tr>'
+      - '  [% END %]'
+      - ''
+      - '  <tfoot>'
+      - '    <td colspan=''3''>'
+      - '      [% IF borrower.account.balance < 0 %]'
+      - '        إجمالي الرصيد المدين اعتباراً من [% today | $KohaDates %]:'
+      - '      [% ELSE %]'
+      - '        إجمالي المستحقات المستحقة اعتباراً من [% today | $KohaDates %]:'
+      - '      [% END %]'
+      - '    </td>'
+      - '    [% IF ( borrower.account.balance <= 0 ) %]<td class=''credit''>[% borrower.account.balance
+        * -1 | $Price %]</td>'
+      - '    [% ELSE %]<td class=''debit''>[% borrower.account.balance | $Price %]</td>[%
+        END %]'
+      - '  </tfoot>'
+      - </table>
+      is_html: 1
+      lang: default
+      message_transport_type: print
+      module: members
+      name: قسيمة رصيد الحساب
+      title: ملخص الحساب بـ [% borrower.firstname %] [% borrower.surname %]
+    - branchcode: ''
+      code: ACQORDER
+      content:
+      - <<aqbooksellers.name>>
+      - <<aqbooksellers.address1>>
+      - <<aqbooksellers.address2>>
+      - <<aqbooksellers.address3>>
+      - <<aqbooksellers.address4>>
+      - <<aqbooksellers.phone>>
+      - ''
+      - 'يرجى الطلب للمكتبة:'
+      - ''
+      - '<order>رقم الطلبية <<aqorders.ordernumber>> (<<biblio.title>>) (الكمية: <<aqorders.quantity>>)
+        ($<<aqorders.listprice>> كل).</order>'
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - <<branches.branchname>>
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: orderacquisition
+      name: طلبية التزويد
+      title: طلبية
+    - branchcode: ''
+      code: RECEIPT
+      content:
+      - '[% USE KohaDates %]'
+      - '[% USE Branches %]'
+      - '[% USE Price %]'
+      - '[% PROCESS "accounts.inc" %]'
+      - <table>
+      - '[% IF ( LibraryName ) %]'
+      - ' <tr>'
+      - '    <th colspan="2" class="centerednames">'
+      - '        <h3>[% LibraryName | html %]</h3>'
+      - '    </th>'
+      - ' </tr>'
+      - '[% END %]'
+      - ' <tr>'
+      - '    <th colspan="2" class="centerednames">'
+      - '        <h2>[% Branches.GetName( credit.branchcode ) | html %]</h2>'
+      - '    </th>'
+      - ' </tr>'
+      - <tr>
+      - '    <th colspan="2" class="centerednames">'
+      - '        <h3>[% credit.date | $KohaDates %]</h3>'
+      - </tr>
+      - <tr>
+      - '  <td>معرف المعاملة: </td>'
+      - '  <td>[% credit.accountlines_id %]</td>'
+      - </tr>
+      - <tr>
+      - '  <td>معرف المشغل: </td>'
+      - '  <td>[% credit.manager_id %]</td>'
+      - </tr>
+      - <tr>
+      - '  <td>نوع الدفع: </td>'
+      - '  <td>[% credit.payment_type %]</td>'
+      - </tr>
+      - ' <tr></tr>'
+      - ' <tr>'
+      - '    <th colspan="2" class="centerednames">'
+      - '        <h2><u>إيصال الرسوم</u></h2>'
+      - '    </th>'
+      - ' </tr>'
+      - ' <tr></tr>'
+      - ' <tr>'
+      - '    <th>وصف الرسوم</th>'
+      - '    <th>المبلغ</th>'
+      - '  </tr>'
+      - ''
+      - '  [% FOREACH debit IN credit.debits %]'
+      - '    <tr>'
+      - '        <td>[% PROCESS account_type_description account=debit %]</td>'
+      - '        <td>[% debit.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '  [% END %]'
+      - ''
+      - <tfoot>
+      - '  <tr class="highlight">'
+      - '    <td>الإجمالي: </td>'
+      - '    <td>[% credit.amount * -1| $Price %]</td>'
+      - '  </tr>'
+      - '  <tr>'
+      - '    <td>المخصوم: </td>'
+      - '    <td>[% collected | $Price %]</td>'
+      - '  </tr>'
+      - '  <tr>'
+      - '    <td>تغيير: </td>'
+      - '    <td>[% change | $Price %]</td>'
+      - '    </tr>'
+      - </tfoot>
+      - </table>
+      is_html: 1
+      lang: default
+      message_transport_type: print
+      module: pos
+      name: إيصال نقطة البيع
+      title: إيصال
+    - branchcode: ''
+      code: RECEIPT
+      content:
+      - '[% USE KohaDates %]'
+      - '[% USE Branches %]'
+      - '[% USE Price %]'
+      - '[% PROCESS "accounts.inc" %]'
+      - <table>
+      - '    [% IF ( LibraryName ) %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h3>[% LibraryName | html %]</h3>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    [% IF credit.library %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h2>[% payment.library.branchname | html %]</h2>'
+      - '      </th>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h3>[% payment.date | $KohaDates %]</h3>'
+      - '      </th>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>معرف المعاملة: </td>'
+      - '      <td>[% payment.accountlines_id %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>معرف المشغل: </td>'
+      - '      <td>[% payment.manager_id %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>نوع الدفع: </td>'
+      - '      <td>[% payment.payment_type %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <th colspan="2" class="centerednames">'
+      - '        <h2><u>إيصال الدفع</u></h2>'
+      - '      </th>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <th>وصف الرسوم</th>'
+      - '      <th>المبلغ</th>'
+      - '    </tr>'
+      - '    [% FOREACH offset IN payment.credit_offsets %]'
+      - '    <tr>'
+      - '        <td>[% PROCESS account_type_description account=debit %]</td>'
+      - '        <td>[% debit.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    [% END %]'
+      - '  <tfoot>'
+      - '    <tr class="highlight">'
+      - '      <td>الإجمالي:</td>'
+      - '      <td>[% payment.amount * -1 | $Price %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>المخصوم: </td>'
+      - '      <td>[% collected | $Price %]</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>التغيير المعطى:</td>'
+      - '      <td>[% change | $Price %]</td>'
+      - '    </tr>'
+      - '  </tfoot>'
+      - </table>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: pos
+      name: إيصال نقطة البيع
+      title: إيصال
+    - branchcode: ''
+      code: CANCEL_HOLD_ON_LOST
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - يؤسفنا إعلامك بتعذر توفير المادة التالية لأنها مفقودة. تم إلغاء حجزك.
+      - ''
+      - 'عنوان: [% biblio.title %]'
+      - 'المؤلف: [% biblio.author %]'
+      - 'نسخ: [% item.copynumber %]'
+      - 'الموقع: [% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: تم إلغاء الحجز
+      title: تم إلغاء الحجز
+    - branchcode: ''
+      code: HOLD
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'لديك حجز متاح للالتقاط اعتباراً من [% hold.waitingdate | $KohaDates %]:'
+      - ''
+      - 'عنوان: [% biblio.title %]'
+      - 'المؤلف: [% biblio.author %]'
+      - 'نسخ: [% item.copynumber %]'
+      - 'الموقع: [% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - '[% branch.branchaddress3 %]'
+      - '[% branch.branchcity %] [% branch.branchzip %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: الحجز متاح للالتقاط
+      title: الحجز متاح للالتقاط في <<branches.branchname>>
+    - branchcode: ''
+      code: HOLDDGST
+      content:
+      - 'لديك حجز واحد أو أكثر متاح للالتقاط:'
+      - '----'
+      - 'عنوان: [% hold.biblio.title %]'
+      - 'المؤلف: [% hold.biblio.author %]'
+      - 'نسخ: [% hold.item.copynumber %]'
+      - 'في الانتظار منذ: [% hold.waitingdate %]'
+      - 'في الانتظار في: [% hold.branch.branchname %]'
+      - '[% hold.branch.branchaddress1 %]'
+      - '[% hold.branch.branchaddress2 %]'
+      - '[% hold.branch.branchaddress3 %]'
+      - '[% hold.branch.branchcity %] [% hold.branch.branchzip %]'
+      - '----'
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: الحجز متاح للالتقاط
+      title: الحجز متاح للالتقاط
+    - branchcode: ''
+      code: HOLDDGST
+      content:
+      - 'لديك حجز واحد أو أكثر متاح للالتقاط:'
+      - ''
+      - '----'
+      - 'عنوان: [% hold.biblio.title %]'
+      - '----'
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: reserves
+      name: الحجز متاح للالتقاط
+      title: الحجز متاح للالتقاط
+    - branchcode: ''
+      code: HOLD
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - حجزك لـ [% biblio.title %] متاح للالتقاط.
+      is_html: 0
+      lang: default
+      message_transport_type: sms
+      module: reserves
+      name: الحجز متاح للالتقاط
+      title: Hold available for pickup at [% branch.branchname %]
+    - branchcode: ''
+      code: HOLD
+      content:
+      - '[% branch.branchname %]'
+      - '[% branch.branchaddress1 %]'
+      - '[% branch.branchaddress2 %]'
+      - ''
+      - ''
+      - تم طلب تغيير الخدمة
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - '[% borrower.firstname %] [% borrower.surname %]'
+      - '[% borrower.address %]'
+      - '[% borrower.city %] [% borrower.zipcode %]'
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - ''
+      - '[% borrower.firstname %] [% borrower.surname %] [% borrower.cardnumber %]'
+      - ''
+      - 'لديك حجز متاح للالتقاط اعتباراً من [% hold.waitingdate | $KohaDates %]:'
+      - ''
+      - 'عنوان: [% biblio.title %]'
+      - 'المؤلف: [% biblio.author %]'
+      - 'نسخ: [% item.copynumber %]'
+      - ''
+      is_html: 0
+      lang: default
+      message_transport_type: print
+      module: reserves
+      name: الحجز متاح للالتقاط
+      title: الحجز متاح للالتقاط (طباعة الإخطار)
+    - branchcode: ''
+      code: HOLDPLACED
+      content:
+      - 'تم وضع حجز على المادة التالية: <<biblio.title>> (<<biblio.biblionumber>>)
+        بواسطة المستخدم <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>).'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: تم وضع حجز على المادة
+      title: تم وضع حجز على المادة
+    - branchcode: ''
+      code: HOLD_CHANGED
+      content:
+      - المستفيد الذي يقوم بالتقاط <<biblio.title>> (<<items.barcode>>) قام بالتغيير
+        إلى <<borrowers.firstname>> <<borrowers.surname>> (<<borrowers.cardnumber>>).
+      - يرجى تحديث معلومات الحجز لهذه المادة.
+      - 'عنوان: <<biblio.title>>'
+      - 'المؤلف: <<biblio.author>>'
+      - 'المادة: <<items.itemcallnumber>>'
+      - 'موقع الالتقاط: <<branches.branchname>>'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: الحجز الملغى متاح لمستفيدين مختلفين
+      title: الحجز الملغى متاح لمستفيدين مختلفين
+    - branchcode: ''
+      code: HOLD_REMINDER
+      content:
+      - |-
+        Dear [% borrower.firstname %] [% borrower.surname %],
+
+        The following holds are waiting at [% branch.branchname %]:
+
+        [% FOREACH hold IN holds %]
+            [% hold.biblio.title %] : waiting since [% hold.waitingdate | $KohaDates %]
+        [% END %]
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: تذكير حجز في الانتظار
+      title: لديك حجوزات في الانتظار.
+    - branchcode: ''
+      code: NEW_CURBSIDE_PICKUP
+      content:
+      - '[%- USE KohaDates -%]'
+      - '[%- SET cp = curbside_pickup -%]'
+      - ''
+      - لديك موعد التقاط جانبي لـ [% cp.scheduled_pickup_datetime | $KohaDates with_hours
+        => 1 %] في [% cp.library.branchname %].
+      - |-
+        Any holds waiting for you at the pickup time will be included in this pickup. At this time, that list includes:
+        [%- FOREACH h IN cp.patron.holds %]
+        [%- IF h.branchcode == cp.branchcode && h.found == 'W' %]
+        * [% h.biblio.title %], [% h.biblio.author %] ([% h.item.barcode %])
+        [%- END %]
+        [%- END %]
+      - ''
+      - Once you have arrived, please call your library or log into your account and
+        click the "Alert staff of your arrival" button to let them know you are there.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: التقاط جانبي جديد
+      title: لقد حددت موعدًا لالتقاط جانبي لـ [% branch.branchname %]
+    - branchcode: ''
+      code: SERIAL_ALERT
+      content:
+      - <<borrowers.firstname>> <<borrowers.surname>>,
+      - ''
+      - 'العدد التالي متاح الآن:'
+      - ''
+      - <<biblio.title>>, <<biblio.author>> (<<items.barcode>>)
+      - ''
+      - يرجى التقاطها في الوقت المناسب لك.
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: serial
+      name: عدد دورية جديد
+      title: عدد دورية جديد متاح الآن
+    - branchcode: ''
+      code: ACCEPTED
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - لقد اقترحت أن تحصل المكتبة على [% suggestion.title %] بواسطة [% suggestion.author
+        %].
+      - ''
+      - قامت المكتبة بمراجعة مقترحك اليوم. سيتم طلب المادة في أقرب وقت. وسيتم إخطارك
+        بالبريد الإلكتروني عند إتمام الطلبية، ومرة ثانية عند وصول المادة إلى المكتبة.
+      - ''
+      - إذا كان لديك أي أسئلة، يرجى إرسال بريد إلكتروني لنا على [% branch.branchemail
+        %].
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: مقترح مقبول
+      title: تم قبول مقترح الشراء
+    - branchcode: ''
+      code: AVAILABLE
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - لقد اقترحت أن تحصل المكتبة على [% suggestion.title %] بواسطة [% suggestion.author
+        %].
+      - ''
+      - يسرنا إعلامك بأن المادة التي قمت بطلبها قد أصبحت جزءاً من المجموعة الآن.
+      - ''
+      - إذا كان لديك أي أسئلة، يرجى إرسال بريد إلكتروني لنا على [% branch.branchemail
+        %].
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: مقترح متاح
+      title: الشراء المقترح متاح
+    - branchcode: ''
+      code: NEW_SUGGESTION
+      content:
+      - <h3>اقتراح في انتظار الموافقة</h3>
+      - '    <p><h4>مقترح بواسطة</h4>'
+      - '    <ul>'
+      - '    <li>[% borrower.firstname %] [% borrower.surname %]</li>'
+      - '    <li>[% borrower.cardnumber %]</li>'
+      - '    [%- IF borrower.phone -%]'
+      - '        <li>[% borrower.phone %]</li>'
+      - '    [%- END -%]'
+      - '    [%- IF borrower.email -%]'
+      - '        <li>[% borrower.email %]</li>'
+      - '    [%- END -%]'
+      - '    </ul>'
+      - '    </p>'
+      - '    <p><h4>العنوان المقترح</h4>'
+      - '    <ul>'
+      - '    <li><b>المكتبة:</b> [% branch.branchname %]</li>'
+      - '    <li><b>العنوان:</b> [% suggestion.title %]</li>'
+      - '    <li><b>المؤلف:</b> [% suggestion.author %]</li>'
+      - '    <li><b>تاريخ حقوق النشر:</b> [% suggestion.copyrightdate %]</li>'
+      - '    <li><b>الرقم المعياري (ISBN, ISSN أو غيره):</b> [% suggestion.isbn %]</li>'
+      - '    <li><b>الناشر:</b> [% suggestion.publishercode %]</li>'
+      - '    <li><b>عنوان المجموعة:</b> [% suggestion.collectiontitle %]</li>'
+      - '    <li><b>مكان النشر:</b> [% suggestion.place %]</li>'
+      - '    <li><b>الكمية:</b> [% suggestion.quantity %]</li>'
+      - '    <li><b>نوع المادة:</b>  [% suggestion.itemtype %]</li>'
+      - '    <li><b>سبب الاقتراح:</b> [% suggestion.patronreason %]</li>'
+      - '    <li><b>ملاحظات:</b> [% suggestion.note %]</li>'
+      - '    </ul>'
+      - '    </p>'
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: مقترح جديد
+      title: مقترح جديد
+    - branchcode: ''
+      code: ORDERED
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - لقد اقترحت أن تحصل المكتبة على [% suggestion.title %] بواسطة [% suggestion.author
+        %].
+      - ''
+      - يسرنا إعلامك بأنه قد تم الآن طلب المادة التي قمت بطلبها. وسوف تصل قريبًا،
+        وحينها ستتم معالجتها لإضافتها إلى المجموعة.
+      - ''
+      - سيتم إخطارك مرة أخرى عند توافر الكتاب.
+      - ''
+      - إذا كان لديك أي أسئلة، يرجى إرسال بريد إلكتروني لنا على [% branch.branchemail
+        %]
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: مقترح مطلوب
+      title: تم طلب المادة المقترحة
+    - branchcode: ''
+      code: REJECTED
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - لقد اقترحت أن تحصل المكتبة على [% suggestion.title %] بواسطة [% suggestion.author
+        %].
+      - ''
+      - قامت المكتبة بمراجعة طلبك اليوم، وقد قررت عدم قبول المقترح في الوقت الراهن.
+      - ''
+      - 'السبب المعطى هو: [% suggestion.reason %]'
+      - ''
+      - إذا كان لديك أي أسئلة، يرجى إرسال بريد إلكتروني لنا على [% branch.branchemail
+        %].
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: مقترح مرفوض
+      title: تم رفض مقترح الشراء
+    - branchcode: ''
+      code: TO_PROCESS
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'مقترح جديد جاهز للمعالجة: [% suggestion.title %] بواسطة [% suggestion.author
+        %].'
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: إخطار مالك التمويل
+      title: مقترح جاهز للمعالجة
+    - branchcode: ''
+      code: NOTIFY_MANAGER
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - ''
+      - 'تم تعيين مقترح جديد لك: [% suggestion.title %].'
+      - ''
+      - مع جزيل الشكر،
+      - ''
+      - '[% branch.branchname %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: suggestions
+      name: إخطار مدير المقترح
+      title: تم تعيين مقترح لك
+    - branchcode: ''
+      code: PROBLEM_REPORT
+      content:
+      - 'اسم المستخدم: <<problem_reports.username>>'
+      - ''
+      - 'صفحة المشكلات: <<problem_reports.problempage>>'
+      - ''
+      - 'عنوان: <<problem_reports.title>>'
+      - ''
+      - 'الرسالة: <<problem_reports.content>>'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: members
+      name: تقرير مشكلة الأوباك
+      title: تقرير مشكلة الأوباك
+    - branchcode: ''
+      code: AUTO_RENEWALS
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - '[% IF checkout.auto_renew_error == ''auto_renew_final'' %]'
+      - تم تجديد المادة التالية , [% biblio.title %], بشكل صحيح وهي الآن مستحقة في
+        [% checkout.date_due | $KohaDates as_due_date => 1 %]
+      - لقد وصلت للحد الأقصى لعدد التجديدات الممكنة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_unseen_final'' %]'
+      - تم تجديد المادة التالية , [% biblio.title %], بشكل صحيح وهي الآن مستحقة في
+        [% checkout.date_due | $KohaDates as_due_date => 1 %]
+      - لقد بلغت هذه المادة الحد الأقصى لعدد التجديدات غير المرئية ويجب تجديدها في
+        المكتبة.
+      - '[% ELSIF checkout.auto_renew_error %]'
+      - 'لم يتم تجديد المادة التالية , [% biblio.title %], بسبب:'
+      - '[% IF checkout.auto_renew_error == ''too_many'' %]'
+      - لقد وصلت للحد الأقصى لعدد التجديدات الممكنة.
+      - '[% ELSIF checkout.auto_renew_error == ''on_reserve'' %]'
+      - هذه المادة في الحجز لمستفيد آخر.
+      - '[% ELSIF checkout.auto_renew_error == ''restriction'' %]'
+      - أنت مقيد حالياً.
+      - '[% ELSIF checkout.auto_renew_error == ''overdue'' %]'
+      - لديك مواد متأخرة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_too_late'' %]'
+      - فات أوان تجديد هذه المادة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_too_much_oweing'' %]'
+      - إجمالي غراماتك غير المدفوعة مرتفع للغاية.
+      - '[% ELSIF checkout.auto_renew_error == ''too_unseen'' %]'
+      - يجب تجديد هذه المادة في المكتبة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_account_expired'' %]'
+      - لقد انتهى حسابك.
+      - '[% END %]'
+      - '[% ELSE %]'
+      - تم تجديد المادة التالية , [% biblio.title %], بشكل صحيح وهي الآن مستحقة في
+        [% checkout.date_due | $KohaDates as_due_date => 1 %]
+      - '[% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إشعار حول تجديد تلقائي
+      title: إخطار التجديد التلقائي
+    - branchcode: ''
+      code: CHECKINSLIP
+      content:
+      - <h3>[% branch.branchname %]</h3>
+      - المواد التي تم ردها لـ [% borrower.title %] [% borrower.firstname %] [% borrower.initials
+        %] [% borrower.surname %] <br>
+      - ([% borrower.cardnumber %]) <br>
+      - <br>
+      - '[% today | $KohaDates %]<br>'
+      - <br>
+      - <h4>تم رده اليوم</h4>
+      - '[% FOREACH checkin IN old_checkouts %]'
+      - '[% SET item = checkin.item %]'
+      - <p>
+      - '[% item.biblio.title %] <br>'
+      - 'الباركود: [% item.barcode %] <br>'
+      - </p>
+      - '[% END %]'
+      is_html: 1
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: كعب الرد
+      title: كعب الرد
+    - branchcode: ''
+      code: OVERDUE_FINE_DESC
+      content:
+      - '[% item.biblio.title %] [% checkout.date_due | $KohaDates %]'
+      is_html: 0
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: وصف رسم المادة المتأخرة
+      title: وصف رسم المادة المتأخرة
+    - branchcode: ''
+      code: AUTO_RENEWALS_DGST
+      content:
+      - تحية طيبة [% borrower.firstname %] [% borrower.surname %]،
+      - '[% IF error %]'
+      - هناك [% error %] مادة لم يتم تجديدها.
+      - '[% END %]'
+      - '[% IF success %]'
+      - هناك [% success %] مادة تم تجديدها.
+      - '[% END %]'
+      - '[% FOREACH checkout IN checkouts %]'
+      - '[% NEXT IF (checkout.auto_renew_error == ''auto_too_soon'') %]'
+      - '[% checkout.item.biblio.title %] : [% checkout.item.barcode %]'
+      - '[% IF !checkout.auto_renew_error %]'
+      - تم التجديد حتى [% checkout.date_due | $KohaDates as_due_date => 1%]
+      - '[% ELSIF checkout.auto_renew_error == ''too_many'' %]'
+      - لقد وصلت للحد الأقصى لعدد التجديدات الممكنة.
+      - '[% ELSIF checkout.auto_renew_error == ''on_reserve'' %]'
+      - هذه المادة في الحجز لمستفيد آخر.
+      - '[% ELSIF checkout.auto_renew_error == ''restriction'' %]'
+      - أنت مقيد حالياً.
+      - '[% ELSIF checkout.auto_renew_error == ''overdue'' %]'
+      - لديك مواد متأخرة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_too_late'' %]'
+      - فات أوان تجديد هذه المادة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_too_much_oweing'' %]'
+      - إجمالي غراماتك غير المدفوعة مرتفع للغاية.
+      - '[% ELSIF checkout.auto_renew_error == ''too_unseen'' %]'
+      - يجب تجديد هذه المادة في المكتبة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_renew_final'' %]'
+      - تم التجديد حتى [% checkout.date_due | $KohaDates as_due_date => 1%]
+      - لقد وصلت للحد الأقصى لعدد التجديدات الممكنة.
+      - '[% ELSIF checkout.auto_renew_error == ''auto_unseen_final'' %]'
+      - تم التجديد حتى [% checkout.date_due | $KohaDates as_due_date => 1%]
+      - لقد بلغت هذه المادة الحد الأقصى لعدد التجديدات غير المرئية ويجب تجديدها في
+        المكتبة.
+      - '[% END %]'
+      - '[% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إشعار حول التجديدات التلقائية
+      title: التجديدات التلقائية (استيعاب)
+    - branchcode: ''
+      code: RETURN_RECALLED_ITEM
+      content:
+      - 'التاريخ: <<today>>'
+      - ''
+      - <<borrowers.firstname>> <<borrowers.surname>>,
+      - ''
+      - 'تم وضع استدعاء على المادة التالية: <<biblio.title>> / <<biblio.author>> (<<items.barcode>>).
+        تم تحديث تاريخ الاستحقاق، وأصبح الآن <<issues.date_due>>. يرجى إعادة المادة
+        قبل تاريخ الاستحقاق.'
+      - ''
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: إشعار لإعادة مادة مستدعاة
+      title: إشعار لإعادة مادة مستدعاة
+    - branchcode: ''
+      code: PICKUP_RECALLED_ITEM
+      content:
+      - 'التاريخ: <<today>>'
+      - ''
+      - <<borrowers.firstname>> <<borrowers.surname>>,
+      - ''
+      - 'الاستدعاء الذي طلبته للمادة التالية: <<biblio.title>> / <<biblio.author>>
+        (<<items.barcode>>) جاهز للالتقاط من <<recalls.pickup_library_id>>. يرجى التقاط
+        مادتك خلال <<recalls.expiration_date>>.'
+      - ''
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: circulation
+      name: المواد المستدعاة في انتظار الالتقاط
+      title: المواد المستدعاة في انتظار الالتقاط
+    - branchcode: ''
+      code: RECALL_REQUESTER_DET
+      content:
+      - 'التاريخ: <<today>>'
+      - ''
+      - مستدعاة للالتقاط من <<branches.branchname>>
+      - <<borrowers.surname>>, <<borrowers.firstname>> (<<borrowers.cardnumber>>)
+      - <<borrowers.phone>>
+      - <<borrowers.streetnumber>> <<borrowers.address>>, <<borrowers.address2>>,
+        <<borrowers.city>> <<borrowers.zipcode>>
+      - <<borrowers.email>>
+      - ''
+      - تم استدعاء المادة
+      - <<biblio.title>> بواسطة <<biblio.author>>
+      - 'الباركود: <<items.barcode>>'
+      - 'رقم الاستدعاء: <<items.itemcallnumber>>'
+      - 'في الانتظار منذ: <<recalls.waiting_date>>'
+      - 'ملاحظات: <<recalls.notes>>'
+      is_html: 0
+      lang: default
+      message_transport_type: print
+      module: circulation
+      name: تفاصيل المستفيد الذي قام باستدعاء المادة
+      title: تفاصيل المستفيد الذي قام باستدعاء المادة
+    - branchcode: ''
+      code: 2FA_DISABLE
+      content:
+      - <p>تحية طيبة [% borrower.firstname %] [% borrower.surname %]،</p>
+      - <p>هذا للتأكيد على أن شخصًا ما قام بتعطيل الاستيثاق الثنائي في حسابك.</p>
+      - <p>إذا لم تقم بذلك، فمن المحتمل أن شخصًا آخر يستخدم حسابك. يرجى الاتصال بالدعم
+        الفني.</p>
+      - <p>مكتبتك</p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: تأكيد تعطيل الاستيثاق الثنائي
+      title: تأكيد تعطيل الاستيثاق الثنائي
+    - branchcode: ''
+      code: 2FA_ENABLE
+      content:
+      - <p>تحية طيبة [% borrower.firstname %] [% borrower.surname %]،</p>
+      - <p>هذا للتأكيد على قيام شخص ما بتفعيل الاستيثاق الثنائي في حسابك.</p>
+      - <p>إذا لم تقم بذلك، فمن المحتمل أن شخصًا آخر يستخدم حسابك. يرجى الاتصال بالدعم
+        الفني.</p>
+      - <p>مكتبتك</p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: تأكيد تفعيل الاستيثاق الثنائي
+      title: تأكيد تفعيل الاستيثاق الثنائي
+    - branchcode: ''
+      code: OPAC_REG
+      content:
+      - <h3>تسجيل ذاتي جديد في الأوباك</h3>
+      - <p><h4>التسجيل الذاتي الذي تم:</h4>
+      - <ul>
+      - <li> [% borrower.firstname %] [% borrower.surname %]</li>
+      - '[% IF borrower.cardnumber %]<li>رقم البطاقة: [% borrower.cardnumber %]</li>[%
+        END %]'
+      - '[% IF borrower.email %]<li>البريد الإلكتروني: [% borrower.email %]</li>[%
+        END %]'
+      - '[% IF borrower.phone %]<li>الهاتف: [% borrower.phone %]</li>[% END %]'
+      - '[% IF borrower.mobile %]<li>الهاتف المحمول: [% borrower.mobile %]</li>[%
+        END %]'
+      - '[% IF borrower.fax %]<li>فاكس: [% borrower.fax %]</li>[% END %]'
+      - '[% IF borrower.emailpro %]<li>البريد الإلكتروني الثانوي: [% borrower.emailpro
+        %]</li>[% END %]'
+      - '[% IF borrower.phonepro %]<li>الهاتف الثانوي: [% borrower.phonepro %]</li>[%
+        END %]'
+      - '[% IF borrower.branchcode %]<li>المكتبة الرئيسية: [% borrower.branchcode
+        %]</li>[% END %]'
+      - '[% IF borrower.categorycode %]<li>فئة المستفيد المؤقت: [% borrower.categorycode
+        %]</li>[% END %]'
+      - </ul>
+      - </p>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: members
+      name: تم تقديم تسجيل ذاتي جديد في الأوباك
+      title: تسجيل ذاتي جديد في الأوباك
+    - branchcode: ''
+      code: LIST
+      content:
+      - '[%- USE Branches -%]'
+      - '[%- USE AuthorisedValues -%]'
+      - '[%- USE Koha -%]'
+      - '[%- PROCESS ''html_helpers.inc'' -%]'
+      - مرحباً،<br><br>
+      - '[% borrower.firstname | html %] [% borrower.surname | html %] أرسل لك قائمة
+        من الفهرس الخاص بنا على الإنترنت تسمى: [% listname | html %].<br>'
+      - يرجى ملاحظة أن الملف المرفق هو ملف تسجيلات مارك ببليوغرافية والذي يمكن استيراده
+        إلى البرمجيات الببليوغرافية الشخصية مثل EndNote أو Reference Manager أو ProCite.<br>
+      - '[% IF ( comment ) %]<hr><br>[% comment | html | html_line_break %]<br><br>[%
+        END %]<hr>'
+      - <ol>[% FOREACH biblio IN biblios %]<li>
+      - '[% biblio.title | html %]'
+      - '[% IF ( biblio.subtitle ) %][% FOREACH subtitle IN biblio.subtitle.split(''
+        | '') %][% subtitle | html %][% END %][% END %][% biblio.part_number | html
+        %] [% biblio.part_name | html %]<br>'
+      - '[% IF ( biblio.author || biblio.get_marc_contributors.size ) %]المؤلف: [%
+        IF ( biblio.author ) %][% biblio.author | html %][% END %][% IF ( biblio.get_marc_contributors
+        ) %][% IF ( biblio.author ) %]; [% END %][% FOREACH author IN biblio.get_marc_contributors
+        %][% FOREACH subfield IN author.MARCAUTHOR_SUBFIELDS_LOOP %][% subfield.separator
+        | html %][% subfield.value | html %][% END %][% UNLESS ( loop.last ) %];[%
+        END %][% END %][% END %]<br>[% END %]'
+      - '[% SET biblioitem = biblio.biblioitem %][% IF ( biblioitem.isbn ) %]ISBN:
+        [% FOREACH isbn IN biblioitem.isbn %][% isbn | html %][% UNLESS ( loop.last
+        ) %]; [% END %][% END %]<br>[% END %]'
+      - '[% IF ( biblioitem.publishercode ) %]منشور بواسطة: [% biblioitem.publishercode
+        | html %][% IF ( biblioitem.publicationyear ) %] في [% biblioitem.publicationyear
+        | html %][% END %][% IF ( biblioitem.pages ) %], [% biblioitem.pages | html
+        %][% END %]<br>[% END %]'
+      - '[% IF ( biblio.seriestitle ) %]المجموعة: [% biblio.seriestitle | html %]<br>[%
+        END %]'
+      - '[% IF ( biblio.copyrightdate ) %]سنة حقوق النشر: [% biblio.copyrightdate
+        | html %]<br>[% END %]'
+      - '[% IF ( biblio.notes ) %]ملاحظات: [% biblio.notes | html %]<br>[% END %]'
+      - '[% IF ( biblio.unititle ) %]العنوان الموحد: [% biblio.unititle | html %]<br>[%
+        END %]'
+      - '[% IF ( biblio.serial ) %]الدورية: [% biblio.serial | html %]<br>[% END %]'
+      - '[% IF ( biblioitem.lccn ) %]رقم التحكم بمكتبة الكونجرس: [% biblioitem.lccn
+        | html %]<br>[% END %]'
+      - '[% IF ( biblio.get_marc_host_only || biblio.get_marc_hostinfo_only ) %]في:
+        [% IF biblio.get_marc_host_only.biblionumber %][% INCLUDE ''biblio-title.inc''  biblio=biblio.get_marc_host_only
+        %] [% biblio.get_marc_relatedparts_only %][% ELSE %][% biblio.get_marc_hostinfo_only
+        %][% END %]<br>[% END %]'
+      - '[% IF ( biblioitem.url ) %]عنوان URL: [% biblioitem.url | html %]<br>[% END
+        %]'
+      - '[<a href=''[% Koha.Preference(''OpacBaseUrl'') %]/cgi-bin/koha/opac-detail.pl?biblionumber=[%
+        biblio.biblionumber | html %]''>عرض في الفهرس على الإنترنت</a>'
+      - '[% IF ( biblio.items.count > 0 ) %]<br>المواد: <ul>[% FOREACH item IN biblio.items
+        %]<li>[% Branches.GetName( item.holdingbranch ) | html %]'
+      - '[% IF ( item.location ) %], [% AuthorisedValues.GetDescriptionByKohaField(
+        kohafield => ''items.location'', authorised_value => item.location ) | html
+        %][% END %][% IF item.itemcallnumber %]([% item.itemcallnumber | html %])[%
+        END %][% item.barcode | html %]</li>[% END %]</ul>[% END %]'
+      - <hr></li>[% END %]</ol>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: catalogue
+      name: إرسال القائمة
+      title: 'قائمتك: [% listname | html %]'
+    - branchcode: ''
+      code: CART
+      content:
+      - '[%- USE Branches -%]'
+      - '[%- USE AuthorisedValues -%]'
+      - '[%- USE Koha -%]'
+      - '[%- PROCESS ''html_helpers.inc'' -%]'
+      - مرحباً،<br><br>
+      - '[% borrower.firstname | html %] [% borrower.surname | html %] تم إرسال سلة
+        لك من فهرسنا على الإنترنت.<br>'
+      - يرجى ملاحظة أن الملف المرفق هو ملف تسجيلات مارك ببليوغرافية والذي يمكن استيراده
+        إلى البرمجيات الببليوغرافية الشخصية مثل EndNote أو Reference Manager أو ProCite.<br>
+      - '[% IF ( comment ) %]<hr><br>[% comment | html | html_line_break %]<br><br>[%
+        END %]<hr>'
+      - <ol>[% FOREACH biblio IN biblios %]<li>
+      - '[% biblio.title | html %]'
+      - '[% IF ( biblio.subtitle ) %][% FOREACH subtitle IN biblio.subtitle.split(''
+        | '') %][% subtitle | html %][% END %][% END %][% biblio.part_number | html
+        %] [% biblio.part_name | html %]<br>'
+      - '[% IF ( biblio.author || biblio.get_marc_contributors.size ) %]المؤلف: [%
+        IF ( biblio.author ) %][% biblio.author | html %][% END %][% IF ( biblio.get_marc_contributors
+        ) %][% IF ( biblio.author ) %]; [% END %][% FOREACH author IN biblio.get_marc_contributors
+        %][% FOREACH subfield IN author.MARCAUTHOR_SUBFIELDS_LOOP %][% subfield.separator
+        | html %][% subfield.value | html %][% END %][% UNLESS ( loop.last ) %];[%
+        END %][% END %][% END %]<br>[% END %]'
+      - '[% SET biblioitem = biblio.biblioitem %][% IF ( biblioitem.isbn ) %]ISBN:
+        [% FOREACH isbn IN biblioitem.isbn %][% isbn | html %][% UNLESS ( loop.last
+        ) %]; [% END %][% END %]<br>[% END %]'
+      - '[% IF ( biblioitem.publishercode ) %]منشور بواسطة: [% biblioitem.publishercode
+        | html %][% IF ( biblioitem.publicationyear ) %] في [% biblioitem.publicationyear
+        | html %][% END %][% IF ( biblioitem.pages ) %], [% biblioitem.pages | html
+        %][% END %]<br>[% END %]'
+      - '[% IF ( biblio.seriestitle ) %]المجموعة: [% biblio.seriestitle | html %]<br>[%
+        END %]'
+      - '[% IF ( biblio.copyrightdate ) %]سنة حقوق النشر: [% biblio.copyrightdate
+        | html %]<br>[% END %]'
+      - '[% IF ( biblio.notes ) %]ملاحظات: [% biblio.notes | html %]<br>[% END %]'
+      - '[% IF ( biblio.unititle ) %]العنوان الموحد: [% biblio.unititle | html %]<br>[%
+        END %]'
+      - '[% IF ( biblio.serial ) %]الدورية: [% biblio.serial | html %]<br>[% END %]'
+      - '[% IF ( biblioitem.lccn ) %]رقم التحكم بمكتبة الكونجرس: [% biblioitem.lccn
+        | html %]<br>[% END %]'
+      - '[% IF ( biblio.get_marc_host_only || biblio.get_marc_hostinfo_only ) %]في:
+        [% IF biblio.get_marc_host_only.biblionumber %][% INCLUDE ''biblio-title.inc''  biblio=biblio.get_marc_host_only
+        %] [% biblio.get_marc_relatedparts_only %][% ELSE %][% biblio.get_marc_hostinfo_only
+        %][% END %]<br>[% END %]'
+      - '[% IF ( biblioitem.url ) %]عنوان URL: [% biblioitem.url | html %]<br>[% END
+        %]'
+      - <a href='[% Koha.Preference('OpacBaseUrl') %]/cgi-bin/koha/opac-detail.pl?biblionumber=[%
+        biblio.biblionumber | html %]'>عرض في الفهرس على الإنترنت</a>
+      - '[% IF ( biblio.items.count > 0 ) %]<br>المواد: <ul>[% FOREACH item IN biblio.items
+        %]<li>[% Branches.GetName( item.holdingbranch ) | html %]'
+      - '[% IF ( item.location ) %], [% AuthorisedValues.GetDescriptionByKohaField(
+        kohafield => ''items.location'', authorised_value => item.location ) | html
+        %][% END %][% IF item.itemcallnumber %]([% item.itemcallnumber | html %])[%
+        END %][% item.barcode | html %]</li>[% END %]</ul>[% END %]'
+      - <hr></li>[% END %]</ol>
+      is_html: 1
+      lang: default
+      message_transport_type: email
+      module: catalogue
+      name: إرسال سلة
+      title: سلتك
+    - branchcode: ''
+      code: PRES_TRAIN_ITEM
+      content:
+      - '[%~ USE AuthorisedValues ~%]'
+      - '[%~ SET train = train_item.train ~%]'
+      - '[%~ SET item = train_item.catalogue_item ~%]'
+      - 'اسم الصف: [% train.name %]'
+      - 'تم الإرسال في: [% train.sent_on | $KohaDates %]'
+      - ''
+      - '[% train.default_processing.name %]'
+      - ''
+      - 'رقم المادة #[% train_item.user_train_item_id %]'
+      - ''
+      - '[% FOREACH item_attribute IN train_item.attributes %]'
+      - '    [%~ SET value = item_attribute.value ~%]'
+      - '    [%~ IF item_attribute.processing_attribute.type == ''authorised_value''
+        ~%]'
+      - '        [%~ SET value = AuthorisedValues.GetByCode(item_attribute.processing_attribute.option_source,
+        item_attribute.value) ~%]'
+      - '    [%~ END ~%]'
+      - '    [% item_attribute.processing_attribute.name %]: [% value %]'
+      - '[% END %]'
+      is_html: 0
+      lang: default
+      message_transport_type: print
+      module: preservation
+      name: كعب مادة الصف
+      title: كعب مادة الصف
+    - branchcode: ''
+      code: HOLDPLACED_PATRON
+      content:
+      - مرحباً [% borrower.firstname %] [% borrower.surname %] [% borrower.cardnumber
+        %],
+      - تم تأكيد الحجز الخاص بك على [% hold.biblio.title %] ([% hold.biblio.id %]).
+      - سيتم إخطارك بواسطة المكتبة عندما تكون المادة الخاصة بك متاحة للالتقاط.
+      - مع جزيل الشكر!
+      is_html: 0
+      lang: default
+      message_transport_type: email
+      module: reserves
+      name: تم تأكيد الحجز
+      title: تم تأكيد حجزك لـ [% hold.biblio.title %]
+    translatable:
+    - name
+    - title
+    - content

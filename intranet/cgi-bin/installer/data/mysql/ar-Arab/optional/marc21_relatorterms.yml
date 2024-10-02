@@ -1,0 +1,894 @@
+---
+description:
+- قائمة رموز مارك للروابط، كما في http://www.loc.gov/marc/relators/relaterm.html
+tables:
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: abr
+      category: RELTERMS
+      lib: مختصر
+    - authorised_value: acp
+      category: RELTERMS
+      lib: ناسخ فني
+    - authorised_value: act
+      category: RELTERMS
+      lib: ممثل
+    - authorised_value: adi
+      category: RELTERMS
+      lib: مخرج فني
+    - authorised_value: adp
+      category: RELTERMS
+      lib: محول
+    - authorised_value: aft
+      category: RELTERMS
+      lib: مؤلف الكلمة الختامية، وإشارة الناشر، إلخ.
+    - authorised_value: anc
+      category: RELTERMS
+      lib: مذيع داخلي
+    - authorised_value: anl
+      category: RELTERMS
+      lib: محلل
+    - authorised_value: anm
+      category: RELTERMS
+      lib: محرك الصور
+    - authorised_value: ann
+      category: RELTERMS
+      lib: مفسر الشروح
+    - authorised_value: ant
+      category: RELTERMS
+      lib: سابقة بيبلوغرافية
+    - authorised_value: ape
+      category: RELTERMS
+      lib: المدعى عليه
+    - authorised_value: apl
+      category: RELTERMS
+      lib: مدعي
+    - authorised_value: app
+      category: RELTERMS
+      lib: متقدم
+    - authorised_value: aqt
+      category: RELTERMS
+      lib: المؤلف في الاقتباسات أو الملخصات النصية
+    - authorised_value: arc
+      category: RELTERMS
+      lib: مهندس معماري
+    - authorised_value: ard
+      category: RELTERMS
+      lib: مخرج فني
+    - authorised_value: arr
+      category: RELTERMS
+      lib: منظم
+    - authorised_value: art
+      category: RELTERMS
+      lib: فنان
+    - authorised_value: asg
+      category: RELTERMS
+      lib: محال إليه
+    - authorised_value: asn
+      category: RELTERMS
+      lib: الاسم المرتبط
+    - authorised_value: ato
+      category: RELTERMS
+      lib: الموقّع
+    - authorised_value: att
+      category: RELTERMS
+      lib: الاسم المنسوب
+    - authorised_value: auc
+      category: RELTERMS
+      lib: بائع بالمزاد
+    - authorised_value: aud
+      category: RELTERMS
+      lib: مؤلف الحوار
+    - authorised_value: aue
+      category: RELTERMS
+      lib: مهندس صوتي
+    - authorised_value: aui
+      category: RELTERMS
+      lib: مؤلف المقدمة، إلخ.
+    - authorised_value: aup
+      category: RELTERMS
+      lib: منتج صوتي
+    - authorised_value: aus
+      category: RELTERMS
+      lib: كاتب السيناريو
+    - authorised_value: aut
+      category: RELTERMS
+      lib: المؤلف
+    - authorised_value: bdd
+      category: RELTERMS
+      lib: مصمم ملزم
+    - authorised_value: bjd
+      category: RELTERMS
+      lib: مصمم غلاف الكتاب
+    - authorised_value: bka
+      category: RELTERMS
+      lib: فنان الكتب
+    - authorised_value: bkd
+      category: RELTERMS
+      lib: مصمم الكتاب
+    - authorised_value: bkp
+      category: RELTERMS
+      lib: منتج الكتاب
+    - authorised_value: blw
+      category: RELTERMS
+      lib: كاتب دعاية
+    - authorised_value: bnd
+      category: RELTERMS
+      lib: ملزمة
+    - authorised_value: bpd
+      category: RELTERMS
+      lib: مصمم رقعة الكتاب
+    - authorised_value: brd
+      category: RELTERMS
+      lib: مذيع
+    - authorised_value: brl
+      category: RELTERMS
+      lib: المزخرف بطريقة برايل
+    - authorised_value: bsl
+      category: RELTERMS
+      lib: بائع الكتب
+    - authorised_value: cad
+      category: RELTERMS
+      lib: مدير اختيار الممثلين
+    - authorised_value: cas
+      category: RELTERMS
+      lib: مسؤول اختيار الممثلين
+    - authorised_value: ccp
+      category: RELTERMS
+      lib: كاتب المفهوم
+    - authorised_value: chr
+      category: RELTERMS
+      lib: مصمم رقصات
+    - authorised_value: cli
+      category: RELTERMS
+      lib: عميل
+    - authorised_value: cll
+      category: RELTERMS
+      lib: خطاط
+    - authorised_value: clr
+      category: RELTERMS
+      lib: ملون
+    - authorised_value: clt
+      category: RELTERMS
+      lib: كولوتيبر
+    - authorised_value: cmm
+      category: RELTERMS
+      lib: معلق
+    - authorised_value: cmp
+      category: RELTERMS
+      lib: ملحن
+    - authorised_value: cmt
+      category: RELTERMS
+      lib: منضد الحروف في المطبعة
+    - authorised_value: cng
+      category: RELTERMS
+      lib: مصور سينمائي
+    - authorised_value: cnd
+      category: RELTERMS
+      lib: موصل
+    - authorised_value: cns
+      category: RELTERMS
+      lib: رقيب
+    - authorised_value: coe
+      category: RELTERMS
+      lib: متسابق - مستأنَف
+    - authorised_value: col
+      category: RELTERMS
+      lib: جامع
+    - authorised_value: com
+      category: RELTERMS
+      lib: مصرف
+    - authorised_value: con
+      category: RELTERMS
+      lib: حارس
+    - authorised_value: cop
+      category: RELTERMS
+      lib: مشغل الكاميرا
+    - authorised_value: cor
+      category: RELTERMS
+      lib: مسجل المجمموعة
+    - authorised_value: cos
+      category: RELTERMS
+      lib: متسابق
+    - authorised_value: cot
+      category: RELTERMS
+      lib: متسابق - مستأنِف
+    - authorised_value: cou
+      category: RELTERMS
+      lib: تحت حكم المحكمة
+    - authorised_value: cov
+      category: RELTERMS
+      lib: مصمم غلاف
+    - authorised_value: cpc
+      category: RELTERMS
+      lib: مطالب بحقوق النشر
+    - authorised_value: cpe
+      category: RELTERMS
+      lib: مشكو
+    - authorised_value: cph
+      category: RELTERMS
+      lib: مالك حقوق النشر
+    - authorised_value: cpl
+      category: RELTERMS
+      lib: مقدم الشكوى
+    - authorised_value: cpt
+      category: RELTERMS
+      lib: مقدم شكوى
+    - authorised_value: cre
+      category: RELTERMS
+      lib: منشئ
+    - authorised_value: crp
+      category: RELTERMS
+      lib: مراسل
+    - authorised_value: crr
+      category: RELTERMS
+      lib: مصحح
+    - authorised_value: crt
+      category: RELTERMS
+      lib: كاتب تقارير المحكمة
+    - authorised_value: csl
+      category: RELTERMS
+      lib: استشاري
+    - authorised_value: csp
+      category: RELTERMS
+      lib: استشاري مشروع
+    - authorised_value: cst
+      category: RELTERMS
+      lib: مصمم أزياء
+    - authorised_value: ctb
+      category: RELTERMS
+      lib: مساهم
+    - authorised_value: cte
+      category: RELTERMS
+      lib: متسابق - مستأنف
+    - authorised_value: ctg
+      category: RELTERMS
+      lib: رسام خرائط
+    - authorised_value: ctr
+      category: RELTERMS
+      lib: مقاول
+    - authorised_value: cts
+      category: RELTERMS
+      lib: متسابق
+    - authorised_value: ctt
+      category: RELTERMS
+      lib: متسابق - مستأنف
+    - authorised_value: cur
+      category: RELTERMS
+      lib: قيّم
+    - authorised_value: cwt
+      category: RELTERMS
+      lib: معلق على نص مكتوب
+    - authorised_value: dbd
+      category: RELTERMS
+      lib: مدير الدوبلاج
+    - authorised_value: dbp
+      category: RELTERMS
+      lib: مكان التوزيع
+    - authorised_value: dfd
+      category: RELTERMS
+      lib: مدعى عليه
+    - authorised_value: dfe
+      category: RELTERMS
+      lib: مدعى عليه - مستأنف
+    - authorised_value: dft
+      category: RELTERMS
+      lib: مدعى عليه - مستأنف
+    - authorised_value: dgc
+      category: RELTERMS
+      lib: عضو لجنة الدرجة
+    - authorised_value: dgg
+      category: RELTERMS
+      lib: المؤسسة مانحة الدرجة
+    - authorised_value: dgs
+      category: RELTERMS
+      lib: مشرف الدرجة
+    - authorised_value: dis
+      category: RELTERMS
+      lib: مقدم الأطروحة
+    - authorised_value: djo
+      category: RELTERMS
+      lib: دي جي
+    - authorised_value: dln
+      category: RELTERMS
+      lib: مرسوم
+    - authorised_value: dnc
+      category: RELTERMS
+      lib: راقص
+    - authorised_value: dnr
+      category: RELTERMS
+      lib: مانح
+    - authorised_value: dpc
+      category: RELTERMS
+      lib: مصوّر
+    - authorised_value: dpt
+      category: RELTERMS
+      lib: مودع
+    - authorised_value: drm
+      category: RELTERMS
+      lib: رسام
+    - authorised_value: drt
+      category: RELTERMS
+      lib: مخرج
+    - authorised_value: dsr
+      category: RELTERMS
+      lib: مصمم
+    - authorised_value: dst
+      category: RELTERMS
+      lib: موزع
+    - authorised_value: dtc
+      category: RELTERMS
+      lib: مساهم البيانات
+    - authorised_value: dte
+      category: RELTERMS
+      lib: مكرس
+    - authorised_value: dtm
+      category: RELTERMS
+      lib: مدير البيانات
+    - authorised_value: dto
+      category: RELTERMS
+      lib: مكرِس
+    - authorised_value: dub
+      category: RELTERMS
+      lib: مؤلف مشكوك فيه
+    - authorised_value: edc
+      category: RELTERMS
+      lib: محرر التجميع
+    - authorised_value: edd
+      category: RELTERMS
+      lib: مدير التحرير
+    - authorised_value: edm
+      category: RELTERMS
+      lib: محرر عمل الصور المتحركة
+    - authorised_value: edt
+      category: RELTERMS
+      lib: محرر
+    - authorised_value: egr
+      category: RELTERMS
+      lib: نقاش
+    - authorised_value: elg
+      category: RELTERMS
+      lib: كهربائي
+    - authorised_value: elt
+      category: RELTERMS
+      lib: صانع ألواح الطباعة
+    - authorised_value: eng
+      category: RELTERMS
+      lib: مهندس
+    - authorised_value: enj
+      category: RELTERMS
+      lib: تشريع الولاية القضائية
+    - authorised_value: etr
+      category: RELTERMS
+      lib: مطبوع
+    - authorised_value: evp
+      category: RELTERMS
+      lib: مكان الحدث
+    - authorised_value: exp
+      category: RELTERMS
+      lib: خبير
+    - authorised_value: fac
+      category: RELTERMS
+      lib: مصور صور طبق الأصل
+    - authorised_value: fds
+      category: RELTERMS
+      lib: موزع أفلام
+    - authorised_value: fld
+      category: RELTERMS
+      lib: مدير ميداني
+    - authorised_value: flm
+      category: RELTERMS
+      lib: مونتير الفيلم
+    - authorised_value: fmd
+      category: RELTERMS
+      lib: مدير سينمائي
+    - authorised_value: fmk
+      category: RELTERMS
+      lib: مخرج سينمائي
+    - authorised_value: fmo
+      category: RELTERMS
+      lib: المالك السابق
+    - authorised_value: fmp
+      category: RELTERMS
+      lib: منتج الفيلم
+    - authorised_value: fon
+      category: RELTERMS
+      lib: المؤسس
+    - authorised_value: fpy
+      category: RELTERMS
+      lib: الطرف الأول
+    - authorised_value: fnd
+      category: RELTERMS
+      lib: ممول
+    - authorised_value: frg
+      category: RELTERMS
+      lib: مزور
+    - authorised_value: gdv
+      category: RELTERMS
+      lib: Game developer
+    - authorised_value: gis
+      category: RELTERMS
+      lib: أخصائي معلومات جغرافية
+    - authorised_value: his
+      category: RELTERMS
+      lib: المؤسسة المضيفة
+    - authorised_value: hnr
+      category: RELTERMS
+      lib: مكرّم
+    - authorised_value: hst
+      category: RELTERMS
+      lib: مضيف
+    - authorised_value: ill
+      category: RELTERMS
+      lib: رسام توضيحي
+    - authorised_value: ilu
+      category: RELTERMS
+      lib: أخصائي إضاءة
+    - authorised_value: ins
+      category: RELTERMS
+      lib: حفار
+    - authorised_value: inv
+      category: RELTERMS
+      lib: مخترع
+    - authorised_value: isb
+      category: RELTERMS
+      lib: جهة الإصدار
+    - authorised_value: itr
+      category: RELTERMS
+      lib: عازف
+    - authorised_value: ive
+      category: RELTERMS
+      lib: الشخص الذي تجري مقابلته
+    - authorised_value: ivr
+      category: RELTERMS
+      lib: مجري المقابلة
+    - authorised_value: jud
+      category: RELTERMS
+      lib: قاضي
+    - authorised_value: jug
+      category: RELTERMS
+      lib: تحت حكم القضاء
+    - authorised_value: lbr
+      category: RELTERMS
+      lib: معمل
+    - authorised_value: lbt
+      category: RELTERMS
+      lib: مؤلف الأوبرا
+    - authorised_value: ldr
+      category: RELTERMS
+      lib: مدير المعمل
+    - authorised_value: led
+      category: RELTERMS
+      lib: قيادة
+    - authorised_value: lee
+      category: RELTERMS
+      lib: مشهر به-مدعى عليه
+    - authorised_value: lel
+      category: RELTERMS
+      lib: مشهر به
+    - authorised_value: len
+      category: RELTERMS
+      lib: المقرض
+    - authorised_value: let
+      category: RELTERMS
+      lib: مشهر به-مدعي
+    - authorised_value: lgd
+      category: RELTERMS
+      lib: مصمم إضاءة
+    - authorised_value: lie
+      category: RELTERMS
+      lib: مشهر-مدعى عليه
+    - authorised_value: lil
+      category: RELTERMS
+      lib: مشهر
+    - authorised_value: lit
+      category: RELTERMS
+      lib: مشهر-مدعي
+    - authorised_value: lsa
+      category: RELTERMS
+      lib: مهندس المناظر الطبيعية
+    - authorised_value: lse
+      category: RELTERMS
+      lib: مرخص له
+    - authorised_value: lso
+      category: RELTERMS
+      lib: مرخص
+    - authorised_value: ltg
+      category: RELTERMS
+      lib: طابع على الحجر
+    - authorised_value: lyr
+      category: RELTERMS
+      lib: شاعر غنائي
+    - authorised_value: mcp
+      category: RELTERMS
+      lib: ناسخ موسيقى
+    - authorised_value: med
+      category: RELTERMS
+      lib: وسيط
+    - authorised_value: mfp
+      category: RELTERMS
+      lib: مكان التصنيع
+    - authorised_value: mfr
+      category: RELTERMS
+      lib: مُصنع
+    - authorised_value: mdc
+      category: RELTERMS
+      lib: جهة اتصال الميتاداتا
+    - authorised_value: mka
+      category: RELTERMS
+      lib: خبير التجميل
+    - authorised_value: mod
+      category: RELTERMS
+      lib: مراقب
+    - authorised_value: mon
+      category: RELTERMS
+      lib: شاشة
+    - authorised_value: mrb
+      category: RELTERMS
+      lib: صانع رخام
+    - authorised_value: mrk
+      category: RELTERMS
+      lib: محرر الترميز
+    - authorised_value: msd
+      category: RELTERMS
+      lib: مخرج موسيقي
+    - authorised_value: mte
+      category: RELTERMS
+      lib: نقاش المعدن
+    - authorised_value: mtk
+      category: RELTERMS
+      lib: ضابط الدقائق
+    - authorised_value: mup
+      category: RELTERMS
+      lib: مبرمج الموسيقى
+    - authorised_value: mus
+      category: RELTERMS
+      lib: موسيقي
+    - authorised_value: mxe
+      category: RELTERMS
+      lib: مهندس الميكس
+    - authorised_value: 'nan'
+      category: RELTERMS
+      lib: مذيع الأخبار
+    - authorised_value: nrt
+      category: RELTERMS
+      lib: راوي
+    - authorised_value: onp
+      category: RELTERMS
+      lib: مشارك على الشاشة
+    - authorised_value: opn
+      category: RELTERMS
+      lib: خصم
+    - authorised_value: org
+      category: RELTERMS
+      lib: المنشئ
+    - authorised_value: orm
+      category: RELTERMS
+      lib: منظم
+    - authorised_value: osp
+      category: RELTERMS
+      lib: مقدم على الشاشة
+    - authorised_value: oth
+      category: RELTERMS
+      lib: آخر
+    - authorised_value: own
+      category: RELTERMS
+      lib: المالك
+    - authorised_value: pad
+      category: RELTERMS
+      lib: مكان العنوان
+    - authorised_value: pan
+      category: RELTERMS
+      lib: عضو اللجنة
+    - authorised_value: pat
+      category: RELTERMS
+      lib: مستفيد
+    - authorised_value: pbd
+      category: RELTERMS
+      lib: مدير النشر
+    - authorised_value: pbl
+      category: RELTERMS
+      lib: الناشر
+    - authorised_value: pdr
+      category: RELTERMS
+      lib: مدير المشروع
+    - authorised_value: pfr
+      category: RELTERMS
+      lib: مدقق لغوي
+    - authorised_value: pht
+      category: RELTERMS
+      lib: مصور فوتوغرافي
+    - authorised_value: plt
+      category: RELTERMS
+      lib: صانع اللوحات
+    - authorised_value: pma
+      category: RELTERMS
+      lib: وكالة التصاريح
+    - authorised_value: pmn
+      category: RELTERMS
+      lib: مدير الإنتاج
+    - authorised_value: pop
+      category: RELTERMS
+      lib: طابعة اللوحات
+    - authorised_value: ppm
+      category: RELTERMS
+      lib: صانع الورق
+    - authorised_value: ppt
+      category: RELTERMS
+      lib: محرك العرائس
+    - authorised_value: pra
+      category: RELTERMS
+      lib: رئيس
+    - authorised_value: prc
+      category: RELTERMS
+      lib: جهة اتصال العملية
+    - authorised_value: prd
+      category: RELTERMS
+      lib: موظفي الإنتاج
+    - authorised_value: pre
+      category: RELTERMS
+      lib: مذيع
+    - authorised_value: prf
+      category: RELTERMS
+      lib: مؤدي
+    - authorised_value: prg
+      category: RELTERMS
+      lib: مبرمج
+    - authorised_value: prm
+      category: RELTERMS
+      lib: صانع الطبعات
+    - authorised_value: prn
+      category: RELTERMS
+      lib: شركة الإنتاج
+    - authorised_value: pro
+      category: RELTERMS
+      lib: منتج
+    - authorised_value: prp
+      category: RELTERMS
+      lib: مكان الإنتاج
+    - authorised_value: prs
+      category: RELTERMS
+      lib: مصمم الإنتاج
+    - authorised_value: prt
+      category: RELTERMS
+      lib: طابعة
+    - authorised_value: prv
+      category: RELTERMS
+      lib: موفر الخدمة
+    - authorised_value: pta
+      category: RELTERMS
+      lib: مقدم طلب براءة الاختراع
+    - authorised_value: pte
+      category: RELTERMS
+      lib: مقدم الشكوى - مدعى
+    - authorised_value: ptf
+      category: RELTERMS
+      lib: مقدم الشكوى
+    - authorised_value: pth
+      category: RELTERMS
+      lib: حامل براءة الاختراع
+    - authorised_value: ptt
+      category: RELTERMS
+      lib: مقدم الشكوى- مدعي
+    - authorised_value: pup
+      category: RELTERMS
+      lib: مكان النشر
+    - authorised_value: rap
+      category: RELTERMS
+      lib: مذيع
+    - authorised_value: rbr
+      category: RELTERMS
+      lib: مفكر
+    - authorised_value: rcd
+      category: RELTERMS
+      lib: عازف الريكورد
+    - authorised_value: rce
+      category: RELTERMS
+      lib: مدير التسجيل
+    - authorised_value: rcp
+      category: RELTERMS
+      lib: المرسل إليه
+    - authorised_value: rdd
+      category: RELTERMS
+      lib: مدير إذاعي
+    - authorised_value: red
+      category: RELTERMS
+      lib: محرر
+    - authorised_value: ren
+      category: RELTERMS
+      lib: عارض
+    - authorised_value: res
+      category: RELTERMS
+      lib: باحث
+    - authorised_value: rev
+      category: RELTERMS
+      lib: مراجع
+    - authorised_value: rpc
+      category: RELTERMS
+      lib: منتج إذاعي
+    - authorised_value: rps
+      category: RELTERMS
+      lib: مستودع
+    - authorised_value: rpt
+      category: RELTERMS
+      lib: مذيع
+    - authorised_value: rpy
+      category: RELTERMS
+      lib: الجهة المسؤولة
+    - authorised_value: rse
+      category: RELTERMS
+      lib: مستجيب- مدعى
+    - authorised_value: rsg
+      category: RELTERMS
+      lib: معيد
+    - authorised_value: rsp
+      category: RELTERMS
+      lib: المستجيب
+    - authorised_value: rsr
+      category: RELTERMS
+      lib: مرمم
+    - authorised_value: rst
+      category: RELTERMS
+      lib: مستجيب - مدعي
+    - authorised_value: rth
+      category: RELTERMS
+      lib: رئيس فريق البحث
+    - authorised_value: rtm
+      category: RELTERMS
+      lib: عضو فريق البحث
+    - authorised_value: rxa
+      category: RELTERMS
+      lib: فنان ريمكس
+    - authorised_value: sad
+      category: RELTERMS
+      lib: مستشار علمي
+    - authorised_value: sce
+      category: RELTERMS
+      lib: كاتب السيناريو
+    - authorised_value: scl
+      category: RELTERMS
+      lib: نحات
+    - authorised_value: scr
+      category: RELTERMS
+      lib: ناسخ
+    - authorised_value: sde
+      category: RELTERMS
+      lib: مهندس الصوت
+    - authorised_value: sgd
+      category: RELTERMS
+      lib: مدير المسرح
+    - authorised_value: sds
+      category: RELTERMS
+      lib: مصمم الصوت
+    - authorised_value: sec
+      category: RELTERMS
+      lib: أمين السر
+    - authorised_value: sfx
+      category: RELTERMS
+      lib: موفر خدمة المؤثرات الخاصة
+    - authorised_value: sgn
+      category: RELTERMS
+      lib: مُوقع
+    - authorised_value: sht
+      category: RELTERMS
+      lib: مضيف داعم
+    - authorised_value: sll
+      category: RELTERMS
+      lib: بائع
+    - authorised_value: sng
+      category: RELTERMS
+      lib: مطرب
+    - authorised_value: spk
+      category: RELTERMS
+      lib: متحدث
+    - authorised_value: spn
+      category: RELTERMS
+      lib: راعي
+    - authorised_value: spy
+      category: RELTERMS
+      lib: الطرف الثاني
+    - authorised_value: srv
+      category: RELTERMS
+      lib: مساح
+    - authorised_value: std
+      category: RELTERMS
+      lib: مصمم الموقع
+    - authorised_value: stg
+      category: RELTERMS
+      lib: الموقع
+    - authorised_value: stl
+      category: RELTERMS
+      lib: راوي
+    - authorised_value: stm
+      category: RELTERMS
+      lib: مدير المسرح
+    - authorised_value: stn
+      category: RELTERMS
+      lib: هيئة المعايير
+    - authorised_value: str
+      category: RELTERMS
+      lib: مقولب
+    - authorised_value: swd
+      category: RELTERMS
+      lib: مطور برمجيات
+    - authorised_value: tau
+      category: RELTERMS
+      lib: كاتب تلفزيوني
+    - authorised_value: tcd
+      category: RELTERMS
+      lib: مدير فني
+    - authorised_value: tch
+      category: RELTERMS
+      lib: معلم
+    - authorised_value: ths
+      category: RELTERMS
+      lib: مشرف الأطروحة
+    - authorised_value: tld
+      category: RELTERMS
+      lib: مخرج تلفزيوني
+    - authorised_value: tlg
+      category: RELTERMS
+      lib: ضيف تلفزيوني
+    - authorised_value: tlh
+      category: RELTERMS
+      lib: مضيف تلفزيوني
+    - authorised_value: tlp
+      category: RELTERMS
+      lib: منتج تلفزيوني
+    - authorised_value: trc
+      category: RELTERMS
+      lib: ناسخ
+    - authorised_value: trl
+      category: RELTERMS
+      lib: مترجم
+    - authorised_value: tyd
+      category: RELTERMS
+      lib: مصمم الكتابة
+    - authorised_value: tyg
+      category: RELTERMS
+      lib: منضد الحروف
+    - authorised_value: uvp
+      category: RELTERMS
+      lib: مكان الجامعة
+    - authorised_value: vac
+      category: RELTERMS
+      lib: ممثل صوتي
+    - authorised_value: vdg
+      category: RELTERMS
+      lib: مصور فيديو
+    - authorised_value: vfx
+      category: RELTERMS
+      lib: موفر خدمة المؤثرات البصرية
+    - authorised_value: wac
+      category: RELTERMS
+      lib: كاتب التعليق الإضافي
+    - authorised_value: wal
+      category: RELTERMS
+      lib: كاتب كلمات الأغاني الإضافية
+    - authorised_value: wam
+      category: RELTERMS
+      lib: كاتب المادة المرفقة
+    - authorised_value: wat
+      category: RELTERMS
+      lib: كاتب النص الإضافي
+    - authorised_value: wdc
+      category: RELTERMS
+      lib: قاطع الخشب
+    - authorised_value: wde
+      category: RELTERMS
+      lib: نحات الخشب
+    - authorised_value: win
+      category: RELTERMS
+      lib: كاتب المقدمة
+    - authorised_value: wit
+      category: RELTERMS
+      lib: شاهد
+    - authorised_value: wpr
+      category: RELTERMS
+      lib: كاتب المقدمة
+    - authorised_value: wst
+      category: RELTERMS
+      lib: كاتب محتوى نصي تكميلي
+    translatable:
+    - lib

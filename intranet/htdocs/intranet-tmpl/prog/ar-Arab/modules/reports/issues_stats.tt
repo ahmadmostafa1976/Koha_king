@@ -1,0 +1,411 @@
+[% USE raw %]
+[% USE Branches %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF ( do_it ) %]
+ [% t("Results") | html %] &rsaquo;
+ [% END %]
+ [% t("Circulation statistics") | html %] &rsaquo;
+ [% t("Reports") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+<style>
+	.sql {display:none;}
+</style>
+</head>
+
+<body id="rep_issues_stats" class="rep">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/reports/reports-home.pl">التقارير</a>
+ [% END %]
+ [% IF ( do_it ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/reports/issues_stats.pl">إحصائيات الإعارة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>نتائج</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>إحصائيات الإعارة</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+<h1>إحصائيات الإعارة</h1>
+[% IF ( do_it ) %]
+ [% FOREACH mainloo IN mainloop %]
+ [% IF ( mainloo.loopfilter ) %]
+ <p>مرشّح فى:</p>
+ <ul>
+ [% FOREACH loopfilte IN mainloo.loopfilter %]
+ [% IF ( loopfilte.err ) %]
+ <li class="error">خطأ: [% ELSIF ( loopfilte.sql ) %] <li class="sql">
+ [% ELSE %]
+ <li>
+ [% END %]
+ [% SWITCH loopfilte.crit %]
+ [% CASE 0 %]<span>الفترة من [% loopfilte.filter | html %]</span>
+ [% CASE 1 %]<span>الفترة إلى [% loopfilte.filter | html %]</span>
+ [% CASE 2 %]<span>فئة المستفيد = [% loopfilte.filter | html %]</span>
+ [% CASE 3 %]<span>نوع المادة = [% loopfilte.filter | html %]</span>
+ [% CASE 4 %]<span>المكتبة المعيرة = [% loopfilte.filter | html %]</span>
+ [% CASE 5 %]<span>المجموعة = [% loopfilte.filter | html %]</span>
+ [% CASE 6 %]<span>الموقع = [% loopfilte.filter | html %]</span>
+ [% CASE 7 %]<span>رقم استدعاء المادة &gt;= [% loopfilte.filter | html %]</span>
+ [% CASE 8 %]<span>رقم استدعاء المادة &lt; [% loopfilte.filter | html %]</span>
+ [% CASE 9 %]<span>فرز المستفيد 1= [% loopfilte.filter | html %]</span>
+ [% CASE 10 %]<span>فرز المستفيد 2= [% loopfilte.filter | html %]</span>
+ [% CASE 11 %]<span>المكتبة الرئيسية = [% loopfilte.filter | html %]</span>
+ [% CASE 12 %]<span>المكتبة المقتنية = [% loopfilte.filter | html %]</span>
+ [% CASE 13 %]<span>مكتبة المستفيد = [% loopfilte.filter | html %]</span>
+ [% CASE 14 %]<span>المكتبة المعيرة = [% loopfilte.filter | html %]</span>
+ [% CASE %]<span>[% loopfilte.crit | html %] = [% loopfilte.filter | html %]</span>
+ [% END %]
+ </li>
+ [% END %]
+ </ul>
+ [% END %]
+ 
+ <table> 
+ <tr>
+ <th>[% mainloo.line | html %] / [% mainloo.column | html %]</th>
+ [% FOREACH loopco IN mainloo.loopcol %]
+ <th>[% loopco.coltitle_display | html %]</th>
+ [% END %]
+ <th>الإجمالي</th>
+ </tr>
+ [% FOREACH loopro IN mainloo.looprow %]
+ <tr>
+ <td>[% loopro.rowtitle_display or "UNKNOWN VALUE" | html %]</td>
+ [% FOREACH loopcel IN loopro.loopcell %]
+ <td>[% loopcel.value || 0 | html %]</td>
+ [% END %]
+ <td>[% loopro.totalrow | html %]</td>
+ </tr>
+ [% END %]
+ <tr>
+ <th>الإجمالي</th>
+ [% FOREACH loopfoote IN mainloo.loopfooter %]
+ <th>[% loopfoote.totalcol | html %]</th>
+ [% END %]
+ <th>[% mainloo.total | html %]</th>
+ </tr>
+ </table>
+ [% END %]
+[% ELSE %]
+
+ <form method="get" action="/cgi-bin/koha/reports/issues_stats.pl">
+ <fieldset class="rows">
+ <legend>إحصائيات الإعارة</legend><table>
+ <thead>
+ <tr>
+ <th>عنوان</th>
+ <th>صف</th>
+ <th>عمود</th>
+ <th>تنقيح</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <td>فترة</td>
+ <td><input type="radio" name="Line" value="datetime" /></td>
+ <td><input type="radio" name="Column" value="datetime" /></td>
+ <td>
+ <label for="from">من</label>
+ <input type="text" size="10" id="from" name="Filter" class="flatpickr" data-date_to="to" />
+ <label for="to">إلى</label>
+ <input size="10" id="to" name="Filter" value="" type="text" class="flatpickr" />
+ <span class="hint">[% INCLUDE 'date-format.inc' %]</span>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="PeriodTypeSel">نوع:</label><select name="PeriodTypeSel" id="PeriodTypeSel">
+ <option value ="issue">إعارة</option>
+ <option value ="renew">التجديد</option>
+ <option value ="return">رد</option>
+ <option value ="localuse">استخدام محلي</option>
+ </select></td>
+ <td colspan="2"><label for="DisplayBy">تجميع حسب</label> <select name="DisplayBy" id="DisplayBy">
+ <option value="">لا شيء</option>
+ <option value ="4">ساعة</option>
+ <option value ="1">يوم في الإسبوع</option>
+ <option value ="2">شهر</option>
+ <option value ="3">عام</option>
+ </select>
+ </td>
+ <td>
+ <label for="PeriodDaySel">حدد يوماً: </label><select name="PeriodDaySel" id="PeriodDaySel">
+ <option value =""></option>
+ <option value ="Monday">الإثنين</option>
+ <option value ="Tuesday">الثلاثاء</option>
+ <option value ="Wednesday">الأربعاء</option>
+ <option value ="Thursday">الخميس</option>
+ <option value ="Friday">الجمعة</option>
+ <option value ="Saturday">السبت</option>
+ <option value ="Sunday">الأحد</option>
+ </select>
+ <label for="PeriodMonthSel">حدد الشهر:</label> <select name="PeriodMonthSel" id="PeriodMonthSel">
+ <option value =""></option>
+ <option value ="January">يناير</option>
+ <option value ="February">نيسان</option>
+ <option value ="March">مارس</option>
+ <option value ="April">أبريل</option>
+ <option value ="May">مايو</option>
+ <option value ="June">يونية</option>
+ <option value ="July">يوليو</option>
+ <option value ="August">أغسطس</option>
+ <option value ="September">سبتمبر</option>
+ <option value ="October">أكتوير</option>
+ <option value ="November">نوفمبر</option>
+ <option value ="December">ديسمبر</option>
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td>فئة المستفيد</td>
+ <td><input type="radio" name="Line" value="borrowers.categorycode" /></td>
+ <td><input type="radio" name="Column" value="borrowers.categorycode" /></td>
+ <td><select name="Filter" id="borcat">
+ <option value=""> </option>
+ [% FOREACH categoryloo IN categoryloop %]
+ <option value="[% categoryloo.categorycode | html %]">[% categoryloo.description | html %]</option>
+ [% END %]
+ </select>
+ </td> 
+ </tr>
+ <tr>
+ <td>نوع المادة</td>
+ <td><input type="radio" name="Line" value="itemtype" /></td>
+ <td><input type="radio" checked="checked" name="Column" value="itemtype" /></td>
+ <td><select name="Filter" id="itemtype">
+ <option value=""> </option>
+ [% FOREACH itemtype IN itemtypes %]
+ <option value="[% itemtype.itemtype | html %]">[% itemtype.translated_description | html %]</option>
+ [% END %]
+ </select>
+ </td> 
+ </tr>
+ <tr>
+ <td>المكتبة المعيرة</td>
+ <td><input type="radio" checked="checked" name="Line" value="branch" /></td>
+ <td><input type="radio" name="Column" value="branch" /></td>
+ <td><select name="Filter" id="branch">
+ <option value=""> </option>
+ [% PROCESS options_for_libraries libraries => Branches.all() %]
+ </select>
+ </td> 
+ </tr>
+ <tr>
+ <td>المجموعة</td>
+ <td><input type="radio" name="Line"   value="items.ccode" /></td>
+ <td><input type="radio" name="Column" value="items.ccode" /></td>
+ <td><select name="Filter" id="ccode">
+ <option value=""> </option>
+ [% FOREACH ccodeloo IN ccodeloop %]
+ <option value="[% ccodeloo.code | html %]">[% ccodeloo.description | html %]</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td>موقع الرف</td>
+ <td><input type="radio" name="Line" value="items.location" /></td>
+ <td><input type="radio" name="Column" value="items.location" /></td>
+ <td><select name="Filter" id="location">
+ <option value=""> </option>
+ [% FOREACH locationloo IN locationloop %]
+ <option value="[% locationloo.code | html %]">[% locationloo.description | html %]</option>
+ [% END %]
+ </select>
+ </td> 
+ </tr>
+ <tr>
+ <td>رقم طلب مادة</td>
+ <td></td>
+ <td></td>
+ <td>من <input type="text" name="Filter" size="10" /> (شامل ) إلى <input type="text" name="Filter" size="10" /> (حصري) </td>
+ </tr>
+ [% IF ( hassort1 ) %]
+ <tr><td>نوع المستفيد 1</td>
+ <td><input type="radio" name="Line" value="borrowers.sort1" /></td>
+ <td><input type="radio" name="Column" value="borrowers.sort1" /></td>
+ <td><select name="Filter" id="sort1">
+ <option value=""> </option>
+ [% FOREACH Bsort IN Bsort1 %]
+ <option value="[% Bsort.authorised_value | html %]" >[% Bsort.lib | html %]</option>
+ [% END %]
+ </select>
+ </td> 
+ </tr>
+ [% END %]
+ [% IF ( hassort2 ) %]
+ <tr><td>نوع المستفيد 2</td>
+ <td><input type="radio" name="Line" value="borrowers.sort2" /></td>
+ <td><input type="radio" name="Column" value="borrowers.sort2" /></td>
+ <td><select name="Filter" id="sort2">
+ <option value=""> </option>
+ [% FOREACH Bsort IN Bsort2 %]
+ <option value="[% Bsort.authorised_value | html %]" >[% Bsort.lib | html %]</option>
+ [% END %]
+ </select>
+ </td> 
+ </tr>
+ [% END %]
+ <tr><td>المكتبة الرئيسية</td>
+ <td><input type="radio" name="Line" value="items.homebranch" /></td>
+ <td><input type="radio" name="Column" value="items.homebranch" /></td>
+ <td><select name="Filter" id="homebranch">
+ <option value=""> </option>
+ [% PROCESS options_for_libraries libraries => Branches.all() %]
+ </select>
+ </td>
+ </tr>
+
+ <tr><td>مقتنيات المكتبة</td>
+ <td><input type="radio" name="Line" value="items.holdingbranch" /></td>
+ <td><input type="radio" name="Column" value="items.holdingbranch" /></td>
+ <td><select name="Filter" id="holdingbranch">
+ <option value=""> </option>
+ [% PROCESS options_for_libraries libraries => Branches.all() %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td>مكتبة المستفيد</td>
+ <td><input type="radio" name="Line" value="borrowers.branchcode" /></td>
+ <td><input type="radio" name="Column" value="borrowers.branchcode" /></td>
+ <td>
+ <select name="Filter" id="patronbranch">
+ <option value="">&nbsp;</option>
+ [% FOREACH branch IN branchloop %]
+ <option value="[% branch.value | html %]">
+ [% branch.branchname | html %]
+ </option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ [% IF (attribute_types_by_class.keys.size) %]
+ <tr>
+ <th colspan="4">سمات المستفيد</th>
+ </tr>
+ [% FOREACH class IN attribute_types_by_class.keys.sort %]
+ [% IF (class) %]
+ <tr>
+ <th>[% class | html %]</th>
+ <th colspan="3"></th>
+ </tr>
+ [% END %]
+ [% FOREACH attr_type IN attribute_types_by_class.$class %]
+ <tr>
+ <td>[% attr_type.description | html %]</td>
+ <td><input type="radio" name="Line" value="borrower_attributes.[% attr_type.code | html %]" /> </td>
+ <td><input type="radio" name="Column" value="borrower_attributes.[% attr_type.code | html %]" /> </td>
+ <td>
+ [% IF attr_type.authorised_value_category %]
+ <select name="Filter_borrower_attributes.[% attr_type.code | html %]">
+ <option value="">&nbsp;</option>
+ [% FOREACH av IN attr_type.authorised_values %]
+ <option value="[% av.authorised_value | html %]">
+ [% av.lib | html %]
+ </option>
+ [% END %]
+ </select>
+ [% ELSE %]
+ <input type="text" name="Filter_borrower_attributes.[% attr_type.code | html %]" />
+ [% END %]
+ </td>
+ </tr>
+ [% END %]
+ [% END %]
+ [% END %]
+
+ </tbody>
+ </table><br /></fieldset>
+
+<fieldset class="rows">
+ <legend>قيمة الخلية</legend>
+ <ol>
+ <li>
+ <label for="cellvalue1">إحصاء إجمالي المواد:</label>
+ <input type="radio" name="Cellvalue" value="1" id="cellvalue1" checked="checked" />
+ </li>
+ <li>
+ <label for="cellvalue3">إحصاء المواد الفريدة:</label>
+ <input type="radio" name="Cellvalue" id="cellvalue3" value="3" />
+ </li>
+ <li>
+ <label for="cellvalue5">إحصاء التسجيلات الببليوغرافية الفريدة:</label>
+ <input type="radio" name="Cellvalue" id="cellvalue5" value="5" />
+ </li>
+ </ol>
+</fieldset>
+ 
+ <fieldset class="rows">
+ <legend>مخرج</legend>
+ <ol>
+ <li>
+ <label for="outputscreen">للعرض فى المتصفح: </label><input type="radio" checked="checked" name="output" id="outputscreen" value="screen" />
+ </li>
+ <li>
+ <label for="outputfile">إلى الملف:</label> <input type="radio" name="output" value="file" id="outputfile" />
+ <label class="inline" for="basename">تسمية : </label><input id="basename" name="basename" type="text" value="تصدير" />
+ <label class="inline" for="MIME">إلى تطبيق:</label>
+ <select name="MIME" id="MIME">
+ [% FOREACH value IN CGIextChoice %]
+ <option value="[% value | html %]">[% value | html %]</option>
+ [% END %]
+ </select>
+ <select name="sep" id="sep">
+ [% FOREACH value IN CGIsepChoice.values.sort() %]
+ [% IF ( value == CGIsepChoice.default ) %]
+ <option value="[% value | html %]" selected="selected">[% value | html %]</option>
+ [% ELSE %]
+ <option value="[% value | html %]">[% value | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ <input type="hidden" name="report_name" value="[% report_name | html %]" />
+ <input type="hidden" name="do_it" value="1" />
+ </fieldset>
+ </form>
+[% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'reports-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'calendar.inc' %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

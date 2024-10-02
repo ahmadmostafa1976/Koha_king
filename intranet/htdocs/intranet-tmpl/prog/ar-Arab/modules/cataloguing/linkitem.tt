@@ -1,0 +1,79 @@
+[% USE raw %]
+[% USE HtmlTags %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Link to host record") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="catalog_linkitem" class="catalog">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/cataloguing/cataloging-home.pl">الفهرسة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>ربط تسجيلة مضيفة بـ [% bibliotitle | html %]</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="container-fluid">
+ <div class="row">
+ <div class="col-sm-6 col-sm-offset-3 col-md-6 col-md-offset-3">
+
+ <h1>ربط تسجيلة مضيفة بـ [% bibliotitle | html %]</h1>
+
+[% IF ( error ) %]
+ <div class="dialog alert">
+ [% IF ( errornomodbiblio ) %]خطأ: لم نتمكن من تعديل التسجيلة الببليوغرافية.[% END %] [% IF ( errornohostitemnumber ) %]خطأ: لم نتمكن من الحصول على رقم المادة من هذا الباركود.[% END %] </div>
+ <a href="/cgi-bin/koha/catalogue/MARCdetail.pl?biblionumber=[% biblionumber | uri %]" class="btn btn-primary">صحيح</a>
+[% ELSE %]
+ [% IF ( success ) %]
+ <div class="dialog message">المادة مرتبطة بنجاح إلى <em>[% bibliotitle | html %]</em>.</div>
+ <a href="/cgi-bin/koha/catalogue/MARCdetail.pl?biblionumber=[% biblionumber | uri %]" class="btn btn-primary">صحيح</a>
+ [% ELSE %]
+ [% IF ( missingparameter ) %]
+ <form method="post" action="/cgi-bin/koha/cataloguing/linkitem.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ [% IF ( missingbiblionumber ) %]
+ <fieldset id="biblionumber_fieldset">
+ <label for="biblionumber_fieldset">اختر رقم التسجيلة البيبليوغرافية لربطها بالمادة</label>
+ <div class="hint">إدخال الرقم الببليوجرافي:</div>
+ <input type="text" name="biblionumber" id="biblionumber" class="focus" size="14" /> 
+ </fieldset>
+ [% ELSE %]
+ <input type="hidden" name="biblionumber" id="biblionumber" value="[% biblionumber | html %]" />
+ [% END %]
+
+ [% IF ( missingbarcode ) %]
+ <fieldset id="barcode_fieldset">
+ <label for="barcode_fieldset">
+ [% IF (bibliotitle ) %]
+ <span>حدد التسجيلة المضيفة للربط بها '[% bibliotitle | html %]'</span>
+ [% ELSE %]
+ <span>حدد التسجيلة المضيفة للربط</span>
+ [% END %]
+ </label>
+ <div class="hint">إدخل باركود المادة:</div>
+ <input type="text" name="barcode" id="barcode" class="barcode focus" size="14" /> 
+ </fieldset>
+ [% ELSE %]
+ <input type="hidden" name="barcode" id="barcode" value="[% barcode | html %]" />
+ [% END %]
+
+ <input type="hidden" name="op" value="cud-linkitem" />
+ <input class="btn btn-primary" type="submit" value="تحديد" />
+
+ </form>
+ [% END %]
+ [% END %]
+[% END %]
+[% INCLUDE 'intranet-bottom.inc' %]

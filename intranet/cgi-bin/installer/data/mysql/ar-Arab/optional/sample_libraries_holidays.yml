@@ -1,0 +1,30 @@
+---
+description:
+- 'عينة عطلات: نهاية الأسبوع، عيد الميلاد، السنة الجديدة'
+tables:
+- repeatable_holidays:
+    multiline: []
+    rows:
+    - branchcode: MPL
+      day: ~
+      description: أيام الأحد
+      id: 2
+      month: ~
+      title: ''
+      weekday: 0
+    - branchcode: MPL
+      day: 1
+      description: يوم السنة الجديدة
+      id: 3
+      month: 1
+      title: ''
+      weekday: ~
+    - branchcode: MPL
+      day: 25
+      description: عيد الميلاد
+      id: 4
+      month: 12
+      title: ''
+      weekday: ~
+    translatable:
+    - description

@@ -1,0 +1,931 @@
+---
+opac.pref:
+  openURL:
+  - - 'عنوان URL تام أو محلل OpenURL (يبدأ بـ <code>http://</code> أو <code>https://</code>):'
+    - class: url
+      pref: OpenURLResolverURL
+  - - 'نص روابط OpenURL (أو عنوان الصورة إذا تم تعريف  <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OpenURLImageLocation">OpenURLImageLocation</a>):'
+    - pref: OpenURLText
+  - - 'موقع الصورة لروابط OpenURL:'
+    - class: url
+      pref: OpenURLImageLocation
+    - <br />يمكن أن يكون عنوان URL مطلق يبدأ بـ <code>http://</code> أو
+    - <code>https://</code> أو URL ذي صلة
+    - '<br />أمثلة:'
+    - <br />- <code>http://www.example.com/img/openurl.png</code>
+    - <br />- <code>/opac-tmpl/bootstrap/images/OpenURL.png</code>
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OPACShowOpenURL
+    - عرض رابط OpenURL في نتائج بحث الأوباك وصفحة التفاصيل.
+  - - 'قائمة برموز نوع المادة (مفصولة بمسافات) للذين ترغب في عرض رابط OpenURL لهم:'
+    - pref: OPACOpenURLItemTypes
+    - <br />
+  استيثاق:
+  - - choices:
+        '0': السماح
+        '1': عدم السماح
+      pref: OPACShibOnly
+    - للمستفيدين بتسجيل الدخول باستخدام وسائل أخرى غير Shibboleth.
+  التعديل والتسجيل الذاتي:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: PatronSelfRegistration
+    - لمستفيدي المكتبة بالتسجيل للحصول على حساب عبر الأوباك.
+    - <br><strong>ملاحظة:</strong> يحتاج ذلك إلى ضبط <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PatronSelfRegistrationDefaultCategory'>PatronSelfRegistrationDefaultCategory</a>
+      إلى رمز فئة مستفيد صالحة.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: PatronSelfRegistrationVerifyByEmail
+    - أن يقوم المستفيد ذاتي التسجيل بتأكيد نفسه عبر البريد الإلكتروني.
+    - <br><strong>ملاحظة:</strong>يتطلب هذا التفضيل الكرون <code>misc/cronjobs/cleanup_database.pl</code>
+      اطلب من مدير نظامك جدولته.
+  - - استخدام
+    - choices: patron-categories
+      pref: PatronSelfRegistrationDefaultCategory
+    - كفئة المستفيد الافتراضية للمستفيدين المسجلين عبر الأوباك.
+    - '<br><strong> تحذير: لا تستخدم فئة مستفيد عادية للتسجيل الذاتي.</strong>'
+    - إذا تم تنصيب الكرون <code>misc/cronjobs/cleanup_database.pl</code> لحذف التسجيلات
+      الذاتية في الأوباك التي لم يتم التحقق منها وغير المكتملة، سيتم حذف جميع المستفيدين
+      الذين سجلوا منذ أكثر من <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PatronSelfRegistrationExpireTemporaryAccountsDelay'>PatronSelfRegistrationExpireTemporaryAccountsDelay</a>
+      يوماً بشكل دائم وبلا رجعة (إلا إذا كان التأخير فارغاً أو صفر).
+  - - حذف المستفيدين الذين لا يزالون في الفئة الموضحة بواسطة <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PatronSelfRegistrationDefaultCategory">PatronSelfRegistrationDefaultCategory</a>
+    - class: integer
+      pref: PatronSelfRegistrationExpireTemporaryAccountsDelay
+    - يوماً بعد إنشاء الحساب.
+    - <br><strong>ملاحظة:</strong>يتطلب هذا التفضيل الكرون <code>misc/cronjobs/cleanup_database.pl</code>.
+      اطلب من مدير نظامك جدولته. <br> لن يتم حذف أي مستفيدين إذا قمت بضبط التفضيل
+      إلى صفر أو تركته فارغاً.
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''> التالية</a> يجب ملؤها في شاشة تعديل المستفيد:'
+    - exclusions: password|cardnumber|dateexpiry|categorycode|sort1|sort2|opacnote|borrowernotes|gonenoaddress|lost|flags
+      pref: PatronSelfModificationMandatoryField
+      source: borrowers
+      type: modalselect
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''> التالية</a> يجب ملؤها في شاشة إدخال المستفيد:'
+    - exclusions: sort1|sort2|opacnote|borrowernotes|gonenoaddress|lost|flags
+      pref: PatronSelfRegistrationBorrowerMandatoryField
+      source: borrowers
+      type: modalselect
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''>التالية </a> لن تظهر في شاشة التسجيل الذاتي للمستفيد:'
+    - exclusions: branchcode|sort1|sort2|gonenoaddress|lost|flags
+      inclusions: categorycode|dateexpiry
+      pref: PatronSelfRegistrationBorrowerUnwantedField
+      source: borrowers
+      type: modalselect
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''> التالية </a> لن تظهر في شاشة التعديل الذاتي للمستفيد:'
+    - exclusions: sort1|sort2|gonenoaddress|lost|flags
+      pref: PatronSelfModificationBorrowerUnwantedField
+      source: borrowers
+      type: modalselect
+  - - choices:
+        '0': لا تضع في الاعتبار
+        '1': ضع في الاعتبار
+      pref: PatronSelfRegistrationEmailMustBeUnique
+    - البريد الالكتروني للمستفيد (borrowers.email) فريد عند التسجيل الذاتي. لن يتم
+      قبول البريد الالكتروني إذا كان موجودا بالفعل في قاعدة البيانات.
+  - - 'نفعيل التسجيل الذاتي للمكتبات التالية:'
+    - pref: PatronSelfRegistrationLibraryList
+    - (افصل رمز الفرع بواسطة |).
+    - اذا تُرك فارغ، سوف يتم سرد كل المكتبات.
+  - - choices:
+        '0': عدم عرض وتعبئة مسبقة
+        '1': عرض وتعبئة مسبقة
+      pref: PatronSelfRegistrationPrefillForm
+    - نموذج كلمة المرور وتسجيل الدخول بعد قيام المستفيد بالتسجيل الذاتي.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: PatronSelfRegistrationConfirmEmail
+    - المستفيدين بتأكيد عنوان بريدهم الإلكتروني عن طريق إدخاله مرتين.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACPatronDetails
+    - للمستفيدين بإخطار المكتبة بالتغييرات في معلومات الاتصال الخاصة بهم من الأوباك.
+  - - 'اختر عنوان البريد الإلكتروني الذي سيتم إرسال التسجيلات الذاتية للمستفيد الجديد
+      إليه: '
+    - choices:
+        '0': لا شيء
+        BranchEmailAddress: عنوان البريد الإلكتروني للمكتبة
+        EmailAddressForPatronRegistrations: EmailAddressForPatronRegistrations
+        KohaAdminEmailAddress: ‫kohaAdminEmailAddress
+      default: 0
+      pref: EmailPatronRegistrations
+    - '‫<br>إذا قمت باختيار <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EmailAddressForPatronRegistrations">EmailAddressForPatronRegistrations</a>
+      يجب عليك إدخال عنوان بريد إلكتروني صالح: '
+    - class: email
+      pref: EmailAddressForPatronRegistrations
+  المظهر:
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACUserSummary
+    - ملخص لإعارات المستفيد الذي تم تسجيل دخوله، ومتأخراته، وحجوزاته، ورسومه على صفحة
+      البدء للأوباك.
+  - - في نتائج البحث في الأوباك، أعرض الجزء التالي من عناصر المادة
+    - choices:
+        holdingbranch: المكتبة الحالية
+        homebranch: المكتبة الرئيسية
+      pref: OPACResultsLibrary
+    - يرجى ملاحظة أن هذه الخاصية متاحة حالياً لمارك21 ويونيمارك.
+  - - استخدم الـ
+    - choices: opac-templates
+      pref: opacthemes
+    - الثيمة في الأوباك.
+  - - استخدم ال
+    - choices:
+        bootstrap: بوتستراب
+        prog: برنامج
+      pref: OPACFallback
+    - ثيمة كثيمة الارتداد في الأوباك.
+  - - 'يقع الأوباك في '
+    - class: url
+      pref: OPACBaseURL
+    - يجب أن يكون ذلك URL يبدأ بـ <code>http://</code>  أو <code>https://</code>.
+      لا تقم بإدراج علامة slash مائلة في ال URL. (يجب أن يتم ملء ذلك بشكل صحيح لكي
+      تعمل برامج البحث المساعدة RSS و unAPI)
+  - - عرض
+    - class: long
+      pref: LibraryName
+    - كاسم المكتبة في الأوباك.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OpacPublic
+    - 'أوباك كوها كعام. يتطلب الأوباك الخاص الاستيثاق قبل الوصول إلى الأوباك. '
+    - 'ملاحظة: لا يؤثر ذلك في واجهة برمجة التطبيقات العامة، انظر <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=RESTPublicAnonymousRequests">RESTPublicAnonymousRequests</a>
+      للتحكم في واجهة برمجة التطبيقات.'
+  - - عرض التقييم باستخدام النجوم في
+    - choices:
+        all: النتائج، التفاصيل، والمستفيد
+        details: فقط التفاصيل
+        disable: ﻻ
+      pref: OpacStarRatings
+    - صفحات.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OpacMaintenance
+    - 'تحذير بأن الأوباك قيد الصيانة،بدلاً من الأوباك نفسه. ملاحظة: يقوم هذا بعرض
+      نفس التحذير الذي يظهر عند الحاجة إلى ترقية قاعدة البيانات،ولكن دون قيد أو شرط.
+      يمكن عرض رسالة مخصصة على صفحة صيانة الأوباك عن طريق إنشاء<a href=''/cgi-bin/koha/tools/additional-contents.pl?category=html_customizations''>تخصيص
+      HTML</a> في منطقة OpacMaintenanceNotice.'
+  - - سيظهر هذا الوصف في نتائج محرك البحث (160 حرفًا).
+    - pref: OpacMetaDescription
+      type: textarea
+  - - افتراضياً، عرض التسجيلات الببليوغرافية
+    - choices:
+        isbd: كما المحدد في نموذج تدمك ISBD .
+        marc: بصيغة مارك الخاصة بهم.
+        normal: بصيغة بسيطة.
+      pref: BiblioDefaultView
+  - - حين يقوم المستفيد بالنقر على رابط لموقع الكتروني آخر من الأوباك (مثل أمازون
+      أو  OCLC),
+    - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: OPACURLOpenInNewWindow
+    - فتح الموقع الالكتروني في نافذة جديدة.
+  - - choices:
+        '0': عرض
+        '1': عدم عرض
+      pref: hidelostitems
+    - المواد الضائعة في صفحات البحث والتفاصيل.
+  - - 'عرض القوائم في الأوباك باستخدام نمط XSLT  في: '
+    - class: file
+      pref: OPACXSLTListsDisplay
+    - ‫<br />الخيارات:<ul><li>قم بإدخال "<a href="#" class="set_syspref" data-syspref="OPACXSLTListsDisplay"
+      data-value="default">الافتراضي</a>" للنمط الافتراضي</li><li>ضع مساراً لتعريف
+      ملف xslt </li><li>ضع عنوان URL لنمط خارجي محدد.</li></ul>إذا كان لديك عدة أنماط
+      للغات المختلفة، سيتم استبدال النائب  {langcode} بلغة الواجهة الحالية.
+  - - 'عرض تفاصيل أوباك بإستخدام أنماط XSLTعلى : '
+    - class: file
+      pref: OPACXSLTResultsDisplay
+    - '‫<br />الخيارات:<ul><li>قم بإدخال"<a href="#" class="set_syspref" data-syspref="OPACXSLTResultsDisplay"
+      data-value="default">الافتراضي</a>"  للنمط الافتراضي</li><li>ضع مساراً لتعريف
+      ملف xslt </li><li>ضع عنوان URL لنمط خارجي محدد.</li><li>ملاحظة: يجب تفعيل التفضيل
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PassItemMarcToXSLT">PassItemMarcToXSLT</a>
+      إذا كان النمط المخصص الخاص بك يستخدم البيانات الموجودة في حقول المادة</li></ul>إذا
+      كان لديك عدة أنماط للغات المختلفة، سيتم استبدال النائب  {langcode} بلغة الواجهة
+      الحالية.'
+  - - 'عرض تفاصيل أوباك بإستخدام أنماط XSLTعلى : '
+    - class: file
+      pref: OPACXSLTDetailsDisplay
+    - ‫<br />الخيارات:<ul><li>قم بإدخال "<a href="#" class="set_syspref" data-syspref="OPACXSLTDetailsDisplay"
+      data-value="default">default</a>" للنمط الافتراضي</li><li>قم بوضع مسار لتعريف
+      ملف xslt</li><li>قم بوضع عنوان URL لنمط خارجي محدد.</li></ul>إذا كان لديك أوراق
+      أنماط متعددة للغات مختلفة، فسيتم استبدال العنصر النائب {langcode} بلغة الواجهة
+      الحالية.
+  - - 'عرض نتائج الاستناد في واجهة الموظفين باستخدام ورقة أنماط XSLT في: '
+    - class: file
+      pref: AuthorityXSLTOpacResultsDisplay
+    - '‫<br />الخيارات:<ul><li>فارغ. لن يتم تطبيق أي XSLT (<strong>الافتراضي</strong>)</li><li>قم
+      بإدخال مسار إلى ملف XSLT مخصص.</li><li>قم بإدخال عنوان URL لنمط خارجي.</li></ul>إذا
+      كان لديك عدة أنماط لـ <ul><li>لغات مختلفة: قم باستخدام العنصر النائب {langcode}
+      - سيتم استبدال هذا بلغة الواجهة الحالية </li><li>أنواع الاستناد: استخدم العنصر
+      النائب {authtypecode} - سيتم استبدال هذا بكود نوع الاستناد'
+  - - 'عرض تفاصيل الاستناد في الأوباك باستخدام ورقة أنماط XSLT في: '
+    - class: file
+      pref: AuthorityXSLTOpacDetailsDisplay
+    - '‫<br />الخيارات:<ul><li>فارغ. لن يتم تطبيق أي XSLT (<strong>الافتراضي</strong>)</li><li>قم
+      بإدخال مسار إلى ملف XSLT مخصص.</li><li>قم بإدخال عنوان URL لنمط خارجي.</li></ul>إذا
+      كان لديك عدة أنماط لـ <ul><li>لغات مختلفة: قم باستخدام العنصر النائب {langcode}
+      - سيتم استبدال هذا بلغة الواجهة الحالية </li><li>أنواع الاستناد: استخدم العنصر
+      النائب {authtypecode} - سيتم استبدال هذا بكود نوع الاستناد'
+  - - choices:
+        '0': عرض
+        '1': عدم عرض
+      default: 0
+      pref: OpacNoItemTypeImages
+    - أيقونات نوع المادة في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: DisplayOPACiconsXSLT
+    - وصوف وأيقونات نوع المادة، الجمهور والتنسيق في نتائج XSLT مارك 21 وصفحات التفاصيل
+      في الأوباك.
+  - - choices:
+        '0': عدم إدراج
+        '1': إدراج
+      pref: COinSinOPACResults
+    - 'cOinS / OpenURL / Z39.88 في نتائج بحث على الأوباك ،<br/>تحذير : تفعيل هذه الميزة
+      سيبطئ استجابة وقت استجابة البحث في الأوباك.'
+    - '<br/>إذا كنت ترغب في عرض رابط إلى محلل OpenURL، انظر إلى مفضلات النظام التالية:'
+    - <br/><a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OpenURLResolverURL">OpenURLResolverURL</a>,
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACShowOpenURL">OPACShowOpenURL</a>,
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACOpenURLItemTypes">OPACOpenURLItemTypes</a>,
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OpenURLText">OpenURLText</a>,
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OpenURLImageLocation">OpenURLImageLocation</a>
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACShowUnusedAuthorities
+    - الملفات الإستنادية الغير مستخدمة في متصفح الإستنادات في أوباك.
+  - - choices:
+        holds: عرض الحجوزات
+        holds_priority: عرض الحجوزات و مستوى الأولوية
+        none: لا تعرض أي تفاصيل للحجز
+        priority: عرض مستوى الأولوية
+      pref: OPACShowHoldQueueDetails
+    - للمستفيدين في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OPACShowCheckoutName
+    - اسم المستفيد الذي لديه مادة معارة في صفحات تفاصيل المادة في الأوباك.
+  - - عرض ال
+    - choices:
+        both: المكتبات الرئيسية والمقتنية
+        holding: المكتبة المقتنية
+        home: المكتبة الرئيسية
+      pref: OpacLocationBranchToDisplay
+    - للمواد في صفحة تفاصيل تسجيلة الأوباك.
+  - - 'عرض موقع الترفيف '
+    - choices:
+        both: أدنى كل من المكتبة الرئيسية والمكتبة المقتنية
+        column: في عمود منفصل
+        holding: أدنى المكتبة المقتنية
+        home: أدنى المكتبة الرئيسية
+      pref: OpacLocationOnDetail
+    - للمواد في صفحة تفاصيل التسجيلة في الأوباك.
+    - '<br />ملاحظة: إذا تم تحديد ''on a separate column'' لايزال عليك تفعيل عرض the
+      item_shelving_location display في صفحة إدارة <a href=''/cgi-bin/koha/admin/columns_settings.pl''>تهيئة
+      الأعمدة</a>.'
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OPACShowMusicalInscripts
+    - الحروف الموسيقية في صفحة تفاصيل التسجيلة في الأوباك.
+  - - choices:
+        '0': عدم تشغيل
+        '1': تشغيل
+      default: 0,'','If displayed musical inscripts, play midi conversion for items
+        on the OPAC record details page.'
+      pref: OPACPlayMusicalInscripts
+    - تمثيل MIDI للحروف الموسيقية في صفحة تفاصيل التسجيلة في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OpacKohaUrl
+    - نص 'مدعوم بواسطة كوها' في تذييل الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OpacShowRecentComments
+    - رابط إلى التعليقات التي صدرت مؤخرا في ترويسة الأوباك.
+  - - choices:
+        '0': عدم تمييز
+        '1': تمييز
+      pref: OpacHighlightedWords
+    - 'الكلمات التي بحث عنها المستفيد في نتائج البحث وصفحات التفاصيل. لمنع تمييز كلمات
+      معينة من أي وقت مضى، قم بإدخال قائمة بكلمات الإيقاف هنا:'
+    - class: multi
+      pref: NotHighlightedWords
+    - (افصل الأعمدة بعلامة |).
+  - - استخدم الصورة الموجودة في
+    - class: url
+      pref: OpacFavicon
+    - لأيقونة المفضلة في الأوباك. (يجب أن يكون ذلك URL كامل , يبدأ بـ <code>http://</code>.)
+  - - 'قم بإدراج الجافاسكريبت التالي في جميع الصفحات في الأوباك:'
+    - class: code
+      pref: OPACUserJS
+      syntax: javascript
+      type: textarea
+    - <br><strong>ملاحظة:</strong> يمكن تعريف JS الخاص بالمكتبة في <a href='/cgi-bin/koha/admin/branches.pl'>إدارة
+      المكتبة</a>.
+  - - إدراج نمط CSS الإضافي
+    - class: file
+      pref: OpacAdditionalStylesheet
+    - 'لتخطي إعدادات معينة من النمط الافتراضي (اتركه فارغًا للتعطيل). قم فقط بإدخال
+      اسم ملف أو مسارًا محليًا كاملًا أو عنوان URL كاملًا يبدأ بـ <code>http: //</code>
+      (إذا كان الملف موجودًا على خادم بعيد). يرجى ملاحظة أنه إذا قمت فقط بإدخال اسم
+      ملف، يجب أن يكون الملف في الدليل الفرعي css لكل نسق ولغة نشطة في دليل قوالب
+      كوها. من المتوقع أن يبدأ المسار المحلي الكامل من جذر مستند HTTP.'
+  - - استخدم أنماط CSS
+    - class: file
+      pref: opaclayoutstylesheet
+    - في كل الصفحات في الأوباك، بدلاً من CSS الافتراضي (يستخدم عند ترك هذا الحقل فارغاً).
+      قم فقط بإدخال اسم الملف، مسار محلي كامل أو (إذا كان الملف موجود على خادم بعيد)
+      عنوان URL كامل يبدأ بـ <code>http://</code>. يرجى ملاحظة أنه إذا قمت بإدخال
+      اسم ملف فقط، يجب أن يكون الملف في دليل CSS الفرعي لكل نسق ولغة نشطة بالموقع
+      ضمن دليل قوالب كوها. ومن المتوقع أن يبدأ المسار المحلي الكامل من مستند الجذر
+      لـ HTTP الخاص بك.
+  - - 'ضمن كود CSS التالي في كل صفحات واجهة المستفيد (OPAC):'
+    - class: code
+      pref: OPACUserCSS
+      syntax: css
+      type: textarea
+    - <br><strong>ملاحظة:</strong> يمكن تعريف CSS خاص بالمكتبة في <a href='/cgi-bin/koha/admin/branches.pl'>إدارة
+      المكتبة</a>.
+  - - 'قم بإدراج مربع "المزيد من البحث" في صفحات تفاصيل المواد في الأوباك بصيغة الHTML
+      التالية (اتركه خاليا للتعطيل):'
+    - '‫<br />ملاحظة: العناصر النائبة {BIBLIONUMBER}, {CONTROLNUMBER}, {OCLC_NO},
+      {TITLE}, {ISBN}, {ISSN} و {AUTHOR} سيتم استبدالها بمعلومات من التسجيلة المعروضة.'
+    - class: code
+      pref: OPACSearchForTitleIn
+      syntax: text/html
+      type: textarea
+  - - 'قم بإدراج عمود "روابط" في تبويبي "ملخصي" و "سجل إعاراتي" عندما يقوم المستفيد
+      بتسجيل الدخول إلى الأوباك، بال HTML التالي (اتركه فارغًا للتعطيل):'
+    - <br />ملاحظة العناصر النائبة {BIBLIONUMBER}, {TITLE}, {ISBN} و {AUTHOR} ستستبدل
+      بالمعلومات من التسجيلة المعروضة.
+    - class: code
+      pref: OPACMySummaryHTML
+      syntax: text/html
+      type: textarea
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: OpacAddMastheadLibraryPulldown
+    - المكتبة بتحديد قائمة منسدلة في الأوباك.
+  - - 'قم بعرض هذا ال HTML  عند عدم العثور على نتائج للبحث في واجهة المستفيد (OPAC):'
+    - '<br/> ملاحظة: يمكنك إدخال المتغيرات {QUERY_KW} والتي ستم استبدالها بالكلمات
+      المفتاحية للاستعلام.'
+    - class: code
+      pref: OPACNoResultsFound
+      syntax: text/html
+      type: textarea
+  - - 'لعرض URI في مجال 856u كصورة في: '
+    - choices:
+        Both: كل من صفحات النتائج والتفاصيل
+        Details: صفحة التفاصيل فقط
+        OFF: أيا من صفحات النتائج أو التفاصيل
+        Results: صفحة النتائج فقط
+      pref: OPACDisplay856uAsImage
+    - '. ملاحظة: خيار <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACXSLT">OPACXSLT</a>المقابل
+      يجب أن يتم تشغيله.'
+  - - 'قم بتحديد خيارات التصدير التي يجب توافرها من صفحة تفاصيل الأوباك:'
+    - multiple:
+        bibtex: bibTeX
+        dc: دبلن كور
+        isbd: تدمك
+        marc8: مارك المرمز بمارك-8
+        marcstd: يونيكود/ مارك المرمز بUTF-8 بدون استخدام محلي لحقول -9xx, x9x, xx9-
+          وحقولها الفرعية
+        marcxml: mARCXML
+        mods: mODS
+        ris: rIS
+        utf8: يونيكود/ مارك المرمز بUTF-8
+      pref: OpacExportOptions
+  - - choices:
+        '0': عدم فصل
+        '1': فصل
+      pref: OpacSeparateHoldings
+    - عرض المواد في تبويبين، حيث يحتوي التبويب الأول على المواد التي
+    - choices:
+        holdingbranch: المكتبة المقتنية
+        homebranch: المكتبة الرئيسية
+      pref: OpacSeparateHoldingsBranch
+    - هي مكتبة المستفيدين المسجل منها الدخول. سيحتوي التبويب الثاني على جميع المواد
+      الأخرى.
+  - - choices:
+        first_column: أول عمود في الجدول
+        holdingbranch: المكتبة المقتنية
+        homebranch: المكتبة الرئيسية
+      pref: OPACHoldingsDefaultSortField
+    - هذا هو الحقل الافتراضي للفرز في جدول المقتنيات.
+  - - عرض حتى
+    - class: integer
+      pref: OpacMaxItemsToDisplay
+    - المواد الموجودة في صفحة تفاصيل التسجيلة الببليوغرافية (إذا كانت التسجيلة الببليوغرافية
+      تحتوي على مواد أكثر من ذلك، فسيتم عرض رابط بدلاً من ذلك يسمح للمستفيد باختيار
+      عرض جميع المواد).
+  - - 'عرض محدد اللغة في '
+    - choices:
+        both: كلا من الرأس والتذييل
+        footer: التذييل فقط
+        top: الأعلى
+      pref: OpacLangSelectorMode
+    - .
+  - - 'قم بإدراج حالات <a href=''/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN''>لا
+      تعار</a>التالية كمتاحة للرجوع إليها في نتائج بحث الأوباك:'
+    - pref: Reference_NFL_Statuses
+    - (استخدم | كمحدد.)
+  - - لا تعرض أكثر من
+    - pref: OPACResultsMaxItems
+    - المواد الفردية (المتاحة) في نتائج بحث XSLT  الأوباك.<br>
+    - إذا تم ضبط <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACResultsUnavailableGroupingBy">OPACResultsUnavailableGroupingBy</a>
+      إلى "المكتبة والحالة الفرعية", لا تقم بعرض أكثر من
+    - pref: OPACResultsMaxItemsUnavailable
+    - (غير متاحة) مواد فردية لفئات مثل معارة، تالفة، محجوزة، ولكن حين تقوم بتجميعها
+      حسب الفرع فقط.<br>
+    - تجميع المواد غير المتاحة حسب
+    - choices:
+        branch: المكتبة والحالة الفرعية
+        branchonly: المكتبة فقط
+        substatus: الحالة الفرعية فقط
+      pref: OPACResultsUnavailableGroupingBy
+    - '(ملاحظة: بالنسبة إلى الاتحادات الكبيرة، نوصي بتجميع المواد غير المتاحة حسب
+      الحالة الفرعية، وسرد عدد المواد فقط.)'
+  خصائص:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: OpacCatalogConcerns
+    - لمستخدمي الأوباك بالإبلاغ عن الشكاوى الخاصة بهم بشأن التسجيلات الببليوغرافية.
+    - ‫<p><strong>ملاحظة:</strong> تفعيل `<a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CatalogConcerns">CatalogConcerns</a>`
+      سيسمح بتقديم الشكاوى من واجهة الموظفين.</p>a>
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACReportProblem
+    - للمستفيدين بتقديم تقارير مشكلات لصفحات الأوباك إلى مدير كوها أو المكتبة.
+    - <br/>
+    - <strong>ملاحظة:</strong> يجب عليك تفعيل  <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress">KohaAdminEmailAddress</a>.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: opacuserlogin
+    - للمستفيدين بتسجيل الدخول إلى حساباتهم في الأوباك.
+  - - عرض
+    - choices:
+        callnum: المكتبة ورقم الاستدعاء
+        ccode: المكتبة، رمز المجموعة، ورقم الاستدعاء
+        library: المكتبة فقط
+        location: المكتبة، الموقع، ورقم الاستدعاء
+      pref: OpacItemLocation
+    - للمواد في نتائج بحث الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OpacPasswordChange
+    - للمستفيدين بتغيير كلمة المرور الخاصة بهم في الأوباك. لاحظ أنه يجب إيقافه لاستخدام
+      استيثاق LDAP .
+  - - 'مستفيدي المكتبة هم '
+    - choices:
+        '0': غير مسموح
+        '1': مسموح
+      default: 1
+      pref: OpacResetPassword
+    - لاستعادة كلمة مرورهم عبر البريد الإلكتروني في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACpatronimages
+    - صور المستفيد في صفحة معلومات المستفيد على اﻷوباك.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OPACDetailQRCode
+    - الخيار لعرض كود QR في صفحة التفاصيل الببليوغرافية في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACFinesTab
+    - للمستفيدين بالوصول إلى تبويب الغرامات على صفحة الحساب الخاصة بهم في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OpacBrowser
+    - للمستفيدين باستعراض استنادات الموضوع في الأوباك.
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/build_browser_and_cloud.pl</code>.
+      اطلب من مدير النظام جدولته.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OpacCloud
+    - سحابة موضوع في الأوباك.
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/build_browser_and_cloud.pl</code>.
+      اطلب من مدير النظام جدولته.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OpacAuthorities
+    - للمستفيدين ببحث تسجيلات الاستناد الخاصة بك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: opacbookbag
+    - للمستفيدين بتخزين المواد في "سلة" مؤقتة في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OpacTopissue
+    - للمستفيدين بالوصول إلى قائمة أكثر المواد إعارة في الأوباك. لاحظ أن هذا لايزال
+      إلى حد ما تجريبياً، ويجب تجنبه إذا كانت مجموعاتك تحتوي على عدد كبير من المواد.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACComments
+    - للمستفيدين بالتعليق على المواد في الأوباك.
+  - - عرض
+    - choices:
+        first: الاسم اﻷول
+        firstandinitial: الحرف الأول من الاسم الأول واسم العائلة
+        full: الاسم بالكامل
+        none: بدون اسم
+        surname: الاسم الأخير
+        username: إسم المستخدم
+      pref: ShowReviewer
+    - من المعلقين مع التعليقات في أوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: ShowReviewerPhoto
+    - أفاتار المراجع بجانب التعليقات في الأوباك. سيتم بحث الأفاتار على <a href="https://www.libravatar.org"
+      target="_blank">Libravatar</a>باستخدام عنوان البريد الإلكتروني للمستفيد.
+  - - choices:
+        '0': عدم السماح بـ
+        '1': السماح بـ
+      pref: OPACHoldRequests
+    - للمستفيدين بوضع حجوزات على المواد من الأوباك.
+  - - عرض
+    - class: long
+      pref: numSearchRSSResults
+    - نتائج البحث في تلقيمة RSS.
+  - - عرض
+    - multiple:
+        email: البريد الإلكتروني
+        facebook: فيسبوك
+        linkedin: لينكدإن
+      pref: SocialNetworks
+    - روابط الشبكات الاجتماعية في صفحات تفاصيل الأوباك.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 1
+      pref: OpacBrowseResults
+    - استعراض و وترقيم صفحات نتائج البحث من صفحة تفاصيل الأوباك.
+  - - عرض اقتباس اليوم
+    - multiple:
+        intranet: واجهة الموظف
+        opac: الأوباك
+      pref: QuoteOfTheDay
+    - الصفحة الرئيسية.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OPACPopupAuthorsSearch
+    - قائمة المؤلفين/الموضوعات في نافذة منبثقة للبحث المدمج في صفحات تفاصيل الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: OpacHoldNotes
+    - للمستفيدين بإضافة ملاحظة عند وضع حجز.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OPACAcquisitionDetails
+    - تفاصيل التزويد في صفحات تفاصيل الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OpacNewsLibrarySelect
+    - قائمة اختيار مكتبة لمواد الأخبار في الأوباك.
+  - - 'استخدم التالي كقالب تدمك للأوباك:'
+    - class: code
+      pref: OPACISBD
+      syntax: text/html
+      type: textarea
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: OpacBrowseSearch
+    - واجهة لاستعراض كل الحجوزات (Elasticsearch فقط).
+  - - 'Display this information about authors and contributors on OPAC detail pages:'
+    - multiple_sortable:
+        activity: Activity (372$a$s$t)
+        address: Address (371$a$b$d$e)
+        associated_group: Associated group (373$a$s$t$u$v$0)
+        email_address: Electronic mail address (371$m)
+        identifiers: Identifiers (024$2$a)
+        occupation: Occupation (374$a$s$t$u$v$0)
+        place_of_birth: Place of birth (370$a)
+        place_of_death: Place of death (370$b)
+        uri: URI (371$u)
+      pref: OPACAuthorIdentifiersAndInformation
+    - '<strong>NOTE:</strong> Identifiers for authors and contributors - valid codes
+      to use in the source subfield (024$2) are currently: orcid (ORCID), scopus (ScopusID),
+      loop (Loop ID), rid (Publons ID), and viaf (VIAF ID).'
+  - - 'احسب المبلغ الذي قام المستفيد ''بتوفيره'' باستخدام المكتبة بناءً على أسعار
+      الاستبدال، وقم بعرض:'
+    - multiple:
+        checkouthistory: في صفحة سجل الإعارة الخاصة بالمستفيد (يجب تفعيل تفضيل النظام
+          'opacreadinghistory')
+        summary: في مربع ملخص المستخدم في صفحة الأوباك الرئيسية (يجب تفعيل تفضيل النظام
+          'OPACUserSummary')
+        user: في صفحة 'ملخصك' الخاصة بالمستفيد
+      pref: OPACShowSavings
+    - . لاحظ أن المحفوظات المعروضة قد تكون غير دقيقة إذا تم إخفاء هوية سجل الإعارة.
+  خصوصية:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: opacreadinghistory
+    - patrons to see what items they have checked out in the past.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACHoldsHistory
+    - للمستفيدين برؤية قائمة حجوزاتهم السابقة.
+  - - choices:
+        '0': عدم الاحتفاظ بـ
+        '1': الاحتفاظ بـ
+      default: 0
+      pref: EnableOpacSearchHistory
+    - سجل بحث المستفيد في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: OPACPrivacy
+    - المستفيدين لاختيار إعدادات الخصوصية الخاصة بهم لسجل إعاراتهم. يتطلب هذا تفضيلي
+      النظام <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=opacreadinghistory">opacreadinghistory</a>
+      و <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AnonymousPatron">AnonymousPatron</a>.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: AllowPatronToSetCheckoutsVisibilityForGuarantor
+    - المستفدين باختيار إعدادات الخصوصية الخاصة بهم لعرض إعارات المستفيد لكفيل المستفيد.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: AllowPatronToSetFinesVisibilityForGuarantor
+    - المستفدين باختيار إعدادات الخصوصية الخاصة بهم لعرض غرامات المستفيد لضامن المستفيد.
+  - - استخدام رقم المستعير
+    - class: integer
+      pref: AnonymousPatron
+    - كمستفيد غير معرف الهوية (لسجل الإعارات والمقترحات غير معرفة الهوية).
+  - - choices:
+        '0': عدم تعقب
+        anonymous: التعقب دون تعريف
+        track: تعقب
+      default: 0
+      pref: TrackClicks
+    - الروابط التي يقوم المستفيدون بالنقر عليها.
+  خيارات البحث المتقدم:
+  - - 'عرض خيارات البحث:'
+    - multiple:
+        itemtype: أنواع المادة
+        language: اللغة
+        location: الموقع والإتاحة
+        pubdate: تاريخ النشر
+        sorting: الفرز
+        subtype: الأنواع الفرعية
+      pref: OpacAdvSearchOptions
+  - - 'عرض خيارات البحث للعرض الموسع:'
+    - multiple:
+        itemtype: أنواع المادة
+        language: اللغة
+        location: الموقع والإتاحة
+        pubdate: تاريخ النشر
+        sorting: الفرز
+        subtype: الأنواع الفرعية
+      pref: OpacAdvSearchMoreOptions
+  - - عرض التبويبات في البحث المتقدم في الأوبك لتقييد عمليات البحث على
+    - class: long
+      pref: OpacAdvancedSearchTypes
+    - حقلاً (افصل بين الحقول باستخدام | ). ستظهر التبويبات بالترتيب المذكور.<br/>
+    - '‫<em>القيم المدعومة حالياً</em>: أنواع المواد (<strong>itemtypes</strong>),
+      المجموعة(<strong>ccode</strong>) وموقع الترفيف (<strong>loc</strong>).'
+  سياسة:
+  - - choices:
+        '0': عدم قصر
+        '1': قصر
+      pref: SearchMyLibraryFirst
+    - عمليات بحث المستفيدين إلى المكتبة التي سجلوا بها.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OpacRenewalAllowed
+    - patrons to renew their own checkouts on the OPAC.
+  - - استخدام
+    - choices:
+        checkoutbranch: المكتبة التي تمت إعارة المادة منها
+        itemhomebranch: مكتبة المادة الرئيسية
+        none: لاغ
+        opacrenew: '''OPACRenew'''
+        patronhomebranch: المكتبة الرئيسة للمستفيدين
+      pref: OpacRenewalBranch
+    - كرمز للفرع للتخزين في جدول الإحصائيات.
+  - - Only allow patrons to renew their own checkouts on the OPAC if they have less
+      than
+    - class: currency
+      pref: OPACFineNoRenewals
+    - ‫[% local_currency %] في الرسوم (اتركه فارغاً للتعطيل).
+  - - choices:
+        '0': عدم إدراج
+        '1': إدراج
+      pref: OPACFineNoRenewalsIncludeCredits
+    - ائتمانات قائمة/غير مطبقة عند تطبيق قاعدة <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACFineNoRenewals">OPACFineNoRenewals</a>
+      على المستفيدين.
+  - - class: code
+      pref: OpacHiddenItems
+      syntax: text/x-yaml
+      type: textarea
+    - قم بتعريف قواعد مخصصة لإخفاء مواد معينة من البحث وعرضها في الأوباك. كيفية كتابة
+      هذه القواعد موثقة في <a href="http://wiki.koha-community.org/wiki/OpacHiddenItems"
+      target="_blank">كوها ويكي</a>.
+  - - 'قائمة بفئات المستفيدين، مفصولة بعلامة| ، التي يمكنها رؤية المواد المخفية بواسطة<a
+      href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OpacHiddenItems">OpacHiddenItems</a>:'
+    - choices: patron-categories
+      class: multiple
+      pref: OpacHiddenItemsExceptions
+  - - choices:
+        '0': عدم إخفاء
+        '1': إخفاء
+      default: 1
+      pref: OpacHiddenItemsHidesRecord
+    - التسجيلة الببليوغرافية عندما يتم إخفاء جميع موادها بواسطة <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OpacHiddenItems'>OpacHiddenItems</a>.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 1
+      pref: OpacAllowPublicListCreation
+    - مستخدمي الأوباك بإنشاء القوائم العامة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: OpacAllowSharingPrivateLists
+    - مستخدمي الأوباك بمشاركة قوائمهم الخاصة مع المستفيدين الآخرين.
+  - - choices:
+        '0': عدم حظر
+        '1': حظر
+      pref: BlockExpiredPatronOpacActions
+    - المستفيدين المنتهيين من إجراءات الأوباك كوضع حجز أو التجديد. لاحظ أن إعداد فئة
+      المستفيد له الأولوية فوق هذا التفضيل.
+  - - يقوم الكرون Cleanup_database.pl تلقائيًا بحذف دعوات مشاركة القائمة الخاصة غير
+      المقبولة بعد ذلك
+    - class: integer
+      pref: PurgeListShareInvitesOlderThan
+    - يوماً.
+    - '<p>مثال: [14] حذف دعوات مشاركة القائمة الخاصة غير المقبولة التي مر عليها أكثر
+      من 14 يومًا.</p>'
+    - '<p><strong>تحذير</strong>: يتم حذف مشاركات القائمة الخاصة غير المقبولة باستخدام
+      هذه الأولويات:'
+    - <ul>
+    - '<li>الأولوية الأولى: استخدم المعلمة --list-invites عند تشغيل مهمة الكرون cleanup_database.pl
+      باستخدام المعلمة --list-invites التي تحدد عدد الأيام.</li>'
+    - '<li>الأولوية الثانية: استخدم تفضيل النظام PurgeListShareInvitesOlderThan عندما
+      يحتوي على قيمة.</li>'
+    - '<li>الأولوية الثالثة: استخدم الإعداد الافتراضي وهو 14 يومًا عند تشغيل مهمة
+      الكرون cleanup_database.pl باستخدام معلمة --list-invites، ولكن بدون قيمة ويكون
+      تفضيل النظام PurgeListShareInvitesOlderThan فارغًا.</li>'
+    - PurgeListShareInvitesOlderThan# </ul>
+    - <br><strong>ملاحظة:</strong>يتطلب هذا التفضيل الكرون <code>misc/cronjobs/cleanup_database.pl</code>
+      اطلب من مدير نظامك جدولته.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      default: 0
+      pref: OpacTrustedCheckout
+    - مستخدمي الأوباك بإنشاء القوائم العامة.
+  صفحة مقيدة:
+  - - الوصول من عناوين IP التي تبدأ بـ
+    - pref: RestrictedPageLocalIPs
+    - 'لا تحتاج إلى الاستيثاق (مفصولة بفاصلة - مثال: ''127.0.0,127.0.1'')'
+  - - تفضيلات الاوباك#ضبط محتوى الصفحة# محتوى HTML لضبط الصفحة (متاح على /cgi-bin/koha/opac-restrictedpage.pl)
+    - class: HTML
+      pref: RestrictedPageContent
+      syntax: text/html
+      type: textarea
+  - - استخدام
+    - class: long
+      pref: RestrictedPageTitle
+    - كعنوان لصفحتك المقيدة (تظهر في التنقل التفصيلي (فتات الخبز) وأعلى الصفحة المقيدة).
+  متصفح الرف:
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACShelfBrowser
+    - متصفح رف في صفحات تفاصيل المادة, مما يسمح للمستفيدين برؤية مدى قرب هذه المادة
+      على الرف. لاحظ أن هذا التفضيل يستخدم كما كبيرا من موارد خادمك ويجب تجنبه إذا
+      كانت مجموعتك تحتوي عددا كبيرا من المواد.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: 1
+      pref: ShelfBrowserUsesLocation
+    - في موقع المادة عندما يجد مواد للمتصفح الرف.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: 1
+      pref: ShelfBrowserUsesHomeBranch
+    - المكتبة الرئيسية للمادة عند العثور على مواد لمستعرض الرف.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: 0
+      pref: ShelfBrowserUsesCcode
+    - رمز مجموعة المادة عند العثور على مواد لمتصفح الرف.
+  مقترحات:
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OpacSuggestionManagedBy
+    - اسم الموظف الذي أدار المقترح في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AnonSuggestions
+    - للمستفيدين غير مسجلي الدخول بعمل مقترحات شراء. المقترحات متصلة بتفضيل النظام
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AnonymousPatron">AnonymousPatron</a>.
+  - - قصر المستفيدين على
+    - class: integer
+      pref: MaxOpenSuggestions
+    - 'open suggestions. اتركه فارغاُ لعدم وضع حد. **ملاحظة: لا يؤثر هذا الإعداد على
+      المقترحات غير معرفة الهوية.'
+  - - عدد إجمالي المقترحات المسموح بها
+    - class: integer
+      pref: MaxTotalSuggestions
+    - في
+    - class: integer
+      pref: NumberOfSuggestionDays
+    - يوماً.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACViewOthersSuggestions
+    - مقترحات الشراء من المستفيدين الآخرين في الأوباك.
+  - - 'الحقول التي يجب أن تكون إلزامية لمقترحات شراء المستفيد:'
+    - pref: OPACSuggestionMandatoryFields
+      required: title
+      source: suggestions
+      type: modalselect
+    - '<br/>ملاحظة: في حال لم يتم اختيار اي من الخيارات عاليه، حقل "العنوان" سوف يكون
+      الزامي على كل حال، افتراضياً.'
+  - - 'الحقول التي يجب إخفاؤها لمقترحات شراء المستفيد:'
+    - exclusions: title
+      pref: OPACSuggestionUnwantedFields
+      source: suggestions
+      type: modalselect
+    - '<br />ملاحظة: لا تجعل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACSuggestionMandatoryFields">OPACSuggestionMandatoryFields</a>حقولاً
+      غير مطلوبة '
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: suggestion
+    - مقترحات شراء في الأوباك.<br>
+    - 'عند تفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=suggestion">suggestion</a>
+      وتعطيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AnonSuggestions">AnonSuggestions</a>
+      لا يتم السماح لفئات المستفيدين التالية بتقديم مقترحات شراء:'
+    - choices: patron-categories
+      class: multiple
+      pref: suggestionPatronCategoryExceptions
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: OPACSuggestionAutoFill
+    - ملء نموذج مقترحات الأوباك تلقائيًا بالبيانات من واجة برمجة تطبيقات كتب جوجل.

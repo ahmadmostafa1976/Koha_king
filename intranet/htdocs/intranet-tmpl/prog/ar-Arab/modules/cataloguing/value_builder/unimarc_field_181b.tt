@@ -1,0 +1,274 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 181b builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_181b" class="cat value_builder">
+
+ <h3>باني حقل يونيمارك 181b</h3>
+
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">مواصفات النوع </label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1 == "a" ) %]
+ <option value="a" selected="selected">a - منوّتة</option>
+ [% ELSE %]
+ <option value="a">a - منوّتة</option>
+ [% END %]
+
+ [% IF ( f1 == "b" ) %]
+ <option value="b" selected="selected">b - مؤداة</option>
+ [% ELSE %]
+ <option value="b">b - مؤداة</option>
+ [% END %]
+
+ [% IF ( f1 == "c" ) %]
+ <option value="c" selected="selected">c - خرائطي</option>
+ [% ELSE %]
+ <option value="c">c - خرائطي</option>
+ [% END %]
+
+ [% IF ( f1 == "x" ) %]
+ <option value="x" selected="selected">x - غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">x - غير قابل للتطبيق</option>
+ [% END %]
+
+ [% IF ( f1 == " " ) %]
+ <option value=" " selected="selected"># - الموضع غير مستخدم</option>
+ [% ELSE %]
+ <option value=" "># - الموضع غير مستخدم</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f2">مواصفات الحركة </label></td>
+ <td>
+ <select name="f2" id="f2">
+ [% IF ( f2 == "a" ) %]
+ <option value="a" selected="selected">a - متحرك</option>
+ [% ELSE %]
+ <option value="a">a - متحرك</option>
+ [% END %]
+
+ [% IF ( f2 == "b" ) %]
+ <option value="b" selected="selected">b - ثابت</option>
+ [% ELSE %]
+ <option value="b">b - ثابت</option>
+ [% END %]
+
+ [% IF ( f2 == "x" ) %]
+ <option value="x" selected="selected">x - غير قابل للتطبيق (المورد ليس صورة)</option>
+ [% ELSE %]
+ <option value="x">x - غير قابل للتطبيق (المورد ليس صورة)</option>
+ [% END %]
+
+ [% IF ( f2 == " " ) %]
+ <option value=" " selected="selected"># - الموضع غير مستخدم</option>
+ [% ELSE %]
+ <option value=" "># - الموضع غير مستخدم</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f3">مواصفات الأبعاد </label></td>
+ <td>
+ <select name="f3" id="f3">
+ [% IF ( f3 == "a" ) %]
+ <option value="a" selected="selected">a - ثنائي الأبعاد</option>
+ [% ELSE %]
+ <option value="a">a - ثنائي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f3 == "b" ) %]
+ <option value="b" selected="selected">b - ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="b">b - ثلاثي الأبعاد</option>
+ [% END %]
+
+ [% IF ( f3 == "x" ) %]
+ <option value="x" selected="selected">x - غير قابل للتطبيق (المورد ليس صورة)</option>
+ [% ELSE %]
+ <option value="x">x - غير قابل للتطبيق (المورد ليس صورة)</option>
+ [% END %]
+
+ [% IF ( f3 == " " ) %]
+ <option value=" " selected="selected"># - الموضع غير مستخدم</option>
+ [% ELSE %]
+ <option value=" "># - الموضع غير مستخدم</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f4">المواصفات الحسية 1 </label></td>
+ <td>
+
+ <select name="f4" id="f4">
+ [% IF ( f4 == "a" ) %]
+ <option value="a" selected="selected">a - سمعي</option>
+ [% ELSE %]
+ <option value="a">a - سمعي</option>
+ [% END %]
+
+ [% IF ( f4 == "b" ) %]
+ <option value="b" selected="selected">b - تذوقي</option>
+ [% ELSE %]
+ <option value="b">b - تذوقي</option>
+ [% END %]
+
+ [% IF ( f4 == "c" ) %]
+ <option value="c" selected="selected">c - متعلق بالشم</option>
+ [% ELSE %]
+ <option value="c">c - متعلق بالشم</option>
+ [% END %]
+
+ [% IF ( f4 == "d" ) %]
+ <option value="d" selected="selected">d - لمسي</option>
+ [% ELSE %]
+ <option value="d">d - لمسي</option>
+ [% END %]
+
+ [% IF ( f4 == "e" ) %]
+ <option value="e" selected="selected">e - مرئي</option>
+ [% ELSE %]
+ <option value="e">e - مرئي</option>
+ [% END %]
+
+ [% IF ( f4 == "" ) %]
+ <option value=" " selected="selected"># - الموضع غير مستخدم</option>
+ [% ELSE %]
+ <option value=" "># - الموضع غير مستخدم</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f5">المواصفات الحسية 2 </label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5 == "a" ) %]
+ <option value="a" selected="selected">a - سمعي</option>
+ [% ELSE %]
+ <option value="a">a - سمعي</option>
+ [% END %]
+
+ [% IF ( f5 == "b" ) %]
+ <option value="b" selected="selected">b - تذوقي</option>
+ [% ELSE %]
+ <option value="b">b - تذوقي</option>
+ [% END %]
+
+ [% IF ( f5 == "c" ) %]
+ <option value="c" selected="selected">c - متعلق بالشم</option>
+ [% ELSE %]
+ <option value="c">c - متعلق بالشم</option>
+ [% END %]
+
+ [% IF ( f5 == "d" ) %]
+ <option value="d" selected="selected">d - لمسي</option>
+ [% ELSE %]
+ <option value="d">d - لمسي</option>
+ [% END %]
+
+ [% IF ( f5 == "e" ) %]
+ <option value="e" selected="selected">e - مرئي</option>
+ [% ELSE %]
+ <option value="e">e - مرئي</option>
+ [% END %]
+
+ [% IF ( f5 == "" ) %]
+ <option value=" " selected="selected"># - الموضع غير مستخدم</option>
+ [% ELSE %]
+ <option value=" "># - الموضع غير مستخدم</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f6">المواصفات الحسية 3 </label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6 == "a" ) %]
+ <option value="a" selected="selected">a - سمعي</option>
+ [% ELSE %]
+ <option value="a">a - سمعي</option>
+ [% END %]
+
+ [% IF ( f6 == "b" ) %]
+ <option value="b" selected="selected">b - تذوقي</option>
+ [% ELSE %]
+ <option value="b">b - تذوقي</option>
+ [% END %]
+
+ [% IF ( f6 == "c" ) %]
+ <option value="c" selected="selected">c - متعلق بالشم</option>
+ [% ELSE %]
+ <option value="c">c - متعلق بالشم</option>
+ [% END %]
+
+ [% IF ( f6 == "d" ) %]
+ <option value="d" selected="selected">d - لمسي</option>
+ [% ELSE %]
+ <option value="d">d - لمسي</option>
+ [% END %]
+
+ [% IF ( f6 == "e" ) %]
+ <option value="e" selected="selected">e - مرئي</option>
+ [% ELSE %]
+ <option value="e">e - مرئي</option>
+ [% END %]
+
+ [% IF ( f6 == "" ) %]
+ <option value=" " selected="selected"># - الموضع غير مستخدم</option>
+ [% ELSE %]
+ <option value=" "># - الموضع غير مستخدم</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="submitMyForm();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+<script>
+    // The following function just puts back the value of the input #return
+    // into the caller's field, referenced by index. And closes the popup.
+    function submitMyForm() {
+        var doc   = opener.document;
+        var field = doc.getElementById("[% index | html %]");
+        field.value = document.f_pop.f1.value+
+                      document.f_pop.f2.value+
+                      document.f_pop.f3.value+
+                      document.f_pop.f4.value+
+                      document.f_pop.f5.value+
+                      document.f_pop.f6.value;
+        window.close();
+        return false;
+    }
+</script>
+
+[% INCLUDE 'popup-bottom.inc' %]

@@ -1,0 +1,1 @@
+[% IF ( dateformat == "us" ) %](شهر/يوم/سنة)[% ELSIF ( dateformat == "metric" ) %](يوم/شهر/سنة)[% ELSIF ( dateformat == "dmydot" ) %](يوم.شهر.سنة)[% ELSE %](سنة-شهر-يوم)[% END %] 

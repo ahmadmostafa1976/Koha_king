@@ -1,0 +1,313 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE KohaDates %]
+[% USE Branches %]
+[% USE TablesSettings %]
+[% USE AuthorisedValues %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Holds awaiting pickup") | html %] &rsaquo;
+ [% t("Circulation") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="circ_waitingreserves" class="circ">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'circ-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/circ/circulation-home.pl">الإعارة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>حجز في انتظار الالتقاط</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-12">
+ <main>
+ <div class="row">
+
+ [% IF Koha.Preference('CircSidebar') %]
+ <div class="col-sm-10 col-sm-push-2">
+ [% ELSE %]
+ <div class="col-sm-12">
+ [% END %]
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>حجوزات في انتظار الالتقاط لمكتبتك في: [% show_date | $KohaDates %]</h1>
+ <h2>
+ [% IF ( all_branches_link ) %]
+ <span><a href="[% all_branches_link | url %]">
+ عرض كل المكتبات</a></span>
+ [% END %]
+ </h2>
+ [% IF reject_result_error %]
+ <div class="error message">
+ [% IF reject_result_error.invalid_status %]
+ <p>حدثت مشكلة أثناء رفض طلب الإلغاء. لا يمكن رفض طلب الإلغاء المكتمل بالفعل.</p>
+ [% ELSE %]
+ <p>حدث خطأ ما أثناء رفض طلب الإلغاء. يرجى التحقق من السجلات</p>
+ [% END %]
+ </div>
+ [% END %]
+ [% IF ( cancel_result ) %]
+ [% FOREACH cancel_result %]
+ [% IF ( messagetransfert ) %]
+ <div class="dialog message">
+ <h2>هذه المادة في الحجز للالتقاط من [% Branches.GetName( branchname ) | html %]</h2>
+ <p><strong>[% nextreservtitle | html %]</strong> محجوز لـِ <strong> [% nextreservsurname | html %], [% nextreservfirstname | html %]</strong>. يرجى الاحتفاظ بهذه المادة وردها لمعالجة الحجز. </p>
+ <form name="cancelReservewithtransfert" action="waitingreserves.pl#[% tab | html %]" method="get">
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> صحيح</button>
+ </form>
+ </div>
+ [% END # /IF messagetransfert%]
+ [% IF ( waiting ) %]
+ <div class="dialog message">
+ <h2>هذه المادة في الحجز للالتقاط من مكتبتك</h2>
+ <p><strong>[% nextreservtitle | html %]</strong> محجوز لـِ <strong>[% nextreservsurname | html %], [% nextreservfirstname | html %]</strong>. يرجى الاحتفاظ بهذه المادة وردها لمعالجة الحجز. </p>
+ <form name="cancelReservewithwaiting" action="waitingreserves.pl#[% tab | html %]" method="get">
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> صحيح</button>
+ </form>
+ </div>
+ [% END # /IF waiting %]
+ [% END # /FOREACH cancel_result %]
+ [% ELSE %]
+ [% IF enqueued %]
+ <div class="dialog message">
+ <p>تم وضع المهمة في الصف! وستتم معالجتها في أقرب وقت.</p>
+ <p><a href="/cgi-bin/koha/admin/background_jobs.pl?op=view&id=[% job_id | uri %]" title="عرض تفاصيل المهمة الموجودة في الصف">عرض تفاصيل المهمة الموجودة في الصف</a></p>
+ </div>
+ [% END %]
+
+ [% WRAPPER tabs id= "resultlist" %]
+ [% WRAPPER tabs_nav %]
+ [% WRAPPER tab_item tabname= "holdswaiting" bt_active= 1 %]
+ <span>حجوزات في الانتظار:</span> [% reservecount | html %]
+ [% END %]
+ [% WRAPPER tab_item tabname= "holdsover" %]
+ <span>حجوزات في الانتظار بعد تاريخ انتهائها:</span> [% overcount | html %]
+ [% END %]
+ [% WRAPPER tab_item tabname= "holdscancelled" %]
+ <span>حجوزات بطلبات إلغاء:</span> [% cancel_reqs_count | html %]
+ [% END %]
+ [% END # /WRAPPER tabs_nav %]
+
+ [% WRAPPER tab_panels %]
+ [% WRAPPER tab_panel tabname="holdswaiting" bt_active= 1 %]
+ [% IF ( reserveloop ) %]
+ <div id="toolbar" class="btn-toolbar">
+ <button class="btn cancel_selected_holds" data-bulk="true"></button>
+ </div>
+ [% INCLUDE waiting_holds.inc table_name='holdst' reserveloop=reserveloop tab='holdwaiting' %]
+ [% ELSE %]
+ <div class="dialog message">لا حجوزات وجدت.</div>
+ [% END %]
+ [% END # /tab_panel#holdswaiting %]
+
+ [% WRAPPER tab_panel tabname="holdsover" %]
+ [% IF ( overloop ) %]
+ <div id="toolbar" class="btn-toolbar">
+ <button class="btn cancel_selected_holds" data-bulk="true"></button>
+ <div class="btn-group">
+ <form name="cancelAllReserve" action="waitingreserves.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-cancelall" />
+ <input type="hidden" name="allbranches" value="[% allbranches | html %]" />
+ <input type="hidden" name="tab" value="holdsover">
+ [% IF TransferWhenCancelAllWaitingHolds %]
+ <input class="btn btn-primary" type="submit" value="إلغاء ونقل الكل" />
+ [% ELSE %]
+ <input class="btn btn-primary" type="submit" value="إلغاء الكل" />
+ [% END %]
+ </form>
+ </div>
+ </div>
+ [% UNLESS TransferWhenCancelAllWaitingHolds %]
+ <div class="hint">سيتم إلغاء المواد التي لا يلزم نقلها فقط (تفضيل النظام TransferWhenCancelAllWaitingHolds)</div>
+ [% END %]
+ [% INCLUDE waiting_holds.inc table_name='holdso' reserveloop=overloop tab='holdsover' %]
+ [% ELSE %]
+ <div class="dialog message">لا حجوزات وجدت.</div>
+ [% END # /IF( overloop ) %]
+ [% END # /tab_panel#holdsover %]
+
+ [% WRAPPER tab_panel tabname="holdscancelled" %]
+ [% IF cancel_reqs_count %]
+ <div id="toolbar" class="btn-toolbar">
+ <button class="btn cancel_selected_holds" data-bulk="true"></button>
+ </div>
+ [% INCLUDE waiting_holds.inc select_column='1' table_name='holdscr' reserveloop=cancel_reqs tab='holdscr' %]
+ [% ELSE %]
+ <div class="dialog message">لا حجوزات وجدت.</div>
+ [% END %]
+ [% END # /tab_panel#holdscancelled %]
+ [% END # /WRAPPER tab_panels %]
+ [% END # /WRAPPER tabs %]
+
+ [% END # /IF ( cancel_result ) %]
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ [% IF Koha.Preference('CircSidebar') %]
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'circ-nav.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ [% END %]
+ </div> <!-- /.row -->
+
+ </main>
+ </div> <!-- /.col-sm-12 -->
+ </div> <!-- /.row -->
+
+ <div id="cancelModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+ <div class="modal-dialog" role="document">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3>تأكيد الحذف</h3>
+ </div>
+
+ <div class="modal-body">
+ <p>هل أنت متأكد من أنك تريد إلغاء هذا الحجز؟</p>
+
+ <fieldset class="action">
+ [% SET hold_cancellation = AuthorisedValues.GetAuthValueDropbox('HOLD_CANCELLATION') %]
+ [% IF hold_cancellation.count %]
+ <label for="cancellation-reason">سبب الإلغاء: </label>
+ <select class="cancellation-reason" name="modal-cancellation-reason" id="modal-cancellation-reason">
+ <option value="">لم يتم إبداء أسباب</option>
+ [% FOREACH reason IN hold_cancellation %]
+ <option value="[% reason.authorised_value | html %]">[% reason.lib | html %]</option>
+ [% END %]
+ </select>
+ [% END %]
+ </fieldset> <!-- /.action -->
+ </div> <!-- /.modal-body -->
+
+ <div class="modal-footer">
+ <button id="cancelModalConfirmBtn" type="button" class="btn btn-danger">تأكيد الإلغاء</button>
+ <a href="#" data-dismiss="modal">إلغاء</a>
+ </div> <!-- /.modal-footer -->
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </div> <!-- /#cancelModal -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+        var MSG_CANCEL_SELECTED = _("إلغاء المحدد (%s)");
+        var holdst_table_settings  = [% TablesSettings.GetTableSettings( 'circ', 'holds_awaiting_pickup', 'holdst',  'json' ) | $raw %];
+        var holdso_table_settings  = [% TablesSettings.GetTableSettings( 'circ', 'holds_awaiting_pickup', 'holdso',  'json' ) | $raw %];
+        var holdscr_table_settings = [% TablesSettings.GetTableSettings( 'circ', 'holds_awaiting_pickup', 'holdscr', 'json' ) | $raw %];
+
+        $(document).ready(function() {
+
+            KohaTable("holdst", {
+                "pagingType": "full",
+                "order": [[1, 'asc']]
+            }, holdst_table_settings);
+
+            KohaTable("holdso", {
+                "pagingType": "full",
+                "order": [[1, 'asc']]
+            }, holdso_table_settings);
+
+            KohaTable("holdscr", {
+                "pagingType": "full",
+                "order": [[1, 'asc']]
+            }, holdscr_table_settings);
+
+            let cancel_link;
+
+            $("#cancelModalConfirmBtn").on("click",function(e) {
+                var ids = cancel_link.data('ids');
+                localStorage.selectedWaitingHolds = JSON.stringify(JSON.parse(localStorage.selectedWaitingHolds).filter(id => !ids.includes(id)));
+                let link = `waitingreserves.pl?cancelBulk=1&amp;ids=${ids.join(',')}`;
+                let reason = $("#modal-cancellation-reason").val();
+                if ( reason ) {
+                    link += "&amp;cancellation-reason=" + reason
+                }
+                window.location.href = link;
+                return false;
+            });
+
+            if(!localStorage.selectedWaitingHolds || document.referrer.replace(/\?.*/, '') !== document.location.origin+document.location.pathname) {
+                localStorage.selectedWaitingHolds = '[]';
+            }
+
+            try {
+                JSON.parse(localStorage.selectedWaitingHolds);
+            } catch(e) {
+                localStorage.selectedWaitingHolds = '[]';
+            }
+
+            $('.holds_table .select_hold').each(function() {
+                if(JSON.parse(localStorage.selectedWaitingHolds).includes($(this).data('id'))) {
+                    $(this).prop('checked', true);
+                }
+            });
+
+            $('.holds_table').each(function() {
+              var table = $(this);
+              var parent = table.parents('.tab-pane');
+
+              $('.holds_table .select_hold_all', parent).each(function() {
+                  var count = $('.select_hold:not(:checked)', table).length;
+                  $('.select_hold_all', table).prop('checked', !count);
+              });
+
+              $('.cancel_selected_holds', parent).html(MSG_CANCEL_SELECTED.format($('.holds_table .select_hold:checked', parent).length));
+
+              $('.holds_table .select_hold_all', parent).click(function() {
+                  var count = $('.select_hold:checked', table).length;
+                  $('.select_hold', table).prop('checked', !count);
+                  $(this).prop('checked', !count);
+                  $('.cancel_selected_holds', parent).data('ids', $('.holds_table .select_hold:checked', parent).toArray().map(el => $(el).data('id'))).html(MSG_CANCEL_SELECTED.format($('.holds_table .select_hold:checked', parent).length));
+                  localStorage.selectedWaitingHolds = JSON.stringify($('.holds_table .select_hold:checked').toArray().map(el => $(el).data('id')));
+              });
+
+              $('.holds_table .select_hold', parent).click(function() {
+                  var count = $('.select_hold:not(:checked)', table).length;
+                  $('.select_hold_all', table).prop('checked', !count);
+                  $('.cancel_selected_holds', parent).data('ids', $('.holds_table .select_hold:checked', parent).toArray().map(el => $(el).data('id'))).html(MSG_CANCEL_SELECTED.format($('.holds_table .select_hold:checked', parent).length));
+                  localStorage.selectedWaitingHolds = JSON.stringify($('.holds_table .select_hold:checked').toArray().map(el => $(el).data('id')));
+              });
+
+              $('.cancel_selected_holds', parent).click(function(e) {
+                  e.preventDefault();
+                  if($('.select_hold:checked', table).length) {
+                      cancel_link = $(this);
+                      $('#cancelModal').modal();
+                  }
+                  return false;
+              });
+            });
+
+            var activeTab = localStorage.getItem("waitingreserves_activetab");
+            if( activeTab ){
+                $("div#resultlist li:eq(" + activeTab + ") a").tab("show");
+            }
+            $("div#resultlist a[data-toggle='tab']").on("shown.bs.tab", function (e) {
+                var thisTab = $(e.target).parent();
+                var activeTab = thisTab.index();
+                localStorage.setItem("waitingreserves_activetab", activeTab );
+            });
+
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

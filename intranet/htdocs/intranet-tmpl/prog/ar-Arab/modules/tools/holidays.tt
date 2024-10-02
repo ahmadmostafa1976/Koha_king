@@ -1,0 +1,664 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE KohaDates %]
+[% USE Branches %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% tx("{library} calendar", { library = Branches.GetName( branch ) }) | html %] &rsaquo;
+ [% t("Tools") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% Asset.css("css/calendar.css") | $raw %]
+</head>
+<body id="tools_holidays" class="tools">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/tools/tools-home.pl">الأدوات</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("{library} calendar", { library = Branches.GetName( branch ) }) | html %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>[% tx("{library} calendar", { library = Branches.GetName( branch ) }) | html %]</h1>
+
+ <div class="row">
+ <div class="col-sm-6">
+ <div class="page-section">
+ <label for="branch">عرف الاجازات لـ :</label>
+ <select id="branch" name="branch">
+ [% PROCESS options_for_libraries libraries => Branches.all( selected => branch ) %]
+ </select>
+
+ <div class="panel" id="showHoliday">
+ <form action="/cgi-bin/koha/tools/exceptionHolidays.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-edit" />
+ <input type="hidden" id="showHolidayType" name="showHolidayType" value="" />
+ <fieldset class="brief">
+ <h3>تحرير هذه العطلة</h3>
+ <span id="holtype"></span>
+ <ol>
+ <li>
+ <strong>المكتبة:</strong> <span id="showBranchNameOutput"></span>
+ <input type="hidden" id="showBranchName" name="showBranchName" />
+ </li>
+ <li>
+ <strong>من تاريخ :</strong>
+ <span id="showDaynameOutput"></span>,
+ [% IF ( dateformat == "us" ) %]
+ <span id="showMonthOutput"></span>/<span id="showDayOutput"></span>/<span id="showYearOutput"></span>
+ [% ELSIF ( dateformat == "metric") %]
+ <span id="showDayOutput"></span>/<span id="showMonthOutput"></span>/<span id="showYearOutput"></span>
+ [% ELSIF ( dateformat == "dmydot") %]
+ <span id="showDayOutput"></span>.<span id="showMonthOutput"></span>.<span id="showYearOutput"></span>[% ELSE %]<span id="showYearOutput"></span>/<span id="showMonthOutput"></span>/<span id="showDayOutput"></span>
+ [% END %]
+
+ <input type="hidden" id="showDayname" name="showDayname" />
+ <input type="hidden" id="showWeekday" name="showWeekday" />
+ <input type="hidden" id="showDay" name="showDay" />
+ <input type="hidden" id="showMonth" name="showMonth" />
+ <input type="hidden" id="showYear" name="showYear" />
+ </li>
+ <li class="dateinsert">
+ <strong>لتاريخ: </strong>
+ <input type="text" id="datecancelrange" name="datecancelrange" size="20" value="[% datecancelrange | html %]" class="flatpickr" />
+ </li>
+ <li>
+ <label for="showTitle">العنوان: </label><input type="text" name="showTitle" id="showTitle" size="35" />
+ </li>
+ <!-- showTitle is necessary for exception radio button to work properly -->
+ <li>
+ <label for="showDescription">وصف:</label>
+ <textarea rows="2" cols="40" id="showDescription" name="showDescription"></textarea>
+ </li>
+ <li class="radio">
+ <div class="exceptionPossibility" style="position:static">
+ <input type="radio" name="showOperation" id="showOperationExc" value="exception" /> <label for="showOperationExc">توليد إستثناء لهذه العطلة المتكررة.</label>
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">يمكنك إجراء استثناء لقاعدة العطلات هذه. بمعنى أنك سيمكنك أن تقول أنه بالنسبة لعطلة متكررة هناك يوم واحد سيكون استثناء.</div>
+ </div>
+ </li>
+ <li class="radio">
+ <div class="exceptionPossibility" style="position:static">
+ <input type="radio" name="showOperation" id="showOperationExcRange" value="exceptionrange" />
+ <label for="showOperationExcRange">توليد استثناءات في نطاق من التواريخ.</label>
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">يمكنك القيام باستثناء في نطاق من التواريخ المتكررة سنوياً.</div>
+ </div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="showOperation" id="showOperationDel" value="cud-delete" />
+ <label for="showOperationDel" id="showOperationDelLabel">حذف هذه العطلة</label>
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">سوف يقوم هذا بحذف قاعدة العطلات تلك. إذا كانت عطلة متكررة، يمكن أن يخضع هذا الخيار لاستثناءات ممكنة. في حالة وجود استثناء، سيقوم هذا الخيار بحذف الاستثناء وضبط التاريخ إلى عطلة منتظمة.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="showOperation" id="showOperationDelRange" value="deleterange" /> <label for="showOperationDelRange" id="showOperationDelLabelRange">حذف العطلات المنفردة في نطاق</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">سوف يقوم هذا بحذف قواعد العطلات المفردة فقط. لن يتم حذف العظلات المتكررة والاستثناءات.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="showOperation" id="showOperationDelRangeRepeat" value="deleterangerepeat" /> <label for="showOperationDelRangeRepeat" id="showOperationDelLabelRangeRepeat">حذف العطلات المتكررة في نطاق</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">سوف يقوم هذا بحذف قواعد العطلات المتكررة فقط. سيتم حذف العطلات المتكررة ولكن ليس الاستثناءات.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="showOperation" id="showOperationDelRangeRepeatExcept" value="deleterangerepeatexcept" /> <label for="showOperationDelRangeRepeatExcept" id="showOperationDelLabelRangeRepeatExcept">حذف الاستثناءات في نطاق</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">سوف يقوم هذا بحذف الاستثناءات داخل نطاق معين. كن حذرا بخصوص نطاقك إذا كان زائد الحجم يمكنك إبطاء كوها.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="showOperation" id="showOperationEdit" value="edit" checked="checked" /> <label for="showOperationEdit">تحرير هذه العطلة</label>
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">هذا سيحفظ التغييرات على عنوان ووصف العطلة. إذا كانت معلومات تكرار العطلة معدلة، فإنه يؤثر على كل من التواريخ التي يتم تكرار العطلة فيها.</div></li>
+ <li class="checkbox">
+ <input type="checkbox" name="allBranches" id="allBranches" />
+ <label for="allBranches">نسخ التغييرات إلى كل المكتبات</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">عند التحديد، سيتم نسخ التغييرات الخاصة بهذه العطلة إلى جميع المكتبات. إذا لم تكن العطلة موجودة في المكتبة، فستتم إضافة العطلة إلى التقويم. ملحوظة! قد يؤدي هذا إلى استبدال العطلات الموجودة في التقاويم الأخرى.</div>
+ </li>
+ </ol>
+ <fieldset class="action">
+ <input class="btn btn-primary" name="submit" type="submit" value="حفظ" />
+ <a href="#" class="cancel hidePanel showHoliday">إلغاء</a>
+ </fieldset>
+ </fieldset> <!-- /.brief -->
+ </form>
+ </div> <!-- /#showHoliday -->
+
+ <!-- Panel to deal with new holidays -->
+ <div class="panel" id="newHoliday">
+ <form action="/cgi-bin/koha/tools/newHolidays.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add" />
+ <fieldset class="brief">
+ <h3>إضافة عطلة جديدة</h3>
+ <ol>
+ <li>
+ <strong>المكتبة:</strong>
+ <span id="newBranchNameOutput"></span>
+ <input type="hidden" id="newBranchName" name="newBranchName" />
+ </li>
+ <li>
+ <strong>من تاريخ :</strong>
+ <span id="newDaynameOutput"></span>,
+
+ [% IF ( dateformat == "us" ) %]
+ <span id="newMonthOutput"></span>/<span id="newDayOutput"></span>/<span id="newYearOutput"></span>
+ [% ELSIF ( dateformat == "metric" ) %]
+ <span id="newDayOutput"></span>/<span id="newMonthOutput"></span>/<span id="newYearOutput"></span>
+ [% ELSIF ( dateformat == "dmydot" ) %]
+ <span id="newDayOutput"></span>.<span id="newMonthOutput"></span>.<span id="newYearOutput"></span>
+ [% ELSE %]
+ <span id="newYearOutput"></span>/<span id="newMonthOutput"></span>/<span id="newDayOutput"></span>
+ [% END %]
+
+ <input type="hidden" id="newDayname" name="showDayname" />
+ <input type="hidden" id="newWeekday" name="newWeekday" />
+ <input type="hidden" id="newDay" name="newDay" />
+ <input type="hidden" id="newMonth" name="newMonth" />
+ <input type="hidden" id="newYear" name="newYear" />
+ </li>
+ <li class="dateinsert">
+ <strong>لتاريخ: </strong>
+ <input type="text" id="dateofrange" name="dateofrange" size="20" value="[% dateofrange | html %]" class="flatpickr" />
+ <div class="hint">يتم تطبيق هذا الحقل فقط عند إضافة أيام العطل إلى النطاق.</div>
+ </li>
+ <li>
+ <label for="title">العنوان: </label>
+ <input type="text" name="newTitle" id="title" size="35" /></li>
+ <li>
+ <label for="newDescription">وصف:</label>
+ <textarea rows="2" cols="40" id="newDescription" name="newDescription"></textarea>
+ </li>
+ <li class="radio">
+ <input type="radio" name="newOperation" id="newOperationOnce" value="holiday" checked="checked" />
+ <label for="newOperationOnce">عطلة فقط فى هذا اليوم</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">عمل عطلة منفردة. على سبيل المثال، تحديد الأول من أوغست 2012 سيحيله إلى عطلة ، ولكن لن يؤثر على الأول من أوغست في السنين الأخرى.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="newOperation" id="newOperationDay" value="weekday" />
+ <label for="newOperationDay">عطلة تتكرر فى نفس اليوم من كل أسبوع</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">حدد هذا اليوم من الأسبوع على أنه عطلة ، كل اسبوع. على سبيل المثال ، إذا كانت مكتبتك تغلق في ايام السبت ، استخدم هذا الخيار لتجعل كل أيام السبت عطلاً.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="newOperation" id="newOperationYear" value="repeatable" />
+ <label for="newOperationYear">عطلة تتكرر سنويا فى نفس اليوم</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">وهذا سوف يستغرق هذا اليوم والشهر كمرجع لجعلها عطلة. من خلال هذا الخيار، يمكنك تكرار هذه القاعدة عن كل سنة. على سبيل المثال، فإن اختيار  1 أغسطس سوف يجعل 1 أغسطس عطلة في كل عام.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="newOperation" id="newOperationField" value="holidayrange" />
+ <label for="newOperationField">العطل ضمن نطاق</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">عمل عطلة منفردة في نطاق متكرر سنوياً. على سبيل المثال ، تحديد الأول من أغسطس و العاشر من أغسطس  ، سيجعل كل الايام بين الأول والعاشر عطلة، وسيؤثر على تاريخ من 1-10 أغسطس في السنوات الأخرى.</div>
+ </li>
+ <li class="radio">
+ <input type="radio" name="newOperation" id="newOperationFieldyear" value="holidayrangerepeat" />
+ <label for="newOperationFieldyear">عطلة تتكرر سنويا لمجموعة معينة</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">عمل عطلة منفردة في نطاق متكرر سنوياً. على سبيل المثال ، تحديد الأول من أغسطس و العاشر من أغسطس  ، سيجعل كل الايام بين الأول والعاشر عطلة، وسيؤثر على تاريخ من 1-10 أغسطس في السنوات الأخرى.</div>
+ </li>
+ <li class="checkbox">
+ <input type="checkbox" name="allBranches" id="allBranches" />
+ <label for="allBranches">النسخ إلى جميع المكتبات</label>.
+ <a href="#" class="helptext">[?]</a>
+ <div class="hint">عند التحديد، سيتم نسخ هذه العطلة إلى كل المكتبات. إذا كانت العطلة موجودة بالفعل في مكتبة، فلن يحدث أي تغيير.</div>
+ </li>
+ </ol>
+ <fieldset class="action">
+ <input class="btn btn-primary" name="submit" type="submit" value="حفظ" />
+ <a href="#" class="cancel hidePanel newHoliday">إلغاء</a>
+ </fieldset>
+ </fieldset> <!-- /.brief -->
+ </form>
+ </div> <!-- /#newHoliday -->
+
+ <div id="calendar-container">
+ <h3>معلومات التقويم</h3>
+ <span id="calendar-anchor"></span>
+ </div>
+ <div style="margin-top: 2em;">
+ <form action="copy-holidays.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-copy" />
+ <input type="hidden" name="from_branchcode" value="[% branch | html %]" />
+ <label for="branchcode">نسخ العطلات إلى:</label>
+ <select id="branchcode" name="branchcode">
+ <option value=""></option>
+ [% FOREACH l IN Branches.all() %]
+ <option value="[% l.branchcode | html %]">[% l.branchname | html %]</option>
+ [% END %]
+ </select>
+ <input class="btn btn-primary" type="submit" value="نسخ" />
+ </form>
+ </div>
+ </div> <!-- /.page-section -->
+ </div> <!-- /.col-sm-6 -->
+
+ <div class="col-sm-6">
+ <div class="page-section">
+ <div class="help">
+ <h4>تلميحات</h4>
+ <ul>
+ <li>قم بالبحث فى التقويم عن اليوم الذى ترغب في ضبطه كيوم عطلة.</li>
+ <li>انقر فوق التاريخ لإضافة أو تحرير عطلة.</li>
+ <li>قم بإدخال عنوان ووصف للعطلة.</li>
+ <li>تحديد كيفية تكرار العطلات.</li>
+ <li>انقر حفظ للإنهاء.</li>
+ </ul>
+ <h4>مفتاح</h4>
+ <p>
+ <span class="key normalday">يوم عمل</span>
+ <span class="key holiday">عطلة فريدة</span>
+ <span class="key repeatableweekly">عطلة مكررة أسبوعية</span>
+ <span class="key repeatableyearly">عطلة مكررة سنويا</span>
+ <span class="key exception">استثناء العطلات</span>
+ </p>
+ </div> <!-- /#help -->
+
+ <div id="holiday-list">
+ <!-- Exceptions First -->
+ <!-- this will probably always have the least amount of data -->
+ [% IF ( EXCEPTION_HOLIDAYS_LOOP ) %]
+ <h3>الاستثناءات</h3>
+ <label class="controls">
+ <input type="checkbox" name="show_past" id="show_past_holidayexceptions" class="show_past" />
+ عرض المدخلات السابقة </label>
+ <table id="holidayexceptions">
+ <thead>
+ <tr>
+ <th class="exception">التاريخ</th>
+ <th class="exception">عنوان</th>
+ <th class="exception">الوصف</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH EXCEPTION_HOLIDAYS_LOO IN EXCEPTION_HOLIDAYS_LOOP %]
+ <tr data-date="[% EXCEPTION_HOLIDAYS_LOO.DATE_SORT | html %]">
+ <td data-order="[% EXCEPTION_HOLIDAYS_LOO.DATE_SORT | html %]">
+ <a href="/cgi-bin/koha/tools/holidays.pl?branch=[% branch | uri %]&amp;calendardate=[% EXCEPTION_HOLIDAYS_LOO.DATE | uri %]">
+ [% EXCEPTION_HOLIDAYS_LOO.DATE | html %]
+ </a>
+ </td>
+ <td>[% EXCEPTION_HOLIDAYS_LOO.TITLE | html %]</td>
+ <td>[% EXCEPTION_HOLIDAYS_LOO.DESCRIPTION | html %]</td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- /#holidayexceptions -->
+ [% END # /IF ( EXCEPTION_HOLIDAYS_LOOP ) %]
+
+ [% IF ( WEEK_DAYS_LOOP ) %]
+ <h3>عطلات متكرّرة - أسبوعية</h3>
+ <table id="holidayweeklyrepeatable">
+ <thead>
+ <tr>
+ <th class="repeatableweekly">يوم في الإسبوع</th>
+ <th class="repeatableweekly">عنوان</th>
+ <th class="repeatableweekly">الوصف</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH WEEK_DAYS_LOO IN WEEK_DAYS_LOOP %]
+ <tr>
+ <td>[% WEEK_DAYS_LOO.KEY | html %]</td>
+ <td>[% WEEK_DAYS_LOO.TITLE | html %]</td>
+ <td>[% WEEK_DAYS_LOO.DESCRIPTION | html %]</td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- /#holidayweeklyrepeatable -->
+ [% END # / IF ( WEEK_DAYS_LOOP ) %]
+
+ [% IF ( DAY_MONTH_HOLIDAYS_LOOP ) %]
+ <h3>عطلات متكررة - سنويا</h3>
+ <table id="holidaysyearlyrepeatable">
+ <thead>
+ <tr>
+ [% IF ( dateformat == "metric" ) %]
+ <th class="repeatableyearly">اليوم / الشهر</th>
+ [% ELSE %]
+ <th class="repeatableyearly">شهر/يوم</th>
+ [% END %]
+ <th class="repeatableyearly">عنوان</th>
+ <th class="repeatableyearly">الوصف</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH DAY_MONTH_HOLIDAYS_LOO IN DAY_MONTH_HOLIDAYS_LOOP %]
+ <tr>
+ <td data-order="[% DAY_MONTH_HOLIDAYS_LOO.DATE_SORT | html %]">
+ [% DAY_MONTH_HOLIDAYS_LOO.DATE | html %]
+ </td>
+ <td>[% DAY_MONTH_HOLIDAYS_LOO.TITLE | html %]</td>
+ <td>[% DAY_MONTH_HOLIDAYS_LOO.DESCRIPTION | html %]</td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- /#holidaysyearlyrepeatable -->
+ [% END # /IF ( DAY_MONTH_HOLIDAYS_LOOP ) %]
+
+ [% IF ( HOLIDAYS_LOOP ) %]
+ <h3>عطلة فريدة</h3>
+ <label class="controls">
+ <input type="checkbox" name="show_past" id="show_past_holidaysunique" class="show_past" />
+ عرض المدخلات السابقة </label>
+ <table id="holidaysunique">
+ <thead>
+ <tr>
+ <th class="holiday">التاريخ</th>
+ <th class="holiday">عنوان</th>
+ <th class="holiday">الوصف</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH HOLIDAYS_LOO IN HOLIDAYS_LOOP %]
+ <tr data-date="[% HOLIDAYS_LOO.DATE_SORT | html %]">
+ <td data-order="[% HOLIDAYS_LOO.DATE_SORT | html %]">
+ <a href="/cgi-bin/koha/tools/holidays.pl?branch=[% branch | uri %]&amp;calendardate=[% HOLIDAYS_LOO.DATE | uri %]">
+ [% HOLIDAYS_LOO.DATE | html %]
+ </a>
+ </td>
+ <td>[% HOLIDAYS_LOO.TITLE | html %]</td>
+ <td>[% HOLIDAYS_LOO.DESCRIPTION.replace('\\\r\\\n', '<br />') | html %]</td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- #holidaysunique -->
+ [% END # /IF ( HOLIDAYS_LOOP ) %]
+ </div> <!-- /#holiday-list -->
+ </div> <!-- /.page-section -->
+ </div> <!-- /.col-sm-6 -->
+ </div> <!-- /.row -->
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'tools-menu.inc' %]
+ </aside>
+ </div> <!-- .col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'calendar.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ [% Asset.js("js/tools-menu.js") | $raw %]
+ <script>
+        var weekdays = new Array(_("أيام الأحد"),_("أيام الإثنين"),_("أيام الخميس"),_("أيام اﻷربعاء"),_("أيام الخميس"),_("أيام الجمعة"),_("أيام السبت"));
+
+        /* Creates all the structures to deal with all different kinds of holidays */
+        var week_days = new Array();
+        var holidays = new Array();
+        var holidates = new Array();
+        var exception_holidays = new Array();
+        var day_month_holidays = new Array();
+        var hola= "[% code | html %]";
+        [% FOREACH WEEK_DAYS_LOO IN WEEK_DAYS_LOOP %]
+            week_days["[% WEEK_DAYS_LOO.KEY | html %]"] = {title:"[% WEEK_DAYS_LOO.TITLE | replace('"','\"') | html %]", description:"[% WEEK_DAYS_LOO.DESCRIPTION | replace('"','\"') | html %]"};
+        [% END %]
+        [% FOREACH HOLIDAYS_LOO IN HOLIDAYS_LOOP %]
+            holidates.push("[% HOLIDAYS_LOO.KEY | html %]");
+            holidays["[% HOLIDAYS_LOO.KEY | html %]"] = {title:"[% HOLIDAYS_LOO.TITLE | replace('"','\"') | html %]", description:"[% HOLIDAYS_LOO.DESCRIPTION | replace('"','\"') | html %]"};
+        [% END %]
+        [% FOREACH EXCEPTION_HOLIDAYS_LOO IN EXCEPTION_HOLIDAYS_LOOP %]
+            exception_holidays["[% EXCEPTION_HOLIDAYS_LOO.KEY | html %]"] = {title:"[% EXCEPTION_HOLIDAYS_LOO.TITLE | replace('"','\"') | html %]", description:"[% EXCEPTION_HOLIDAYS_LOO.DESCRIPTION | replace('"','\"') | html %]"};
+        [% END %]
+        [% FOREACH DAY_MONTH_HOLIDAYS_LOO IN DAY_MONTH_HOLIDAYS_LOOP %]
+            day_month_holidays["[% DAY_MONTH_HOLIDAYS_LOO.KEY | html %]"] = {title:"[% DAY_MONTH_HOLIDAYS_LOO.TITLE | replace('"','\"') | html %]", description:"[% DAY_MONTH_HOLIDAYS_LOO.DESCRIPTION | replace('"','\"') | html %]"};
+        [% END %]
+
+        function holidayOperation(formObject, opType) {
+            var op = document.getElementsByName('operation');
+            op[0].value = opType;
+            formObject.submit();
+        }
+
+        // This function shows the "Show Holiday" panel //
+        function showHoliday (exceptionPossibility, dayName, day, month, year, weekDay, title, description, holidayType) {
+            $("#newHoliday").slideUp("fast");
+            $("#showHoliday").slideDown("fast");
+            $('#showDaynameOutput').html(dayName);
+            $('#showDayname').val(dayName);
+            $('#showBranchNameOutput').html($("#branch :selected").text());
+            $('#showBranchName').val($("#branch").val());
+            $('#showDayOutput').html(day);
+            $('#showDay').val(day);
+            $('#showMonthOutput').html(month);
+            $('#showMonth').val(month);
+            $('#showYearOutput').html(year);
+            $('#showYear').val(year);
+            $('#showDescription').val(description);
+            $('#showWeekday:first').val(weekDay);
+            $('#showTitle').val(title);
+            $('#showHolidayType').val(holidayType);
+
+            if (holidayType == 'exception') {
+                $("#showOperationDelLabel").html(_("حذف هذا الاستثناء."));
+                $("#holtype").attr("class","key exception").html(_("استثناء العطلات"));
+            } else if(holidayType == 'weekday') {
+                $("#showOperationDelLabel").html(_("حذف هذه العطلة."));
+                $("#holtype").attr("class","key repeatableweekly").html(_("عطلة مكررة أسبوعية"));
+            } else if(holidayType == 'daymonth') {
+                $("#showOperationDelLabel").html(_("حذف هذه العطلة."));
+                $("#holtype").attr("class","key repeatableyearly").html(_("عطلة مكررة سنويا"));
+            } else {
+                $("#showOperationDelLabel").html(_("حذف هذه العطلة."));
+                $("#holtype").attr("class","key holiday").html(_("عطلة فريدة"));
+            }
+
+            if (exceptionPossibility == 1) {
+                $(".exceptionPossibility").parent().show();
+            } else {
+                $(".exceptionPossibility").parent().hide();
+            }
+        }
+
+        // This function shows the "Add Holiday" panel //
+        function newHoliday (dayName, day, month, year, weekDay) {
+            $("#showHoliday").slideUp("fast");
+            $("#newHoliday").slideDown("fast");
+            $("#newDaynameOutput").html(dayName);
+            $("#newDayname").val(dayName);
+            $("#newBranchNameOutput").html($('#branch :selected').text());
+            $("#newBranchName").val($('#branch').val());
+            $("#newDayOutput").html(day);
+            $("#newDay").val(day);
+            $("#newMonthOutput").html(month);
+            $("#newMonth").val(month);
+            $("#newYearOutput").html(year);
+            $("#newYear").val(year);
+            $("#newWeekday:first").val(weekDay);
+        }
+
+        function hidePanel(aPanelName) {
+            $("#"+aPanelName).slideUp("fast");
+        }
+
+        function changeBranch () {
+            var branch = $("#branch option:selected").val();
+            location.href='/cgi-bin/koha/tools/holidays.pl?branch=' + branch + '&calendardate=' + "[% calendardate | html %]";
+        }
+
+        /**
+        * Build settings to be passed to the formatDay function for each day in the calendar
+        * @param  {object} dayElem - HTML node passed from Flatpickr
+        * @return {void}
+        */
+        function dateStatusHandler( dayElem ) {
+            var day = dayElem.dateObj.getDate();
+            var month = dayElem.dateObj.getMonth() + 1;
+            var year = dayElem.dateObj.getFullYear();
+            var weekDay = dayElem.dateObj.getDay();
+            var dayMonth = month + '/' + day;
+            var dateString = year + '/' + month + '/' + day;
+            if (exception_holidays[dateString] != null) {
+                formatDay( [ "exception", _("استثناء: %s").format(exception_holidays[dateString].title)], dayElem );
+            } else if ( week_days[weekDay] != null ){
+                formatDay( [ "repeatableweekly", _("عطلة أسبوعية: %s").format(week_days[weekDay].title)], dayElem );
+            } else if ( day_month_holidays[dayMonth] != null ) {
+                formatDay( [ "repeatableyearly", _("عطلة سنوية: %s").format(day_month_holidays[dayMonth].title)], dayElem );
+            } else if (holidays[dateString] != null) {
+                formatDay( [ "holiday", _("عطلة مفردة: %s").format(holidays[dateString].title)], dayElem );
+            } else {
+                formatDay( [ "normalday", _("يوم عادي")], dayElem );
+            }
+        }
+
+        /**
+        * Adds style and title attribute to a day on the calendar
+        * @param  {object} settings - span class attribute ([0]) and title attribute ([1])
+        * @param  {node}   dayElem  - HTML node passed from Flatpickr
+        * @return {void}
+        */
+        function formatDay( settings, dayElem ){
+            $(dayElem).attr("title", settings[1]).addClass( settings[0]);
+        }
+
+        /**
+        * Triggers an action based on a click on a calendar day: If a holiday exists on
+        * that day it loads an edit form. If there is no existing holiday one can be created
+        * @param  {object} calendar - a Date object corresponding to the clicked day
+        * @return {void}
+        */
+        function dateChanged( calendar ) {
+            var day = calendar.getDate();
+            var month = calendar.getMonth() + 1;
+            var year = calendar.getFullYear();
+            var weekDay = calendar.getDay();
+            var dayName = weekdays[weekDay];
+            var dayMonth = month + '/' + day;
+            var dateString = year + '/' + month + '/' + day;
+            if (holidays[dateString] != null) {
+                showHoliday(0, dayName, day, month, year, weekDay, holidays[dateString].title,     holidays[dateString].description, 'ymd');
+            } else if (exception_holidays[dateString] != null) {
+                showHoliday(0, dayName, day, month, year, weekDay, exception_holidays[dateString].title, exception_holidays[dateString].description, 'exception');
+            } else if (week_days[weekDay] != null) {
+                showHoliday(1, dayName, day, month, year, weekDay, week_days[weekDay].title,     week_days[weekDay].description, 'weekday');
+            } else if (day_month_holidays[dayMonth] != null) {
+                showHoliday(1, dayName, day, month, year, weekDay, day_month_holidays[dayMonth].title, day_month_holidays[dayMonth].description, 'daymonth');
+            } else {
+                newHoliday(dayName, day, month, year, weekDay);
+            }
+        };
+
+        /* Custom table search configuration: If a table row
+            has an "expired" class, hide it UNLESS the
+            show_expired checkbox is checked */
+        $.fn.dataTable.ext.search.push(
+            function( settings, searchData, index, rowData, counter ) {
+                var table = settings.nTable.id;
+                var row = $(settings.aoData[index].nTr);
+                if( row.hasClass("date_past") && !$("#show_past_" + table ).prop("checked") ){
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        );
+
+        // Create current date variable
+        var date = new Date();
+        var datestring = date.toISOString().substring(0, 10);
+
+        $(document).ready(function() {
+
+            $(".helptext + .hint").hide();
+            $("#branch").change(function(){
+                changeBranch();
+            });
+            $("#holidayweeklyrepeatable>tbody>tr").each(function(){
+                var first_td = $(this).find('td').first();
+                first_td.html(weekdays[first_td.html()]);
+            });
+            $("#holidayweeklyrepeatable").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "dom": 't',
+                "paginate": false
+            }));
+            var tables = $("#holidayexceptions, #holidaysyearlyrepeatable, #holidaysunique").DataTable($.extend(true, {}, dataTablesDefaults, {
+                "dom": 't',
+                "paginate": false,
+                "createdRow": function( row, data, dataIndex ) {
+                    var holiday = $(row).data("date");
+                    if( holiday < datestring ){
+                        $(row).addClass("date_past");
+                    }
+                }
+            }));
+
+            $(".show_past").on("change", function(){
+                tables.draw();
+            });
+
+            $("a.helptext").click(function(){
+                $(this).parent().find(".helptext + .hint").toggle(); return false;
+            });
+
+            const dateofrange = document.querySelector("#dateofrange")._flatpickr;
+            const datecancelrange = document.querySelector("#datecancelrange")._flatpickr;
+
+            $("#dateofrange").each(function () { this.value = "" });
+            $("#datecancelrange").each(function () { this.value = "" });
+
+            var maincalendar = $("#calendar-anchor").flatpickr({
+                inline: true,
+                onReady: function( selectedDates, dateStr, instance ){
+                    // We do not want to display the 'close' icon in this case
+                    $(instance.input).siblings('.flatpickr-input').hide();
+                },
+                onDayCreate: function( dObj, dStr, fp, dayElem ){
+                    /* for each day on the calendar, get the
+                      correct status information for the date */
+                    dateStatusHandler( dayElem );
+                },
+                onChange: function( selectedDates, dateStr, instance ){
+                    var fromdate = selectedDates[0];
+                    var enddate = dateofrange.selectedDates[0];
+
+                    dateChanged( fromdate );
+
+                    dateofrange.set( 'defaultDate', fromdate );
+                    dateofrange.set( 'minDate', fromdate );
+
+                    if ( enddate != undefined ) {
+                        if ( enddate < fromdate ) {
+                            dateofrange.set("defaultDate", fromdate);
+                            dateofrange.setDate(fromdate);
+                        }
+                    }
+
+                },
+                defaultDate: new Date("[% keydate | html %]")
+            });
+
+            $(".hidePanel").on("click",function(){
+                if( $(this).hasClass("showHoliday") ){
+                    hidePanel("showHoliday");
+                } else {
+                    hidePanel("newHoliday");
+                }
+            })
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

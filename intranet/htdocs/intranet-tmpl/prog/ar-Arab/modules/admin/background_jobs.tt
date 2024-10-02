@@ -1,0 +1,371 @@
+[% USE raw %]
+[% USE KohaDates %]
+[% USE Asset %]
+[% USE KohaDates %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op == 'view' %]
+ [% tx("Details of job #{job_id}", { job_id = job.id }) | html %] &rsaquo;
+ [% END %]
+ [% t("Jobs") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_background_jobs" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% IF CAN_user_parameters_manage_background_jobs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+ [% IF op == 'view' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/background_jobs.pl">مهام</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تفاصيل المهمة #[% job.id | html %]</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>مهام</span>
+ [% END %]
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>الإدارة</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% FOR m IN messages %]
+ <div class="dialog message">
+ [% SWITCH m.code %]
+ [% CASE 'cannot_view_job' %]
+ <div><i class="fa fa-exclamation error"></i>صلاحيات غير كافية لرؤية هذه المهمة.</div>
+ [% CASE %]
+ [% m.code | html %]
+ [% END %]
+ </div>
+[% END %]
+
+[% IF op == 'view' %]
+ <h1>تفاصيل المهمة #[% job.id | html %]</h1>
+
+ [% PROCESS "background_jobs/${job.type}.inc" %]
+
+ <div id="job_details" style="display:none">
+ <fieldset class="rows">
+ <ol>
+ <li><span class="label">معرّف المهمة: </span>[% job.id | html %]</li>
+ <li>
+ <label for="job_status">الحالة: </label>
+ <span id="job_status_description"></span>
+ </li>
+ <li><label for="job_progress">التقدم: </label>[% job.progress || 0 | html %] / [% job.size | html %]</li>
+ <li>
+ <label for="job_type">نوع: </label>
+ <span id="job_type_description"></span>
+ </li>
+ <li>
+ <label for="job_enqueued_on">في الصف: </label>
+ [% job.enqueued_on | $KohaDates with_hours = 1 %]
+ </li>
+ <li>
+ <label for="job_started_on">بدأ : </label>
+ [% job.started_on | $KohaDates with_hours = 1 %]
+ </li>
+ <li>
+ <label for="job_ended_on">انتهى: </label>
+ [% job.ended_on | $KohaDates with_hours = 1 %]
+ </li>
+ </ol>
+ </fieldset>
+ <div class="page-section">
+ <h2>تقرير</h2>
+ [% IF job.status != 'new' %][% PROCESS 'report' %][% END %]
+ </div>
+ <div class="page-section">
+ <h2>الرسائل التفصيلية</h2>
+ [% IF job.status != 'new' %][% PROCESS 'detail' %][% END %]
+ </div>
+ </div> <!-- /#job_details -->
+
+ [% IF CAN_user_parameters_manage_background_jobs %]
+ <fieldset class="action">
+ <a href="/cgi-bin/koha/admin/background_jobs.pl">العودة إلى قائمة المهام</a>
+ </fieldset>
+ [% END %]
+[% END %]
+
+[% IF op == 'list' %]
+
+ <h1>مهام</h1>
+
+ <div>
+ <input type="checkbox" id="only_current" checked />
+ <label for="only_current">المهام الحالية فقط</label>
+ </div>
+
+ <div>
+ <input type="checkbox" id="include_last_hour" checked />
+ <label for="include_last_hour">قم بإدراج المهام التي تم وضعها في الصف في الساعة الأخيرة فقط</label>
+ </div>
+
+ <div class="page-section">
+ <table id="table_jobs">
+ <thead>
+ <tr>
+ <th>معرّف المهمة</th>
+ <th data-filter="job_statuses">حالة</th>
+ <th>التقدم</th>
+ <th data-filter="job_types">نوع</th>
+ <th>في الصف</th>
+ <th>بدأ</th>
+ <th>انتهى</th>
+ <th class="noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ </table>
+ </div>
+[% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'js-date-format.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ <script>
+        const job_statuses = [
+            {'_id': 'new',       '_str': _("جديد")},
+            {'_id': 'cancelled', '_str': _("ملغي")},
+            {'_id': 'finished',  '_str': _("انتهى")},
+            {'_id': 'started',   '_str': _("بدأ")},
+            {'_id': 'running',   '_str': _("جاري التشغيل")},
+            {'_id': 'failed',    '_str': _("فشل")},
+        ];
+        function get_job_status (status) {
+            let status_lib = job_statuses.find( s => s._id == status );
+            if (status_lib) {
+                return status_lib._str;
+            }
+            return status;
+        }
+
+        const job_types = [
+            {
+                '_id': 'batch_biblio_record_modification',
+                '_str': _("تعديل تسجيلات الاستناد بالدفعة")
+            },
+            {
+                '_id': 'batch_biblio_record_deletion',
+                '_str': _("حذف التسجيلات الببليوغرافية بالدفعة")
+            },
+            {
+                '_id': 'batch_authority_record_modification',
+                '_str': _("تعديل تسجيلات الاستناد بالدفعة")
+            },
+            {
+                '_id': 'batch_authority_record_deletion',
+                '_str': _("حذف تسجيلات الاستناد بالدفعة")
+            },
+            {
+                '_id': 'batch_item_record_modification',
+                '_str': _("تعديل تسجيلات المواد بالدفعة")
+            },
+            {
+                '_id': 'batch_item_record_deletion',
+                '_str': _("حذف تسجيلات المواد بالدفعة")
+            },
+            {
+                '_id': 'erm_sushi_harvester',
+                '_str': _("إحصائيات استخدام إدارة الموارد الإلكترونية أداة حصاد سوشي")
+            },
+            {
+                '_id': 'batch_hold_cancel',
+                '_str': _("إلغاء الحجوزات بالدفعة")
+            },
+            {
+                '_id': 'pseudonymize_statistic',
+                '_str': _("إحصائية بأسماء مستعارة")
+            },
+            {
+                '_id': 'create_eholdings_from_biblios',
+                '_str': _("إنشاء عناوين مقتنيات إلكترونية")
+            },
+            {
+                '_id': 'update_elastic_index',
+                '_str': _("تحديث فهرس Elasticsearch")
+            },
+            {
+                '_id': 'update_holds_queue_for_biblios',
+                '_str': _("تحديث صف الحجوزات")
+            },
+            {
+                '_id': 'stage_marc_for_import',
+                '_str': _("تسجيلات مارك المجهزة للاستيراد")
+            },
+            {
+                '_id': 'marc_import_commit_batch',
+                '_str': _("استيراد تسجيلات مارك")
+            },
+            {
+                '_id': 'marc_import_revert_batch',
+                '_str': _("التراجع عن استيراد تسجيلات مارك")
+            },
+            {
+                '_id': 'import_from_kbart_file',
+                '_str': _("Import titles from a KBART file")
+            },
+        ];
+
+        function get_job_type (job_type) {
+            let job_type_lib = job_types.find( t => t._id == job_type );
+            if ( job_type_lib ) {
+                return job_type_lib._str;
+            }
+            return _("نوع مهمة غير معروف '%s'").format(job_type);
+        }
+
+        $(document).ready(function() {
+            [% IF op == 'view' %]
+                $("#job_status_description").html( get_job_status("[% job.status | html %]") );
+                $("#job_type_description").html( get_job_type("[% job.type | html %]") );
+                $("#job_details").show();
+            [% END %]
+
+            let additional_filters = {
+                enqueued_on: function(){
+                    let now = new Date();
+                    if ( $("#include_last_hour").is(":checked") ) {
+                        now.setHours(now.getHours() - 1);
+                        return { ">": now.toISOString() };
+                    } else {
+                        return { "<": now.toISOString() };
+                    }
+                }
+            };
+
+            let only_current_filter = function(){
+                if ( $("#only_current").is(":checked") ) {
+                    return 'only_current=1';
+                } else {
+                    return 'only_current=0';
+                }
+            }
+
+            let jobs_table = $("#table_jobs").kohaTable({
+                "ajax": {
+                    "url": "/api/v1/jobs?" + only_current_filter()
+                },
+                "order": [[ 1, "desc" ]],
+                "columns": [
+                    {
+                        "data": "job_id",
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "status",
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function(data, type, row, meta) {
+                            return get_job_status(row.status).escapeHtml();
+                        }
+                    },
+                    {
+                        "data": "progress,size",
+                        "searchable": false,
+                        "orderable": true,
+                        "render": function(data, type, row, meta) {
+                            return "%s/%s".format(row.progress, row.size).escapeHtml();
+                        }
+                    },
+                    {
+                        "data": "type",
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function(data, type, row, meta) {
+                            return get_job_type(row.type).escapeHtml();
+                        }
+                    },
+                    {
+                        "data": "enqueued_date",
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function(data, type, row, meta) {
+                            return $datetime(row.enqueued_date);
+                        }
+                    },
+                    {
+                        "data": "started_date",
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function(data, type, row, meta) {
+                            return $datetime(row.started_date);
+                        }
+                    },
+                    {
+                        "data": "ended_date",
+                        "searchable": true,
+                        "orderable": true,
+                        "render": function(data, type, row, meta) {
+                            return $datetime(row.ended_date);
+                        }
+                    },
+                    {
+                        "data": function( row, type, val, meta ) {
+                            var result = '<a class="btn btn-default btn-xs" role="button" href="/cgi-bin/koha/admin/background_jobs.pl?op=view&amp;id='+ encodeURIComponent(row.job_id) +'"><i class="fa-solid fa-eye aria-hidden="true"></i> '+_("عرض")+'</a>'+"\n";
+                            if ( row.status == 'new' || row.status == 'started' ) {
+                                result += '<a class="btn btn-default btn-xs" role="button" href="/cgi-bin/koha/admin/background_jobs.pl?op=cancel&amp;id='+ encodeURIComponent(row.job_id) +'"><i class="fa fa-trash-can" aria-hidden="true"></i> '+_("إلغاء")+'</a>';
+                            }
+                            return result;
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    }
+                ]
+            }, null, 1, additional_filters);
+
+            $("#include_last_hour").on("change", function(){
+                jobs_table.DataTable().draw();
+                return false;
+            });
+
+            $("#only_current").on("change", function(){
+                jobs_table.DataTable().ajax.url("/api/v1/jobs?" + only_current_filter()).load();
+                return false;
+            });
+        });
+    </script>
+ [% IF op == 'view' %]
+ [% PROCESS 'js' %]
+ [% END %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

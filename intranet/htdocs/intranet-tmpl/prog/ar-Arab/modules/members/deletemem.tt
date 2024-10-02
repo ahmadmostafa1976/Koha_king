@@ -1,0 +1,102 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Price %]
+[% USE Branches %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Delete patron") | html %] [% INCLUDE 'patron-title.inc' no_html = 1 %] &rsaquo;
+ [% t("Patrons") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="pat_deletemem" class="pat">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'patron-search-header.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/members-home.pl">المستفيدين</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% patron.borrowernumber | uri %]">[% INCLUDE 'patron-title.inc' %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>حذف المستفيد</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% INCLUDE 'members-toolbar.inc' %]
+ [% IF ItemsOnIssues || debits || is_guarantor %]
+ <div class="dialog alert">
+ <h1>لا يمكن حذف المستفيد</h1>
+ <ul>
+ [% IF ( ItemsOnIssues ) %]
+ <li>المستفيد [% ItemsOnIssues | html %]عنده كتب معاره.</li>
+ [% END %]
+ [% IF debits %]
+ <li>المستفيد [% debits | $Price %] عليه غرامات.</li>
+ [% END %]
+ [% IF is_guarantor %]
+ <li>لدى تسجيلة المستفيد حسابات مكفولة مرفقة.</li>
+ [% END %]
+ </ul>
+ </div>
+ [% ELSIF op == 'delete_confirm' and patron %]
+ [%# TODO add "patron does not exist" unless patron %]
+ <div class="dialog alert">
+ [% IF ItemsOnHold or credits or pending_suggestions > 0 %]
+ <ul>
+ [% IF ItemsOnHold %]
+ <li>لدى المستفيد [% ItemsOnHold | html %] حجزاً. حذف المستفيد يلغي جميع حجوزاته.</li>
+ [% END %]
+ [% IF credits %]
+ <li>يمتلك المستفيد [% credits | $Price %] ائتمان مالي.</li>
+ [% END %]
+ [% IF pending_suggestions > 0 %]
+ <li>المستفيد لديه [% pending_suggestions | html %] مقترحاً في الانتظار.</li>
+ [% END %]
+ </ul>
+ [% END %]
+ <h1>هل أنت متأكد من أنك تريد حذف المستفيد[% patron.firstname | html %] [% patron.surname | html %]؟</h1>
+ <p>لا يمكن التراجع عن هذا الإجراء.</p>
+ <form method="post" action="/cgi-bin/koha/members/deletemem.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="member" value="[% patron.borrowernumber | html %]"/>
+ <input type="hidden" name="op" value="cud-delete_confirmed" />
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> نعم, إحذف</button>
+ </form>
+ <form method="get" action="/cgi-bin/koha/members/moremember.pl">
+ <input type="hidden" name="borrowernumber" value="[% patron.borrowernumber | html %]"/>
+ <button type="submit" class="deny"><i class="fa fa-fw fa-times"></i> لا ، لا تقم بالحذف</button>
+ </form>
+ </div>
+ [% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'circ-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

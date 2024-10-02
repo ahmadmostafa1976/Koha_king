@@ -1,0 +1,312 @@
+[% USE raw %]
+[% USE Koha %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="admin_admin-home" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>الإدارة</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+ [% INCLUDE 'messages.inc' %]
+ <h1>إدارة كوها</h1>
+ [% IF ( CAN_user_parameters_manage_mana ) %]
+ [% IF ( Koha.Preference('Mana') == 1) && !mana_url %]
+ <div class="dialog message">
+ <h4>خاصية قاعدة معرفة مانا مفعّلة لكنها غير مهيئة.</h4>
+ <p>تتيح لك هذه الخاصية استعادة البيانات ومشاركتها (أنماط الاشتراكات والتقارير) مع مكتبات كوها الأخرى.</p>
+ <p>
+ اطلب من مدير نظامك تهيئة هذه الخاصية، أو إزالة هذه الملاحظة بواسطة <a href=/cgi-bin/koha/admin/share_content.pl>إيقاف تفضيل النظام 'Mana'</a>.
+ </p>
+ </div>
+ [% END %]
+ [% IF ( Koha.Preference('Mana') == 2 ) %]
+ <div class="dialog message">
+ <h4>مشاركة المحتوى مع قاعدة معرفة مانا؟</h4>
+ <p> أنت لم تقرر ما إذا كنت تريد تفعيل قاعدة معرفة مانا. <a href=/cgi-bin/koha/admin/share_content.pl>قم بتغيير إعدادات قاعدة معرفة مانا الخاصة بك</a>.</p>
+ </div>
+ [% END %]
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_usage_stats ) %]
+ [% IF ( Koha.Preference('UsageStats') == 2 ) %]
+ <div class="dialog message">
+ <h4>مشاركة إحصائيات الاستخدام بدون تعريف الهوية مع مجتمع كوها؟</h4>
+ <p> أنت لم تقرر بعد ما إذا كنت تريد تفعيل مشاركة إحصائيات الاستخدام في كوها. <a href=/cgi-bin/koha/admin/usage_statistics.pl>قم بتغيير إعدادات Hea الخاصة بك</a>.</p>
+ <p> توفر هذه الخاصية لمطوري كوها معلومات قيمة حول كيفية استخدام كوها وتساعد في دفع القرارات خلال دورة التطوير</p>
+ </div>
+ [% END %]
+ [% END %]
+ <div class="row">
+ <div class="col-md-6 sysprefs">
+ [% IF ( CAN_user_parameters_manage_sysprefs ) %]
+ <form action="/cgi-bin/koha/admin/preferences.pl" method="get">
+ <fieldset>
+ <h4><a href="/cgi-bin/koha/admin/preferences.pl">تفضيلات النظام</a></h4>
+ <p>إدارة تفضيلات النظام مثل وضع مارك، وتنسيق التاريخ، والبريد الإلكتروني للمسؤول، والقوالب.</p>
+ <input type="hidden" name="op" value="search" />
+ <input type="text" name="searchfield" value="[% searchfield | html %]" />
+ <input class="btn btn-primary" name="ok" type="submit" value="بحث" />
+ </fieldset>
+ </form>
+ [% END %]
+
+ [% IF ( CAN_user_parameters_manage_libraries || CAN_user_parameters_manage_itemtypes || CAN_user_parameters_manage_auth_values ) %]
+ <div class="hint"><h4>تلميح:</h4><p>قم بتهيئة هذه المعاملات بالترتيب التي تظهر به.</p></div>
+ <h3>اﻹعدادات الأساسية</h3>
+ <dl>
+ [% IF ( CAN_user_parameters_manage_libraries ) %]
+ <dt><a href="/cgi-bin/koha/admin/branches.pl">المكتبات</a></dt>
+ <dd>تعريف المكتبات</dd>
+ <dt><a href="/cgi-bin/koha/admin/library_groups.pl">مجموعات المكتبة</a></dt>
+ <dd>تعريف مجموعات المكتبة الهرمية</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_itemtypes ) %]
+ <dt><a href="/cgi-bin/koha/admin/itemtypes.pl">أنواع المادة</a></dt>
+ <dd>تعريف أنواع المادة المستخدمة لقواعد الإعارة</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_auth_values ) %]
+ <dt><a href="/cgi-bin/koha/admin/authorised_values.pl">قيم الاستناد</a></dt>
+ <dd>تعريف الفئات وقيم الاستناد الخاصة بها</dd>
+ [% END %]
+ </dl>
+ [% END %]
+
+ [% IF ( CAN_user_parameters_manage_patron_categories || CAN_user_parameters_manage_circ_rules || CAN_user_parameters_manage_patron_attributes || CAN_user_parameters_manage_transfers || CAN_user_parameters_manage_item_circ_alerts || CAN_user_parameters_manage_cities || CAN_user_parameters_manage_curbside_pickups ) %]
+ <h3>المستفيدين والإعارة</h3>
+ <dl>
+ [% IF ( CAN_user_parameters_manage_patron_categories ) %]
+ <dt><a href="/cgi-bin/koha/admin/categories.pl">فئات المستفيد</a></dt>
+ <dd>تعريف فئات المستفيدين</dd>
+ [% END %]
+ [% IF CAN_user_parameters_manage_circ_rules %]
+ <dt><a href="/cgi-bin/koha/admin/smart-rules.pl">قواعد الإعارة والغرامات</a></dt>
+ <dd>تحديد قواعد التوزيع وقواعد الغرامات لمجموعات المكتبات وفئات المستفيدين وأنواع المواد</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_patron_attributes ) %]
+ <dt><a href="/cgi-bin/koha/admin/patron-attr-types.pl">أنواع سمات المستفيدين</a></dt>
+ <dd>تحديد السمات الموسعة (معرفات والفئات الإحصائية) للسجلات المستفيد</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_transfers ) %]
+ <dt><a href="/cgi-bin/koha/admin/branch_transfer_limits.pl">حدود النقل بالمكتبة</a> (<a href="/cgi-bin/koha/admin/transfer_limits.pl">محرر متقدم</a>)</dt>
+ <dd>تحديد القدرة على نقل المواد بين المكتبات بناء على المكتبة المرسلة، المكتبة المستلمة، ونوع المادة. هذه القواعد تدخل حيز التنفيذ في حالة تفعيل التفضيل UseBranchTransferLimits فقط</dd>
+ <dt><a href="/cgi-bin/koha/admin/transport-cost-matrix.pl">مصفوفة تكاليف النقل</a></dt>
+ <dd>تعريف تكاليف النقل بين الفروع</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_item_circ_alerts ) %]
+ <dt><a href="/cgi-bin/koha/admin/item_circulation_alerts.pl">تنبيهات إعارة المادة</a></dt>
+ <dd>تحديد القواعد من أجل إشعارات إعارة المواد وارجاعها لمجموعات من المكتبات، والفئات المستفيدين وأنواع المواد</dd>
+ [% END %]
+ [% IF ( Koha.Preference('UseCirculationDesks') && CAN_user_parameters_manage_libraries ) %]
+ <dt><a href="/cgi-bin/koha/admin/desks.pl">مكاتب الإعارة</a></dt>
+ <dd>قم بتعريف مكاتب الإعارة</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_cities ) %]
+ <dt><a href="/cgi-bin/koha/admin/cities.pl">مدن وبلدان</a></dt>
+ <dd>تعريف المدن والبلدان التي يعيش فيها المستفيدون</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_curbside_pickups ) %]
+ <dt><a href="/cgi-bin/koha/admin/curbside_pickup.pl">التقاط جانبي</a></dt>
+ <dd>تهيئة الالتقاط الجانبي للمكتبات</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_patron_restrictions ) %]
+ <dt><a href="/cgi-bin/koha/admin/restrictions.pl">أنواع قيود المستفيد</a></dt>
+ <dd>تعريف أنواع قيود المستفيد اليدوية</dd>
+ [% END %]
+ </dl>
+ [% END %]
+
+ [% IF ( CAN_user_parameters_manage_accounts || ( Koha.Preference('UseCashRegisters') && CAN_user_parameters_manage_cash_registers ) ) %]
+ <h3>الحسابات</h3>
+ <dl>
+ [% IF ( CAN_user_parameters_manage_accounts ) %]
+ <dt><a href="/cgi-bin/koha/admin/debit_types.pl">أنواع حساب المدين</a></dt>
+ <dd>تعريف أنواع الحساب المدين</dd>
+ <dt><a href="/cgi-bin/koha/admin/credit_types.pl">أنواع حساب الدائن</a></dt>
+ <dd>تعريف أنواع الاعتماد</dd>
+ [% END %]
+ [% IF ( Koha.Preference('UseCashRegisters') && CAN_user_parameters_manage_cash_registers ) %]
+ <dt><a href="/cgi-bin/koha/admin/cash_registers.pl">سجلات نقدية</a></dt>
+ <dd>تعريف السجلات النقدية</dd>
+ [% END %]
+ </dl>
+ [% END %]
+
+ [% IF plugins_enabled && ( CAN_user_plugins_manage || CAN_user_plugins_configure || ( CAN_user_plugins_admin && admin_plugins)) %]
+ <h3>برامج مساعدة</h3>
+ <dl>
+ [% IF CAN_user_plugins_manage || CAN_user_plugins_configure %]
+ <dt><a href="/cgi-bin/koha/plugins/plugins-home.pl">إدارة البرامج المساعدة</a></dt>
+ <dd>عرض، إدارة، تهيئة، وتشغيل البرامج المساعدة.</dd>
+ [% END %]
+ [% IF ( CAN_user_plugins_admin && admin_plugins ) %]
+ [% FOREACH plugin IN admin_plugins %]
+ <dt><a href="/cgi-bin/koha/plugins/run.pl?class=[% plugin.class | uri %]&method=admin"><span class="plugin_name">[% plugin.metadata.name | html %]</span></a></dt>
+ <dd>[% plugin.metadata.description | html %]</dd>
+ [% END %]
+ [% END %]
+ </dl>
+ [% END %]
+
+ [% IF CAN_user_parameters_manage_background_jobs %]
+ <h3>مهام</h3>
+ <dl>
+ <dt><a href="/cgi-bin/koha/admin/background_jobs.pl">إدارة المهام</a></dt>
+ <dd>عرض وإدارة وإلغاء المهام.</dd>
+ </dl>
+ [% END %]
+
+ </div>
+
+ <div class="col-md-6 sysprefs">
+ [% IF ( CAN_user_parameters_manage_marc_frameworks || CAN_user_parameters_manage_classifications || CAN_user_parameters_manage_matching_rules || CAN_user_parameters_manage_oai_sets || CAN_user_parameters_manage_item_search_fields || CAN_user_parameters_manage_search_engine_config || CAN_user_parameters_manage_marc_overlay_rules || ( Koha.Preference('SavedSearchFilters') && ( CAN_user_parameters_manage_search_filters ) ) ) %]
+ <h3>الفهرس</h3>
+ <dl>
+ [% IF ( CAN_user_parameters_manage_marc_frameworks ) %]
+ <dt><a href="/cgi-bin/koha/admin/biblio_framework.pl">إطار مارك الببليوغرافي</a></dt>
+ <dd>إنشاء وإدارة الإطارات الببليوغرافية التي تعرف خصائص تسجيلات مارك الخاصة بك (تعريفات الحقل والحقل الفرعى) وكذلك قوالب محرر مارك</dd>
+ <dt><a href="/cgi-bin/koha/admin/koha2marclinks.pl">تخطيط كوها إلى مارك</a></dt>
+ <dd>تعريف التخطيط بين قاعدة بيانات معاملات كوها (SQL) وتسجيلات مارك الببليوغرافية</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_marc_frameworks ) %]
+ <dt><a href="/cgi-bin/koha/admin/checkmarc.pl">اختبار إطار مارك الببليوغرافي</a></dt>
+ <dd>يفحص بنية مارك. إذا قمت بتغيير إطار مارك الببليوغرافي الخاص بك، ينصح بتشغيل هذه الأداة لاختبار الأخطاء في تعريفك</dd>
+ <dt><a href="/cgi-bin/koha/admin/authtypes.pl">انواع الاستناد</a></dt>
+ <dd>إنشاء وإدارة إطارات الاستناد التي تعرف خصائص تسجيلات مارك الخاصة بك (تعريفات الحقل والحقل الفرعى).</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_classifications ) %]
+ <dt><a href="/cgi-bin/koha/admin/classsources.pl">تهيئة التصنيف</a></dt>
+ <dd>قم بتعريف مصادر التصنيف (مثال: رقم الاستدعاء، التخطيطات) المستخدمة بواسطة مجموعتك. قم كذلك بتعريف القواعد المستخدمة لترتيب أرقام الإستدعاء وقواعد التقسيم لتقسيمها</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_matching_rules ) %]
+ <dt><a href="/cgi-bin/koha/admin/matching-rules.pl">قواعد مطابقة التسجيلة</a></dt>
+ <dd>إدارة القواعد لمطابقة تسجيلات مارك تلقائياً أثناء إستيرادات التسجيلة</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_record_sources ) %]
+ <dt><a href="/cgi-bin/koha/admin/record_sources">Record sources</a></dt>
+ <dd>Define record sources to import from</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_marc_overlay_rules ) %]
+ <dt><a href="/cgi-bin/koha/admin/marc-overlay-rules.pl">قواعد تراكب التسجيلة</a></dt>
+ <dd>إدارة القواعد لتغطية حقول مارك تلقائياً أثناء استيرادات التسجيلة والتحديثات</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_oai_sets ) %]
+ <dt><a href="/cgi-bin/koha/admin/oai_sets.pl">تهيئة مجموعات OAI</a></dt>
+ <dd>إدارة مجموعات OAI</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_item_search_fields ) %]
+ <dt><a href="/cgi-bin/koha/admin/items_search_fields.pl">حقول بحث المواد</a></dt>
+ <dd>إدارة الحقول المخصصة لبحث المواد</dd>
+ [% END %]
+ [% IF Koha.Preference('SavedSearchFilters') && ( CAN_user_parameters_manage_search_filters ) %]
+ <dt><a href="/cgi-bin/koha/admin/search_filters.pl">منقحات البحث</a></dt>
+ <dd>إدارة منقحات البحث المخصصة</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_search_engine_config ) %]
+ <dt><a href="/cgi-bin/koha/admin/searchengine/elasticsearch/mappings.pl">تهيئة محرك البحث (Elasticsearch)</a></dt>
+ <dd>إدارة الفهارس، الواجهات، وتخطيطاتها إلى حقول مارك وحقول مارك الفرعية</dd>
+ [% END %]
+ </dl>
+ [% END %]
+
+ [% IF ( CAN_user_acquisition_currencies_manage || CAN_user_acquisition_period_manage || CAN_user_acquisition_budget_manage || ( Koha.Preference('EDIFACT') && CAN_user_acquisition_edi_manage ) ) %]
+ <h3>إعدادات التزويد</h3>
+ <dl>
+ [% IF ( CAN_user_acquisition_currencies_manage ) %]
+ <dt><a href="/cgi-bin/koha/admin/currency.pl">العملات وأسعار الصرف</a></dt>
+ <dd>تعريف العملات وأسعار الصرف المستخدمة للتزويد</dd>
+ [% END %]
+ [% IF ( CAN_user_acquisition_period_manage ) %]
+ <dt><a href="/cgi-bin/koha/admin/aqbudgetperiods.pl">الميزانيات</a></dt>
+ <dd>قم بتعريف الميزانيات الخاصة بك</dd>
+ [% END %]
+ [% IF ( CAN_user_acquisition_budget_manage ) %]
+ <dt><a href="/cgi-bin/koha/admin/aqbudgets.pl">التمويلات</a></dt>
+ <dd>تحديد الأموال ضمن الميزانيات الخاصة بك</dd>
+ [% END %]
+ [% IF ( Koha.Preference('EDIFACT') && CAN_user_acquisition_edi_manage ) %]
+ <dt><a href="/cgi-bin/koha/admin/edi_accounts.pl">حسابات EDI</a></dt>
+ <dd>إدارة حسابات EDI  المزود للاستيراد / التصدير</dd>
+ <dt><a href="/cgi-bin/koha/admin/edi_ean_accounts.pl">المكتبة EANs</a></dt>
+ <dd>إدارة EDI EANs المكتبة</dd>
+ [% END %]
+ </dl>
+ [% END %]
+
+ [% IF ( ( CAN_user_parameters_manage_identity_providers || CAN_user_parameters_manage_smtp_servers || CAN_user_parameters_manage_search_targets || CAN_user_parameters_manage_didyoumean || CAN_user_parameters_manage_column_config || CAN_user_parameters_manage_audio_alerts || CAN_user_parameters_manage_sms_providers && Koha.Preference('SMSSendDriver') == 'Email' ) || CAN_user_parameters_manage_usage_stats || CAN_user_parameters_manage_additional_fields || CAN_user_parameters_manage_mana || (Koha.Preference('EnableAdvancedCatalogingEditor') && CAN_user_parameters_manage_keyboard_shortcuts) ) %]
+ <h3>عوامل إضافية</h3>
+ <dl>
+ <!-- <dt><a href="/cgi-bin/koha/admin/printers.pl">Network Printers</a></dt>
+ <dd>Printers (UNIX paths).</dd> -->
+ [% IF ( CAN_user_parameters_manage_identity_providers) %]
+ <dt><a href="/cgi-bin/koha/admin/identity_providers.pl">موفرى الهوية</a></dt>
+ <dd>تعريف موفري الهوية الخارجيين الذين سيتم استخدامهم</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_search_targets ) %]
+ <dt><a href="/cgi-bin/koha/admin/z3950servers.pl">خوادم Z39.50/SRU</a></dt>
+ <dd>تعريف أي الخوادم الخارجية للاستعلام عن بيانات مارك</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_smtp_servers ) %]
+ <dt><a href="/cgi-bin/koha/admin/smtp_servers.pl">خوادم SMTP</a></dt>
+ <dd>تعريف أي خوادم SMTP سيتم استخدامها</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_didyoumean ) %]
+ <dt><a href="/cgi-bin/koha/admin/didyoumean.pl">هل تعني؟</a></dt>
+ <dd>اختر أي البرامج المساعدة لاستخدامها لاقتراح عمليات بحث على المستفيدين والموظفين</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_column_config ) %]
+ <dt><a href="/cgi-bin/koha/admin/columns_settings.pl">إعدادات الجدول</a></dt>
+ <dd>تهيئة وإخفاء أو إظهار الأعمدة للجداول</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_audio_alerts ) %]
+ <dt><a href="/cgi-bin/koha/admin/audio_alerts.pl">تنبيهات صوتية</a></dt>
+ <dd>تعريف أي أحداث تحفز أي أصوات</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_sms_providers && Koha.Preference('SMSSendDriver') == 'Email' ) %]
+ <dt><a href="/cgi-bin/koha/admin/sms_providers.pl">مقدمي خدمة الرسائل النصية القصيرة</a></dt>
+ <dd>تعريف قائمة بمقدمي خدمة الهاتف المحمول لإرسال رسائل نصية قصيرة عبر البريد الإلكتروني</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_usage_stats ) %]
+ <dt><a href="/cgi-bin/koha/admin/usage_statistics.pl">مشاركة إحصائيات استخدامي</a></dt>
+ <dd>مشاركة إحصائيات استخدام تثبيت كوها الخاص بك مع مجتمع كوها</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_mana ) %]
+ <dt><a href="/cgi-bin/koha/admin/share_content.pl">مشاركة المحتوى مع قاعدة معرفة مانا</a></dt>
+ <dd>مشاركة المحتوى (الاشتراكات، التقارير) مع مجتمع كوها</dd>
+ [% END %]
+ [% IF ( CAN_user_parameters_manage_additional_fields ) %]
+ <dt><a href="/cgi-bin/koha/admin/additional-fields.pl">حقول إضافية</a></dt>
+ <dd>إضافة حقول إضافية إلى جداول محددة</dd>
+ [% END %]
+ [% IF Koha.Preference('EnableAdvancedCatalogingEditor') && ( CAN_user_parameters_manage_keyboard_shortcuts ) %]
+ <dt><a href="/cgi-bin/koha/admin/adveditorshortcuts.pl">اختصارات لوحة المفاتيح</a></dt>
+ <dd>قم بتعريف المفاتيح والإجراءات التي تقوم بها في محرر الفهرسة المتقدم</dd>
+ [% END %]
+ [% IF Koha.Preference('ILLModule') && CAN_user_ill %]
+ <dt><a href="/cgi-bin/koha/admin/ill_batch_statuses.pl">حالات دفعة الإعارة البينية</a></dt>
+ <dd>إدارة الحالات التي يمكن تخصيصها لدفعات الإعارة البينية</dd>
+ [% END %]
+ </dl>
+ [% END %]
+ </div>
+ </div>
+ </div>
+</div>
+
+[% INCLUDE 'intranet-bottom.inc' %]

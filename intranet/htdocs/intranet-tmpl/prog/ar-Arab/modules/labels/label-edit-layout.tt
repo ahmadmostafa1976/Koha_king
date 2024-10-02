@@ -1,0 +1,264 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[%- BLOCK translate_label_types -%]
+ [%-  SWITCH type -%]
+ [%- CASE 'BIB' -%]<span> تتم طباعة البيانات الببليوغرافية فقط</span>
+ [%- CASE 'BARBIB'-%]<span> الباركود يسبق البيانات الببليوغرافية</span>
+ [%- CASE 'BIBBAR'-%]<span> البيانات الببليوغرافية تسبق الباركود</span>
+ [%- CASE 'ALT' -%]<span> تتم طباعة الباركود والبيانات الببليوغرافية على ملصقات بديلة</span>
+ [%- CASE 'BAR' -%]<span> تتم طباعة الباركود فقط</span>
+ [%- END -%]
+[%- END -%]
+ [% INCLUDE 'doc-head-open.inc' %]
+ <title>[% FILTER collapse %]
+ [% IF( layout_id ) %]
+ [% tx("Edit label layout {layout_id}", { layout_id = layout_id }) | html %]
+ [% ELSE %]
+ [% t("New label layout") | html %]
+ [% END %] &rsaquo;
+ [% t("Layouts") | html %] &rsaquo;
+ [% t("Label creator") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+ [% END %]</title>
+ [% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+[% BLOCK translate_justification_types %]
+[%  SWITCH type %]
+[%   CASE 'L' %]<span>اليسار</span>
+[%   CASE 'C' %]<span>وسط</span>
+[%   CASE 'R' %]<span>يمين</span>
+[%  END %]
+[% END %]
+<body id="labels_label-edit-layout" class="tools labels">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/cataloguing/cataloging-home.pl">الفهرسة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/labels/label-home.pl">منشئ الملصقات</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/labels/label-manage.pl?label_element=layout">التخطيطات</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% IF ( layout_id ) %]
+ <span>تحرير تخطيط الملصق  [% layout_id | html %]</span>
+ [% ELSE %]
+ <span>تخطيط ملصق جديد</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% INCLUDE 'labels-toolbar.inc' %]
+
+ [% IF ( layout_id ) %]
+ <h1>تحرير تخطيط الملصق  [% layout_id | html %]</h1>
+ [% ELSE %]
+ <h1>تخطيط ملصق جديد</h1>
+ [% END %]
+
+ <form name="input" action="/cgi-bin/koha/labels/label-edit-layout.pl" method="post">
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="layout_name">اسم التخطيط: </label>
+ <input type="text" name="layout_name" id="layout_name" size="20" value="[% layout_name | html %]" />
+ </li>
+ <li>
+ <label for="barcode_type">قم باختيار نوع باركود (ترميز): </label>
+ <select name="barcode_type" id="barcode_type">
+ [% FOREACH barcode_type IN barcode_types %]
+ [% IF ( barcode_type.selected ) %]
+ <option value="[% barcode_type.type | html %]" selected="selected">[% barcode_type.name | html %]</option>
+ [% ELSE %]
+ <option value="[% barcode_type.type | html %]">[% barcode_type.name | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="printing_type">قم باختيار نوع النمط: </label>
+ <select name="printing_type" id="printing_type">
+ [% FOREACH label_type IN label_types %]
+ [% IF ( label_type.selected ) %]
+ <option value="[% label_type.type | html %]" selected="selected">[% PROCESS translate_label_types type=label_type.type %]</option>
+ [% ELSE %]
+ <option value="[% label_type.type | html %]">[% PROCESS translate_label_types type=label_type.type %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <fieldset>
+ <legend>بيانات بيبلوغرافية للطباعة</legend>
+ <ol>
+ <li class="radio">[% IF ( layout_string ) %]
+ <input type="radio" name="layout_choice" id="layout_choice_order" value="layout_table" checked="checked" /><label for="layout_choice_order">اختر ترتيب حقول النص للطباعة</label>
+ [% ELSE %]
+ <input type="radio" name="layout_choice" id="layout_choice_order" value="layout_table" /><label for="layout_choice_order">اختر ترتيب حقول النص للطباعة</label>
+ [% END %]
+ <div id="layout_table">
+ <p>
+ [% FOREACH text_field IN fields %]
+ <select name="[% text_field.field_name | html %]" id="[% text_field.field_name |url %]">
+ <option value=""></option>
+ [% FOREACH orde IN [1..field_count] %]
+ [% IF ( orde == text_field.order ) %]
+ <option value="[% orde | html %]" selected="1">[% orde | html %]</option>
+ [% ELSE %]
+ <option value="[% orde | html %]">[% orde | html %]</option>
+ [% END %]
+ [% END %]
+ </select>&nbsp;<label for="[% text_field.field_name |url %]">[% text_field.field_label | html %]</label>
+
+ &nbsp;&nbsp;
+
+ [% END %]
+ </p>
+ </div>
+ </li>
+ [% UNLESS ( layout_string ) %]
+ <li class="radio"><input type="radio" id="layout_choice_list" name="layout_choice" value="layout_string" checked="checked" /> <label for="layout_choice_list">حقول القائمة</label></li>
+ [% ELSE %]
+ <li class="radio"><input type="radio" id="layout_choice_list" name="layout_choice" value="layout_string" /> <label for="layout_choice_list">حقول القائمة</label></li>
+ [% END %]
+ <li> <fieldset id="layout_string" class="brief">
+ <label for="format_string">حقول البيانات</label>
+ <input type="text" name="format_string" id="format_string" size="80" value="[% format_string | html %]" />
+ <div class="hint">
+ <p>إدخال قائمة مفصولة بفواصل من الحقول للطباعة. قد تتضمن أي <em>حقل كوها</em> أو حقول مارك الفرعية.</p>
+ <p>انظر التعليمات الفورية للحصول على خيارات متقدمة</p>
+ <p>مثال: الباركود ، رقم استدعاء المادة، العنوان، "050a 050b", 300a </p>
+ <p>Fields homebranch_description, holdingbranch_description, ccode_description, location_description و permanent_location_description تعرض الوصف بدلا من الرمز.</p>
+ </div>
+ </fieldset></li>
+ </ol>
+ </fieldset>
+ </li>
+ <li>
+ <label for="guidebox">رسم مربعات مرشدة: </label>
+ [% IF ( guidebox ) %]
+ <input type="checkbox" name="guidebox" id="guidebox" value="1"  checked="checked" />
+ [% ELSE %]
+ <input type="checkbox" name="guidebox" id="guidebox" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="callnum_split">تقسيم أرقام الاستدعاء: </label>
+ [% IF ( callnum_split ) %]
+ <input type="checkbox" name="callnum_split" id="callnum_split" value="1"  checked="checked" />
+ [% ELSE %]
+ <input type="checkbox" name="callnum_split" id="callnum_split" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="text_justify">ضبط النص: </label>
+ <select name="text_justify" id="text_justify">
+ [% FOREACH text_justification_type IN text_justification_types %]
+ [% IF ( text_justification_type.selected ) %]
+ <option value="[% text_justification_type.type | html %]" selected="selected">[% PROCESS translate_justification_types type=text_justification_type.type %]</option>
+ [% ELSE %]
+ <option value="[% text_justification_type.type | html %]">[% PROCESS translate_justification_types type=text_justification_type.type %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="font">خط: </label>
+ <select name="font" id="font">
+ [% FOREACH font_type IN font_types %]
+ [% IF ( font_type.selected ) %]
+ <option value="[% font_type.type | html %]" selected="selected">[% font_type.name | html %]</option>
+ [% ELSE %]
+ <option value="[% font_type.type | html %]">[% font_type.name | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="font_size">حجم الخط: </label>
+ <input type="text" name="font_size" id="font_size" size="2" value="[% font_size | html %]" />
+ </li>
+ <li>
+ <label for="scale_width">عرض الباركود: </label>
+ <input type="text" name="scale_width" id="scale_width" size="2" value="[% scale_width | html %]" />
+ </li>
+ <li>
+ <label for="scale_height">ارتفاع الباركود: </label>
+ <input type="text" name="scale_height" id="scale_height" size="2" value="[% scale_height | html %]" />
+ </li>
+ <li>
+ <label for="oblique_title">عنوان منحدر: </label>
+ [% IF ( oblique_title ) %]
+ <input type="checkbox" name="oblique_title" id="oblique_title" value="1"  checked="checked" />
+ [% ELSE %]
+ <input type="checkbox" name="oblique_title" id="oblique_title" value="1" />
+ [% END %]
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ [% INCLUDE 'csrf-token.inc' %] 
+ <input type="hidden" name="op" value="cud-save" />
+ <input type="hidden" name="layout_id" value="[% layout_id | html %]" />
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a class="cancel" href="/cgi-bin/koha/labels/label-manage.pl?label_element=layout">إلغاء</a>
+ </fieldset>
+ </form>
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'cat-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        $(document).ready(function() {
+            $('#navmenulist a[href$="/cgi-bin/koha/labels/label-home.pl"]').addClass("current");
+            $("input[name='layout_choice']").change( function() { layout_method() } );
+            layout_method();
+            $("#font").on("change",function(){
+                 checkOblique();
+            });
+        });
+        function layout_method() {
+            if( $("input[name='layout_choice']:checked").val() == 'layout_string' ) {
+                $('#layout_table').hide();
+                $('#layout_string').show();
+            } else {
+                $('#layout_table').show();
+                $('#layout_string').hide();
+            }
+        }
+        function checkOblique() {
+            var font = document.getElementById("font");
+            var selectedfont = font.options[font.selectedIndex].value;
+            if ( selectedfont.match("I$") || selectedfont.match("O$") ) {
+                document.getElementById("oblique_title").disabled = true;
+            } else {
+                document.getElementById("oblique_title").disabled = false;
+            }
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

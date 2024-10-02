@@ -1,0 +1,389 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE ItemTypes %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+ [% INCLUDE 'doc-head-open.inc' %]
+ <title>[% FILTER collapse %]
+ [% IF ( batch_id ) %]
+ [% tx("Edit label batch {batch_id}", { batch_id = batch_id }) | html %]
+ [% ELSE %]
+ [% t("New label batch") | html %]
+ [% END %] &rsaquo;
+ [% t("Batches") | html %] &rsaquo;
+ [% t("Label creator") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+ [% END %]</title>
+ [% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="labels_label-edit-batch" class="tools labels" onload="dofocus();">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/cataloguing/cataloging-home.pl">الفهرسة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/labels/label-home.pl">منشئ الملصقات</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/labels/label-manage.pl?label_element=batch">دفعات</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% IF description %]
+ <span>تحرير [% description | html %]</span>
+ [% ELSIF batch_id %]
+ <span>إنشاء دفعة الملصقات  [% batch_id | html %]</span>
+ [% ELSE %]
+ <span>دفعة ملصقات جديدة</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% INCLUDE 'labels-toolbar.inc' %]
+
+ [% IF description %]
+ <h1>تحرير [% description | html %]</h1>
+ [% ELSIF batch_id %]
+ <h1>إنشاء دفعة الملصقات  [% batch_id | html %]</h1>
+ [% ELSE %]
+ <h1>دفعة ملصقات جديدة</h1>
+ [% END %]
+
+ [% IF ( err ) %]
+ [% BLOCK xlate_errtype %]
+ [%    SWITCH errtype %]
+ [%       CASE 'ITEM_NOT_REMOVED' %]
+ <span>لم تتم إزالة المادة من الدفعة [% batch_id | html %].</span>
+ [%       CASE 'BATCH_NOT_DELETED' %]
+ <span>لم يتم حذف الدفعة [% batch_id | html %] .</span>
+ [%       CASE 'ITEM_NOT_ADDED' %]
+ <span>لم تتم إضافة المادة إلى الدفعة [% batch_id | html %].</span>
+ [%       CASE 'BRANCH_NOT_SET' %]
+ <span>لم يتم ضبط المكتبة، يرجى ضبط مكتبتك أولاً قبل إضافة المواد إلى الدفعة.</span>
+ [%       CASE 'BATCH_NOT_DEDUP' %]
+ <span>الدفعة [% batch_id | html %] لم يتم إلغاء تكرارها بالكامل.</span>
+ [%       CASE %]
+ <span>نوع خطأ غير معروف [% errtype | html %].</span>
+ [%    END %]
+ [% END %]
+ <div class="dialog alert">
+ <strong>تحذير :</strong> لقد حدث خطأ: [% PROCESS xlate_errtype %] يرجى الطلب من مدير النظام التحقق من سجل الأخطاء للمزيد من التفاصيل. </div>
+ [% ELSIF ( duplicate_message ) %]
+ <div class="dialog message">
+ <strong>تمت إزالة تكرارات المواد من الدفعة رقم  [% batch_id | html %]: [% duplicate_count | html %]</strong>
+ </div>
+ [% END %]
+
+ <div id="manage-label-batches">
+ <form name="add_by_number" action="/cgi-bin/koha/labels/label-edit-batch.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <div>
+ <fieldset class="rows" style="border-bottom: 0px; border: 0px;">
+ <ol><li id="description">
+ <input type="hidden" name="op" value="cud-add" />
+ <input type="hidden" name="batch_id" value="[% batch_id | html %]" />
+ <label for="description">وصف الدفعة: </label>
+ <input type="text" name="description" value="[% description | html %]"> <span id="change-status"></span>
+ </li>
+ <li>
+ <input type="radio" name="number_type" id="barcode_enter" value="barcode" checked />
+ <label for="barcode_enter">إدخال بواسطة الباركود:</label>
+ </li>
+ <li>
+ <input type="radio" name="number_type" id="itemnum_enter" value="itemnumber" />
+ <label for="itemnum_enter">إدخال بواسطة رقم المادة:</label>
+ </li>
+ <li>
+ <label for="number_list">
+ اضافة بواسطة الباركود أو أرقام المواد: </label>
+ <textarea rows="5" id="number_list" name="number_list" tabindex="1" class="focus"></textarea>
+ <div class="hint">
+ رقم واحد لكل سطر. <br /> اتركه فارغاً للإضافة عبر بحث المادة (رقم المادة) </div>
+ </li></ol>
+ </fieldset>
+ </div>
+ </form>
+ <div id="batch-manage" class="btn-toolbar">
+ <a class="btn btn-default" id="additems" href="#"><i class="fa fa-plus"></i> إضافة مادة أو مجموعة مواد</a>[% IF ( table_loop ) %]
+ <a class="btn btn-default" id="savedesc" href="#" data-batch_id="[% batch_id | html %]"><i class="fa fa-save"></i> حفظ الوصف</a>
+ <a class="btn btn-default" id="removeitems" href="#"><i class="fa fa-trash-can"></i> حذف المواد المحددة</a>
+
+ <a class="btn btn-default submit-form-link" id="deletebatch" href="#" data-op="cud-delete" data-label_element="batch" data-element_id="[% batch_id | html %]" data-action="/cgi-bin/koha/labels/label-manage.pl" data-method="post" data-confirmation-msg="[% tx("Are you sure you want to delete batch {batch_number}?", { batch_number = batch_id }) %]"><i class="fa fa-minus-square"></i> حذف الدفعة</a>
+
+ <a class="btn btn-default" id="deduplicate" href="#"><i class="fa fa-minus"></i> إزالة التكرارات</a>
+ <a class="btn btn-default" id="exportitems" href="#"><i class="fa-solid fa-share-from-square"></i> تصدير المواد المحددة</a>
+ <a class="btn btn-default" id="exportbatch" href="#"><i class="fa-solid fa-share-from-square"></i> تصدير دفعة كاملة</a>[% END %]
+ </div>
+ [% IF ( table_loop ) %]
+ <form method="get" name="items">
+ <h2>المواد في الدفعة رقم [% batch_id | html %]</h2>
+
+ <div class="page-section">
+ <table id="batcht">
+ [% FOREACH table_loo IN table_loop %]
+ [% IF ( table_loo.header_fields ) %]
+ <thead>
+ <tr>
+ [% FOREACH header_field IN table_loo.header_fields %]
+ [% SWITCH header_field.field_label -%]
+ [% CASE "Label number" -%]
+ <th>رقم الملصق</th>
+ [% CASE "Summary" -%]
+ <th class="anti-the">ملخص</th>
+ [% CASE "Item type" %]
+ <th>نوع المادة</th>
+ [% CASE "Call number" %]
+ <th>رقم الاستدعاء</th>
+ [% CASE "Barcode" %]
+ <th>الباركود</th>
+ [% CASE "Select" -%]
+ <th>تحديد</th>
+ [% CASE %]
+ <th>[% header_field.field_label | html %]</th>
+ [% END -%]
+ [% END %]
+ </tr>
+ </thead>
+ <tbody>
+ [% ELSE %]
+ <tr>
+ [% FOREACH text_field IN table_loo.text_fields %]
+ [% IF ( text_field.select_field ) %]
+ <td>
+ <a class="btn btn-default btn-xs delete" href="/cgi-bin/koha/labels/label-edit-batch.pl?op=remove&amp;batch_id=[% batch_id |url %]&amp;label_id=[% text_field.field_value |url %]"><i class="fa fa-trash-can"></i> حذف</a>
+ <a class="btn btn-default btn-xs export" href="#" data-batch-id="[% batch_id | html %]" data-label-id="[% text_field.field_value | html %]"><i class="fa-solid fa-share-from-square"></i> تصدير</a>
+ </td>
+ <td><input type="checkbox" name="action" value="[% text_field.field_value | html %]"></td>
+ [% ELSE %]
+ <td>
+ [% IF ( text_field.field_name == '_item_type_tbl' ) %]
+ [% ItemTypes.GetDescription( text_field.field_value ) | html %]
+ [% ELSE %]
+ [% text_field.field_value | $raw %]
+ [% END %]
+ </td>
+ [% END %]
+ [% END %]
+ </tr>
+ [% END %]
+ [% END %]
+ </tbody>
+ </table>
+ </div> <!-- /.page-section -->
+ </form>
+ [% ELSE %]
+ <div class="dialog message">
+ <h4>لا توجد مواد في هذه الدفعة بعد</h4>
+ <p>إضافة مواد باستخدام مساحة النص أعلاه أو تركها خالية للإضافة عبر بحث المواد.</p>
+ </div>
+ [% END %]
+ </div>
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'cat-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'greybox.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ [% Asset.js("js/form-submit.js") | $raw %]
+ <script>
+        function dofocus() {    // named function req'd for body onload event by some FF and IE7 security models
+            $(".focus:last").select();
+        }
+        function verifyBarcodes(barcodes) {
+            if (barcodes.value == '') {
+                alert(_("يرجى إضافة أرقام الباركود باستخدام إما نص الإدخال المباشر أو بحث المادة."));
+                return false;   // not ok
+            }
+            else {
+                return true;    // ok
+            }
+        }
+        function Remove() {
+            items = new Array;
+            item_num = new Array;
+            if(document.items.action.length > 0) {
+                for (var i=0; i < document.items.action.length; i++) {
+                    if (document.items.action[i].checked) {
+                        items.push("label_id=" +  document.items.action[i].value);
+                        item_num.push(i+1);
+                    }
+                }
+                getstr = items.join("&");
+                item_msg = item_num.join(", ");
+                var msg = _("هل أنت متأكد من أنك تريد حذف أرقام الملصقات: %s من هذه الدفعة؟").format(item_msg);
+            } else if (document.items.action.checked) {
+                alert(_("حذف الملصق من دفعة بها ملصق واحد فقط سيؤدي إلى حذف الدفعة.") + "\n\n" + _("إذا كنت تريد هذا، قم بتحديد خيار 'حذف الدفعة' من شريط الأدوات"));
+                    return; // no deletion for single item batch
+            } else {
+                alert(_("يرجى تحديد ملصق واحد على الأقل للحذف."));
+                return;     // no item selected
+            }
+            var answer = confirm(msg);
+            if (answer) {
+                window.location = "/cgi-bin/koha/labels/label-edit-batch.pl?op=remove&amp;batch_id=[% batch_id | html %]&amp;" + getstr;
+            } else {
+                return; // abort delete
+            }
+        }
+        function Add() {
+            var number_list = document.getElementById("number_list");
+            if (number_list.value == '') {
+                window.open("/cgi-bin/koha/labels/label-item-search.pl?batch_id=[% batch_id | html %]&amp;type=labels",'FindABibIndex','width=875,height=400,toolbar=no,scrollbars=yes');
+            } else {
+                document.forms["add_by_number"].submit();
+            }
+        }
+
+        function add_item(item_number) {
+            $("#itemnum_enter").prop("checked",true);
+            $("#number_list").val($("#number_list").val()+item_number+"\r\n");
+        }
+
+        function DeDuplicate() {
+            window.location = "/cgi-bin/koha/labels/label-edit-batch.pl?op=de_duplicate&amp;batch_id=[% batch_id | html %]";
+        }
+
+        function Xport(mode) {
+            if (mode == 'label') {
+                labels= new Array;
+                if(document.items.action.length > 0) {
+                    for (var i=0; i < document.items.action.length; i++) {
+                        if (document.items.action[i].checked) {
+                            labels.push("label_id=" +  document.items.action[i].value);
+                        }
+                    }
+                    if (labels.length < 1) {
+                        alert(_("يرجى تحديد ملصق واحد على الأقل للتصدير."));
+                        return;     // no batch selected
+                    }
+                    getstr = labels.join("&");
+                }
+                else if (document.items.action.checked) {
+                    getstr = document.items.action.value;
+                } else {
+                    alert(_("يرجى تحديد ملصق واحد على الأقل للتصدير."));
+                    return;     // no batch selected
+                }
+                return GB_showCenter(_("تصدير الملصقات"), "/cgi-bin/koha/labels/label-print.pl?batch_id=[% batch_id | html %]&" + getstr, 400, 800);
+            } else if (mode == 'batch') {
+                return GB_showCenter(_("تصدير الملصقات"), "/cgi-bin/koha/labels/label-print.pl?batch_id=[% batch_id | html %]", 400, 800);
+            } else {
+                // some pass-thru error trapping just in case...
+            }
+        }
+
+        function selected_layout() {
+            if (document.items.action.length) {
+                for (i=0;i<document.items.action.length;i++){
+                    if (document.items.action[i].checked==true){
+                        return(document.items.action[i].value);
+                    }
+                }
+            } else {
+                if (document.items.action.checked){
+                    return(document.items.action.value);
+                }
+            }
+            alert(_("يرجى تحديد مادة واحدة على الأقل."));
+            return (-1);
+        }
+
+        $(document).ready(function() {
+            $('#navmenulist a[href$="/cgi-bin/koha/labels/label-home.pl"]').addClass("current");
+            [% IF table_loop %]
+                $("#description").show();
+            [% ELSE %]
+                $("#description").hide();
+            [% END %]
+            $("#batcht").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "autoWidth": false,
+                "columnDefs": [
+                    { "type": "anti-the", "targets":  [ "anti-the" ] },
+                    { "targets": [ -1, -2 ], "orderable": false, "searchable":  false },
+                ],
+                "order": [[ 0, "asc" ]],
+                "pagingType": "full"
+            }));
+            $("#additems").click(function(){
+                Add();
+                return false;
+            });
+            $("#removeitems").click(function(){
+                Remove();
+                return false;
+            });
+
+            $("#deduplicate").click(function(){
+                DeDuplicate();
+                return false;
+            });
+            $("#exportitems").click(function(){
+                Xport('label');
+                return false;
+            });
+            $("#exportbatch").click(function(){
+                Xport('batch');
+                return false;
+            });
+            $(".delete").on("click", function(){
+                return confirmDelete( _("هل أنت متأكد أنك تريد حذف هذا؟") );
+            });
+            $(".export").on("click", function(e){
+                e.preventDefault();
+                var label_id = $(this).data("label-id");
+                var batch_id = $(this).data("batch-id");
+                GB_showCenter(_("تصدير الملصقات"),"/cgi-bin/koha/labels/label-print.pl?batch_id=" + batch_id + "&label_id=" + label_id, 400, 800);
+            });
+            $("#savedesc").click(function(event){
+                event.preventDefault(); // prevent form submission
+                var newdescription = $('input[name="description"]').val();
+                var batch_id = $(this).data('batch_id');
+                var ajaxData = {
+                    'newdescription': newdescription,
+                    'batch_id': batch_id,
+                    op: 'cud-set_permission',
+                    csrf_token: $('meta[name="csrf-token"]').attr("content"),
+                };
+
+                $.ajax({
+                    url: '/cgi-bin/koha/svc/creator_batches',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: ajaxData,
+                })
+                .done(function(data){
+                    if (data.status == 'success') {
+                        $("input[name='description']").text(data.newdesc);
+                        $("#change-status").text(_("محفوظ"));
+                    } else {
+                        $("#change-status").text(_("تعذر حفظ الوصف"));
+                    }
+                }).fail(function(){
+                    $("#change-status").text(_("تعذر حفظ الوصف"));
+                });
+            });
+         });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

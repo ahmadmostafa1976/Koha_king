@@ -1,0 +1,405 @@
+[% USE raw %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% PROCESS 'authorities-search-results.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF view == 'list' %]
+ [% t("Confirm selection") | html %] &rsaquo;
+ [% ELSIF view == 'enqueued' %]
+ [% t("Job enqueued") | html %] &rsaquo;
+ [% END %]
+ [% t("Batch record modification") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% Asset.css("css/humanmsg.css") | $raw %]
+</head>
+
+<body id="tools_batch_record_modification" class="tools">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+ [% END %]
+
+ [% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/cataloguing/cataloging-home.pl">الفهرسة</a>
+ [% END %]
+ [% IF view == 'form' %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تعديل التسجيلة بالدفعة</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/tools/batch_record_modification.pl">تعديل التسجيلة بالدفعة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% IF view == 'list' %]
+ [% t("Confirm selection") | html %]
+ [% ELSIF view == 'enqueued' %]
+ [% t("Job enqueued") | html %]
+ [% END %]
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+ [% END #/ WRAPPER sub-header.inc %]
+
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>تعديل التسجيلة بالدفعة</h1>
+
+ [% IF ( messages ) %]
+ <div class="dialog message">
+
+ [% FOREACH message IN messages %]
+ [% IF message.type == 'success' %]
+ <div><i class="fa fa-check success"></i>
+ [% ELSIF message.type == 'warning' %]
+ <div><i class="fa-solid fa-triangle-exclamation warn"></i>
+ [% ELSIF message.type == 'error' %]
+ <div><i class="fa fa-exclamation error"></i>
+ [% END %]
+ [% IF message.code == 'no_action_defined_for_the_template' %]
+ <span>القالب المحدد (المعرف=[% message.mmtid | html %]) غير موجود أو لم يتم تحديد أي إجراء.</span>
+ [% ELSIF message.code == 'biblio_not_exists' %]
+ <span>التسجيلة الببليوغرافية [% message.biblionumber | html %] غير موجودة في قاعدة البيانات.</span>
+ [% ELSIF message.code == 'authority_not_exists' %]
+ <span>التسجيلة الاستنادية [% message.authid | html %] غير موجودة في قاعدة البيانات.</span>
+ [% ELSIF message.code == 'cannot_enqueue_job' %]
+ <span>لا يمكن إدراج هذه المهمة في الصف.</span>
+ [% END %]
+ [% IF message.error %]
+ <span>(كان الخطأ هو: [% message.error | html %]. انظر ملف سجل كوها للمزيد من المعلومات).</span>
+ [% END %]
+ </div>
+ [% END %]
+
+ </div> <!-- /.dialog.message -->
+ [% END %]
+
+ [% IF view == 'form' %]
+ <form method="post" enctype="multipart/form-data" action="/cgi-bin/koha/tools/batch_record_modification.pl" id="record_ids_selection">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <legend>نوع التسجيلة</legend>
+ <ol class="radio">
+ <li><label for="biblio_type"><input type="radio" name="recordtype" value="biblio" id="biblio_type" checked="checked" /> التسجيلات الببليوغرافية</label></li>
+ <li><label for="authority_type"><input type="radio" name="recordtype" value="authority" id="authority_type" /> تسجيلات الاستناد</label></li>
+ </ol>
+ </fieldset>
+
+ <br class="clear"/>
+
+ [% WRAPPER tabs id= "batch_mod_form" %]
+ [% WRAPPER tabs_nav %]
+ [% WRAPPER tab_item tabname= "uploadfile_tab" bt_active= 1 %] <span>تحميل ملف</span> [% END %]
+ [% IF lists.count %]
+ [% WRAPPER tab_item tabname= "shelves_tab" %] <span>حدد قائمة بالتسجيلات</span> [% END %]
+ <!-- <li id="show_list_option"> -->
+ [% END %]
+ [% WRAPPER tab_item tabname= "enterlist_tab" %] <span>قم بإدخال قائمة بأرقام التسجيلات</span> [% END %]
+ [% END # /WRAPPER tabs_nav %]
+ [% WRAPPER tab_panels %]
+ [% WRAPPER tab_panel tabname="uploadfile_tab" bt_active= 1 %]
+ <fieldset class="rows">
+ <ol>
+ <li><label for="uploadfile">الملف: </label> <input type="file" id="uploadfile" name="uploadfile" /></li>
+ </ol>
+ </fieldset>
+ [% END # /tab_panel %]
+
+ [% IF lists.count %]
+ [% WRAPPER tab_panel tabname="shelves_tab" %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="shelf_number">القائمة: </label>
+ <select name="shelf_number" id="shelf_number">
+ <option value="">حدد قائمة</option>
+ [% FOREACH list IN lists %]
+ <option value="[% list.shelfnumber | html %]">[% list.shelfname | html %]</option>
+ [% END %]
+ </select>
+ </li>
+ </ol>
+ </fieldset>
+ [% END # /tab_panel %]
+ [% END %]
+ [% WRAPPER tab_panel tabname="enterlist_tab" %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="recordnumber_list">أرقام التسجيلة: </label>
+ <textarea rows="10" cols="30" id="recordnumber_list" name="recordnumber_list"></textarea>
+ <div class="hint">قم بإدخال قائمة بالأرقام الببليوغرافية أو معرّفات الاستناد، رقم في كل سطر.</div>
+ </li>
+ </ol>
+ </fieldset>
+ [% END # /tab_panel %]
+ [% END # /WRAPPER tab_panels %]
+ [% END # /WRAPPER tabs %]
+
+ <fieldset class="rows">
+ <legend>قالب تعديل مارك</legend>
+ <ol>
+ <li>
+ <label for="marc_modification_template_id" class="required">القالب: </label>
+ <select name="marc_modification_template_id" id="marc_modification_template_id" required="required">
+ <option value="">تحديد قالب</option>
+ [% FOREACH mmt IN MarcModificationTemplatesLoop %]
+ <option value="[% mmt.template_id | html %]">[% mmt.name | html %]</option>
+ [% END %]
+ </select>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-list" />
+ <input class="btn btn-primary" type="submit" value="متابعة" />
+ <a class="cancel" href="/cgi-bin/koha/cataloguing/cataloging-home.pl">إلغاء</a>
+ </fieldset>
+ </form> <!-- /#record_ids_selection -->
+ [% ELSIF view == 'list' %]
+ [% IF records %]
+ <form action="/cgi-bin/koha/tools/batch_record_modification.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <label for="marc_modification_template_id" class="required">تعديل التسجيلة باستخدام القالب التالي: </label>
+ <select name="marc_modification_template_id" id="marc_modification_template_id" required="required">
+ <option value="">تحديد قالب</option>
+ [% FOREACH mmt IN MarcModificationTemplatesLoop %]
+ [% IF mmt.selected %]
+ <option value="[% mmt.template_id | html %]" selected="selected">[% mmt.name | html %]</option>
+ [% ELSE %]
+ <option value="[% mmt.template_id | html %]">[% mmt.name | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ <div id="marcPreview" class="modal" tabindex="-1" role="dialog" aria-labelledby="marcPreviewLabel" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="marcPreviewLabel">معاينة مارك</h3>
+ </div>
+ <div class="modal-body">
+ <div id="loading"> <img src="[% interface | html %]/[% theme | html %]/img/spinner-small.gif" alt="" /> جاري التحميل </div>
+ </div>
+ <div class="modal-footer">
+ <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">إغلاق</button>
+ </div>
+ </div>
+ </div>
+ </div>
+ [% IF recordtype == 'biblio' %]
+ <div class="btn-toolbar selections-toolbar">
+ <a id="selectall" href="#"><i class="fa fa-check"></i> تحديد الكل</a>
+ | <a id="clearall" href="#"><i class="fa fa-times"></i> مسح الكل</a>
+ </div>
+ <div class="page-section">
+ <table id="biblios" class="records">
+ <thead>
+ <tr>
+ <th>&nbsp;</th>
+ <th>الرقم الببليوغرافي</th>
+ <th>عنوان</th>
+ <th>&nbsp;</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOR biblio IN records %]
+ <tr>
+ <td><input type="checkbox" name="record_id" value="[% biblio.biblionumber | html %]" /></td>
+ <td>[% biblio.biblionumber | html %]</td>
+ <td><a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% biblio.biblionumber | uri %]">[% biblio.title | html %]</a></td>
+ <td class="actions">
+ <a class="previewMARC btn btn-default btn-xs" data-mmtid="[% mmtid | html %]" data-record_id="[% biblio.biblionumber | html %]" data-record_type="biblio" href="/cgi-bin/koha/svc/records/preview?record_type=biblio&record_id=[% biblio.biblionumber | uri %]&mmtid=[% mmtid | uri %]&overlay_context=batchmod" title="معاينة مارك"><i class="fa-solid fa-eye"></i> عرض مارك</a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- /#biblios -->
+ </div>
+ <div class="note"><i class="fa fa-exclamation"></i> تذكير: سيؤدي هذا الإجراء إلى تعديل التسجيلات الببليوغرافية المحددة!</div>
+ [% ELSE %]
+ <div class="btn-toolbar selections-toolbar">
+ <a id="selectall" href="#"><i class="fa fa-check"></i> تحديد الكل</a>
+ | <a id="clearall" href="#"><i class="fa fa-times"></i> مسح الكل</a>
+ </div>
+ <div class="page-section">
+ <table id="authorities" class="records">
+ <thead>
+ <tr>
+ <th></th>
+ <th>معرف الاستناد</th>
+ <th>ملخص</th>
+ <th>&nbsp;</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOR authority IN records %]
+ <tr>
+ <td><input type="checkbox" name="record_id" value="[% authority.authid | html %]" data-usage="[% authority.count_usage | html %]" /></td>
+ <td><a href="/cgi-bin/koha/authorities/detail.pl?authid=[% authority.authid | uri %]">[% authority.authid | html %]</a></td>
+ <td>[% PROCESS authresult summary=authority.summary authid=authority.authid %]</td>
+ <td class="actions"><a href="/cgi-bin/koha/svc/records/preview?record_type=authority&record_id=[% authority.authid | uri %]&mmtid=[% mmtid | uri %]&overlay_context=batchmod" data-record_type="authority" data-record_id="[% authority.authid | html %]" data-mmtid="[% mmtid | html %]" class="previewMARC btn btn-default btn-xs"><i class='fa fa-eye'></i> عرض مارك</a>
+ </tr>
+ [% END %]
+ </tbody>
+ </table> <!-- /#authorities -->
+ </div>
+ <div class="note"><i class="fa fa-exclamation"></i> تذكير: سيؤدي هذا الإجراء إلى تعديل الاستنادات المحددة!</div>
+ [% END %]
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-modify" />
+ <input type="hidden" name="recordtype" value="[% recordtype | html %]" />
+ <input class="button" id="mainformsubmit" type="submit" value="تعديل التسجيلات المحددة" />
+ </fieldset>
+ </form> <!-- /#process -->
+ [% ELSE %]
+ <div class="dialog message">
+ لم يتم تعديل تسجيلا. [% IF recordtype != 'biblio' %]<a href="/cgi-bin/koha/tools/batch_record_modification.pl" title="تعديل جديد لدفعة التسجيلات">تعديل جديد لدفعة التسجيلات</a>[% END %]
+ </div>
+ [% END %]
+ [% ELSIF view == 'errors' %]
+ [% FOR error IN errors %]
+ [% IF error == 'no_template_defined' %]
+ <div class="dialog message">
+ <p>لم يتم تعريف قالب تعديل مارك. يجب عليك إنشاء قالب واحد على الأقل لاستخدام هذه الأداة.</p>
+ [% IF ( CAN_user_tools_marc_modification_templates ) %]
+ <a class="btn btn-default" href="/cgi-bin/koha/tools/marc_modification_templates.pl"><i class="fa fa-plus"></i> إنشاء قالب تعديل مارك جديد</a>
+ [% END %]
+ </div>
+ [% END %]
+ [% END %]
+ [% ELSIF view == 'enqueued' %]
+ <div class="dialog message">
+ <h1>تم وضع المهمة في الصف!</h1>
+ <p>ستتم معالجتها في أقرب وقت.</p>
+ <p><a href="/cgi-bin/koha/admin/background_jobs.pl?op=view&id=[% job_id | uri %]" title="عرض تفاصيل المهمة الموجودة في الصف">عرض تفاصيل المهمة الموجودة في الصف</a>
+ | <a href="/cgi-bin/koha/tools/batch_record_modification.pl" title="تعديل جديد لدفعة التسجيلات">تعديل جديد لدفعة التسجيلات</a></p>
+ </div>
+ [% ELSE %]
+ <div class="dialog alert">
+ لم يتم تعريف إجراء للقالب. </div>
+ [% END %]
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'cat-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'datatables.inc' %]
+ [% Asset.js("lib/jquery/plugins/humanmsg.js") | $raw %]
+ <script>
+        function update_tab_display(){
+            let selected_type = $('input[name="recordtype"]:checked').val();
+            if (selected_type == 'authority') {
+                $("a[href='#shelves_tab_panel']").parent().hide();
+                $("a[href='#uploadfile_tab_panel']").tab("show");
+            } else if (selected_type == 'biblio') {
+                $("a[href='#shelves_tab_panel']").parent().show();
+                $("a[href='#uploadfile_tab_panel']").tab("show");
+            }
+        }
+        $(document).ready(function() {
+
+            update_tab_display();
+            $("input[type='radio']").click(function() {
+                update_tab_display();
+            });
+
+            $("#selectall").click(function(e){
+                e.preventDefault();
+                $(".records input[type='checkbox']").each(function(){
+                    $(this).prop("checked", true);
+                });
+            });
+
+            $("#clearall").click(function(e){
+                e.preventDefault();
+                $(".records input[type='checkbox']").each(function(){
+                    $(this).prop("checked", false);
+                });
+            });
+
+            $("#selectall").click();
+
+            $("table#biblios").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "columnDefs": [
+                    { "targets": [0, 3], "orderable": false, "searchable":  false },
+                    { "targets": [1], "type": "num-html" }
+                ],
+                "dom": 't',
+                "order": [],
+                "paginate": false
+            }));
+
+            $("table#authorities").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "columnDefs": [
+                    { "targets": [0, 3], "orderable": false, "searchable":  false },
+                    { "targets": [1], "type": "num-html" }
+                ],
+                "dom": 't',
+                "order": [],
+                "paginate": false
+            }));
+
+            $("#mainformsubmit").click(function() {
+                if ($("input[type=checkbox][name='record_id']:checked").length == 0) {
+                    alert(_("يرجى تحديد تسجيلة واحدة على الأقل لمعالجتها"));
+                    return false;
+                }
+                if ($("#marc_modification_template_id").val() <= 0) {
+                    alert(_("يرجى تحديد قالب تعديل."));
+                    return false;
+                }
+                return true;
+            });
+
+            $("#record_ids_selection").on("submit", function(e) {
+                var tab = $(this).find('#batch_mod_form li.active:first a').attr('href');
+                if (tab == '#uploadfile_tab_panel') {
+                    $("#recordnumber_list, #shelf_number").val('');
+                } else if (tab == '#shelves_tab_panel') {
+                    $("#recordnumber_list, #uploadfile").val('');
+                } else { // enterlist
+                    $("#uploadfile, #shelf_number").val('')
+                }
+            });
+
+            $("#marc_modification_template_id").change(function() {
+                var url = "/cgi-bin/koha/svc/records/preview?"
+                var mmtid = $(this).val();
+                $("a.previewMARC").each(function() {
+                    $(this).attr("href", url + "record_type=" + $(this).attr("data-record_type") + "&record_id=" + $(this).attr("data-record_id") + "&mmtid=" + mmtid + "&overlay_context=batchmod");
+                });
+            });
+
+            $("body").on("click", ".previewMARC", function(e) {
+                e.preventDefault();
+                var ltitle = $(this).text();
+                var page = $(this).attr("href");
+                $("#marcPreviewLabel").text(ltitle);
+                $("#marcPreview .modal-body").load(page + " div");
+                $('#marcPreview').modal({ show: true });
+            });
+            $("#marcPreview").on("hidden.bs.modal", function() {
+                $("#marcPreviewLabel").html("");
+                $("#marcPreview .modal-body").html("<div id=\"loading\"><img src=\"[% interface | html %]/[% theme | html %]/img/spinner-small.gif\" alt=\"\" /> " + _("جاري التحميل") + "</div>");
+            });
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

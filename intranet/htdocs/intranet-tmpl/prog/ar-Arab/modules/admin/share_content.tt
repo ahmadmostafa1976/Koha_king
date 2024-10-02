@@ -1,0 +1,177 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Share content with Mana KB") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_share_content" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>مشاركة المحتوى مع قاعدة معرفة مانا</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ [% INCLUDE 'messages.inc' %]
+ <div class="col-sm-6">
+ [% IF result.code != 201 && result.msg %]
+ <div class="dialog alert" role="alert">
+ [% result.msg | html %]
+ </div>
+ [% END %]
+
+ [% IF result.code == 201  %]
+ <div class="dialog message" role="alert">
+ لقد قمت بإنشاء حساب قاعدة معرفة مانا بنجاح. قم بالتحقق من صندوق بريدك واتباع التعليمات. </div>
+ [% END %]
+
+ [% UNLESS (mana_url) %]
+ <div class="dialog alert" role="alert">
+ تهيئة مانا خالية حاليًا. لن تعمل هذه الخاصية. يرجى الاتصال بمدير موقعك. </div>
+ [% ELSIF (bad_url) %]
+ <div class="dialog alert" role="alert">
+ تعذر اكتشاف خادم مانا في <strong>[% mana_url | url %]</strong>، يرجى طلب التحقق من التهيئة من مدير النظام </div>
+ [% END %]
+
+ <h1>مشاركة المحتوى مع مجتمع كوها باستخدام قاعدة معرفة مانا</h1>
+ <p>قاعدة معرفة مانا هي قاعدة معرفة عالمية لبيانات المكتبة المركزية. تم تصميمها مبدئيًا للتفاعل مع كوها، نظام إدارة المكتبات مفتوحة المصدر، لكن يمكن استخدامها بواسطة البرمجيات الأخرى.</p>
+
+ <p>تقوم مانا بمركزة المعلومات بين تثبيتات كوها الأخرى لتسهيل إنشاء اشتراكات، ومزودين، وتقارير جديدة، إلخ. يمكنك بحث محتوى مانا ومشاركته واستيراده والتعليق عليه. تتم مشاركة المعلومات المشاركة مع قاعدة بيانات مانا بموجب <a href="https://creativecommons.org/choose/zero/">رخصة CC-0</a>.
+
+ <p>تعرف على المزيد حول قاعدة معرفة مانا عبر <a href="https://wiki.koha-community.org/wiki/Mana_central_database">التوثيق الرسمي لقاعدة معرفة مانا</a>.</p>
+
+ [% IF mana_url && !bad_url %]
+ [% IF (mana_url) %]
+ <p>خادم قاعدة معرفة مانا الخاصة بك حاليًأ: <strong>[% mana_url | url %]</strong></p>
+ [% END %]
+
+ <form id="mana_preference" method="post" class="clearfix">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="mana">استخدم قاعدة معرفة مانا لمشاركة المحتوى: </label>
+ <select name="mana" id="mana">
+ [% IF Koha.Preference('Mana') == 0 %]
+ <option value="0" selected="selected">لا</option>
+ [% ELSE %]
+ <option value="0">لا</option>
+ [% END %]
+
+ [% IF Koha.Preference('Mana') == 1 %]
+ <option value="1" selected="selected">نعم</option>
+ [% ELSE %]
+ <option value="1">نعم</option>
+ [% END %]
+ [% IF Koha.Preference('Mana') == 2 %]
+ <option value="2" selected="selected">لا، دعني أفكر في الأمر</option>
+ [% ELSE %]
+ <option value="2">لا، دعني أفكر في الأمر</option>
+ [% END %]
+ </select>
+ <div class="hint">تفعيل قاعدة معرفة مانا من أجل بحث المحتوى واستيراده والتعليق عليه من خادم قاعدة معرفة مانا، ولمشاركة محتواك.</div>
+ </li>
+ <li>
+ <label for="autosharewithmana">مشاركة الاشتراك التلقائي: </label>
+ [% IF Koha.Preference('AutoShareWithMana').grep('subscription').size == 0 %]
+ <input id="autosharewithmana" type="checkbox" name="autosharewithmana">
+ [% ELSE %]
+ <input id="autosharewithmana" type="checkbox" name="autosharewithmana" checked="checked">
+ [% END %]
+ <span class="hint">عند التحديد، سيتم مشاركة الاشتراكات الجديدة تلقائيًا مع قاعدة معرفة مانا.</span>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-save" />
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ </fieldset>
+ </form>
+
+ [% UNLESS Koha.Preference('ManaToken') %]
+ <h3>تهيئة قاعدة معرفة مانا</h3>
+
+ <p>تجب تهيئة مانا بمجرد تفعيلها. قم بكتابة اسمك وعنوان بريدك الالكتروني ثم التقديم. سيقوم ذلك بإرسال طلب إنشاء حساب إلى قاعدة معرفة مانا والتي ستستجيب برمز قاعدة معرفة مانا (معرف مرمز يقوم بالتعرف على تثبيت كوها بشكل فريد). سيتم حفظ هذا الرمز تلقائيًا في قاعدة بياناتك. بعد ذلك ستتلقى بريدًا إلكترونيًا. قم بقراءته جيدًا واتباع التعليمات.</p>
+ [% END %]
+
+ [% IF Koha.Preference('ManaToken') %]
+ <form id="mana_token" method="post" class="clearfix">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <legend>رمز قاعدة معرفة مانا</legend>
+ <ol>
+ <li>
+ <label for="token">رموز مانا: </label>
+ <input type="text" id="token" name="token" value="[% Koha.Preference('ManaToken') | html %]" size="50" disabled="disabled" />
+ <div class="hint">يستخدم رمز حمايتك الفريد للاستيثاق في خدمة قاعدة معرفة مانا (ضد البريد المزعج).</div>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-reset" />
+ <input class="btn btn-primary" type="submit" value="إعادة تعيين رمزك" />
+ </fieldset>
+ </form>
+ [% ELSE %]
+ <form id="mana_request" method="post" class="clearfix">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows" id="mana_subscription">
+ <ol>
+ <li>
+ <label for="name">اسمك: </label>
+ <input id="name" type="text" name="name" />
+ <div class="hint">قم بإدخال الاسم الشخصي أو المؤسسي.</div>
+ </li>
+ <li>
+ <label for="email">البريد الإلكتروني: </label>
+ <input id="email" type="text" name="email" size="45" required="required" />
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-send" />
+ <input class="btn btn-primary" type="submit" value="إرسال إلى قاعدة معرفة مانا" />
+ </fieldset>
+ </form>
+ [% END %]
+ [% END # /IF mana_url && !bad_url %]
+ </div>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ <script>
+        $(document).ready(function() {
+            $('#mana_token').submit(function() {
+                return confirm( _("سيقوم ذلك بحذف رمز قاعدة معرفة مانا من كوها. هل تريد الاستمرار؟") );
+            });
+        });
+    </script>
+[% END %]
+[% INCLUDE 'intranet-bottom.inc' %]

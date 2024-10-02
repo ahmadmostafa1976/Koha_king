@@ -1,0 +1,577 @@
+[% USE raw %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op == 'add_form' %]
+ [% IF ( action_modify || action_add_value ) %]
+ [% IF ( action_modify ) %]
+ [% t("Modify authorized value") | html %] &rsaquo;
+ [% END %]
+ [% IF ( action_add_value ) %]
+ [% t("New authorized value") | html %] &rsaquo;
+ [% END %]
+ [% tx("Authorized values for category {category_name}", { category_name = category_name }) | html %] &rsaquo;
+ [% END %]
+ [% IF ( action_add_category ) %]
+ [% t("New category") | html %] &rsaquo;
+ [% END %]
+
+ [% ELSIF ( loop || searchfield ) %]
+ [% tx("Authorized values for category {category_name}", { category_name = category.category_name }) | html %] &rsaquo;
+ [% END # /IF op == 'add_form' %]
+
+ [% t("Authorized values") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+
+[% FILTER collapse %]
+ <style>
+        fieldset.rows div.toptabs li {
+            clear: none;
+            margin-right:.4em;
+            padding-bottom: 0;
+            width: auto;
+        }
+        #lib,
+        #lib_opac {
+            width: 75%;
+        }
+        .authval-icons {
+            display: flex;
+            flex-wrap: wrap;
+            clear: both;
+        }
+        .authval-icons label {
+            float: none;
+            width: auto;
+        }
+        #authorised_value:invalid {
+            color:red;
+        }
+    </style>
+[% END %]
+</head>
+
+<body id="admin_authorised_values" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+
+ [% IF ( op == 'add_form' || loop || searchfield ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/authorised_values.pl">قيم الاستناد</a>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>قيم الاستناد</span>
+ [% END %]
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% IF ( action_modify || action_add_value ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=[% category_name | uri %]">قيم الاستناد لفئة [% category_name | html %]</a>
+ [% END %]
+ [% IF ( action_modify ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تعديل قيمة الاستناد</span>
+ [% END %]
+ [% END %]
+ [% IF ( action_add_value ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>قيمة استناد جديدة</span>
+ [% END %]
+ [% END %]
+ [% END %]
+ [% IF ( action_add_category ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>فئة جديدة</span>
+ [% END %]
+ [% END %]
+
+ [% ELSIF ( loop || searchfield ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>قيم الاستناد لفئة [% category.category_name | html %]</span>
+ [% END %]
+ [% END # /IF op == 'add_form' %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% IF op == 'add_form' OR op == 'edit_form' %]
+ <h1>
+ [% IF ( action_modify ) %]<span>تعديل قيمة الاستناد</span>[% END %]
+ [% IF ( action_add_value ) %]<span>قيمة استناد جديدة</span>[% END %]
+ [% IF ( action_add_category ) %]<span>فئة جديدة</span>[% END %]
+ [% IF ( op == 'edit_form' ) %]<span>Edit category</span>[% END %]
+ </h1>
+
+ [% IF ( action_modify ) %]
+ <div class="note">
+ <i class="fa fa-exclamation"></i> <strong>ملاحظة :</strong> إذا قمت بتغيير رمز قيمة الاستناد، فإن التسجيلات الحالية التي تستخدمها لن يتم تحديثها. سوف تظهر التغييرات على وصف القيمة في الحال. </div>
+ [% END %]
+
+ <form action="/cgi-bin/koha/admin/authorised_values.pl" name="Aform" id="Aform" method="post" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ [% IF action_add_category %]
+ <ol>
+ <li>
+ <label for="category" class="required">فئة: </label>
+ <input type="text" name="category"  id="category" size="32" maxlength="32" class="focus required" />
+ <span class="required">مطلوب</span>
+ <input type="hidden" name="op" value="cud-add_category" />
+ </li>
+ <li>
+ <input type="checkbox" name="is_integer_only" id="is_integer_only"/><label for="is_integer_only">Restrict value to numbers only</label></input>
+ </li>
+ </ol>
+ [% ELSIF op == 'edit_form' %]
+ <ol>
+ <li>
+ <label for="category" class="required">فئة: </label>
+ <input type="text" disabled value="[% category_name | html %]"/>
+ </li>
+ <li>
+ [% IF category.is_integer_only %]
+ <input type="checkbox" checked name="is_integer_only" id="is_integer_only"/><label for="is_integer_only">Restrict value to numbers only</label></input>
+ [% ELSE %]
+ <input type="checkbox" name="is_integer_only" id="is_integer_only"/><label for="is_integer_only">Restrict value to numbers only</label></input>
+ [% END %]
+ </li>
+ </ol>
+ <input type="hidden" name="op" value="cud-edit_category" />
+ <input type="hidden" name="category" value="[% category_name | html %]" />
+ <input type="hidden" name="searchfield" value="[% category_name | html %]" />
+ [% ELSE %]
+ <ol>
+ <li>
+ <span class="label">فئة</span>
+ <input type="hidden" name="op" value="cud-add" />
+ <input type="hidden" name="category" value="[% category_name | html %]" /> [% category_name | html %]
+ </li>
+ <li>
+ <label for="authorised_value">قيمة الاستناد: </label>
+ [% IF ( action_modify ) %]
+ <input type="hidden" id="id" name="id" value="[% av.id | html %]" />
+ [% END %]
+ [% IF ( av && av.is_integer_only ) || category.is_integer_only %]
+ <input type="text" inputmode="numeric" pattern="[% num_pattern | $raw %]" min="-128" max="127" id="authorised_value" name="authorised_value" value="[% av.authorised_value | html %]" class="focus" title="Should be numeric (-128..127)" required/>
+ [% ELSE %]
+ <input type="text" id="authorised_value" name="authorised_value" value="[% av.authorised_value | html %]" maxlength="80" class="focus"/>
+ [% END %]
+ </li>
+ <li>
+ <label for="lib">الوصف: </label>
+ <input type="text" name="lib" id="lib" value="[% av.lib | html %]" maxlength="200" />
+ </li>
+ <li>
+ <label for="lib_opac">الوصف (الأوباك): </label>
+ <input type="text" name="lib_opac" id="lib_opac" value="[% av.lib_opac | html %]" maxlength="200" />
+ </li>
+ <li><label for="branches">حدود المكتبة: </label>
+ <select id="branches" name="branches" multiple size="10">
+ <option value="">كل المكتبات</option>
+ [% FOREACH branch IN branches_loop %]
+ [% IF ( branch.selected ) %]
+ <option selected="selected" value="[% branch.branchcode | html %]">[% branch.branchname | html %]</option>
+ [% ELSE %]
+ <option value="[% branch.branchcode | html %]">[% branch.branchname | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ <div class="hint">تحديد الكل إذا كان يجب عرض قيمة الاستناد طوال الوقت. وإلا قم بتحديد المكتبات التي تريد إرفاقها بهذه القيمة.</div>
+ </li>
+ </ol>
+
+ [% INCLUDE 'admin-icon-selection.inc' context = "authval" %]
+
+ [% END # /IF action_add_category %]
+ </fieldset>
+
+ <fieldset class="action">
+ <input type="hidden" name="id" value="[% av.id | html %]" />
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a class="cancel" href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=[% category_name | url %]">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END # /IF op == 'add_form' %]
+
+ [% IF op == 'list' %]
+ <div id="toolbar" class="btn-toolbar">
+ <a id="addcat" class="btn btn-default" href= "/cgi-bin/koha/admin/authorised_values.pl?op=add_form"><i class="fa fa-plus"> </i> فئة جديدة</a>
+ [% IF ( searchfield ) %]
+ <a id="editcat" class="btn btn-default" href= "/cgi-bin/koha/admin/authorised_values.pl?op=edit_form&amp;category=[% category.category_name | url %]"><i class="fa fa-plus"> </i> Edit category</a>
+ <a id="addauth" class="btn btn-default" href= "/cgi-bin/koha/admin/authorised_values.pl?op=add_form&amp;category=[% category.category_name | url %]"><i class="fa fa-plus"> </i> قيمة استناد جديدة لـِ [% category.category_name | html %]</a>
+ [% END %]
+ </div>
+
+ [% IF ( searchfield ) %]
+ <h1>قيم الاستناد لفئة [% category.category_name | html %]</h1>
+ [% PROCESS category_descriptions code_category = category.category_name %]
+ [% ELSE %]
+ <h1>قيم الاستناد</h1>
+ [% END %]
+
+ [% IF ( searchfield ) %]
+ <div class="note">
+ <i class="fa fa-exclamation"></i> <strong>ملاحظة :</strong> إذا قمت بتغيير رمز قيمة الاستناد، فإن التسجيلات الحالية التي تستخدمها لن يتم تحديثها. سوف تظهر التغييرات على وصف القيمة في الحال. </div>
+ [% END %]
+
+ [% FOR m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'error_on_update' %]
+ <span>حدث خطأ أثناء تحديث قيمة الاستناد هذه. قد تكون القيمة موجودة بالفعل.</span>
+ [% CASE 'error_on_insert' %]
+ <span>حدث خطأ أثناء إدخال قيمة الاستناد هذه. ربما تكون القيمة أو الفئة موجودة بالفعل.</span>
+ [% CASE 'error_on_edit_cat' %]
+ <span>An error occurred when updating this authorized value category.</span>
+ [% CASE 'error_on_insert_cat' %]
+ <span>حدث خطأ عند إدخال فئة قيمة الاستناد. ربما يكون اسم الفئة موجوداً بالفعل.</span>
+ [% CASE 'error_on_delete' %]
+ <span>حدث خطأ أثناء حذف قيمة الاستناد هذه. تحقق من السجلات للتفاصيل.</span>
+ [% CASE 'error_on_delete_category' %]
+ <span>حدث خطأ أثناء حذف فئة قيمة الاستناد هذه. تحقق من السجلات للتفاصيل.</span>
+ [% CASE 'success_on_update' %]
+ <span>تم تحديث قيمة الاستناد بنجاح.</span>
+ [% CASE 'success_on_insert' %]
+ <span>تمت إضافة قيمة الاستناد بنجاح.</span>
+ [% CASE 'success_on_insert_cat' %]
+ <span>تمت إضافة فئة قيمة الاستناد بنجاح.</span>
+ [% CASE 'success_on_delete' %]
+ <span>تم حذف قيمة الاستناد بنجاح.</span>
+ [% CASE 'success_on_delete_category' %]
+ <span>تم حذف فئة قيمة الاستناد بنجاح.</span>
+ [% CASE 'cat_already_exists' %]
+ <span>فئة قيمة الاستناد هذه موجودة بالفعل.</span>
+ [% CASE 'invalid_category_name' %]
+ <span>يتم استخدام فئة قيمة الاستناد 'branches' و 'itemtypes' و'cn_source' داخليًا بواسطة كوها وهي غير صالحة.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+ [% END # /FOR m IN messages %]
+
+ <div class="page-section">
+ [% IF ( searchfield ) %]
+
+ <form action="/cgi-bin/koha/admin/authorised_values.pl" method="get" id="category">
+ <p>
+ <label for="category_search">إظهار الفئة: </label>
+ <select name="searchfield" id="category_search">
+ [% FOR c IN category_names %]
+ [% IF c == searchfield %]
+ <option value="[% c | html %]" selected="selected">[% c | html %]</option>
+ [% ELSE %]
+ <option value="[% c | html %]">[% c | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </p>
+ </form> <!-- /#category -->
+
+ [% IF loop %]
+ <table id="categoriest" class="authorized_values_table">
+ <thead>
+ <tr>
+ <th>قيمة الاستناد</th>
+ <th>الوصف</th>
+ <th>الوصف (الأوباك)</th>
+ <th>الرمز</th>
+ <th>حدود المكتبة</th>
+ <th class="noExport NoSort">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH loo IN loop %]
+ <tr>
+ <td>[% loo.authorised_value | html %]</td>
+ <td>[% loo.lib | html %]</td>
+ <td>[% loo.lib_opac | html %]</td>
+ <td>
+ [% IF ( loo.image ) %]<img src="[% loo.image | url %]" alt=""/>[% ELSE %]&nbsp;[% END %]</td>
+ <td>
+ [% IF loo.branches.size > 0 %]
+ [% branches_str = "" %]
+ [% FOREACH branch IN loo.branches %]
+ [%- IF loop.first -%]
+ [% branches_str = branch.branchname _ " (" _ branch.branchcode _ ")" %]
+ [% ELSE %]
+ [% branches_str = branches_str _ "\n" _ branch.branchname _ " (" _ branch.branchcode _ ")" %]
+ [% END %]
+ [% END %]
+ <span class="library_limitation" title="[% branches_str | html %]">
+ [% IF loo.branches.size > 1 %]
+ <span>[% loo.branches.size | html %] حدود المكتبة</span>
+ [% ELSE %]
+ <span>[% loo.branches.size | html %] حد المكتبة</span>
+ [% END %]
+ [% ELSE %]
+ <span>بدون حد</span>
+ [% END # /IF loo.branches.size > 0 %]
+ </td>
+ <td class="actions">
+ <a href="/cgi-bin/koha/admin/authorised_values.pl?op=add_form&amp;id=[% loo.id | uri %]" class="btn btn-default btn-xs"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <form action="/cgi-bin/koha/admin/authorised_values.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-delete" />
+ <input type="hidden" name="searchfield" value="[% searchfield | html %]" />
+ <input type="hidden" name="id" value="[% loo.id | html %]" />
+ <button type="submit" class="delete btn btn-default btn-xs"><i class="fa fa-trash-can"></i> حذف</button>
+ </form>
+ </td>
+ </tr>
+ [% END # /FOREACH loop %]
+ </tbody>
+ </table> <!-- /#categoriest -->
+ [% ELSE %]
+ <div class="dialog message">
+ <p>لا توجد قيمة استناد معرفة ل [% category.category_name | html %]</p>
+ <form action="/cgi-bin/koha/admin/authorised_values.pl" method="get">
+ <input type="hidden" name="op" value="add_form" />
+ <input type="hidden" name="category" value="[% category.category_name | html %]" />
+ <button type="submit"><i class="fa fa-plus"></i> إضافة قيمة استناد جديدة</button>
+ </form>
+ [% UNLESS category.is_system %]
+ <form id="delete_category" action="/cgi-bin/koha/admin/authorised_values.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-delete_category" />
+ <input type="hidden" name="category_name" value="[% category.category_name | html %]" />
+ <button type="submit"><i class="fa fa-plus"></i> حذف الفئة '[% category.category_name | html %]' </button>
+ </form>
+ [% END %]
+ </div>
+ [% END # /IF loop %]
+
+ [% ELSE # category was selected %]
+ <table id="categoriest" class="authorized_values_table">
+ <thead>
+ <tr>
+ <th>فئة</th>
+ <th>الوصف</th>
+ <th class="noExport">&nbsp;</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOR c IN category_names %]
+ <tr>
+ <td><a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=[% c | uri %]">[% c | html %]</a></td>
+ <td>
+ [% PROCESS category_descriptions code_category = c %]
+ </td>
+ <td>
+ <a id="addauth" class="btn btn-default btn-xs" href= "/cgi-bin/koha/admin/authorised_values.pl?op=add_form&amp;category=[% c | uri %]"><i class="fa fa-plus"> </i> إضافة</a>
+ </td>
+ </tr>
+ [% END # /FOR c %]
+ </tbody>
+ </table> <!-- /#categoriest -->
+ [% END # /IF ( searchfield  )%]
+ </div>
+
+ [% END # /IF op == 'list' %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+        $(document).ready(function() {
+
+            KohaTable("categoriest", {
+                "order": [[ 0, "asc" ]],
+                "pagingType": "full"
+            });
+
+            if ( $("#branches option:selected").length < 1 ) {
+                $("#branches option:first").attr("selected", "selected");
+            }
+
+            $(".delete").click(function(){
+                return confirm(_("هل أنت متأكد من أنك تريد حذف قيمة هذا الاستناد؟"));
+            });
+            $('#category_search').change(function() {
+                $('#category').submit();
+            });
+            $(".library_limitation").tooltip();
+
+            $("#delete_category").on('submit', function(){
+                return confirm(_("هل أنت متأكد من أنك تريد حذف فئة قيمة الاستناد؟"));
+            });
+
+            if( $("#icons .tab-pane.active").length < 1 ){
+                $("#icons a:first").tab("show");
+            }
+
+            $("#Aform").submit(function() {
+                if ( $('#authorised_value').length ) {
+                    if ( ! $('#authorised_value').get(0).checkValidity() ) {
+                        alert( _("Authorised value should be numeric.") );
+                        $('#authorised_value').focus();
+                        return false;
+                    }
+                }
+                return true;
+            });
+        });
+    </script>
+[% END %]
+
+[% BLOCK category_descriptions %]
+ [% SWITCH code_category %]
+ [% CASE 'Asort1' %]
+ <p>تستخدم لأغراض إحصائية خاصة بالتزويد</p>
+ [% CASE 'Asort2' %]
+ <p>تستخدم لأغراض إحصائية خاصة بالتزويد</p>
+ [% CASE 'BOR_NOTES' %]
+ <p>قيم لرسائل المستفيد المخصصة التي تظهر على شاشة الإعارة والأوباك. يجب أن تكون القيمة الموجودة في حقل الوصف هي نص الرسالة ويقتصر على 200 حرفًا</p>
+ [% CASE 'branches' %]
+ <p></p>
+ [% CASE 'Bsort1' %]
+ <p>القيم التي يمكن إدخالها لملء حقل فرز 1 للمستفيد، والذي يمكن استخدامه لأغراض إحصائية</p>
+ [% CASE 'Bsort2' %]
+ <p>القيم التي يمكن إدخالها لملء حقل فرز 2 للمستفيد، والذي يمكن استخدامه لأغراض إحصائية</p>
+ [% CASE 'CAND' %]
+ <p></p>
+ [% CASE 'CCODE' %]
+ <p>المجموعات (تظهر عند فهرسة المواد والعمل معها)</p>
+ [% CASE 'cn_source' %]
+ <p></p>
+ [% CASE 'CONTROL_NUM_SEQUENCE' %]
+ <p></p>
+ [% CASE 'COUNTRY' %]
+ <p>مستخدم في يونيمارك 102 $a</p>
+ [% CASE 'DAMAGED' %]
+ <p>وصف المواد التالفة ( يظهر عند فهرسة المواد والعمل بها)</p>
+ [% CASE 'DEPARTMENT' %]
+ <p>الأقسام مطلوبة وسيتم استخدامها في نظام الحجز الأكاديمي الفرعي</p>
+ [% CASE 'ETAT' %]
+ <p>مستخدم في تثبيتات يونيمارك الفرنسية في الحقل 995 $o لتعريف حالة المادة. مشابه لـ NOT_LOAN</p>
+ [% CASE 'ERM_AGREEMENT_CLOSURE_REASON' %]
+ <p>أسباب إغلاق الاتفاقيات (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_AGREEMENT_LICENSE_LOCATION' %]
+ <p>مواقع اتفاقيات التراخيص (نظام إدارة الموارد الإلكترونية الفعري)</p>
+ [% CASE 'ERM_AGREEMENT_LICENSE_STATUS' %]
+ <p>حالات اتفاقيات التراخيص (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_AGREEMENT_RENEWAL_PRIORITY' %]
+ <p>أولويات تجديد الاتفاقيات (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_AGREEMENT_STATUS' %]
+ <p>حالات الاتفاقيات (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_USER_ROLES' %]
+ <p>أدوار المستخدمين (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_LICENSE_STATUS' %]
+ <p>حالات التراخيص (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_LICENSE_TYPE' %]
+ <p>أنواع التراخيص (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_PACKAGE_CONTENT_TYPE' %]
+ <p>نوع محتوى الحزم (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_PACKAGE_TYPE' %]
+ <p>أنواع الحزم (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'ERM_TITLE_PUBLICATION_TYPE' %]
+ <p>أنواع المنشورات والعناوين (نظام إدارة الموارد الإلكترونية الفرعي)</p>
+ [% CASE 'HINGS_AS' %]
+ <p>المقتنيات العامة: مؤشر حالة التزويد :: يحدد عنصر البيانات هذا حالة التزويد للوحدة وقت تقرير المقتنيات.</p>
+ [% CASE 'HINGS_C' %]
+ <p>المقتنيات العامة: مؤشر الاكتمال</p>
+ [% CASE 'HINGS_PF' %]
+ <p>مؤشرات الشكل المادي</p>
+ [% CASE 'HINGS_RD' %]
+ <p>المقتنيات العامة: مؤشر مدة الاحتفاظ :: يحدد عنصر البيانات هذا سياسة الاحتفاظ للوحدة في وقت تقرير المقتنيات.</p>
+ [% CASE 'HINGS_UT' %]
+ <p>المقنيات العامة: نوع مؤشر الوحدة</p>
+ [% CASE 'HOLD_CANCELLATION' %]
+ <p>الأسباب المحتملة لإلغاء حجز</p>
+ [% CASE 'ILL_STATUS_ALIAS' %]
+ <p>بدائل حالات طلبات الإعارة البينية التي يستخدمها نظام الإعارة البينية الفرعي</p>
+ [% CASE 'AR_CANCELLATION' %]
+ <p>الأسباب المحتملة لإلغاء طلب مقال</p>
+ [% CASE 'HSBND_FREQ' %]
+ <p>التواترات المستخدمة بواسطة نظام المرابطة المنزلية الفرعي. يتم عرضها في تبويب مرابط في المنزل في حساب المستفيد في برنامج العميل.</p>
+ [% CASE 'ITEMTYPECAT' %]
+ <p>يسمح ببحث عدة أنواع للمادة في فئة. يمكن إدخال الفئات إلى قيمة الاستناد ITEMTYPECAT. لتجميع أنواع مواد في هذه الفئة، قم بإدخال فئة هذا البحث إلى أي نوع مادة</p>
+ [% CASE 'itemtypes' %]
+ <p></p>
+ [% CASE 'LANG' %]
+ <p>ISO 639-2 رموز اللغات القياسية</p>
+ [% CASE 'LOC' %]
+ <p>موقع الرفوف ( يظهر عادة عند إضافة أو تحرير مادة). يقوم LOC بالتخطيط إلى مواقع المادة في قاعدة بيانات كوها.</p>
+ [% CASE 'LOST' %]
+ <p>وصف المواد المفقودة (يظهر عند إضافة مادة أو تحريرها)</p>
+ [% CASE 'NOT_LOAN' %]
+ <p>أسباب أن العنوان ليس للإعارة</p>
+ [% CASE 'OPAC_SUG' %]
+ <p>قائمة بالأسباب المعروضة في نموذج الاقتراح في الأوباك.</p>
+ [% CASE 'ORDER_CANCELLATION_REASON' %]
+ <p>الأسباب المحتملة لإلغاء طلبية</p>
+ [% CASE 'PAYMENT_TYPE' %]
+ <p>يملأ قائمة منسدلة بأنواع الدفع المخصصة عند دفع الغرامات</p>
+ [% CASE 'qualif' %]
+ <p>رموز الوظيفة (المؤلف، المحرر، المساهم، إلخ) المستخدمة في يونيمارك 7XX $4 (الفرنسية)</p>
+ [% CASE 'RELTERMS' %]
+ <p>قائمة رموز ومصطلحات الارتباط وفقا لـ <a target="_blank" href="https://www.loc.gov/marc/relators/">قائمة رموز مارك للروابط</a></p>
+ [% CASE 'REPORT_GROUP' %]
+ <p>طريقة لفرز وتنقيح التقارير الخاصة بك، القيم الافتراضية في هذه الفئة تشمل أنظمة كوها الفرعية (الحسابات، التزويد، الفهرس، الإعارة، المستفيدين)</p>
+ [% CASE 'REPORT_SUBGROUP' %]
+ <p>يمكن استخدامها للمزيد من الفرز والتنقيح لتقاريرك. هذه الفئة خالية افتراضيًا. يجب أن تشمل القيم الموجودة هنا رمز قيمة الاستناد من REPORT_GROUP في حقل الوصف (الأوباك) لربط المجموعة الفرعية بالمجموعة الملائمة.</p>
+ [% CASE 'RESTRICTED' %]
+ <p>حالة مقيدة للمادة</p>
+ [% CASE 'ROADTYPE' %]
+ <p>أنواع الطرق المستخدمة في عناوين المستفيد</p>
+ [% CASE 'SIP_MEDIA_TYPE' %]
+ <p>تستخدم عند إنشاء أو تحرير نوع مادى إلى نوع وسائط SIP محدد لأجهزة مثل الخزائن والمفرزات.</p>
+ [% CASE 'STACK' %]
+ <p>رقم تحكم الترفيف</p>
+ [% CASE 'SUGGEST' %]
+ <p>قائمة بأسباب رفض أو قبول مقترحات المستفيدين (تظهر عند إدارة المقترحات)</p>
+ [% CASE 'SUGGEST_FORMAT' %]
+ <p>قائمة بأنواع المادة لعرضها في قائمة منسدلة في نموذج مقترح الشراء في الأوباك. عند إنشاء قيم استناد لـ SUGGEST_FORMAT، قم بإدخال الوصف في هذا النموذج ليكون مرئيًا للمستفيدين في الأوباك.</p>
+ [% CASE 'SUGGEST_STATUS' %]
+ <p>قائمة بقيم الحالة المخصصة الإضافية للمقترحات والتي يمكن استخدامها بالإضافة إلى القيم الافتراضية.</p>
+ [% CASE 'TERM' %]
+ <p>مصطلحات لاستخدامها في نظام الحجز الأكاديمي الفرعي. قم بإدخال المصطلحات التي ستظهر في القائمة المنسدلة عند تنصيب الحجز الأكاديمي. (على سبيل المثال: الربيع، الصيف، الشتاء، الخريف).</p>
+ [% CASE 'TICKET_STATUS' %]
+ <p>A list of custom status values for tickets that can be used in addition to the default values of "New" and "Resolved".</p>
+ [% CASE 'TICKET_RESOLUTION' %]
+ <p>A list of custom resolution values for tickets that can be used in addition to the standard "Resolved".</p>
+ [% CASE 'UPLOAD' %]
+ <p>الفئات التي سيتم تعيينها لتحميل الملفات. بدون فئة سيعتبر التحميل مؤقتًا ويمكن إزالته أثناء التنظيف المؤتمت.</p>
+ [% CASE 'VENDOR_TYPE' %]
+ <p>القيم التي يمكن إدخالها لملء حقل 'نوع المزود' في نظام التزويد الفرعي، والتي يمكن استخدامها لأغراض إحصائية</p>
+ [% CASE 'VENDOR_INTERFACE_TYPE' %]
+ <p>القيم التي يمكن إدخالها لملء حقل 'نوع واجهة المزود' في نظام التزويد الفرعي</p>
+ [% CASE 'VENDOR_ISSUE_TYPE' %]
+ <p>القيم التي يمكن إدخالها لملء حقل 'نوع عدد المزود' في نظام التزويد الفرعي</p>
+ [% CASE 'WITHDRAWN' %]
+ <p>وصف مادة مسحوبة (يظهر عند إضافة مادة أو تحريرها)</p>
+ [% CASE 'YES_NO' %]
+ <p>حقل قيمة استناد عامة يمكن استخدامه في أي مكان تحتاج فيه إلى قائمة منسدلة بسيطة بخياري نعم/لا.</p>
+ [% END %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

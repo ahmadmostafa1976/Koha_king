@@ -1,0 +1,58 @@
+---
+accounting.pref:
+  خصائص:
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: no
+      pref: UseCashRegisters
+    - السجلات النقدية مع نظام المحاسبة لتتبع المدفوعات.
+    - <p class='text-danger'><strong>تحذير:</strong> سيؤدي تفعيل هذا الإعداد إلى جعل
+      التسجيل حقلاً مطلوبًا لجميع المعاملات من نوع CASH؛ يتضمن هذا معاملات SIP00،
+      لذا يرجى التأكد من تحديث تهيئات SIP الخاصة بك لتعيين سجل لجهاز SIP الخاص بك.</p>
+  - - 'عند تحصيل مدفوعات، '
+    - choices:
+        '0': اطلب سجلاً نقدياً فقط عند اختيار نوع الدفع CASH
+        '1': طلب سجل نقدي دائماً
+      default: no
+      pref: RequireCashRegister
+    - (يتطلب <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UseCashRegisters">UseCashRegisters</a>)
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: no
+      pref: EnablePointOfSale
+    - خاصية نقطة البيع للسماح بالتعاملات المالية بدون تعريف الهوية مع نظام المحاسبة.
+      (يتطلب <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UseCashRegisters">UseCashRegisters</a>)
+  - - choices:
+        '': عدم توليد أرقام الائتمان تلقائياً
+        annual: توليد أرقام الائتمان تلقائياً بصيغة <year>-0001
+        branchyyyymmincr: توليد أرقام الائتمان تلقائياً بصيغة <branchcode>yyyymm0001
+        incremental: توليد أرقام الائتمان تلقائياً بصيغة 1، 2، 3
+      pref: AutoCreditNumber
+    - يجب أيضاً تفعيل التوليد التلقائي لكل نوع رصيد دائن (<a href="/cgi-bin/koha/admin/credit_types.pl">تهيئة
+      أنواع الأرصدة الدائنة</a>)
+  سياسة:
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: AccountAutoReconcile
+    - تسوية حسابات المستفيدين تلقائيًا عند كل معاملة مالية لإضافة أرصدة مدينة أو دائنة.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: FinePaymentAutoPopup
+    - قم بعرض محادثة الطباعة تلقائيًا لإيصال السداد عند عملية الدفع.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: RequirePaymentType
+    - للموظف باختيار نوع الدفع عند السداد.
+    - ليس لهذا التفضيل أي تأثير إذا تم تفعيل التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UseCashRegisters">UseCashRegisters</a>
+      أو عند عدم تعريف أنواع دفع في فئة قيمة الاستناد PAYMENT_TYPE.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: RoundFinesAtPayment
+    - تقريب الغرامات إلى أقرب سنت عند تحصيل المدفوعات. يتيح تفعيل هذا التفضيل دفع
+      غرامات جزئية والتي قد لا تكون مرئية في الواجهة.

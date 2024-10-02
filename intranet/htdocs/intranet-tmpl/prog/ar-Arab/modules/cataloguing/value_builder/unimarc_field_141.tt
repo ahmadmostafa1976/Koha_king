@@ -1,0 +1,401 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 141 builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_141" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 141</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">المادة الملزمة 1:</label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1 ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">المخطوطات، الرق</option>
+ [% ELSE %]
+ <option value="a">المخطوطات، الرق</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">جلد</option>
+ [% ELSE %]
+ <option value="b">جلد</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">خشب</option>
+ [% ELSE %]
+ <option value="c">خشب</option>
+ [% END %]
+ [% IF ( f1d ) %]
+ <option value="d" selected="selected">قماش</option>
+ [% ELSE %]
+ <option value="d">قماش</option>
+ [% END %]
+ [% IF ( f1e ) %]
+ <option value="e" selected="selected">مواد تركيبية</option>
+ [% ELSE %]
+ <option value="e">مواد تركيبية</option>
+ [% END %]
+ [% IF ( f1f ) %]
+ <option value="f" selected="selected">لوح كارتوني</option>
+ [% ELSE %]
+ <option value="f">لوح كارتوني</option>
+ [% END %]
+ [% IF ( f1g ) %]
+ <option value="g" selected="selected">ورقة</option>
+ [% ELSE %]
+ <option value="g">ورقة</option>
+ [% END %]
+ [% IF ( f1h ) %]
+ <option value="h" selected="selected">غير مجلد</option>
+ [% ELSE %]
+ <option value="h">غير مجلد</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f2">المادة الملزمة 2:</label></td>
+ <td>
+ <select name="f2" id="f2">
+
+ [% IF ( f2 ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f2a ) %]
+ <option value="a" selected="selected">المخطوطات، الرق</option>
+ [% ELSE %]
+ <option value="a">المخطوطات، الرق</option>
+ [% END %]
+ [% IF ( f2b ) %]
+ <option value="b" selected="selected">جلد</option>
+ [% ELSE %]
+ <option value="b">جلد</option>
+ [% END %]
+ [% IF ( f2c ) %]
+ <option value="c" selected="selected">خشب</option>
+ [% ELSE %]
+ <option value="c">خشب</option>
+ [% END %]
+ [% IF ( f2d ) %]
+ <option value="d" selected="selected">قماش</option>
+ [% ELSE %]
+ <option value="d">قماش</option>
+ [% END %]
+ [% IF ( f2e ) %]
+ <option value="e" selected="selected">مواد تركيبية</option>
+ [% ELSE %]
+ <option value="e">مواد تركيبية</option>
+ [% END %]
+ [% IF ( f2f ) %]
+ <option value="f" selected="selected">لوح كارتوني</option>
+ [% ELSE %]
+ <option value="f">لوح كارتوني</option>
+ [% END %]
+ [% IF ( f2g ) %]
+ <option value="g" selected="selected">ورقة</option>
+ [% ELSE %]
+ <option value="g">ورقة</option>
+ [% END %]
+ [% IF ( f2h ) %]
+ <option value="h" selected="selected">غير مجلد</option>
+ [% ELSE %]
+ <option value="h">غير مجلد</option>
+ [% END %]
+ [% IF ( f2z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f3">المادة الملزمة 3:</label></td>
+ <td>
+ <select name="f3" id="f3">
+ [% IF ( f3 ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f3a ) %]
+ <option value="a" selected="selected">المخطوطات، الرق</option>
+ [% ELSE %]
+ <option value="a">المخطوطات، الرق</option>
+ [% END %]
+ [% IF ( f3b ) %]
+ <option value="b" selected="selected">جلد</option>
+ [% ELSE %]
+ <option value="b">جلد</option>
+ [% END %]
+ [% IF ( f3c ) %]
+ <option value="c" selected="selected">خشب</option>
+ [% ELSE %]
+ <option value="c">خشب</option>
+ [% END %]
+ [% IF ( f3d ) %]
+ <option value="d" selected="selected">قماش</option>
+ [% ELSE %]
+ <option value="d">قماش</option>
+ [% END %]
+ [% IF ( f3e ) %]
+ <option value="e" selected="selected">مواد تركيبية</option>
+ [% ELSE %]
+ <option value="e">مواد تركيبية</option>
+ [% END %]
+ [% IF ( f3f ) %]
+ <option value="f" selected="selected">لوح كارتوني</option>
+ [% ELSE %]
+ <option value="f">لوح كارتوني</option>
+ [% END %]
+ [% IF ( f3g ) %]
+ <option value="g" selected="selected">ورقة</option>
+ [% ELSE %]
+ <option value="g">ورقة</option>
+ [% END %]
+ [% IF ( f3h ) %]
+ <option value="h" selected="selected">غير مجلد</option>
+ [% ELSE %]
+ <option value="h">غير مجلد</option>
+ [% END %]
+ [% IF ( f3z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f4">أنواع الربط:</label></td>
+ <td>
+ <select name="f4" id="f4">
+
+ [% IF ( f4a ) %]
+ <option value="a" selected="selected">أصلي ، أي أولي</option>
+ [% ELSE %]
+ <option value="a">أصلي ، أي أولي</option>
+ [% END %]
+ [% IF ( f4b ) %]
+ <option value="b" selected="selected">ارتداد</option>
+ [% ELSE %]
+ <option value="b">ارتداد</option>
+ [% END %]
+ [% IF ( f4c ) %]
+ <option value="c" selected="selected">حديث</option>
+ [% ELSE %]
+ <option value="c">حديث</option>
+ [% END %]
+ [% IF ( f4d ) %]
+ <option value="d" selected="selected">استعادة، فاكسيميليا</option>
+ [% ELSE %]
+ <option value="d">استعادة، فاكسيميليا</option>
+ [% END %]
+ [% IF ( f4e ) %]
+ <option value="e" selected="selected">استعادة، تقليد</option>
+ [% ELSE %]
+ <option value="e">استعادة، تقليد</option>
+ [% END %]
+ [% IF ( f4f ) %]
+ <option value="f" selected="selected">عمل مُلزم مع الآخر</option>
+ [% ELSE %]
+ <option value="f">عمل مُلزم مع الآخر</option>
+ [% END %]
+ [% IF ( f4h ) %]
+ <option value="h" selected="selected">غير مجلد</option>
+ [% ELSE %]
+ <option value="h">غير مجلد</option>
+ [% END %]
+ [% IF ( f4z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f5">ملزم مع:</label></td>
+ <td>
+ <select name="f5" id="f5">
+
+ [% IF ( f50 ) %]
+ <option value="0" selected="selected">مادة مفردة</option>
+ [% ELSE %]
+ <option value="0">مادة مفردة</option>
+ [% END %]
+ [% IF ( f51 ) %]
+ <option value="1" selected="selected">منضم مع واحد أو أكثر من الآخرين</option>
+ [% ELSE %]
+ <option value="1">منضم مع واحد أو أكثر من الآخرين</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f6">حالة الحفظ - تجليد:</label></td>
+ <td>
+ <select name="f6" id="f6">
+
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">ممتاز</option>
+ [% ELSE %]
+ <option value="a">ممتاز</option>
+ [% END %]
+ [% IF ( f6b ) %]
+ <option value="b" selected="selected">جيد</option>
+ [% ELSE %]
+ <option value="b">جيد</option>
+ [% END %]
+ [% IF ( f6c ) %]
+ <option value="c" selected="selected">مهترئ</option>
+ [% ELSE %]
+ <option value="c">مهترئ</option>
+ [% END %]
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">تالفة</option>
+ [% ELSE %]
+ <option value="d">تالفة</option>
+ [% END %]
+ [% IF ( f6e ) %]
+ <option value="e" selected="selected">ظهر مكسور</option>
+ [% ELSE %]
+ <option value="e">ظهر مكسور</option>
+ [% END %]
+ [% IF ( f6f ) %]
+ <option value="f" selected="selected">مفقود</option>
+ [% ELSE %]
+ <option value="f">مفقود</option>
+ [% END %]
+ [% IF ( f6z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f7">حالة الحفظ - متن الكتاب 1 :</label></td>
+ <td>
+ <select name="f7" id="f7">
+
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">ممتاز</option>
+ [% ELSE %]
+ <option value="a">ممتاز</option>
+ [% END %]
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">جيد</option>
+ [% ELSE %]
+ <option value="b">جيد</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">مهترئ</option>
+ [% ELSE %]
+ <option value="c">مهترئ</option>
+ [% END %]
+ [% IF ( f7d ) %]
+ <option value="d" selected="selected">تالفة</option>
+ [% ELSE %]
+ <option value="d">تالفة</option>
+ [% END %]
+ [% IF ( f7e ) %]
+ <option value="e" selected="selected">غير مكتمل</option>
+ [% ELSE %]
+ <option value="e">غير مكتمل</option>
+ [% END %]
+ [% IF ( f7g ) %]
+ <option value="g" selected="selected">استعادة</option>
+ [% ELSE %]
+ <option value="g">استعادة</option>
+ [% END %]
+ [% IF ( f7z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f8">حالة الحفظ - متن الكتاب 2 :</label></td>
+ <td>
+ <select name="f8" id="f8">
+
+ [% IF ( f8a ) %]
+ <option value="a" selected="selected">ممتاز</option>
+ [% ELSE %]
+ <option value="a">ممتاز</option>
+ [% END %]
+ [% IF ( f8b ) %]
+ <option value="b" selected="selected">جيد</option>
+ [% ELSE %]
+ <option value="b">جيد</option>
+ [% END %]
+ [% IF ( f8c ) %]
+ <option value="c" selected="selected">مهترئ</option>
+ [% ELSE %]
+ <option value="c">مهترئ</option>
+ [% END %]
+ [% IF ( f8d ) %]
+ <option value="d" selected="selected">تالفة</option>
+ [% ELSE %]
+ <option value="d">تالفة</option>
+ [% END %]
+ [% IF ( f8e ) %]
+ <option value="e" selected="selected">غير مكتمل</option>
+ [% ELSE %]
+ <option value="e">غير مكتمل</option>
+ [% END %]
+ [% IF ( f8g ) %]
+ <option value="g" selected="selected">استعادة</option>
+ [% ELSE %]
+ <option value="g">استعادة</option>
+ [% END %]
+ [% IF ( f8z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        var dateformat = "[% Koha.Preference('dateformat') | html %]";
+        function report() {
+            var doc = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value = document.f_pop.f1.value+document.f_pop.f2.value+document.f_pop.f3.value+document.f_pop.f4.value+document.f_pop.f5.value+document.f_pop.f6.value+document.f_pop.f7.value+document.f_pop.f8.value;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

@@ -1,0 +1,1512 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Branches %]
+[% USE AuthorisedValues %]
+[% USE KohaDates %]
+[% USE Price %]
+[% USE TablesSettings %]
+[% PROCESS 'i18n.inc' %]
+[% PROCESS 'patron-search.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op == 'save' %]
+ [% IF ( suggestionid ) %]
+ [% tx("Edit suggestion #{suggestion_number}", { suggestion_number = suggestionid }) | html %] &rsaquo;
+ [% ELSE %]
+ [% t("Add suggestion") | html %] &rsaquo;
+ [% END %]
+ [% ELSIF ( op == 'show' ) %]
+ [% tx("Show suggestion #{suggestion_number}", { suggestion_number = suggestionid }) | html %] &rsaquo;
+ [% END %]
+ [% t("Suggestions") | html %] &rsaquo;
+ [% t("Acquisitions") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% IF op == 'else' %]
+ [% FILTER collapse %]
+ <style>
+            h4.local_collapse a {
+                font-size: 80%;
+                text-decoration: none;
+            }
+            #limits fieldset.brief,
+            #limits fieldset.action {
+                display: none;
+            }
+            .overlay {
+                background: #eeffd4;
+                color: #000;
+                display: none;
+                left: 50%;
+                margin-left: -100px;
+                margin-top: -10px;
+                padding: .5em;
+                position: absolute;
+                text-align: center;
+                top: 180px;
+                width: 200px;
+            }
+        </style>
+ [% END %]
+[% END %]
+</head>
+
+<body id="acq_suggestion" class="acq">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+ [% END %]
+
+ [% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/acqui/acqui-home.pl">التزويد</a>
+ [% END %]
+ [% IF ( op == 'save' || op == 'show' ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/suggestion/suggestion.pl">مقترحات</a>
+ [% END %]
+ [% END %]
+ [% IF op == 'save' %]
+ [% IF ( suggestionid ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تحرير المقترح رقم [% suggestionid | html %]</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>إضافة مقترح</span>
+ [% END %]
+ [% END %]
+ [% ELSIF ( op == 'show' ) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>عرض الاقتراح  #[% suggestionid | html %]</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>إدارة المقترحات</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+ [% END #/ WRAPPER sub-header.inc %]
+
+ [% IF ( op == 'show' ) %]
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-8 col-md-offset-2">
+ [% INCLUDE 'messages.inc' %]
+
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="editsuggestion" href="suggestion.pl?op=edit_form&amp;suggestionid=[% suggestionid | html %]"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <form class="delete_form" method="post" action="/cgi-bin/koha/suggestion/suggestion.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-delete" />
+ <input type="hidden" name="suggestionid" value="[% suggestionid | html %]" />
+ <button type="submit" class="btn btn-primary">حذف</button>
+ </fieldset>
+ </form>
+ </div>
+
+ <fieldset class="rows">
+ <legend>المعلومات الببليوغرافية</legend>
+ <ol>
+ [% IF ( title ) %]
+ <li>
+ <span class="label">العنوان:</span>
+ [% IF suggestion.biblionumber %]
+ <a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% suggestion.biblionumber | uri %]">[% suggestion.title | html %]</a>
+ [% ELSE %]
+ [% title | html %]
+ [% END %]
+ </li>
+ [% END %]
+ [% IF ( author ) %]
+ <li>
+ <span class="label">المؤلف:</span>
+ [% author | html %]
+ </li>
+ [% END %]
+ [% IF ( copyrightdate ) %]
+ <li>
+ <span class="label">تارخ حق النشر:</span>
+ [% copyrightdate | html %]
+ </li>
+ [% END %]
+ [% IF ( isbn ) %]
+ <li>
+ <span class="label">ردمك أو ردمد أو أرقام معيارية أخرى:</span>
+ [% isbn | html %]
+ </li>
+ [% END %]
+ [% IF ( publishercode ) %]
+ <li>
+ <span class="label">الناشر:</span>
+ [% publishercode | html %]
+ </li>
+ [% END %]
+ [% IF ( place ) %]
+ <li>
+ <span class="label">مكان النشر:</span>
+ [% place | html %]
+ </li>
+ [% END %]
+ [% IF ( collectiontitle ) %]
+ <li>
+ <span class="label">عنوان المجموعة:</span>
+ [% collectiontitle | html %]
+ </li>
+ [% END %]
+ [% IF ( itemtype ) %]
+ <li>
+ <span class="label">نوع المستند:</span>
+ [% AuthorisedValues.GetByCode( 'SUGGEST_FORMAT', itemtype, 0 ) | html %]
+ </li>
+ [% END %]
+ [% IF ( patron_reason_loop ) %]
+ <li>
+ <span class="label">سبب الاقتراح: </span>
+ [% FOREACH patron_reason_loo IN patron_reason_loop %]
+ [% IF patron_reason_loo.authorised_value == patronreason %]
+ [% patron_reason_loo.lib | html %]
+ [% END %]
+ [% END %]
+ </li>
+ [% END %]
+ [% IF ( note ) %]
+ <li>
+ <span class="label">ملاحظات:</span>
+ [% note | html %]
+ </li>
+ [% END %]
+ [% IF ( staff_note ) %]
+ <li>
+ <span class="label">ملاحظات:</span>
+ [% staff_note | html %]
+ </li>
+ [% END %]
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend>إدارة الاقتراح</legend>
+ <ol>
+ <li>
+ <span class="label">حالة:</span>
+ [% SET status_found = 0 %]
+ [% IF ( STATUS == 'ASKED' ) %]
+ <span>في الانتظار</span>
+ [% SET status_found = 1 %]
+ [% ELSIF ( STATUS == 'ACCEPTED' ) %]
+ <span>مقبول</span>
+ [% SET status_found = 1 %]
+ [% ELSIF ( STATUS == 'CHECKED' ) %]
+ <span>تم فحصه</span>
+ [% SET status_found = 1 %]
+ [% ELSIF ( STATUS == 'REJECTED' ) %]
+ <span>رُفض</span>
+ [% SET status_found = 1 %]
+ [% ELSIF ( STATUS == 'ORDERED' ) %]
+ <span>مطلوب</span>
+ [% SET status_found = 1 %]
+ [% ELSIF ( STATUS == 'AVAILABLE' ) %]
+ <span>متاح</span>
+ [% SET status_found = 1 %]
+ [% ELSE %]
+ [% FOREACH s IN SuggestionStatuses %]
+ [% IF STATUS == s.authorised_value %]
+ [% s.lib | html %]
+ [% SET status_found = 1 %]
+ [% END %]
+ [% END %]
+ [% END %]
+ </li>
+ <li>
+ <span class="label">السبب:</span>
+ [% IF ( reason ) %]
+ [% AuthorisedValues.GetByCode( 'SUGGEST', reason, 0 ) | html %]
+ [% END %]
+ </li>
+ </ol>
+
+ <table>
+ <thead>
+ <tr>
+ <th>&nbsp;</th>
+ <th>التاريخ</th>
+ <th>بواسطة</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <th>[% tp('purchase suggestion created by', 'Created by:') | html %]</th>
+ <td>[% suggesteddate | $KohaDates %]</td>
+ <td>
+ [% IF ( suggestedby_patron.borrowernumber ) %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% suggestedby_patron.borrowernumber | uri %]">[% suggestedby_patron.surname | html %], [% suggestedby_patron.firstname | html %] ([% suggestedby_patron.cardnumber | html %])</a>
+ [% Branches.GetName( suggestedby_patron.branchcode ) | html %] ([% suggestedby_patron.category.description | html %])
+ [% END %]
+ </td>
+ </tr>
+ <tr>
+ <th>مدار بواسطة:</th>
+ <td>[% manageddate | $KohaDates %]</td>
+ <td>
+ [% IF ( managedby_patron.borrowernumber ) %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% managedby_patron.borrowernumber | uri %]">[% managedby_patron.surname | html %], [% managedby_patron.firstname | html %] ([% managedby_patron.cardnumber | html %])</a>
+ [% Branches.GetName( managedby_patron.branchcode ) | html %] ([% managedby_patron.category.description | html %])
+ [% END %]
+ </td>
+ </tr>
+ <tr>
+ <th>مقبول في:</th>
+ <td>[% accepteddate | $KohaDates %]</td>
+ <td>
+ [% IF ( acceptedby_patron.borrowernumber ) %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% acceptedby_patron.borrowernumber | uri %]">[% acceptedby_patron.surname | html %], [% acceptedby_patron.firstname | html %] ([% acceptedby_patron.cardnumber | html %])</a>
+ [% Branches.GetName( acceptedby_patron.branchcode ) | html %] ([% acceptedby_patron.category.description | html %])
+ [% END %]
+ </td>
+ </tr>
+ <tr>
+ <th>آخر تعديل في:</th>
+ <td>[% lastmodificationdate | $KohaDates %]</td>
+ <td>
+ [% IF ( lastmodificationby_patron.borrowernumber ) %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% lastmodificationby_patron.borrowernumber | uri %]">[% lastmodificationby_patron.surname | html %], [% lastmodificationby_patron.firstname | html %] ([% lastmodificationby_patron.cardnumber | html %])</a>
+ [% Branches.GetName( lastmodificationby_patron.branchcode ) | html %] ([% lastmodificationby_patron.category.description | html %])
+ [% END %]
+ </td>
+ </tr>
+ </tbody>
+ </table>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend>معلومات التزويد</legend>
+ <ol>
+ <li>
+ <span class="label">المكتبة:</span>
+ [% Branches.GetName( branchcode ) | html %]
+ </li>
+ <li>
+ <span class="label">التمويل:</span>
+ [% budgetname | html %]
+ </li>
+ <li>
+ <span class="label">النسخ:</span>
+ [% quantity | html %]
+ </li>
+ <li>
+ <span class="label">العملة:</span>
+ [% currency | html %]
+ </li>
+ <li>
+ <span class="label">سعر:</span>
+ [% price | $Price %]
+ </li>
+ <li>
+ <span class="label">الإجمالي</span>
+ [% total | $Price %]
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="action">
+ <a href="suggestion.pl">&lt;&lt; العودة إلى المقترحات</a>
+ </fieldset>
+
+ </div> <!-- /.col-md-8 col-md-offset-2 -->
+ </div> <!-- /.row -->
+ [% ELSE # IF op == "show" %]
+
+ [% IF op == 'save' %]
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-8 col-md-offset-2">
+ [% INCLUDE 'messages.inc' %]
+ [% ELSE %]
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ [% INCLUDE 'messages.inc' %]
+ [% END %]
+
+ [% IF op == 'save' %]
+ [% FOR m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'biblio_exists' %]
+ <span>توجد وثيقة مشابهة بالفعل: <a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% m.id | uri %]">[% m.title | html %]</a>. قم بالنقر على "تأكيد مقترحك" لتجاهل هذه الرسالة.</span>
+ [%  CASE 'manager_not_enough_permissions' %]
+ <span>المدير الذي اخترته ليس لديه صلاحيات كافية.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div> <!-- /.dialog -->
+ [% END %]
+
+ <form id="add_edit" action="suggestion.pl" method="post" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="redirect" id="redirect" value="[% redirect | html %]" />
+ <input type="hidden" name="borrowernumber" id="borrowernumber" value="[% borrowernumber | html %]" />
+ [% IF ( suggestionid ) %]
+ <h1>تحرير مقترحات الشراء #[% suggestionid | html %]</h1>
+ <input type="hidden" name="suggestionid" value="[% suggestionid | html %]"/>
+ [% ELSE %]
+ <h1>إدخال مقترحات شراء جديدة</h1>
+ [% END %]
+
+ <fieldset class="rows">
+ <legend>المعلومات الببليوغرافية</legend>
+ <ol>
+ <li>
+ <label for="title" class="required">العنوان:</label>
+ <input type="text" id="title" name="title" size="80" maxlength="255" value="[% title | html %]" required="required" class="required" />
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="author">المؤلف:</label>
+ <input type="text" id="author" name="author" size="50" maxlength="80" value="[% author | html %]"/>
+ </li>
+ <li>
+ <label for="copyrightdate">تارخ حق النشر:</label>
+ <input type="text" id="copyrightdate" name="copyrightdate" size="4" maxlength="4" value="[% copyrightdate | html %]" />
+ </li>
+ <li>
+ <label for="isbn">ردمك أو ردمد أو أرقام معيارية أخرى:</label>
+ <input type="text" id="isbn" name="isbn" size="50" maxlength="80" value="[% isbn | html %]"/>
+ </li>
+ <li>
+ <label for="publishercode">الناشر:</label>
+ <input type="text" id="publishercode" name="publishercode" size="50" maxlength="80" value="[% publishercode | html %]"/>
+ </li>
+ <li>
+ <label for="place">مكان النشر:</label>
+ <input type="text" id="place" name="place" size="50" maxlength="80" value="[% place | html %]"/>
+ </li>
+ <li>
+ <label for="collectiontitle">عنوان المجموعة:</label>
+ <input type="text" id="collectiontitle" name="collectiontitle" size="50" maxlength="80" value="[% collectiontitle | html %]"/>
+ </li>
+ <li>
+ <label for="itemtype">نوع المستند:</label>
+ [% PROCESS 'av-build-dropbox.inc' name="itemtype", category="SUGGEST_FORMAT", size=20, default=itemtype, empty=1 %]
+ </li>
+ [% IF patron_reason_loop %]
+ <li>
+ <label for="patronreason">سبب الاقتراح: </label>
+ <select name="patronreason" id="patronreason">
+ <option value=""> --إختر -- </option>
+ [% FOREACH patron_reason_loo IN patron_reason_loop %]
+ [% IF patron_reason_loo.authorised_value == patronreason %]
+ <option value="[% patron_reason_loo.authorised_value | html %]" selected="selected">[% patron_reason_loo.lib | html %]</option>
+ [% ELSE %]
+ <option value="[% patron_reason_loo.authorised_value | html %]">[% patron_reason_loo.lib | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ [% END # /IF patron_reason_loop %]
+ <li>
+ <label for="note">ملاحظات:</label>
+ <textarea name="note" id="note" rows="5" cols="40">[% note | html %]</textarea>
+ </li>
+ <li>
+ <label for="note">ملاحظات غير عامة:</label>
+ <textarea name="staff_note" id="staff_note" rows="5" cols="40">[% staff_note | html %]</textarea>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend>إدارة الاقتراح</legend>
+ <ol>
+ [% IF ( suggestionid ) %]
+ <li>
+ <label for="STATUS">حالة:</label>
+ <select id="STATUS" name="STATUS">
+ <option value="">بدون حالة</option>
+
+ [% IF (statusselected_ASKED ) %]
+ <option value="ASKED" selected="selected">في الانتظار</option>
+ [% ELSE %]
+ <option value="ASKED">في الانتظار</option>
+ [% END %]
+
+ [% IF (statusselected_ACCEPTED ) %]
+ <option value="ACCEPTED" selected="selected">مقبول</option>
+ [% ELSE %]
+ <option value="ACCEPTED">مقبول</option>
+ [% END %]
+
+ [% IF (statusselected_CHECKED ) %]
+ <option value="CHECKED" selected="selected">تم فحصه</option>
+ [% ELSE %]
+ <option value="CHECKED">تم فحصه</option>
+ [% END %]
+
+ [% IF ( statusselected_REJECTED ) %]
+ <option value="REJECTED" selected="selected">رُفض</option>
+ [% ELSE %]
+ <option value="REJECTED">رُفض</option>
+ [% END %]
+
+ [% IF ( statusselected_ORDERED ) %]
+ <option value="ORDERED" selected="selected">مطلوب</option>
+ [% ELSE %]
+ <option value="ORDERED">مطلوب</option>
+ [% END %]
+
+ [% FOREACH s IN SuggestionStatuses %]
+ [% IF s.authorised_value == suggestion.STATUS %]
+ <option value="[% s.authorised_value | html %]" selected="selected">[% s.lib | html %]</option>
+ [% ELSE %]
+ <option value="[% s.authorised_value | html %]">[% s.lib | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="reason">السبب:</label>
+ <select class="select-reason" id="reason" name="reason">
+ <option value=""> -- إختر سبب-- </option>
+ [% FOREACH reasonsloo IN suggestion.reasonsloop %]
+ [% IF (reasonsloo.lib == suggestion.reason) %]
+ <option value="[% reasonsloo.lib | html %]" selected="selected">[% reasonsloo.lib | html %]</option>
+ [% ELSE %]
+ <option value="[% reasonsloo.lib | html %]">[% reasonsloo.lib | html %]</option>
+ [% END %]
+ [% END %]
+ <option value="other">آخرين...</option>
+ </select>
+
+ <span id="other_reason" name="other_reason">
+ [% IF other_reason %]
+ <input id="select-other_reason" name="other_reason" placeholder="يرجى ملاحظة سببك هنا. . ." size="31" type="text" value="[% suggestion.reason | html %]" />
+ [% ELSE %]
+ <input id="select-other_reason" name="other_reason" placeholder="يرجى ملاحظة سببك هنا. . ." size="31" type="text" />
+ [% END %]
+ <a href="#back">إلغاء</a>
+ </span>
+ </li>
+ [% END %]
+ <li>
+ <table>
+ <thead>
+ <tr>
+ <th>&nbsp;</th>
+ <th>التاريخ</th>
+ <th>بواسطة</th>
+ <th>إجراء</th>
+ </tr>
+ </thead>
+ <tbody>
+ <tr>
+ <th>
+ <label for="suggesteddate">[% tp('purchase suggestion created by', 'Created by:') | html %]</label>
+ </th>
+ <td>
+ <input type="text" id="suggesteddate" name="suggesteddate" class="flatpickr" size="10" maxlength="10" value="[% suggesteddate | html %]"/> [% INCLUDE 'date-format.inc' %]
+ </td>
+ <td id="tdsuggestedby">
+ <input type="hidden" id="suggestedby" name="suggestedby" value="[% suggestedby | html %]"/>
+ [% IF ( suggestedby_patron.borrowernumber ) %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% suggestedby_patron.borrowernumber | uri %]">[% suggestedby_patron.surname | html %], [% suggestedby_patron.firstname | html %] ([% suggestedby_patron.cardnumber | html %])</a> [% Branches.GetName( suggestedby_patron.branchcode ) | html %] ([% suggestedby_patron.category.description | html %])
+ [% END %]
+ </td>
+ <td>
+ <a href="#patron_search_modal_suggester" id="edit_suggester" class="btn btn-default" data-toggle="modal">ضبط إلى المستفيد</a>
+ </td>
+ </tr>
+ <tr>
+ <th>
+ <label for="accepteddate">مقبول في:</label>
+ </th>
+ <td>
+ <input type="text" id="accepteddate" name="accepteddate" class="flatpickr" size="10" maxlength="10" value="[% accepteddate | html %]" />[% INCLUDE 'date-format.inc' %]
+ </td>
+ <td>
+ <input type="hidden" id="acceptedby" name="acceptedby" value="[% acceptedby | html %]"/>
+ [% IF ( acceptedby_patron.borrowernumber ) %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% acceptedby_patron.borrowernumber | uri %]">[% acceptedby_patron.surname | html %], [% acceptedby_patron.firstname | html %] ([% acceptedby_patron.cardnumber | html %])</a>
+ [% Branches.GetName( acceptedby_patron.branchcode ) | html %] ([% acceptedby_patron.category.description | html %])
+ [% END %]
+ </td>
+ <td></td>
+ </tr>
+ <tr>
+ <th>
+ <label for="lastmodificationdate">آخر تعديل في:</label>
+ </th>
+ <td>
+ [% lastmodificationdate | $KohaDates %]
+ </td>
+ <td>
+ [% IF lastmodificationby_patron %]
+ [% INCLUDE 'patron-title.inc' patron=lastmodificationby_patron hide_patron_infos_if_needed=1 %] [% Branches.GetName( lastmodificationby_patron.branchcode ) | html %] ([% lastmodificationby_patron.category.description | html %])
+ [% END %]
+ </td>
+ <td></td>
+ </tr>
+ </tbody>
+ </table>
+ </li>
+ <li>
+ <label for="managedon">مدار في:</label>
+ <input type="text" id="managedon" name="manageddate" class="flatpickr" size="10" maxlength="10" value="[% manageddate | html %]" />[% INCLUDE 'date-format.inc' %]
+ </li>
+ <li>
+ <label for="managedby_name">بواسطة:</label>
+ <div>
+ <span id="managedby_name" name="managedby_name">
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% logged_in_user.borrowernumber | uri %]">أنت</a>
+ </span>
+ [% IF managedby_patron.borrowernumber && logged_in_user.borrowernumber != managedby_patron.borrowernumber %] | كان سابقاً [% INCLUDE 'patron-title.inc' patron=managedby_patron hide_patron_infos_if_needed=1 %] [% Branches.GetName( managedby_patron.branchcode ) | html %] ([% managedby_patron.category.description | html %]) [% END %] <br />
+ <a href="#patron_search_modal_manager" id="edit_manager" data-toggle="modal"><i class="fa fa-search"></i> حدد مديراً</a>
+ [% IF managedby_patron.borrowernumber && logged_in_user.borrowernumber != managedby_patron.borrowernumber %]
+ <a id="restore_previous_manager" href="#"><i class="fa fa-trash-can"></i> الاحتفاظ بالمدير الحالي</a>
+ [% END %]
+ <input type="hidden" name="managedby" id="managedby" value="[% logged_in_user.borrowernumber | html %]" />
+
+ <br/>
+ <label for="notify">إخطار المدير:</label>
+ <input disabled="disabled" id="notify" name="notify" title="سيتم توليد إخطار NOTIFY_MANAGER وإرساله إلى المدير إذا تم تعريف عنوان بريد إلكتروني صالح. يمكن تحديد ذلك إذا تم اختيار مدير جديد." type="checkbox" value="notify" />
+ </div> <!-- /div -->
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend>معلومات التزويد</legend>
+ <ol>
+ <li>
+ <label for="branchcode">المكتبة:</label>
+ <select name="branchcode" id="branchcode">
+ <option value="">أي</option>
+ [% PROCESS options_for_libraries libraries => Branches.all( selected => branchcode ) %]
+ </select>
+ </li>
+ <li>
+ <label for="budgetid">التمويل:</label>
+ <select name="budgetid" id="budgetid">
+ <option value="">أي</option>
+ [% FOREACH budget IN sugg_budgets %]
+ [% IF ( budget.selected ) %]
+ <option value="[% budget.b_id | html %]" selected="selected">[% budget.b_txt | html %] [% IF ( !budget.b_active ) %](غير نشط)[% END %]</option>
+ [% ELSIF ( budget.b_active ) %]
+ <option value="[% budget.b_id | html %]">[% budget.b_txt | html %]</option>
+ [% ELSE %]
+ <option value="[% budget.b_id | html %]" class="b_inactive">[% budget.b_txt | html %] (غير نشط)</option>
+ [% END %]
+ [% END %]
+ </select>
+ <label for="showallfunds" style="float:none;width:auto;">&nbsp;عرض غير النشط:</label>
+ <input type="checkbox" id="showallfunds" />
+ </li>
+ <li>
+ <label for="quantity">النسخ:</label>
+ <input type="text" size="10" id="quantity" name="quantity" value="[% quantity | html %]" />
+ </li>
+ <li>
+ <label for="currency">العملة:</label>
+ [% FOREACH c IN currencies %]
+ <input type="hidden" value="[% c.rate | html %]" id="currency_rate_[% c.currency | html %]" name="currency_rate_[% c.currency | html %]" />
+ <input type="hidden" id="[% c.currency | html %]" name="[% c.currency | html %]" value="[% c.rate | html %]" />
+ [% END %]
+ <select name="currency" id="currency">
+ [% FOREACH c IN currencies %]
+ [% IF suggestionid and suggestion.currency == c.currency or not suggestionid and c.active %]
+ <option value="[% c.currency | html %]" selected="selected">[% c.currency | html %]</option>
+ [% ELSIF not c.archived %]
+ <option value="[% c.currency | html %]">[% c.currency | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="price">سعر:</label>
+ <input class="decimal" type="text" size="20" name="price" id="price" value="[% price | $Price on_editing => 1 %]" />
+ </li>
+ <li>
+ <label for="total">الإجمالي: </label>
+ <input type="text" readonly="readonly" id="total" name="total" size="10" value="[% total | html %]"/>
+ </li>
+ </ol>
+ </fieldset> <!-- /.rows -->
+
+ <fieldset class="action">
+ <input type="hidden" id="returnsuggested" name="returnsuggested" value="[% IF ( returnsuggestedby ) %][% returnsuggestedby | html %][% ELSE %]noone[% END %]"/>
+ [% IF ( suggestionid ) %]
+ <input type="hidden" name="op" value="cud-save" />
+ [% IF ( need_confirm ) %]
+ <input type="hidden" name="save_confirmed" value="1" />
+ <input class="btn btn-primary" type="submit" value="تأكيد مقترحك" />
+ [% ELSE %]
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ [% END %]
+ <a class="cancel" href="[% IF ( returnsuggestedby ) %]/cgi-bin/koha/members/moremember.pl?borrowernumber=[% returnsuggestedby | uri %]#suggestions[% ELSE %]suggestion.pl[% END %]">إلغاء</a>
+ [% ELSE %]
+ <input type="hidden" name="op" value="cud-save" />
+ [% IF ( need_confirm ) %]
+ <input type="hidden" name="save_confirmed" value="1" />
+ <input class="btn btn-primary" type="submit" value="تأكيد مقترحك" />
+ [% ELSE %]
+ <input class="btn btn-primary" type="submit" value="تقديم مقترحك" />
+ [% END %]
+ <a class="cancel" href="suggestion.pl">إلغاء</a>
+ [% END %]
+ </fieldset> <!-- /.action -->
+ </form> <!-- /#add_edit -->
+ [% END %]
+
+ [% IF op == 'else' %]
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="newsuggestion" href="suggestion.pl?op=add_form&branchcode=[% branchcode | uri %]"><i class="fa fa-plus"></i> مقترح شراء جديد</a>
+ </div>
+
+ <h1>إدارة المقترحات</h1>
+
+ [% IF ( displayby != "branchcode" ) %]
+ <label for="branchcode">عرض المقترحات للمكتبة:</label>
+ <select name="branchcode" id="branchcode">
+ <option value="__ANY__">أي</option>
+ [% PROCESS options_for_libraries libraries => Branches.all( selected => branchfilter || branchcode ) %]
+ </select>
+ [% END %]
+
+ [% FOR m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'already_exists' %]
+ <span>لم تتم إضافة الاقتراح. يوجد بالفعل اقتراح بهذا الاسم (<a href='/cgi-bin/koha/suggestion/suggestion.pl?suggestionid=[% m.id | html %]&op=show'>مقترح  #[% m.id | html %]</a>)</span>
+ [% CASE 'biblio_exists' %]
+ <span>توجد وثيقة مشابهة بالفعل: <a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% m.id | uri %]">[% m.title | html %]</a>. قم بالنقر على "تأكيد مقترحك" لتجاهل هذه الرسالة.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div> <!-- /.dialog -->
+ [% END # /FOR m %]
+
+ [% WRAPPER tabs id= "suggestiontabs" %]
+ [% WRAPPER tabs_nav %]
+ [% FOREACH suggestion IN suggestions %]
+ [% WRAPPER tab_item tabname= suggestion.suggestiontype %]
+ [% IF ( suggestion.suggestiontypelabel ) %]
+ [% IF (suggestion.suggestiontypelabel == "Pending") %]<span>في الانتظار</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "Accepted") %]<span>مقبول</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "Checked") %]<span>تم فحصه</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "Rejected") %]<span>رُفض</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "Available") %]<span>متاح</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "Ordered") %]<span>مطلوب</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "Unknown") %]<span>الحالة غير معروفة</span>
+ [% ELSIF (suggestion.suggestiontypelabel == "__ANY__") %]<span>أي</span>
+ [% ELSE %][% suggestion.suggestiontypelabel | html %][% END %]
+ [% ELSE %]
+ [% IF ( suggestion.suggestiontype ) %]
+ [% AuthorisedValues.GetByCode( 'SUGGEST_STATUS', suggestion.suggestiontype ) | html %]
+ [% ELSE %]
+ <span>بدون اسم</span>
+ [% END %]
+ [% END %]
+ ([% suggestion.suggestions.size| html %])
+ [% END %]
+ [% END # /FOREACH suggestion %]
+ [% END # /WRAPPER tabs_nav %]
+
+ [% WRAPPER tab_panels %]
+ [% FOREACH suggestion IN suggestions %]
+ [% WRAPPER tab_panel tabname= suggestion.suggestiontype %]
+ <form id="action_form" method="post" action="/cgi-bin/koha/suggestion/suggestion.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-" />[%# filled by click event %]
+ <input type="hidden" name="suggestionid" value="" />
+ </form>
+ <form class="update_suggestions" method="post" action="/cgi-bin/koha/suggestion/suggestion.pl#[% suggestion.suggestiontype| uri %]">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-" />[%# filled by submit %]
+
+ [% IF suggestion.suggestions.size %]
+ <p>
+ <a class="checkall" href="#">تحديد الكل</a> | <a class="uncheckall" href="#">إلغاء تحديد الكُل</a>
+ </p>
+
+ <table id="table_[% loop.count | html %]" class="sorted">
+ <thead>
+ <tr>
+ <th class="NoSort noExport">&nbsp;</th>
+ <th class="anti-the">اقتراح</th>
+ <th>مُقترح من قبل</th>
+ <th>الفئة المقترحة</th>
+ <th>مقترح في</th>
+ <th>سبب المستفيد</th>
+ <th>مدار بواسطة</th>
+ <th>مدار في</th>
+ <th>آخر تعديل بواسطة</th>
+ <th>آخر تعديل في</th>
+ <th>آخر تحديث</th>
+ <th>المكتبة</th>
+ <th>التمويل</th>
+ <th>ملاحظة غير عامة</th>
+ <th>حالة</th>
+ <th class="NoSort noExport">&nbsp;</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH s IN suggestion.suggestions %]
+ <tr>
+ <td>
+ <input type="checkbox" name="suggestionid" value="[% s.suggestionid | html %]" />
+ </td>
+ <td>
+ <a href="suggestion.pl?suggestionid=[% s.suggestionid | uri %]&op=show" title="مقترح">
+ [% s.title | html %][% IF ( s.author ) %], بواسطة [% s.author | html %][% END %] </a>
+ <br />
+ [% IF ( s.copyrightdate ) %]
+ &copy; <span class="suggestion_copyrightdate">[% s.copyrightdate | html %]</span>
+ [% END %]
+ [% IF ( s.volumedesc ) %]
+ ; <span class="suggestion_volume">مجلد:<em>[% s.volumedesc | html %]</em></span>
+ [% END %]
+ [% IF ( s.isbn ) %]
+ ; <span class="suggestion_isbn">ردمك: <em>[% s.isbn | html %]</em></span>
+ [% END %]
+ [% IF ( s.publishercode ) %]
+ ; <span class="suggestion_publishercode">منشور بواسطة [% s.publishercode | html %]</span>
+ [% END %] [% IF ( s.publicationyear ) %] في <span class="suggestion_publicationyear"><em>[% s.publicationyear | html %]</em></span>
+ [% END %] [% IF ( s.place ) %] في <span class="suggestion_place"><em>[% s.place | html %]</em></span>
+ [% END %]
+ [% IF ( s.collectiontitle ) %]
+ ; <span class="suggestion_collectiontitle">[% s.collectiontitle | html %]</span>
+ [% END %]
+ [% IF ( s.itemtype ) %]
+ ; <span class="suggestion_itype">[% AuthorisedValues.GetByCode( 'SUGGEST_FORMAT', s.itemtype, 0 ) | html %]</span>
+ [% END %]
+ <br />
+ [% IF ( s.note ) %]
+ <div class="suggestion_note"><i class="fa fa-comment"></i> [% s.note | html %]</div>
+ [% END %]
+ [% IF s.archived %]
+ <br /><i class="fa fa-archive"></i> مؤرشف [% END %] </td>
+ <td>
+ [% SET suggester = s.suggester %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% suggester.borrowernumber | uri %]">[% suggester.surname | html %][% IF suggester.firstname %], [% suggester.firstname | html %][% END %] [% IF suggester.cardnumber %]([% suggester.cardnumber | html %])[% END %]</a>
+ </td>
+ <td>
+ [% suggester.category.description | html %]
+ </td>
+ <td data-order="[% s.suggesteddate | html %]">
+ [% IF ( s.suggesteddate ) %][% s.suggesteddate | $KohaDates %][% END %]
+ </td>
+ <td>[% AuthorisedValues.GetByCode( 'OPAC_SUG', s.patronreason ) | html %]</td>
+ <td>
+ [% SET manager = s.manager %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% manager.borrowernumber | uri %]">[% manager.surname | html %][% IF manager.firstname %], [% manager.firstname | html %][% END %]</a>
+ </td>
+ <td data-order="[% s.manageddate | html %]">
+ [% IF ( s.manageddate ) %][% s.manageddate | $KohaDates %][% END %]
+ </td>
+ <td>
+ [% SET last_modifier = s.last_modifier %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% last_modifier.borrowernumber | uri %]">[% last_modifier.surname | html %][% IF last_modifier.firstname %], [% last_modifier.firstname | html %][% END %]</a>
+ </td>
+ <td data-order="[% s.lastmodificationdate | html %]">
+ [% IF ( s.lastmodificationdate ) %][% s.lastmodificationdate | $KohaDates %][% END %]
+ </td>
+ <td>
+ [% s.lastmodificationdate | $KohaDates %]
+ </td>
+ <td>
+ [% Branches.GetName( s.branchcode ) | html %]
+ </td>
+ <td>
+ [% s.fund.budget_name | html %]
+ </td>
+ <td>
+ [% s.staff_note | html %]
+ </td>
+ <td>
+ [% IF s.STATUS == 'ASKED' %]
+ <span>في الانتظار</span>
+ [% ELSIF s.STATUS == 'ACCEPTED' %]
+ <span>مقبول</span>
+ [% ELSIF s.STATUS == 'ORDERED' %]
+ <span>مطلوب</span>
+ [% ELSIF s.STATUS == 'REJECTED' %]
+ <span>رُفض</span>
+ [% ELSIF s.STATUS == 'CHECKED' %]
+ <span>تم فحصه</span>
+ [% ELSIF s.STATUS == 'AVAILABLE' %]
+ <span>متاح</span>
+ [% ELSIF AuthorisedValues.GetByCode( 'SUGGEST_STATUS', s.STATUS ) %]
+ [% AuthorisedValues.GetByCode( 'SUGGEST_STATUS', s.STATUS ) | html %]
+ [% ELSE %]
+ <span>الحالة غير معروفة</span>
+ [% END %]
+
+ [% IF ( s.reason ) %]
+ <br />([% s.reason | html %])
+ [% END %]
+ </td>
+ <td class="actions">
+ <div class="btn-group dropup">
+ <a class="btn btn-default btn-xs" role="button" href="suggestion.pl?suggestionid=[% s.suggestionid | html %]&amp;op=edit_form"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a><a class="btn btn-default btn-xs dropdown-toggle" id="more_actions_[% s.suggestionid | html %]" role="button" data-toggle="dropdown" href="#"><b class="caret"></b></a>
+ <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="more_actions_[% s.suggestionid | html %]">
+ <li>
+ <button data-op="cud-delete" data-suggestionid="[% s.suggestionid | html %]" class="btn btn-default trigger_action">حذف</button>
+ </li>
+ [% UNLESS s.archived %]
+ <li>
+ <button class="btn btn-default trigger_action" data-op="cud-archive" data-suggestionid="[% s.suggestionid | html %]">أرشيف</button>
+ </li>
+ [% ELSE %]
+ <li>
+ <button class="btn btn-default trigger_action" data-op="cud-unarchive" data-suggestionid="[% s.suggestionid | html %]">إلغاء أرشفة</button>
+ </li>
+ [% END %]
+ </ul>
+ </div>
+ </td>
+ </tr>
+ [% END # /FOREACH s %]
+ </tbody>
+ </table> <!-- /#table_[% loop.count | html %] -->
+
+ <div class="row">
+ <div class="col-sm-12">
+ <h2>تغيير المقترحات المحددة</h2>
+ </div>
+ </div>
+ <div class="suggestions_batch_ops row">
+ <div class="col-sm-4">
+ <fieldset class="brief">
+ <div id="select-reason[% loop.index | html %]">
+ <label for="STATUSreason[% loop.index | html %]">قم بوضع علامة على المحدد كـ: </label>
+ <select name="STATUS" id="STATUSreason[% loop.index | html %]">
+ <option value=""> -- إختر حالة  --</option>
+
+ [% IF (statusselected_ASKED ) %]
+ <option value="ASKED" selected="selected">في الانتظار</option>
+ [% ELSE %]
+ <option value="ASKED">في الانتظار</option>
+ [% END %]
+
+ [% IF (statusselected_ACCEPTED ) %]
+ <option value="ACCEPTED" selected="selected">مقبول</option>
+ [% ELSE %]
+ <option value="ACCEPTED">مقبول</option>
+ [% END %]
+
+ [% IF (statusselected_CHECKED ) %]
+ <option value="CHECKED" selected="selected">تم فحصه</option>
+ [% ELSE %]
+ <option value="CHECKED">تم فحصه</option>
+ [% END %]
+
+ [% IF ( statusselected_REJECTED ) %]
+ <option value="REJECTED" selected="selected">رُفض</option>
+ [% ELSE %]
+ <option value="REJECTED">رُفض</option>
+ [% END %]
+
+ [% IF ( statusselected_ORDERED ) %]
+ <option value="ORDERED" selected="selected">مطلوب</option>
+ [% ELSE %]
+ <option value="ORDERED">مطلوب</option>
+ [% END %]
+
+ [% FOREACH s IN SuggestionStatuses %]
+ <option value="[% s.authorised_value | html %]">[% s.lib | html %]</option>
+ [% END %]
+ </select>
+
+ <label for="choosereason[% loop.index | html %]">مع هذا السبب:</label>
+ <select name="reason" id="choosereason[% loop.index | html %]">
+ <option value=""> -- إختر سبب-- </option>
+ [% FOREACH reasonsloo IN suggestion.reasonsloop %]
+ <option value="[% reasonsloo.lib | html %]">[% reasonsloo.lib | html %]</option>
+ [% END %]
+ <option value="other">آخرين...</option>
+ </select>
+
+ <span class="other_reason">
+ <input name="other_reason" placeholder="يرجى ملاحظة سببك هنا. . ." size="31" type="text" />
+ <a href="#" class="cancel_note">إلغاء</a>
+ </span>
+ </div>
+
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="branchcode" value="[% branchfilter | html %]" />
+ <input type="hidden" name="filter_archived" value="[% filter_archived | html %]" />
+ <button type="submit" data-op="cud-update_status" class="btn btn-primary">تقديم</button>
+ </fieldset>
+ </div> <!-- /.col-sm-4 -->
+
+ <div class="col-sm-2">
+ <fieldset class="brief">
+ <label id="suggestion_itemtype">
+ تحديث أنواع المواد بـ: </label>
+ [% PROCESS 'av-build-dropbox.inc' name="suggestion_itemtype", category="SUGGEST_FORMAT", size = 20  %]
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="branchcode" value="[% branchfilter | html %]" />
+ <input type="hidden" name="filter_archived" value="[% filter_archived | html %]" />
+ <button type="submit" data-op="cud-update_itemtype" class="btn btn-primary">تقديم</button>
+ </fieldset>
+ </div> <!-- /.col-sm-4 -->
+
+ <div class="col-sm-2">
+ <fieldset class="brief">
+ <span class="label">مدير التحديث</span>
+ <a href="#patron_search_modal_manager_[% loop.count | uri %]" id="set_manager_[% loop.count | uri %]" data-tab="[% loop.count | uri %]" class="set_manager" data-toggle="modal"><i class="fa fa-search"></i> حدد مديراً</a>
+ <span id="managedby_name[% loop.count | html %]"></span>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="suggestion_managedby" id="managedby[% loop.count | html %]" value="[% logged_in_user.borrowernumber | html %]" />
+ <input type="hidden" name="branchcode" value="[% branchfilter | html %]" />
+ <input type="hidden" name="filter_archived" value="[% filter_archived | html %]" />
+ <button type="submit" data-op="cud-update_manager" class="btn btn-primary">تقديم</button>
+ </fieldset>
+ </div> <!-- /.col-sm-2 -->
+
+ <div class="col-sm-2">
+ <fieldset class="brief">
+ <span class="label">حذف المحدد</span>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="branchcode" value="[% branchfilter | html %]" />
+ <input type="hidden" name="filter_archived" value="[% filter_archived | html %]" />
+ <button type="submit" data-op="cud-delete" class="btn btn-primary">حذف</button>
+ </fieldset>
+ </div> <!-- /.col-sm-2 -->
+ <div class="col-sm-2">
+ <fieldset class="brief">
+ <span class="label">الأرشيف المحدد</span>
+ <fieldset class="action">
+ <input type="hidden" name="branchcode" value="[% branchfilter | html %]" />
+ <input type="hidden" name="filter_archived" value="[% filter_archived | html %]" />
+ <button type="submit" data-op="cud-archive" class="btn btn-primary">أرشيف</button>
+ </fieldset>
+ </fieldset>
+ </div> <!-- /.col-sm-2 -->
+ </div> <!-- /.row -->
+
+ [% ELSE %]
+ <strong>لا توجد نتائج.</strong>
+ [% END # /IF ( suggestion.suggestions_loop ) %]
+ </form> <!-- /.update_suggestions -->
+ [% END # /tab_panel# %]
+ [% END # /FOREACH suggestion %]
+ [% END # /WRAPPER tab_panels %]
+ [% END # /WRAPPER tabs %]
+ [% END # /IF op == 'else' %]
+
+ [% UNLESS op == 'save' %]
+ [% UNLESS ( op == 'show' ) %]
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ <form name="suggestionfilter" action="suggestion.pl" method="get">
+ <input type="hidden" name="branchcode" value="[% branchfilter | html %]" />
+ <fieldset class="brief">
+ <h4>تنظيم بواسطة:</h4>
+ <ol>
+ <li>
+ <label for="displayby" class="sr-only">تنظيم بواسطة: </label>
+ <select name="displayby" id="displayby">
+ [% IF ( displayby == "STATUS" ) %]
+ <option value="STATUS" selected="selected">حالة</option>
+ [% ELSE %]
+ <option value="STATUS">حالة</option>
+ [% END %]
+ [% IF ( displayby == "branchcode" ) %]
+ <option value="branchcode" selected="selected">المكتبة</option>
+ [% ELSE %]
+ <option value="branchcode">المكتبة</option>
+ [% END %]
+ [% IF ( displayby == "itemtype" ) %]
+ <option value="itemtype" selected="selected">نوع المادة</option>
+ [% ELSE %]
+ <option value="itemtype">نوع المادة</option>
+ [% END %]
+ [% IF ( displayby == "managedby" ) %]
+ <option value="managedby" selected="selected">مدار بواسطة</option>
+ [% ELSE %]
+ <option value="managedby">مدار بواسطة</option>
+ [% END %]
+ [% IF ( displayby == "acceptedby" ) %]
+ <option value="acceptedby" selected="selected">مقبول بواسطة</option>
+ [% ELSE %]
+ <option value="acceptedby">مقبول بواسطة</option>
+ [% END %]
+ </select>
+ </li>
+ </ol>
+ </fieldset> <!-- /.brief -->
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="اذهب" />
+ </fieldset>
+
+ <fieldset class="brief">
+ <h4>تنقيح بواسطة: <a style="font-size:80%;font-weight:normal;" href="/cgi-bin/koha/suggestion/suggestion.pl">[مسح]</a></h4>
+
+ <div id="limits">
+ <h4 class="local_collapse"><a href="#" data-target="biblio_information">المعلومات الببليوغرافية</a></h4>
+ <fieldset class="brief biblio_information">
+ <ol>
+ <li>
+ <label for="title"> العنوان:</label>
+ <input type="text" id="title" name="title" value="[% title | html %]" />
+ </li>
+ <li>
+ <label for="author"> المؤلف:</label>
+ <input type="text" id="author" name="author" value="[% author | html %]" />
+ </li>
+ <li>
+ <label for="isbn"> تدمك:</label>
+ <input type="text" id="isbn"  name="isbn" value="[% isbn | html %]" />
+ </li>
+ <li>
+ <label for="publishercode"> الناشر:</label>
+ <input type="text" id="publishercode" name="publishercode" value="[% publishercode | html %]" />
+ </li>
+ <li>
+ <label for="copyrightdate_filter"> تارخ حق النشر:</label>
+ <input type="text" id="copyrightdate_filter" name="copyrightdate" value="[% copyrightdate | html %]" />
+ </li>
+ <li>
+ <label for="collectiontitle"> عنوان المجموعة:</label>
+ <input type="text" id="collectiontitle" name="collectiontitle" value="[% collectiontitle | html %]" />
+ </li>
+ </ol>
+ </fieldset> <!-- /.biblio_information -->
+ <fieldset class="action biblio_information">
+ <input type="submit" value="اذهب" />
+ </fieldset>
+
+ <h4 class="local_collapse"><a href="#" data-target="suggestion_information">معلومات الاقتراح</a></h4>
+ <fieldset class="brief suggestion_information">
+ <ol>
+ <li>
+ <label for="STATUS[% loop.index | html %]"> حالة:</label>
+ <select name="STATUS" id="STATUS[% loop.index | html %]">
+ <option value="">أي</option>
+ [% IF (statusselected_ASKED ) %]
+ <option value="ASKED" selected="selected">في الانتظار</option>
+ [% ELSE %]
+ <option value="ASKED">في الانتظار</option>
+ [% END %]
+
+ [% IF (statusselected_ACCEPTED ) %]
+ <option value="ACCEPTED" selected="selected">مقبول</option>
+ [% ELSE %]
+ <option value="ACCEPTED">مقبول</option>
+ [% END %]
+
+ [% IF (statusselected_CHECKED ) %]
+ <option value="CHECKED" selected="selected">تم فحصه</option>
+ [% ELSE %]
+ <option value="CHECKED">تم فحصه</option>
+ [% END %]
+
+ [% IF ( statusselected_REJECTED ) %]
+ <option value="REJECTED" selected="selected">رُفض</option>
+ [% ELSE %]
+ <option value="REJECTED">رُفض</option>
+ [% END %]
+
+ [% IF ( statusselected_ORDERED ) %]
+ <option value="ORDERED" selected="selected">مطلوب</option>
+ [% ELSE %]
+ <option value="ORDERED">مطلوب</option>
+ [% END %]
+
+ [% FOREACH s IN SuggestionStatuses %]
+ [% IF s.authorised_value == selected_status %]
+ <option value="[% s.authorised_value | html %]" selected="selected">[% s.lib | html %]</option>
+ [% ELSE %]
+ <option value="[% s.authorised_value | html %]">[% s.lib | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+
+ <li>
+ <label for="suggestedby"> مقترح من قبل:</label>
+ <select id="suggestedby" name="suggestedby">
+ <option value="">أي</option>
+ [% FOREACH suggestedby_loo IN suggestedby_loop %]
+ [% IF ( suggestedby_loo.selected ) %]
+ <option value="[% suggestedby_loo.code | html %]" selected="selected">[% suggestedby_loo.desc | html %]</option>
+ [% ELSE %]
+ <option value="[% suggestedby_loo.code | html %]">[% suggestedby_loo.desc | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="suggesteddate_from">التاريخ المقترح من:</label>
+ <input type="text" id="suggesteddate_from" size="10" name="suggesteddate_from" value="[% suggesteddate_from | html %]" data-date_to="suggesteddate_to" class="flatpickr" />
+ </li>
+ <li>
+ <label for="suggesteddate_to">إلى:</label>
+ <input type="text" id="suggesteddate_to" size="10" name="suggesteddate_to" value="[% suggesteddate_to | html %]" class="flatpickr" />
+ </li>
+ <li>
+ <label for="managedby"> مدار بواسطة:</label>
+ <select id="managedby" name="managedby">
+ <option value="">أي</option>
+ [% FOREACH managedby_loo IN managedby_loop %]
+ [% IF ( managedby_loo.selected ) %]
+ <option value="[% managedby_loo.code | html %]" selected="selected">[% managedby_loo.desc | html %]</option>
+ [% ELSE %]
+ <option value="[% managedby_loo.code | html %]">[% managedby_loo.desc | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="manageddate_from">تاريخ الإدارة من:</label>
+ <input type="text" id="manageddate_from" size="10" name="manageddate_from" value="[% manageddate_from | html %]" data-date_to="manageddate_to" class="flatpickr" />
+ </li>
+ <li>
+ <label for="manageddate_to">إلى:</label>
+ <input type="text" id="manageddate_to" size="10" name="manageddate_to" value="[% manageddate_to | html %]" class="flatpickr" />
+ </li>
+ <li>
+ <label for="acceptedby"> مقبول بواسطة:</label>
+ <select id="acceptedby" name="acceptedby">
+ <option value="">أي</option>
+ [% FOREACH acceptedby_loo IN acceptedby_loop %]
+ [% IF ( acceptedby_loo.selected ) %]
+ <option value="[% acceptedby_loo.code | html %]" selected="selected">[% acceptedby_loo.desc | html %]</option>
+ [% ELSE %]
+ <option value="[% acceptedby_loo.code | html %]">[% acceptedby_loo.desc | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="accepteddate_from">تاريخ مقبول من:</label>
+ <input type="text" id="accepteddate_from" size="10" name="accepteddate_from" value="[% accepteddate_from | html %]" data-date_to="accepteddate_to" class="flatpickr" />
+ </li>
+ <li>
+ <label for="accepteddate_to">إلى:</label>
+ <input type="text" id="accepteddate_to" size="10" name="accepteddate_to" value="[% accepteddate_to | html %]" class="flatpickr" />
+ </li>
+ </ol>
+ </fieldset> <!-- /#suggestion_information -->
+ <fieldset class="action suggestion_information">
+ <input type="submit" value="اذهب" />
+ </fieldset>
+
+ <h4 class="local_collapse">
+ <a href="#" data-target="acquisition_information">معلومات التزويد</a>
+ </h4>
+ <fieldset class="brief acquisition_information">
+ <ol>
+ <li>
+ <label for="budgetid"> تمويل كتاب:</label>
+ <select name="budgetid" id="budgetid">
+ <option value="__ANY__">أي</option>
+ [% IF budgetid == '__NONE__' %]
+ <option value="__NONE__" selected="selected">لا شيء</option>
+ [% ELSE %]
+ <option value="__NONE__">لا شيء</option>
+ [% END %]
+ [% FOREACH budgetsloo IN budgetsloop %]
+ [% IF ( budgetsloo.selected ) %]
+ <option value="[% budgetsloo.budget_id | html %]" selected="selected">[% budgetsloo.budget_name | html %]</option>
+ [% ELSE %]
+ <option value="[% budgetsloo.budget_id | html %]">[% budgetsloo.budget_name | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ </ol>
+ </fieldset> <!-- /#acquisition_information -->
+ <fieldset class="action acquisition_information">
+ <input type="submit" value="اذهب" />
+ </fieldset>
+
+ <div id="filter_archived_information">
+ <ol>
+ <li>
+ <label for="archived" style="display: inline;">إدراج المؤرشف:</label>
+ [% IF filter_archived %]
+ <input checked="checked" id="archived" name="filter_archived" title="إدراج المقترحات المؤرشفة في البحث" type="checkbox" value="1" />
+ [% ELSE %]
+ <input id="archived" name="filter_archived" title="إدراج المقترحات المؤرشفة في البحث" type="checkbox" value="1" />
+ [% END %]
+ </li>
+ </ol>
+ </div>
+ </div> <!-- /#limits -->
+ </fieldset> <!-- /.brief -->
+ </form> <!-- /suggestionsfilter -->
+
+ [% INCLUDE 'acquisitions-menu.inc' %]
+
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ [% END # /UNLESS ( op == 'show' ) %]
+ [% END # /UNLESS op == 'save' %]
+ </div> <!-- /.row -->
+
+ [% END # /IF op == "show" %]
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'calendar.inc' %]
+
+ <script>
+        var tab = '';
+        function select_manager(borrowernumber, borrower) {
+            var managedby_name = $("#managedby_name"+tab);
+            var managedby = $("#managedby"+tab);
+            managedby_name.empty();
+            managedby.val('');
+            var borrowername = borrower.firstname + ' ' + borrower.surname;
+            if (borrowernumber) {
+                var managerlink = '<a href="/cgi-bin/koha/members/moremember.pl'
+                    + '?borrowernumber=' + borrowernumber + '">'
+                    + borrowername + '</a>';
+                managedby_name.html(managerlink);
+                managedby.val(borrowernumber);
+            }
+
+            [% IF op == "save" %]
+                var notify = $('#notify');
+                if ( notify.length ) {
+                    [% IF managedby_patron %]
+                        if ( borrowernumber == [% logged_in_user.borrowernumber | html %] || borrowernumber == [% managedby_patron.borrowernumber | html %] ) {
+                    [% ELSE %]
+                        if ( borrowernumber == [% logged_in_user.borrowernumber | html %] ) {
+                    [% END %]
+                        $(notify).prop('checked', false).prop('disabled', true);
+                    } else {
+                        $(notify).prop('disabled', false);
+                    }
+                }
+            [% END %]
+        }
+
+        function select_suggester(borrowernumber, borrower) {
+            $.ajax({
+                type: 'GET',
+                url: '/api/v1/patrons/' + borrowernumber,
+                headers: {
+                    "x-koha-embed": "+strings"
+                },
+                success: function (data) {
+                    var suggested = '<input type="hidden" id="suggestedby" name="suggestedby" value="' + data.patron_id + '" />';
+                    suggested += '<a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=' + data.patron_id + '">';
+                    suggested += data.surname.escapeHtml() + ', ' + data.firstname.escapeHtml() + ' (' + data.cardnumber.escapeHtml() + ')';
+                    suggested += '</a> ';
+                    suggested += data._strings.library_id.str.escapeHtml() + ' (' + data._strings.category_id.str.escapeHtml() + ')';
+                    $("#tdsuggestedby").html(suggested);
+
+                },
+                error: function (data) {
+                    alert(_("لا يمكن استرداد المعلومات لهذا المستفيد."));
+                },
+            });
+            return 0;
+        }
+    </script>
+
+ [% IF ( op == 'show' || op == 'else' ) %]
+ <script>
+            $(document).ready(function(){
+                $(".deletesuggestion").on("click",function(){
+                    return confirm(_("هل أنت متأكد من أنك تريد حذف هذا الاقتراح؟"));
+                });
+            });
+        </script>
+ [% END %]
+ [% IF op == 'else' %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+            $(document).ready(function() {
+                if( $("#suggestiontabs .tab-pane.active").length < 1 ){
+                    $("#suggestiontabs a:first").tab("show");
+                }
+
+                var table_settings = [% TablesSettings.GetTableSettings( 'acqui', 'suggestions', 'suggestions', 'json' ) | $raw %]
+                var saved_table = localStorage.getItem("DataTables_suggestions_/cgi-bin/koha/suggestion/suggestion.pl");
+                var updated_settings = get_columns_saved_state(saved_table, table_settings);
+
+                [% FOREACH suggestion IN suggestions %]
+                    [% IF suggestion.suggestions.size %]
+                        KohaTable("table_[% loop.count| html %]", {
+                            "sorting": [[ 4, "asc" ]],
+                            "autoWidth": false,
+                            "stateSave": true,
+                        }, updated_settings );
+                    [% END %]
+                [% END %]
+
+                $("#branchcode").on('change',function(){
+                [%# Modify the hidden input in the filters block from the library %]
+                [%# dropdown list at the top of suggestion list %]
+                    let branchcode = $(this).val();
+                    $('input[name="branchcode"]').val( branchcode );
+                    $('form[name="suggestionfilter"]').submit();
+                });
+
+                $(".checkall").click(function(e){
+                    e.preventDefault();
+                    $(this).parents('form').find("input:checkbox").each(function(){
+                        $(this).prop("checked", true);
+                    });
+                });
+                $(".uncheckall").click(function(e){
+                    e.preventDefault();
+                    $(this).parents('form').find("input:checkbox").each(function(){
+                        $(this).prop("checked", false);
+                    });
+                });
+                $(".other_reason").hide();
+                $("select[name='reason']").change(function(){
+                    if($(this).val() == "other"){
+                        $(this).hide();
+                        $(this).siblings(".other_reason").show();
+                    }
+                });
+
+                $("a.cancel_note").click(function(e) {
+                    $(this).parent().siblings("select").show().find("option[value='']").attr("selected","selected");
+                    $(this).siblings("input[name='other_reason']").hide();
+                    e.preventDefault();
+                });
+
+                $("h4.local_collapse a").on("click", function(e){
+                    e.preventDefault();
+                    const target = $(this).data("target");
+                    $("." + target).toggle();
+                });
+
+                $("button.trigger_action").on("click", function(e) {
+                    var id = $(this).data('suggestionid');
+                    var op = $(this).data('op');
+                    if ( op == 'cud-delete' && !confirm(_("هل أنت متأكد من أنك تريد حذف هذا الاقتراح؟")) ) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    $('#action_form input[name="op"]').val(op);
+                    $('#action_form input[name="suggestionid"]').val(id);
+                    $('#action_form').submit();
+                    return false;
+                });
+
+                $("form.update_suggestions button[type='submit']").on("click", function(e) {
+                    var submit_button = this;
+                    var op = $(submit_button).data('op');
+                    var selected_suggestions = $('form.update_suggestions').find("input[type='checkbox'][name='suggestionid']:checked");
+
+                    if ( selected_suggestions.length == 0 ) {
+                        alert(_("يرجى تحديد مقترح واحد على الأقل"));
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    if ( op === "cud-delete" ) {
+                        if ( ! confirm(_("هل أنت متأكد من أنك تريد حذف هذه المقترحات؟")) ) {
+                            e.preventDefault();
+                            return false;
+                        }
+                    } else if ( op === "cud-update_manager" ) {
+                        var managedby = $(submit_button).siblings("suggestion_managedby");
+                        if ( managedby.val() == "" ) {
+                            alert(_("يرجى تحديد مدير لتعيين المقترحات المحددة له"));
+                            e.preventDefault();
+                            return false;
+                        }
+                    }
+                    $("form.update_suggestions input[name='op']").val(op);
+                    return true;
+                });
+            });
+        </script>
+ [% END %]
+ [% IF op == 'save'  %]
+ <script>
+
+            $(document).ready(function(){
+                calcNewsuggTotal();
+                $("#quantity,#price,#currency").on("change",function(){
+                    calcNewsuggTotal();
+                });
+
+                [% IF other_reason %]
+                    $(".select-reason").hide();
+                    $(".select-reason").find("option[value='other']").attr("selected","selected");
+                    $("#other_reason").show();
+                [% ELSE %]
+                    $("#other_reason").hide();
+                [% END %]
+                $(".select-reason").change(function(){
+                    if($(this).val() == "other"){
+                        $(this).hide();
+                        $("#other_reason").show();
+                    }
+                });
+                $("a[href*=back]").click(function(){
+                    $(".select-reason").show().find("option[value='']").attr("selected","selected");
+                    $("#other_reason").hide();
+                });
+
+                $("#restore_previous_manager").on("click",function(e){
+                    e.preventDefault();
+
+                    $("#managedby_name").empty();
+                    $("#managedby").val('');
+                    var borrowername = "[% managedby_patron.firstname | html %] [% managedby_patron.surname | html %]";
+                    var managerlink = '<a href="/cgi-bin/koha/members/moremember.pl'
+                        + '?borrowernumber=[% managedby_patron.borrowernumber | html %]">'
+                        + borrowername + '</a>';
+                    $('#managedby_name').html(managerlink);
+                    $('#managedby').val([% managedby_patron.borrowernumber | html %]);
+                    $('#notify').prop('checked', false).prop('disabled', true);
+                });
+
+                //keep a copy of all budgets before removing the inactives
+                var budgetId = $("form#add_edit #budgetid");
+                var disabledBudgetsCopy = budgetId.html();
+                $('.b_inactive').remove();
+
+                $('#showallfunds').click(function() {
+                    if ($(this).is(":checked")) {
+                        budgetId.html(disabledBudgetsCopy); //Puts back all the funds
+                    }
+                    else {
+                        $('.b_inactive').remove();
+                    }
+                });
+
+            });
+        </script>
+ [% END %]
+ [% Asset.js("js/acq.js") | $raw %]
+ [% Asset.js("js/acquisitions-menu.js") | $raw %]
+
+ [% INCLUDE 'select2.inc' %]
+ [% SET columns = ['cardnumber','name','category','branch','action'] %]
+ [% IF op == 'save' %]
+ [% PROCESS patron_search_modal columns => columns, modal_title => t("Select suggester"), patron_search_modal_id => 'patron_search_modal_suggester', table_id => 'patron_search_modal_suggester_table' %]
+ [% PROCESS patron_search_js columns => columns, actions => ["select"], preview_on_name_click => 1, table_id => 'patron_search_modal_suggester_table', callback => 'select_suggester' %]
+ [% PROCESS patron_search_modal columns => columns, modal_title => t("Select manager"), patron_search_modal_id => 'patron_search_modal_manager', table_id => 'patron_search_modal_manager_table' %]
+ [% PROCESS patron_search_js columns => columns, filter => 'suggestions_managers', actions => ["select"], preview_on_name_click => 1, table_id => 'patron_search_modal_manager_table', callback => 'select_manager' %]
+ [% ELSIF op == 'else' %]
+ [% FOREACH suggestion IN suggestions %]
+ <script>tab = [% loop.count | html %];</script>
+ [% PROCESS patron_search_modal columns => columns, modal_title => t("Select manager"), patron_search_modal_id => 'patron_search_modal_manager_' _ loop.count, table_id => 'patron_search_modal_manager_table_' _ loop.count %]
+ [% PROCESS patron_search_js columns => columns, filter => 'suggestions_managers', actions => ["select"], preview_on_name_click => 1, table_id => 'patron_search_modal_manager_table_' _ loop.count, callback => 'select_manager' %]
+ [% END %]
+ [% END %]
+
+
+[% END %]
+[% INCLUDE 'intranet-bottom.inc' %]

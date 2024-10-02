@@ -1,0 +1,698 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE Branches %]
+[% USE KohaDates %]
+[% USE TablesSettings %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF (op == 'create_edit_rota' && rota.rota_id) %]
+ [% tx("Modify rota '{rota_title}'", rota_title = rota.title ) %] &rsaquo;
+ [% ELSIF (op == 'create_edit_rota' && !rota.rota_id) %]
+ [% t("New rota") | html %] &rsaquo;
+ [% ELSIF (op == 'manage_stages') %]
+ [% tx("Manage stages for '{rota_title}'", rota_title = rota.title ) %] &rsaquo;
+ [% ELSIF (op == 'create_edit_stage' && stage.id) %]
+ [% tx("Modify {library} stage", library = Branches.GetName(stage.branchcode_id) ) %] &rsaquo;
+ [% tx("Manage stages for '{rota_title}'", rota_title = rota.title ) %] &rsaquo;
+ [% ELSIF (op == 'create_edit_stage' && !stage.id) %]
+ [% t("New stage") | html %] &rsaquo;
+ [% ELSIF (op == 'manage_items') %]
+ [% tx("Manage items for '{rota_title}'", rota_title = rota.title ) %] &rsaquo;
+ [% ELSIF op == 'add_items_to_rota' %]
+ [% t("Add items" ) | html %] &rsaquo;
+ [% tx("Manage items for '{rota_title}'", rota_title = rota.title ) %] &rsaquo;
+ [% END # /IF (op == 'create_edit_rota' %]
+ [% t("Stock rotation") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+<style>i.drag_handle{ color: #999; }</style>
+</head>
+
+<body id="tools_stockrotation" class="tools">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/cataloguing/cataloging-home.pl">الفهرسة</a>
+ [% END %]
+
+ [% IF no_op_set %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تدوير المخزون</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/tools/stockrotation.pl">تدوير المخزون</a>
+ [% END %]
+ [% END # /IF no_op_set %]
+
+ [% IF (op == 'create_edit_rota' && rota.rota_id) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Modify rota '{rota_title}'", rota_title = rota.title ) %]
+ [% END %]
+ [% ELSIF (op == 'create_edit_rota' && !rota.rota_id) %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>لائحة جديدة</span>
+ [% END %]
+ [% ELSIF (op == 'manage_stages') %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Manage stages for '{rota_title}'", rota_title = rota.title ) %]
+ [% END %]
+ [% ELSIF (op == 'create_edit_stage' && stage.id) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="?op=manage_stages&amp;rota_id=[% rota_id | uri %]">[% tx("Manage stages for '{rota_title}'", rota_title = rota.title ) %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Modify {library} stage", library = Branches.GetName(stage.branchcode_id) ) %]
+ [% END %]
+ [% ELSIF (op == 'create_edit_stage' && !stage.id) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="?op=manage_stages&amp;rota_id=[% rota_id | uri %]">[% tx("Manage stages for '{rota_title}'", rota_title = rota.title ) %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>مرحلة جديدة</span>
+ [% END %]
+ [% ELSIF op == 'add_items_to_rota' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/tools/stockrotation.pl?op=manage_items&rota_id=[% rota_id | uri %]">[% tx("Manage items for '{rota_title}'", rota_title = rota.title ) %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% t("Add items") | html %]
+ [% END %]
+ [% ELSIF (op == 'manage_items') %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Manage items for '{rota_title}'", rota_title = rota.title ) %]
+ [% END %]
+ [% END # /IF (op == 'create_edit_rota' %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ <div id="stockrotation">
+
+ [% IF no_op_set %]
+
+ [% INCLUDE 'stockrotation-toolbar.inc' %]
+
+ <h1>تدوير المخزون</h1>
+
+ [% IF existing_rotas.size > 0 %]
+ <div class="page-section">
+ <table id="stock_rotation" class="rotas_table" role="grid">
+ <thead>
+ <tr>
+ <th class="anti-the">الاسم</th>
+ <th>دوري</th>
+ <th>نشط</th>
+ <th>الوصف</th>
+ <th>عدد المواد</th>
+ <th class="NoSort noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH rota IN existing_rotas %]
+ <tr>
+ <td>[% rota.title | html %]</td>
+ <td>[% rota.cyclical ? 'Yes' : 'No' | html %]</td>
+ <td>[% rota.active ? 'Yes' : 'No' | html %]</td>
+ <td>[% rota.description | html %]</td>
+ <td>[% rota.stockrotationitems.count | html %]</td>
+ <td class="actions">
+ <a class="btn btn-default btn-xs" href="?op=create_edit_rota&amp;rota_id=[% rota.rota_id | uri %]">
+ <i class="fa-solid fa-pencil" aria-hidden="true"></i>
+ تحرير </a>
+ <div class="btn-group dropup" role="group">
+ <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+ إدارة <i class="fa fa-caret-down"></i>
+ </button>
+ <ul class="dropdown-menu pull-right">
+ <li><a href="?op=manage_stages&amp;rota_id=[% rota.rota_id | uri %]">مراحل</a></li>
+ [% IF CAN_user_stockrotation_manage_rota_items && rota.stockrotationstages.count > 0 %]
+ <li><a href="?op=manage_items&amp;rota_id=[% rota.rota_id | uri %]">مواد</a></li>
+ [% END %]
+ </ul>
+ </div>
+ <form id="toggle_rota_[% rota.rota_id | html %]" method="post" action="/cgi-bin/koha/tools/stockrotation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-toggle_rota" />
+ <input type="hidden" name="rota_id" value="[% rota.rota_id | html %]" />
+ <button class="btn btn-default btn-xs" type="submit"><i class="fa fa-power-off"></i>
+ [% IF !rota.active %] نشط [% ELSE %] غير نشط [% END %] </button>
+ </form>
+ <a class="btn btn-default btn-xs" href="?op=confirm_delete_rota&amp;rota_id=[% rota.rota_id | uri %]">
+ <i class="fa fa-trash"></i>
+ حذف </a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div><!-- /.page-section -->
+ [% END %]
+
+ [% ELSIF (op == 'create_edit_rota') %]
+
+ [% IF rota.rota_id %]
+ <h1>[% tx("Modify rota '{rota_title}'", rota_title = rota.title ) %]</h1>
+ [% ELSE %]
+ <h1>لائحة جديدة</h1>
+ [% END %]
+
+ [% IF error == 'invalid_form' %]
+ <div class="dialog alert">
+ <h3>لقد حدثت مشكلة في تقديم النموذج الخاص بك</h3>
+ </div>
+ [% END %]
+
+ <form id="rota_form" method="post" enctype="multipart/form-data" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label class="required" for="title">الاسم:</label>
+ <input id="title" name="title" placeholder="اسم اللائحة" required="required" type="text" value="[% rota.title | html %]">
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="cyclical">دوري:</label>
+ <select name="cyclical" id="cyclical">
+ [% IF rota.cyclical %]
+ <option value="1" selected="selected">نعم</option>
+ <option value="0">لا</option>
+ [% ELSE %]
+ <option value="1">نعم</option>
+ <option value="0" selected="selected">لا</option>
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="description">وصف:</label>
+ <textarea id="description" name="description" placeholder="وصف اللائحة">[% rota.description | html %]</textarea>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a href="/cgi-bin/koha/tools/stockrotation.pl" class="cancel">إلغاء</a>
+ </fieldset>
+ [% IF rota.rota_id %]
+ <input type="hidden" name="id" value="[% rota.rota_id | html %]">
+ [% END %]
+ <input type="hidden" name="op" value="cud-process_rota">
+ </form>
+
+ [% ELSIF (op == 'manage_stages') %]
+
+ [% INCLUDE 'stockrotation-toolbar.inc' %]
+
+ [% IF error == 'invalid_form' %]
+ <div class="dialog alert">
+ <h3>لقد حدثت مشكلة في تقديم النموذج الخاص بك</h3>
+ </div>
+ [% END %]
+
+ <h1>[% tx("Manage stages for '{rota_title}'", rota_title = rota.title ) %]</h1>
+ <div id="ajax_status"
+                        data-saving-msg="Saving changes..."
+                        data-success-msg=""
+                        data-failed-msg="Error: ">
+ <span id="ajax_saving_msg"></span>
+ <i id="ajax_saving_icon" class="fa fa-spinner fa-spin"></i>
+ <i id="ajax_success_icon" class="fa fa-check"></i>
+ <i id="ajax_failed_icon" class="fa fa-times"></i>
+ <span id="ajax_success_msg"></span>
+ <span id="ajax_failed_msg"></span>
+ </div>
+
+ <!-- Add stage modal -->
+ <div class="modal" id="addStageModal" tabindex="-1" role="dialog" aria-labelledby="addStageLabel">
+ <form id="stage_form" method="post" enctype="multipart/form-data" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <div class="modal-dialog" role="document">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button aria-label="إغلاق" class="closebtn" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+ <h4 class="modal-title" id="addStageLabel">إضافة مرحلة إلى <em>[% rota.title | html %]</em></h4>
+ </div>
+ <div class="modal-body">
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label class="required" for="branch">المكتبة:</label>
+ <select name="branchcode" id="branch">
+ [% FOREACH branch IN branches %]
+ [% IF branch.branchcode == stage.branchcode_id %]
+ <option value="[% branch.branchcode | html %]" selected="selected">[% Branches.GetName(branch.branchcode) | html %]</option>
+ [% ELSE %]
+ <option value="[% branch.branchcode | html %]">[% Branches.GetName(branch.branchcode) | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label class="required" for="duration">المدة:</label>
+ <input id="duration" name="duration" placeholder="المدة (يومًا)" required="required" type="text" value="[% stage.duration | html %]">
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ </fieldset> <!-- /.rows -->
+ </div> <!-- /.modal-body -->
+ <div class="modal-footer">
+ <input type="hidden" name="stage_id" value="[% stage.id | html %]">
+ <input type="hidden" name="rota_id" value="[% rota_id | html %]">
+ <input type="hidden" name="op" value="cud-process_stage">
+ <button type="submit" class="btn btn-primary">حفظ</button>
+ <button type="button" class="btn btn-default" data-dismiss="modal">إلغاء</button>
+ </div> <!-- /.modal-footer -->
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </form> <!-- /#stage_form -->
+ </div> <!-- /#addStageModal -->
+
+ [% IF existing_stages.size > 0 %]
+ <div id="manage_stages" class="page-section">
+ <div id="manage_stages_help">
+ يمكن إعادة ترتيب المراحل باستخدام <i class="drag_handle fa-solid fa-fw fa-grip-vertical" aria-hidden="true"></i> تعامل لسحبها وإفلاتها في موضعها الجديد </div>
+ <div id="stage_list_headings">
+ <span class="stagename">المكتبة</span>
+ <span class="stageduration">المدة (يومًا)</span>
+ </div>
+ <ul id="sortable_stages" data-rota-id="[% rota.rota_id | html %]">
+ [% FOREACH stage IN existing_stages %]
+ <li id="stage_[% stage.stage_id | html %]">
+ <span class="stagename" data-placement="right" data-toggle="tooltip" title="سحب وإفلات لنقل هذه المرحلة إلى موضع آخر">
+ [% IF existing_stages.size > 1 %]
+ <i class="drag_handle fa-solid fa-fw fa-grip-vertical" aria-hidden="true"></i>
+ [% END %]
+ [% Branches.GetName(stage.branchcode_id) | html %]
+ </span>
+ <span class="stageduration">[% stage.duration | html %]</span>
+ <span class="stageactions">
+ <a class="btn btn-default btn-xs" href="?op=create_edit_stage&amp;stage_id=[% stage.stage_id | uri %]">
+ <i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير </a>
+ <a class="btn btn-default btn-xs" href="?op=confirm_delete_stage&amp;stage_id=[% stage.stage_id | uri %]">
+ <i class="fa fa-trash-can"></i> حذف </a>
+ </span>
+ </li>
+ [% END %]
+ </ul>
+ </div>
+ [% ELSE %]
+
+ <div class="dialog message">
+ <h4>لا توجد مراحل بهذه اللائحة.</h4>
+ <p><button type="button" data-toggle="modal" data-target="#addStageModal"><i class="fa fa-plus"></i> إضافة مرحلة</button></p>
+ </div>
+
+ [% END %]
+
+ <p><a href="stockrotation.pl">العودة إلى اللوائح</a></p>
+
+ [% ELSIF (op == 'create_edit_stage') %]
+
+ [% IF stage.id %]
+ <h1>[% tx("Modify {library} stage", library = Branches.GetName(stage.branchcode_id) ) %]</h1>
+ [% ELSE %]
+ <h1>مرحلة جديدة</h1>
+ [% END %]
+
+ [% IF error == 'invalid_form' %]
+ <div class="dialog alert">
+ <h3>لقد حدثت مشكلة في تقديم النموذج الخاص بك</h3>
+ </div>
+ [% END %]
+
+ <form id="stage_form" method="post" enctype="multipart/form-data" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label class="required" for="branch">المكتبة:</label>
+ <select name="branchcode" id="branch">
+ [% FOREACH branch IN branches %]
+ [% IF branch.branchcode == stage.branchcode_id %]
+ <option value="[% branch.branchcode | html %]" selected="selected">[% Branches.GetName(branch.branchcode) | html %]</option>
+ [% ELSE %]
+ <option value="[% branch.branchcode | html %]">[% Branches.GetName(branch.branchcode) | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label class="required" for="duration">المدة:</label>
+ <input id="duration" name="duration" placeholder="المدة (يومًا)" required="required" type="text" value="[% stage.duration | html %]">
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a href="/cgi-bin/koha/tools/stockrotation.pl?op=manage_stages&amp;rota_id=[% rota_id | uri %]" class="cancel">إلغاء</a>
+ </fieldset>
+ <input type="hidden" name="stage_id" value="[% stage.id | html %]">
+ <input type="hidden" name="rota_id" value="[% rota_id | html %]">
+ <input type="hidden" name="op" value="cud-process_stage">
+ </form>
+ [% ELSIF (op == 'confirm_remove_from_rota') %]
+
+ <div class="dialog alert">
+ <h1>هل أنت متأكد من أنك تريد حذف هذه المادة من لائحتها</h1>
+ <p>
+ <form id="remove_item_from_stage_[% item_id | html %]_[% rota.rota_id | html %]" method="post" action="/cgi-bin/koha/tools/stockrotation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-remove_item_from_stage" />
+ <input type="hidden" name="item_id" value="[% item_id | html %]" />
+ <input type="hidden" name="rota_id" value="[% rota_id | html %]" />
+ <input type="hidden" name="stage_id" value="[% stage_id | html %]" />
+ <button class="btn btn-default btn-xs approve" type="submit"><i class="fa fa-fw fa-check"></i> نعم</button>
+ </form>
+ <a class="btn btn-default btn-xs deny" href="?op=manage_items&amp;rota_id=[% rota_id | uri %]"><i class="fa fa-fw fa-times"></i> لا</a>
+ </p>
+ </div>
+ [% ELSIF (op == 'confirm_delete_rota') %]
+
+ <div class="dialog alert">
+ <h1>هل أنت متأكد من أنك تريد حذف هذه اللائحة؟</h1>
+ [% IF sritemstotal > 0 %]
+ [% IF sritemstotal == 1 %]
+ <p> لا تزال [% sritemstotal | html %] مادة مرفقة بهذه المجموعة الدوارة، وستظل هذه المادة في مكتبات المرحلة الحالية.</p>
+ [% ELSE %]
+ <p> لا تزال [% sritemstotal | html %] مادة مرفقة بهذه المجموعة الدوارة، وستظل هذه المواد في مكتبات المرحلة الحالية.</p>
+ [% END %]
+ [% END %]
+ <p>
+ <form id="delete_rota_[% rota.rota_id | html %]" method="post" action="/cgi-bin/koha/tools/stockrotation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-delete_rota" />
+ <input type="hidden" name="rota_id" value="[% rota.rota_id | html %]" />
+ <button class="btn btn-default btn-xs approve" type="submit"><i class="fa fa-fw fa-check"></i> نعم</button>
+ </form>
+ <a class="btn btn-default btn-xs deny" href="/cgi-bin/koha/tools/stockrotation.pl"><i class="fa fa-fw fa-times"></i> لا</a>
+ </p>
+ </div>
+ [% ELSIF (op == 'confirm_delete_stage') %]
+
+ <div class="dialog alert">
+ <h1>هل أنت متأكد من أنك تريد حذف هذه المرحلة؟</h1>
+ [% IF stage.stockrotationitems.count > 0 %]
+ <p>تحتوي هذه المرحلة على المواد التالية:</p>
+ <ul>
+ [% FOREACH sritem IN stage.stockrotationitems %]
+ <li>[% sritem.item.biblio.title | html %] (الباركود: [% sritem.item.barcode | html %])</li>
+ [% END %]
+ </ul>
+ [% END %]
+ <p>
+ <form id="delete_stage_[% stage.stage_id | html %]" method="post" action="/cgi-bin/koha/tools/stockrotation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-delete_stage" />
+ <input type="hidden" name="stage_id" value="[% stage.stage_id | html %]" />
+ <button class="btn btn-default btn-xs approve" type="submit"><i class="fa fa-fw fa-check"></i> نعم</button>
+ </form>
+ <a class="btn btn-default btn-xs deny" href="?op=manage_stages&amp;rota_id=[% stage.rota.rota_id | uri %]"><i class="fa fa-fw fa-times"></i> لا</a>
+ </p>
+ </div>
+ [% ELSIF (op == 'manage_items') %]
+
+ [% INCLUDE 'stockrotation-toolbar.inc' %]
+
+ [% IF error %]
+ <div class="dialog alert">
+ [% IF error == "item_not_found" %]
+ <h3>لم يتم العثور على المادة</h3>
+ [% ELSIF error == "already_on_rota" %]
+ <h3>هذه المادة موجودة بالفعل في هذه اللائحة</h3>
+ [% END %]
+ </div>
+ [% END %]
+
+ <h1>[% tx("Manage items for '{rota_title}'", rota_title = rota.title ) %]</h1>
+
+ <!-- Add items modal -->
+ <div class="modal" id="addItemsModal" tabindex="-1" role="dialog" aria-labelledby="addItemsLabel">
+ <form id="add_rota_item_form" method="post" enctype="multipart/form-data" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <div class="modal-dialog" role="document">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button aria-label="إغلاق" class="closebtn" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+ <h1 class="modal-title" id="addItemsLabel">
+ [% tx("Add items to rota '{rota_title}'", rota_title = rota.title ) %]
+ </h1>
+ </div>
+ <div class="modal-body">
+ <fieldset class="rows">
+ <legend>إضافة مادة بواسطة الباركود</legend>
+ <ol>
+ <li>
+ <label for="barcode">الباركود:</label>
+ <input autofocus="autofocus" id="barcode" name="barcode" placeholder="باركود المادة" type="text">
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="rows">
+ <legend>استخدم ملف باركود</legend>
+ <ol>
+ <li>
+ <label for="barcodefile">ملف الباركود:</label>
+ <input type="file" id="barcodefile" name="barcodefile">
+ </li>
+ </ol>
+ </fieldset> <!-- /.rows -->
+ </div> <!-- /.modal-body -->
+ <div class="modal-footer">
+ <input type="hidden" name="rota_id" value="[% rota.id | html %]">
+ <input type="hidden" name="op" value="cud-add_items_to_rota">
+ <button type="submit" class="btn btn-primary">حفظ</button>
+ <button type="button" class="btn btn-default" data-dismiss="modal">إلغاء</button>
+ </div> <!-- /.modal-footer -->
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </form> <!-- /#dd_rota_item_form -->
+ </div> <!-- /#addItemsModal -->
+
+ [% IF sritems.count > 0 %]
+ <div class="page-section">
+ <table id="stock_rotation_manage_items" class="items_table" role="grid">
+ <thead>
+ <tr>
+ <th>الباركود</th>
+ <th>عنوان</th>
+ <th>مؤلف</th>
+ <th>رقم الاستدعاء</th>
+ <th class="NoSearch">في النقل</th>
+ <th class="NoSort noExport">المراحل &amp; المدة بالأيام<br>(المرحلة الحالية مظللة)</th>
+ <th class="NoSort noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH sritem IN sritems %]
+ <tr>
+ <td><a href="/cgi-bin/koha/catalogue/moredetail.pl?itemnumber=[% sritem.id | uri %]&amp;biblionumber=[% sritem.item.biblio.id | uri %]#item[% sritem.id | uri %]">[% sritem.item.barcode | html %]</a></td>
+ <td><a href="/cgi-bin/koha/catalogue/detail.pl?biblionumber=[% sritem.item.biblio.id | uri %]">[% sritem.item.biblio.title | html %]</a></td>
+ <td>[% sritem.item.biblio.author | html %]</td>
+ <td>[% sritem.item.itemcallnumber | html %]</td>
+ <td>[% IF ( transfer = sritem.item.get_transfer) %]
+ [% IF (transfer.reason.match('Stockrotation.*')) %]
+ [% IF (transfer.datesent) %]
+ <span class="intransit">في النقل من [% Branches.GetName( transfer.frombranch ) | html %] إلى  [% Branches.GetName( transfer.tobranch ) | html %] منذ [% transfer.datesent | $KohaDates %]</span>
+ [% ELSE %]
+ <span class="transitrequested">النقل في الانتظار من [% Branches.GetName( transfer.frombranch ) | html %] إلى [% Branches.GetName( transfer.tobranch ) | html %] منذ [% transfer.daterequested | $KohaDates %]</span>
+ [% END %]
+ [% END %]
+ [% END %]
+ </td>
+ <td>
+ [% FOREACH this_stage IN stages %]
+ [% IF this_stage.stage_id == sritem.stage.stage_id %]
+ <span class="stage highlight_stage">
+ [% ELSE %]
+ <span class="stage">
+ [% END %]
+ [% Branches.GetName(this_stage.branchcode_id) | html %] ([% this_stage.duration | html %])
+ </span>
+ &raquo;
+ [% END %]
+ [% IF stages.size > 0 %]
+ <span class="stage">[% rota.cyclical ? 'START' : 'END' | html %]</span>
+ [% END %]
+ </td>
+ <td class="actions">
+ [% in_transit = sritem.item.get_transfer %]
+ [% IF stages.size < 2 %]
+ <a class="btn btn-default btn-xs" disabled="disabled" title="توجد بالمجموعة الدوارة مرحلة واحدة، ولن يكون للتقدم أي تأثير">
+ [% ELSE %]
+ <form id="move_to_next_stage_[% sritem.id | html %]_[% rota.id | html %]" method="post" action="/cgi-bin/koha/tools/stockrotation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-move_to_next_stage" />
+ <input type="hidden" name="item_id" value="[% sritem.id | html %]" />
+ <input type="hidden" name="rota_id" value="[% rota.id | html %]" />
+ <input type="hidden" name="stage_id" value="[% sritem.stage.stage_id | html %]" />
+ [% IF !in_transit %]
+ <button class="btn btn-default btn-xs" type="submit"><i class="fa fa-arrow-right"></i> Move to next stage</button>
+ [% ELSE %]
+ <button class="btn btn-default btn-xs" title="المادة في النقل، وسيتم توجيهها إلى مرحلة جديدة عند الرد" type="submit"><i class="fa fa-arrow-right"></i> Move to next stage</button>
+ [% END %]
+ </form>
+ [% END %]
+
+ [% IF !in_transit %]
+ <form id="toggle_in_demand_[% sritem.id | html %]_[% rota.id | html %]" method="post" action="/cgi-bin/koha/tools/stockrotation.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-toggle_in_demand" />
+ <input type="hidden" name="item_id" value="[% sritem.id | html %]" />
+ <input type="hidden" name="rota_id" value="[% rota.id | html %]" />
+ <input type="hidden" name="stage_id" value="[% sritem.stage.stage_id | html %]" />
+ [% IF sritem.indemand %]
+ <button class="btn btn-default btn-xs" type="submit"><i class="fa fa-fire"></i> إزالة &quot;في الطلب&quot;</button>
+ [% ELSE %]
+ <button class="btn btn-default btn-xs" type="submit"><i class="fa fa-fire"></i> إضافة &quot;في الطلب&quot;</button>
+ [% END %]
+ </form>
+ [% END %]
+
+ [% IF !in_transit %]
+ <a class="btn btn-default btn-xs" href="?op=confirm_remove_from_rota&amp;stage_id=[% sritem.stage.stage_id | uri %]&amp;item_id=[% sritem.id | uri %]&amp;rota_id=[% rota.id | uri %]">
+ [% ELSE %]
+ <a class="btn btn-default btn-xs" disabled>
+ [% END %]
+ <i class="fa fa-trash-can"></i>
+ إزالة من اللائحة </a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div> <!-- /.page-section -->
+ [% ELSE %]
+
+ <div class="dialog message">
+ <h4>لا توجد مواد معينة لهذه اللائحة.</h4>
+ <p><button type="button" data-toggle="modal" data-target="#addItemsModal"><i class="fa fa-plus"></i> إضافة مواد</button></p>
+ </div>
+
+ [% END %]
+
+ <p><a href="stockrotation.pl">العودة إلى اللوائح</a></p>
+
+ [% ELSIF op == 'add_items_to_rota' %]
+
+ <h1>[% tx("Add items to rota '{rota_title}'", rota_title = rota.title ) %]</h1>
+ <h2>نتائج</h2>
+ <div class="page-section">
+ [% IF barcode_status.ok.size > 0 %]
+ <h4>المواد المضافة إلى اللائحة:</h4>
+ <ul>
+ [% FOREACH item_ok IN barcode_status.ok %]
+ <li>[% item_ok.biblio.title | html %]</li>
+ [% END %]
+ </ul>
+ [% END %]
+ [% IF barcode_status.on_this.size > 0 %]
+ <h4>المواد الموجودة في هذه اللائحة بالفعل:</h4>
+ <ul>
+ [% FOREACH item_on_this IN barcode_status.on_this %]
+ <li>[% item_on_this.biblio.title | html %]</li>
+ [% END %]
+ </ul>
+ [% END %]
+ [% IF barcode_status.not_found.size > 0 %]
+ <h4>لم يتم العثور على أرقام الباركود:</h4>
+ <ul>
+ [% FOREACH barcode_not_found IN barcode_status.not_found %]
+ <li>[% barcode_not_found | html %]</li>
+ [% END %]
+ </ul>
+ [% END %]
+ [% IF barcode_status.on_other.size > 0 %]
+ <h4>مواد موجود في لوائح أخرى:</h4>
+ <ul>
+ [% FOREACH item_on_other IN barcode_status.on_other %]
+ <li>[% item_on_other.biblio.title | html %]</li>
+ [% END %]
+ </ul>
+ [% END %]
+ </div>
+
+ [% IF barcode_status.on_other.size > 0 %]
+ <form id="add_rota_item_form" method="post" enctype="multipart/form-data">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset>
+ <legend>قم بتحديد مواد لنقلها إلى هذه اللائحة:</legend>
+ [% FOREACH item_on_other IN barcode_status.on_other %]
+ <li><input type="checkbox" name="move_item" value="[% item_on_other.itemnumber | html %]"> [% item_on_other.biblio.title | html %] (حاليا في &quot;[% item_on_other.stockrotationitem.stage.rota.title | html %]&quot;)</li>
+ [% END %]
+
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ </fieldset>
+ <input type="hidden" name="rota_id" value="[% rota_id | html %]">
+ <input type="hidden" name="op" value="cud-move_items_to_rota">
+ </form>
+ [% END %]
+ <p><a href="?op=manage_items&amp;rota_id=[% rota_id | uri %]">العودة إلى اللائحة</a></p>
+
+ [% END %]
+ </div>
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% IF ( op == 'manage_stages' || op == 'manage_items' ) %]
+ <div id="menu">
+ <ul>
+ [% IF op == 'manage_stages' %]
+ <li class="active">
+ [% ELSE %]
+ <li>
+ [% END %]
+ <a href="/cgi-bin/koha/tools/stockrotation.pl?op=manage_stages&amp;rota_id=[% rota_id | uri %]">إدارة المراحل</a>
+ </li>
+ [% IF op == 'manage_items' %]
+ <li class="active">
+ [% ELSE %]
+ <li>
+ [% END %]
+ <a href="/cgi-bin/koha/tools/stockrotation.pl?op=manage_items&amp;rota_id=[% rota_id | uri %]">إدارة المواد</a>
+ </li>
+ </ul>
+ </div>
+ [% END %]
+ [% INCLUDE 'cat-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ [% Asset.js( "lib/sortable/Sortable.min.js" ) | $raw %]
+ [% Asset.js("js/pages/stockrotation.js") | $raw %]
+ <script>
+        var stock_rotation_items_table_settings = [% TablesSettings.GetTableSettings( 'tools', 'stockrotation', 'stock_rotation_manage_items', 'json' ) | $raw %];
+        var stock_rotation_table_settings = [% TablesSettings.GetTableSettings( 'tools', 'stockrotation', 'stock_rotation', 'json' ) | $raw %];
+        $("#addStageModal, #addItemsModal").on("shown.bs.modal", function(){
+            $("#branch, #barcode").focus();
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

@@ -1,0 +1,296 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Branches %]
+[% USE Price %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% PROCESS 'accounts.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op =='add_form' %]
+ [% IF debit_type.code %]
+ [% tx("Modify debit type '{debit_type}'", { debit_type = debit_type.code }) | html %]
+ [% ELSE %]
+ [% t("New debit type") | html %]
+ [% END %] &rsaquo;
+ [% END %]
+ [% t("Debit types") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_debit_types" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/debit_types.pl">أنواع حساب المدين</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% IF debit_type.code %]
+ [% tx("Modify debit type '{debit_type}'", { debit_type = debit_type.code }) | html %]
+ [% ELSE %]
+ <span>نوع حساب مدين جديد</span>
+ [% END %]
+ [% END %]
+
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>أنواع حساب المدين</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% FOREACH m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'success_on_saving' %]
+ <span>تم حفظ نوع الحساب المدين بنجاح.</span>
+ [% CASE 'error_on_saving' %]
+ <span>حدث خطأ أثناء حفظ نوع الرصيد الدائن هذا. تحقق من السجلات للتفاصيل.</span>
+ [% CASE 'success_on_archive' %]
+ <span>تمت أرشفة نوع الحساب الدائن بنجاح.</span>
+ [% CASE 'success_on_restore' %]
+ <span>تمت استعادة نوع الحساب المدين بنجاح.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% IF debit_type %]
+ <h1>[% tx("Modify debit type '{debit_type}'", { debit_type = debit_type.code }) | html %]</h1>
+ [% ELSE %]
+ <h1>نوع حساب مدين جديد</h1>
+ [% END %]
+
+ <form action="/cgi-bin/koha/admin/debit_types.pl" name="Aform" method="post" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add_validate" />
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label for="code" class="required">كود نوع حساب المدين: </label>
+ [% IF debit_type %]
+ <strong>[% debit_type.code | html %]</strong>
+ <input type="hidden" name="code" value="[% code | html %]" />
+ [% ELSE %]
+ <input type="text" name="code" id="code" size="80" maxlength="64" class="required focus" required="required"><span class="required">الحد الأقصى المطلوب هو 64 حرفاً</span>
+ [% END %]
+ </li>
+ <li>
+ <label for="default_amount">المبلغ الافتراضي: </label>
+ <input type="text" pattern="^\d+(\.\d{2})?$" name="default_amount" id="default_amount" size="80" maxlength="100" value="[% debit_type.default_amount | $Price on_editing => 1 %]" step="any" min="0"/>
+ </li>
+ <li>
+ <label for="description" class="required">الوصف: </label>
+ [% IF debit_type && debit_type.is_system %]
+ <span>[%- PROCESS debit_type_description debit_type = debit_type -%]</span>
+ [% ELSE %]
+ <input type="text" name="description" id="description" required="required" class="required" size="80" maxlength="100" value="[% debit_type.description | html %]" /> <span class="required">مطلوب</span>
+ [% END %]
+ </li>
+ <li>
+ <label for="can_be_invoiced">هل يمكن إنشاء فاتورة يدوية له؟ </label>
+ [% IF debit_type.can_be_invoiced %]
+ <input type="checkbox" name="can_be_invoiced" id="can_be_invoiced" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" name="can_be_invoiced" id="can_be_invoiced" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="can_be_sold">يمكن بيعه؟ </label>
+ [% IF debit_type.can_be_sold %]
+ <input type="checkbox" name="can_be_sold" id="can_be_sold" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" name="can_be_sold" id="can_be_sold" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="restricts_checkouts">مدرجة في noissuescharge؟ </label>
+ [% IF debit_type.restricts_checkouts %]
+ <input type="checkbox" name="restricts_checkouts" id="restricts_checkouts" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" name="restricts_checkouts" id="restricts_checkouts" value="1" />
+ [% END %]
+ </li>
+ <li>
+ <label for="branches">حد المكتبات: </label>
+ <select id="branches" name="branches" multiple size="10">
+ <option value="">كل المكتبات</option>
+ [% FOREACH branch IN branches_loop %]
+ [% IF ( branch.selected ) %]
+ <option selected="selected" value="[% branch.branchcode | html %]">[% branch.branchname | html %]</option>
+ [% ELSE %]
+ <option value="[% branch.branchcode | html %]">[% branch.branchname | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ <div class="hint">قم بتحديد 'كل المكتبات' إذا كان يجب إتاحة نوع هذا الرصيد المدين في جميع المكتبات. وإلا فقم بتحديد المكتبات التي تريد ربط نوع هذا الرصيد الدائن بها.</div>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="action">
+ <button id="save_debit_type" class="btn btn-primary">حفظ</button>
+ <a class="cancel" href="/cgi-bin/koha/admin/debit_types.pl">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END %]
+
+ [% IF op == 'list' %]
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="newdebittype" href="/cgi-bin/koha/admin/debit_types.pl?op=add_form"><i class="fa fa-plus"></i> نوع حساب مدين جديد</a>
+ </div>
+
+ <h1>أنواع حساب المدين</h1>
+ [% IF debit_types.count %]
+ <div class="page-section">
+ <table id="table_debit_types">
+ <thead>
+ <th>مؤرشف</th>
+ <th>نظام</th>
+ <th>رمز</th>
+ <th>الوصف</th>
+ <th>المبلغ الافتراضي</th>
+ <th>متاح لـ</th>
+ <th>حدود المكتبة</th>
+ <th>حظر الإعارات؟</th>
+ <th class="noExport">الإجراءات</th>
+ </thead>
+ <tbody>
+ [% FOREACH debit_type IN debit_types %]
+ <tr>
+ <td>[% debit_type.archived | html %]</td>
+ <td>[% debit_type.is_system | html %]</td>
+ <td>[% debit_type.code | html %]</td>
+ <td>[%- PROCESS debit_type_description debit_type = debit_type -%]</td>
+ <td>[% debit_type.default_amount | $Price %]</td>
+ <td>[% IF debit_type.can_be_invoiced && debit_type.can_be_sold %]
+ <i class="fa fa-id-card"></i> فوترة، <i class="fa fa-shopping-cart"></i> تخفيضات [% ELSIF debit_type.can_be_invoiced %] <i class="fa fa-id-card"></i> فوترة [% ELSIF debit_type.can_be_sold %] <i class="fa fa-shopping-cart"></i> تخفيضات [% END %] </td>
+ <td>
+ [% IF debit_type.library_limits.count > 0 %]
+ [% library_limits_str = "" %]
+ [% FOREACH library IN debit_type.library_limits %]
+ [%- IF loop.first -%]
+ [% library_limits_str = library.branchname _ " (" _ library.branchcode _ ")" %]
+ [% ELSE %]
+ [% library_limits_str = library_limits_str _ "\n" _ library.branchname _ " (" _ library.branchcode _ ")" %]
+ [% END %]
+ [% END %]
+ <span class="library_limitation" title="[% library_limits_str | html %]">
+ [% IF debit_type.library_limits.count > 1 %]
+ <span>[% debit_type.library_limits.count | html %] حدود المكتبة</span>
+ [% ELSE %]
+ <span>[% debit_type.library_limits.count | html %] حد المكتبة</span>
+ [% END %]
+ [% ELSE %]
+ <span>بدون حد</span>
+ [% END %]
+ </td>
+ <td>
+ [% IF debit_type.restricts_checkouts %]
+ <span>نعم</span>
+ [% ELSE %]
+ <span>لا</span>
+ [% END %]
+ </td>
+ <td class="actions">
+ [% IF !debit_type.archived %]
+ <a class="btn btn-default btn-xs" href="/cgi-bin/koha/admin/debit_types.pl?op=add_form&amp;code=[% debit_type.code | uri %]&type=debit"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ [% IF !debit_type.is_system %]
+ <form id="archive_[% debit_type.code | html %]" method="post" action="/cgi-bin/koha/admin/debit_types.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-archive" />
+ <input type="hidden" name="code" value="[% debit_type.code | html %]" />
+ <button type="submit" class="btn btn-default btn-xs archive_button" href="#" data-code="[% debit_type.code | html %]"><i class="fa fa-archive"></i> أرشيف</button>
+ </form>
+ [% END %]
+ [% ELSIF debit_type.archived %]
+ <form id="unarchive_[% debit_type.code | html %]" method="post" action="/cgi-bin/koha/admin/debit_types.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-unarchive" />
+ <input type="hidden" name="code" value="[% debit_type.code | html %]" />
+ <button type="submit" class="btn btn-default btn-xs unarchive_button" href="#" data-code="[% debit_type.code | html %]"><i class="fa fa-undo"></i> استعادة</button>
+ </form>
+ [% END %]
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div><!-- /.page-section -->
+ [% ELSE %]
+ <div class="dialog message">
+ لم يتم تعريف أنواع أرصدة مدينة للحساب. <a href="/cgi-bin/koha/admin/debit_types.pl?op=add_form">إنشاء نوع حساب مدين جديد</a>
+ </div>
+ [% END %]
+ [% END %]
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'datatables.inc' %]
+
+ <script>
+        $(document).ready(function() {
+            var txtActivefilter = _("تنقيح أنواع حسابات المدين بالنظام");
+            var txtInactivefilter = _("عرض كل أنواع الأرصدة المدينة");
+            var table_debit_types = $("#table_debit_types").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "columnDefs": [
+                    { "targets": [ -1 ], "orderable": false, "searchable":  false },
+                    { "targets": [ 0, 1 ], "orderable": false, "visible": false },
+                ],
+                "order": [[ 0, "asc" ],[ 2, "asc" ]],
+                "dom": 'C<"top pager"ilpfB><"#filter_s">tr<"bottom pager"ip>',
+                "pageLength": 20,
+                "pagingType": "full_numbers"
+            }));
+            $("#filter_s").html('<p><a href="#" id="filter_system"><i class="fa fa-filter"></i> '+txtActivefilter+'</a>');
+            $('#filter_system').click(function(e) {
+                e.preventDefault();
+                if ($(this).hasClass('filtered')) {
+                    var filteredValue = '';
+                    $(this).html('<i class="fa fa-filter"></i> '+txtActivefilter);
+                } else { //Not filtered. Let's do it!
+                    var filteredValue = '0';
+                    $(this).html('<i class="fa fa-filter"></i> '+txtInactivefilter);
+                }
+                table_debit_types.fnFilter(filteredValue, 1, false, false);
+                $(this).toggleClass('filtered');
+            });
+
+            //Start filtered
+            $('#filter_system').click();
+
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

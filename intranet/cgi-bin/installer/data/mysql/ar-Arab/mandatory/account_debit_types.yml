@@ -1,0 +1,105 @@
+---
+description:
+- أنواع الرصيد المدين المستخدمة في كوها
+tables:
+- account_debit_types:
+    multiline: []
+    rows:
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: ACCOUNT
+      default_amount: ~
+      description: رسم إنشاء الحساب
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: ACCOUNT_RENEW
+      default_amount: ~
+      description: رسم تجديد الحساب
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: ARTICLE_REQUEST
+      default_amount: ~
+      description: رسم طلب المقال
+      is_system: '1'
+    - can_be_invoiced: '1'
+      can_be_sold: '0'
+      code: LOST
+      default_amount: ~
+      description: مادة ضائعة
+      is_system: '1'
+    - can_be_invoiced: '1'
+      can_be_sold: '0'
+      code: MANUAL
+      default_amount: ~
+      description: رسم يدوي
+      is_system: '0'
+    - can_be_invoiced: '1'
+      can_be_sold: '0'
+      code: NEW_CARD
+      default_amount: ~
+      description: رسم بطاقة جديدة
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: OVERDUE
+      default_amount: ~
+      description: رسم التأخير
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: PROCESSING
+      default_amount: ~
+      description: رسم معالجة مادة ضائعة
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: PAYOUT
+      default_amount: ~
+      description: الدفع من المكتبة إلى المستفيد
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: RENT
+      default_amount: ~
+      description: رسم الإيجار
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: RENT_DAILY
+      default_amount: ~
+      description: رسم التأجير اليومي
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: RENT_DAILY_RENEW
+      default_amount: ~
+      description: تجديد مادة الإيجار اليومي
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: RENT_RENEW
+      default_amount: ~
+      description: تجديد مادة الإيجار
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: RESERVE
+      default_amount: ~
+      description: رسم الحجز
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: RESERVE_EXPIRED
+      default_amount: ~
+      description: الحجز في الانتظار لمدة طويلة
+      is_system: '1'
+    - can_be_invoiced: '0'
+      can_be_sold: '0'
+      code: VOID
+      default_amount: ~
+      description: لقد تم إبطال الائتمان
+      is_system: '1'
+    translatable:
+    - description

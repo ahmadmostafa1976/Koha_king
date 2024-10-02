@@ -1,0 +1,184 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF all_done %]
+ [% t("Onboarding complete") | html %]
+ [% ELSE %]
+ [% t("Create circulation rule") | html %]
+ [% END %] &rsaquo;
+ [% t("Web installer") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'installer-doc-head-close.inc' %]
+</head>
+
+<body id="installer" class="installer">
+ <div class="container-fluid">
+ <div class="row">
+ <div id="onboarding-step5" class="installer-main col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
+ <div id="logo"><a href="#">كوها</a></div>
+
+ [% IF all_done %]
+
+ <h1>مثبت الويب &rsaquo; اكتمل</h1>
+ [% INCLUDE 'onboarding_messages.inc' %]
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> تثبيت</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <h3>تهانينا! لقد انتهيت وأصبحت جاهزا لاستخدام كوها</h3>
+ <a class="btn btn-success" href="/cgi-bin/koha/mainpage.pl">البدء باستخدام كوها</a>
+
+ [% ELSE %]
+
+ <h2>مثبت الويب &rsaquo; إنشاء قاعدة إعارة جديدة </h2>
+
+ [% INCLUDE 'onboarding_messages.inc' %]
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> تثبيت</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء مكتبة</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء فئة مستفيد</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء مستفيد مدير في كوها</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء نوع مادة جديد</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء قاعدة إعارة جديدة</li>
+ </ol>
+ </li>
+ </ol>
+ </div>
+
+ <form name="createcirculationrule" method="post" action="onboarding.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <input type="hidden" name="step" value="5"/>
+ <input type="hidden" name="op" value="cud-add_validate_circ_rule" />
+ <ol>
+ <li>
+ <label for="branchname" class="required"> فرع المكتبة</label>
+ <select name="branch" id="branchname" required="required">
+ <option value=""> اختر</option>
+ <option value="*" selected="selected">الكل</option>
+ [% FOREACH library IN libraries %]
+ <option value="[% library.branchcode | html %]"> [% library.branchname | html %]</option>
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="categorycode" class="required">فئة المستفيد: </label>
+ <select name="categorycode" id="categorycode" required="required">
+ <option value=""> اختر</option>
+ <option value="*" selected="selected">الكل</option>
+ [% FOREACH category IN categories %]
+ <option value = "[% category.categorycode | html %]"> [% category.description | html %]</option>
+ [%END%]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+
+ <li>
+ <label for="itemtype" class="required">نوع المادة: </label>
+ <select id="itemtype" name="itemtype" required="required">
+ <option value=""> اختر </option>
+ <option value="*" selected="selected">الكل</option>
+ [% FOREACH item IN itemtypes %]
+ <option value = "[% item.itemtype | html %]"> [% item.itemtype | html %]
+ [%END%]
+ </select>
+ <span class="required"> مطلوب</span>
+ </li>
+ <li>
+ <label for="maxissueqty" class="required">الإعارات المسموح بها حاليا: </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="maxissueqty" id="maxissueqty" size="10" value="50" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+
+ <li>
+ <label for="issuelength" class="required">فترة الإعارة: </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="issuelength" id="issuelength" size="10" value="14" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="lengthunit" class="required">وحدات: </label>
+ <select name="lengthunit" id="lengthunit" required="required">
+ <option value=""> اختر </option>
+ [% SET units = 'days' %]
+ [% IF category %]
+ [% SET default_privacy = category.default_privacy %]
+ [% END %]
+
+ [% SWITCH units %]
+ [% CASE 'days' %]
+ <option value="days" selected="selected">أيام</option>
+ <option value="hours">ساعات</option>
+ [% CASE 'hours' %]
+ <option value="days">أيام</option>
+ <option value="hours" selected="selected">ساعات</option>
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="renewalsallowed" class="required">التجديدات المسموح بها: </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="renewalsallowed" id="renewalsallowed" size="10" value="10" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+
+ <li>
+ <label for="renewalperiod" class="required">فترة التجديدات: </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="renewalperiod" id="renewalperiod" size="10" value="14" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+
+ <li>
+ <label for="reservesallowed">الحجوزات المسموح بها (الإجمالي): </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="reservesallowed" id="reservesallowed" size="10" value="10" />
+ </li>
+
+ <li>
+ <label for="holds_per_day">الحجوزات المسموح بها (يوميًا): </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="holds_per_day" id="holds_per_day" size="10" value="10" />
+ </li>
+
+ <li>
+ <label for="holds_per_record">الحجوزات لكل تسجيلة (إحصاء): </label>
+ <input type="text" inputmode="numeric" pattern="[0-9]*" name="holds_per_record" id="holds_per_record" size="10" value="1" />
+ </li>
+
+ <li>
+ <label for="onshelfholds">الحجوزات على الرف المسموح بها: </label>
+ <select name="onshelfholds" id="onshelfholds" required="required">
+ <option value="">اختر</option>
+ <option value="1" selected="selected">نعم</option>
+ <option value="0">إذا كان أي منها غير متاح</option>
+ <option value="2">إذا كان الكل غير متاح</option>
+ </select>
+ </li>
+ </ol>
+ <p>
+ لإنشاء قاعدة إعارة، اذهب إلى: <span class="breadcrumbs">الإدارة &rsaquo;الإعارة وقواعد الغرامات </span>
+ </p>
+
+ </fieldset>
+
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ </form>
+ [% END %]
+ </div> <!-- / #onboarding-step5 -->
+ </div> <!-- / .row -->
+ </div><!-- / .container-fluid -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'validator-strings.inc' %]
+ [% INCLUDE 'installer-strings.inc' %]
+ <script src="[% interface | html %]/[% theme | html %]/js/onboarding.js"></script>
+[% END %]
+
+[% INCLUDE 'installer-intranet-bottom.inc' %]

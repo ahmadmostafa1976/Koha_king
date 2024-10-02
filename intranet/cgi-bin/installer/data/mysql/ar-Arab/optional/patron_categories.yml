@@ -1,0 +1,186 @@
+---
+description:
+- عينة أنواع وفئات المستفيدين. الأنواع حاليًا مرمزة بشكل ثابت ولكن يمكنك إدارة الفئات
+  بعد التثبيت من نظام الإدارة الفرعي.
+- ''
+- مستفيد بالغ - نوع مستفيد افتراضي
+- '                PT  - مستفيد'
+- '                ST  - طالب'
+- '                BH  - مرابط بالمنزل'
+- ''
+- طفل - مستفيد له ضامن
+- '                K   - طفل'
+- '                J   - ناشئة'
+- '                YA  - شاب'
+- ''
+- المستفيد - مؤسسة هو مؤسسة، وليس شخصاً
+- '                ILL - إعارة بينية'
+- '                SC  - مدرسة'
+- '                L   - مكتبة'
+- ''
+- مهني - عضو مؤسسة (المؤسسة هي الضامن)
+- '                T   - مدرس'
+- '                S   - موظفين'
+- '                B   - لوحة'
+tables:
+- categories:
+    multiline: []
+    rows:
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: A
+      categorycode: PT
+      dateofbirthrequired: 18
+      description: مستفيد
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: A
+      categorycode: ST
+      dateofbirthrequired: 18
+      description: طالب
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: A
+      categorycode: HB
+      dateofbirthrequired: 18
+      description: مرابط بالمنزل
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 1
+      category_type: C
+      categorycode: K
+      dateofbirthrequired: 5
+      description: طفل
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 17
+    - bulk: ~
+      can_be_guarantee: 1
+      category_type: C
+      categorycode: J
+      dateofbirthrequired: 5
+      description: ناشئة
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 17
+    - bulk: ~
+      can_be_guarantee: 1
+      category_type: C
+      categorycode: YA
+      dateofbirthrequired: 5
+      description: شاب
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 17
+    - bulk: ~
+      can_be_guarantee: 1
+      category_type: P
+      categorycode: T
+      dateofbirthrequired: 18
+      description: معلم
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 0
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 1
+      category_type: P
+      categorycode: B
+      dateofbirthrequired: 5
+      description: لوحة
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 17
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: I
+      categorycode: IL
+      dateofbirthrequired: 18
+      description: إعارة بينية
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: I
+      categorycode: SC
+      dateofbirthrequired: 18
+      description: مدرسة
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: I
+      categorycode: L
+      dateofbirthrequired: 18
+      description: مكتبة
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 1
+      reservefee: '0.000000'
+      upperagelimit: 999
+    - bulk: ~
+      can_be_guarantee: 0
+      category_type: S
+      categorycode: S
+      dateofbirthrequired: 18
+      description: موظفين
+      enrolmentfee: '0.000000'
+      enrolmentperiod: 99
+      finetype: ~
+      issuelimit: ~
+      overduenoticerequired: 0
+      reservefee: '0.000000'
+      upperagelimit: 999
+    translatable:
+    - description

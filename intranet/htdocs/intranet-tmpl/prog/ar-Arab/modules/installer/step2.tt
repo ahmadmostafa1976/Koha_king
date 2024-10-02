@@ -1,0 +1,97 @@
+[% USE raw %]
+[% USE HtmlTags %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Database settings") | html %] &rsaquo;
+ [% t("Web installer") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'installer-doc-head-close.inc' %]
+</head>
+
+<body id="installer" class="installer">
+ <div class="container-fluid">
+ <div class="row">
+ <div id="installer-step2" class="installer-main col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
+
+
+ <div id="logo"><a href="#">كوها</a></div>
+ <h1>مثبت الويب &rsaquo; إعدادات قاعدة البيانات</h1>
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> اختر لغتك</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> التحقق من تبعيات بيرل</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> إعدادات قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تنصيب_قاعدة البيانات</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> تثبيت إعدادات التهيئة الأساسية</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد</li>
+ </ol>
+ </div>
+
+ <h3>إعدادات قاعدة البيانات:</h3>
+ <ul>
+ <li><em>نوع قاعدة البيانات: </em> [%- dbms | $HtmlTags tag=>'code' -%]</li>
+ <li><em>اسم قاعدة البيانات: </em> [%- dbname | $HtmlTags tag=>'code' -%]</li>
+ <li><em>مضيف قاعدة البيانات: </em> [%- hostname | $HtmlTags tag=>'code' -%]</li>
+ <li><em>منفذ قاعدة البيانات: </em> [%- port| $HtmlTags tag=>'code' -%] (لا بأس إن كان فارغاً)</li>
+ <li><em>مستخدم قاعدة البيانات: </em> [%- user | $HtmlTags tag=>'code' -%]</li>
+ </ul>
+
+ [% IF ( dbconnection ) %]
+ <form name="checkdbparameters" action="install.pl" method="get">
+ [% IF ( checkdatabaseaccess ) %]
+ <div class="alert alert-success" role="alert"><p>تم إنشاء الاتصال.</p></div>
+ [% IF ( checkdatabasecreated ) %]
+ <ul>
+ <li>قاعدة البيانات [% dbname | $HtmlTags tag=>'code' %] موجودة.</li>
+ [% IF ( checkgrantaccess ) %]
+ <li>المستخدم [% user | $HtmlTags tag=>'code' %] يمتلك جميع الامتيازات المطلوبة في قاعدة البيانات [% dbname | $HtmlTags tag=>'code' %].</li>
+ </ul>
+ [% ELSE %]
+ </ul>
+ <p class="error">لا يمتلك المستخدم [% user | $HtmlTags tag=>'code' %] امتيازات كافية في قاعدة البيانات [% dbname | $HtmlTags tag=>'code' %].</p>
+ <p class="hint">قم بإجراء التغييرات في امتيازات المستخدم أو بطلب إجرائها . يجب أن يكون [% user | $HtmlTags tag=>'code' %] للمستخدم امتيازات  USAGE,، INSERT، UPDATE، DELETE، DROP و CREATE في قاعدة البيانات [% dbname | $HtmlTags tag=>'code' %].</p>
+ <p>هل تحتاج إلى المساعدة؟ للحصول على المساعدة حول منح الصلاحيات، يرجى البحث على الإنترنت عن"[% dbms | $HtmlTags tag=>'code' %] منح الصلاحيات يدويًا" </p>
+ [% END %]
+ [% IF ( warnDbRowFormat ) %]
+ <div class="alert alert-danger" role="alert">
+ <p>جداول قاعدة البيانات ذات تنسيق صف آخر غير 'DYNAMIC': [% warnDbRowFormat | html %]</p>
+ <p>قد تواجه مشكلات في الترقية إلى الإصدارات الأحدث من كوها ما لم تقم بتحديث تنسيق الصف لجداول قاعدة البيانات الخاصة بك.</p>
+ <p>لمعرفة كيفية تجنب هذه المشكلة انظر صفحة ويكي ذات الصلة: <a href="https://wiki.koha-community.org/wiki/Database_row_format">تنسيق صف قاعدة البيانات</a>
+ </p>
+ </div>
+ [% END %]
+ [% ELSE %]
+ <div class="alert alert-danger" role="alert"><p>لم يتم العثور على أي قاعدة بيانات باسم [% dbname | $HtmlTags tag=>'code' %].</p></div>
+ <p>يرجى إنشاء قاعدة البيانات قبل الاستمرار.</p>
+ [% END %]
+ [% ELSE %]
+ <div class="alert alert-warning" role="alert">[% error | html %] : [% message | html %]</div>
+ <div class="hint">
+ <ul>
+ <li>تأكد من أن قاعدة البيانات الخاصة بك تعمل.</li>
+ <li>تحقق من إعدادات قاعدة بياناتك في [% 'koha-conf.xml' | $HtmlTags Tag=>'code' %].</li>
+ <li>تحقق من إعداد اسم المستضيف في [% INCLUDE txt_kohaconf_xml %]. بعض خوادم قواعد البيانات تتطلب [% '127.0.0.1' | $HtmlTags tag=>'code' %]  بدلا من [% 'localhost' | $HtmlTags tag=>'code' %].</li>
+ </ul>
+ </div>
+ <p>يرجى تصحيح هذه الأخطاء. <a href="/cgi-bin/koha/installer/install.pl">ثم ابدأ المثبت مرة أخرى.</a>
+ [% END %]
+ [% UNLESS ( error ) %]
+ <input type="hidden" name="step" value="3" />
+ <p><input class="btn btn-primary" type="submit" value="تابع إلى الخطوة التالية" /></p>
+ [% END %]
+ </form>
+ [% ELSE %]
+ <form name="checkinformation" action="install.pl" method="get">
+ <input type="hidden" name="step" value="2" />
+ <input type="hidden" name="checkdb" value="1" />
+ <p><input class="btn btn-primary" type="submit" value="تابع إلى الخطوة التالية" /> </p>
+ </form>
+ [% END # / IF dbconnection %]
+ </div> <!-- / #installer-step2 -->
+ </div> <!-- / .row -->
+ </div><!-- / .container-fluid -->
+
+[% INCLUDE 'installer-intranet-bottom.inc' %]

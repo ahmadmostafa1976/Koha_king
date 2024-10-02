@@ -1,0 +1,17 @@
+---
+‫erm.pref:
+  ‫erm.pref Interface:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: ERMModule
+    - نظام إدارة الموارد الإلكترونية الفرعي
+  - - لنظام إدارة الموارد الإلكترونية الفرعي
+    - multiple:
+        ebsco: إبسكو
+        local: محلي
+      pref: ERMProviders
+  - - معرف العميل لـ HoldingsIQ من إبسكو
+    - pref: ERMProviderEbscoCustomerID
+  - - مفتاح واجهة برمجة التطبيقات لـ HoldingsIQ من إبسكو
+    - pref: ERMProviderEbscoApiKey

@@ -1,0 +1,117 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 106 builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_106" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 106</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">شكل المادة: بيانات الأكواد: الدلالية المتوسطة (غير قابلة للتكرار)</label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1r ) %]
+ <option value="r" selected="selected">طبعة منتظمة</option>
+ [% ELSE %]
+ <option value="r">طبعة منتظمة</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="d" selected="selected">طبعة كبيرة</option>
+ [% ELSE %]
+ <option value="d">طبعة كبيرة</option>
+ [% END %]
+ [% IF ( f1e ) %]
+ <option value="e" selected="selected">تنسيق جريدة</option>
+ [% ELSE %]
+ <option value="e">تنسيق جريدة</option>
+ [% END %]
+
+ [% IF ( f1f ) %]
+ <option value="f" selected="selected">نص بلغة بريل أو مون</option>
+ [% ELSE %]
+ <option value="f">نص بلغة بريل أو مون</option>
+
+ [% END %]
+ [% IF ( f1g ) %]
+ <option value="g" selected="selected">طبعة مصغرة</option>
+ [% ELSE %]
+ <option value="g">طبعة مصغرة</option>
+
+ [% END %]
+ [% IF ( f1h ) %]
+ <option value="h" selected="selected">مكتوب باليد</option>
+ [% ELSE %]
+ <option value="h">مكتوب باليد</option>
+
+ [% END %]
+ [% IF ( f1i ) %]
+ <option value="i" selected="selected">وسائط متعددة (على سبيل المثال مادة بطبعة عادية مع ملحق الميكروفيش)</option>
+ [% ELSE %]
+ <option value="i">وسائط متعددة (على سبيل المثال مادة بطبعة عادية مع ملحق الميكروفيش)</option>
+
+ [% END %]
+ [% IF ( f1j ) %]
+ <option value="j" selected="selected">طبعة مصغرة</option>
+ [% ELSE %]
+ <option value="j">طبعة مصغرة</option>
+
+ [% END %]
+ [% IF ( f1s ) %]
+ <option value="s" selected="selected">الكتروني</option>
+ [% ELSE %]
+ <option value="s">الكتروني</option>
+
+ [% END %]
+ [% IF ( f1t ) %]
+ <option value="t" selected="selected">ميكروفورم</option>
+ [% ELSE %]
+ <option value="t">ميكروفورم</option>
+
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">شكل آخر من مادة</option>
+ [% ELSE %]
+ <option value="z">شكل آخر من مادة</option>
+
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value = document.f_pop.f1.value;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

@@ -1,0 +1,387 @@
+---
+enhanced_content.pref:
+  library Thing:
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: ThingISBN
+    - خدمة ThingISBN لعرض طبعات أخرى من عنوان (عندما يكون أي من <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=FRBRizeEditions">FRBRizeEditions</a>
+      أو <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACFRBRizeEditions">OPACFRBRizeEditions</a>مفعلاً).
+      هذا منفصل عن Library Thing للمكتبات.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: LibraryThingForLibrariesEnabled
+    - 'المراجعات، المواد المشابهة، والوسوم من Library Thing for Libraries في صفحات
+      تفاصيل المادة في الأوباك. إذا قمت بتفعيل هذا التفضيل,، يجب عليك '
+    - <a href="https://www.librarything.com/forlibraries/">تسجيل</a>، ثم إدخال معرفك
+      أدناه.
+  - - الوصول إلى Library Thing for Libraries باستخدام معرّف المستفيد
+    - pref: LibraryThingForLibrariesID
+    - .
+  - - عرض محتوى Library Thing for Libraries
+    - choices:
+        '0': بالتوازي مع المعلومات البيبلوجرافية.
+        '1': في التبويبات.
+      pref: LibraryThingForLibrariesTabbedView
+  novelist Select:
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: NovelistSelectEnabled
+    - محتوى  Novelist Select إلى الأوباك (يتطلب الدخول إلى ملف المستخدم الشخصي وكلمة
+      المرور، والذي يمكن رؤيته في روابط الصورة)
+  - - عرض محتوى  Novelist Select
+    - choices:
+        above: أعلى جدول المقتنيات
+        below: أدنى الجدول المقتنيات
+        right: أدنى قائمة حفظ التسجيلة المنسدلة، على اليسار
+        tab: في تبويب الأوباك
+      pref: NovelistSelectView
+    - .
+  - - الوصول إلى  Novelist Select باستخدام ملف المستخدم الشخصي
+    - pref: NovelistSelectProfile
+    - في الأوباك
+  - - الوصول إلى Novelist Select باستخدام ملف المستخدم
+    - pref: NovelistSelectStaffProfile
+    - في واجهة الموظف.
+  - - الوصول إلى Novelist Select باستخدام كلمة مرور
+    - class: password
+      pref: NovelistSelectPassword
+    - .
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: NovelistSelectStaffEnabled
+    - محتوى Novelist Select إلى واجهة الموظف (يتطلب منك إدخال بروفايل مستخدم مع كلمة
+      مرور، والتي يمكن رؤيتها في روابط الصورة).
+  - - عرض محتوى واجهة الموظف من Novelist Select
+    - choices:
+        above: أعلى جدول المقتنيات
+        below: أدنى جدول المقتنيات
+        tab: في تبويب
+      pref: NovelistSelectStaffView
+    - .
+  overDrive:
+  - - إدراج معلومات إتاحة OverDrive  بمفتاح العميل
+    - pref: OverDriveClientKey
+    - وسر العميل
+    - pref: OverDriveClientSecret
+    - .
+  - - 'استيثاق باستخدام #معرف موقع OverDrive الإلكتروني'
+    - pref: OverDriveWebsiteID
+    - .
+  - - استيثاق باستخدام OverDrive Authname
+    - pref: OverDriveAuthName
+    - (سيتم استخدامه كاحتياطي إذا لم يتم ضبط authname الفرع في <a href="/cgi-bin/koha/admin/overdrive.pl">جدول
+      أسماء استناد مكتبة OverDrive</a>)
+  - - 'عرض المواد من فهرس OverDrive للمكتبة #'
+    - pref: OverDriveLibraryID
+    - .
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: OverDriveCirculation
+    - للمستخدمين للوصول سجل إعارة OverDrive الخاص بهم، وإعارة المواد.<br />
+    - يستخدم OverDrive المستفيد
+    - choices:
+        cardnumber: رقم البطاقة
+        userid: اسم المستخدم
+      pref: OverDriveUsername
+    - لوصول المستخدم إلى OverDrive.<br />
+    - كلمة المرور هي
+    - choices:
+        '0': غير مطلوب
+        '1': مطلوب
+      pref: OverDrivePasswordRequired
+    - لوصول المستخدم إلى OverDrive.<br />
+    - إذا قمت بتفعيل الوصول يجب أن يكون لديك اتصال SIP مسجل بـ
+    - overDrive لاستيثاق المستفيد مقابل كوها
+  syndetics:
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: SyndeticsEnabled
+    - محتوى من Syndetics. لاحظ أن هذا يتطلب تسجيلك الدخول في الخدمة، وخولك في رمز
+      العميل الخاص بك أدناه.
+  - - استخدام رمز العميل
+    - pref: SyndeticsClientCode
+    - للوصول إلى Syndetics.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsCoverImages
+    - صور الغلاف من Syndetics في صفحات نتائج البحث وتفاصيل المادة في الأوباك وواجهة
+      الموظف في
+    - choices:
+        LC: كبير
+        MC: متوسط
+      pref: SyndeticsCoverImageSize
+    - الحجم.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsAuthorNotes
+    - ملاحظات حول مؤلف  عنوان من Syndetics على صفحات تفاصيل المادة المتعلقة بالأوباك
+      .
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsAwards
+    - من المعلومات حول Syndetics جوائز عنوان فاز على صفحات تفاصيل المادة المتعلقة
+      بواجهة المستفيد  OPAC.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsEditions
+    - معلومات عن الطبعات الأخرى من عنوان من Syndetics على صفحات تفاصيل المادة في الأوباك
+      (حين يكون <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACFRBRizeEditions">OPACFRBRizeEditions</a>
+      مفعلاً).
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsExcerpt
+    - مقتطفات من عنوان من Syndetics في صفحات تفاصيل المادة في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsReviews
+    - مراجعات للعنوان من Syndetics في صفحات تفاصيل المادة في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsSeries
+    - information on other titles in a series from Syndetics on the record detail
+      pages on the OPAC.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsSummary
+    - موجزا للعنوان من Syndetics على صفحات تفاصيل المادة المتعلقة بواجهة المستفيد
+      OPAC.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SyndeticsTOC
+    - جدول المحتويات من عنوان من Syndetics على صفحات تفاصيل المادة المتعلقة بالأوباك.
+  أمازون:
+  - - استخدام بيانات أمازون من
+    - choices:
+        CA: الكندية
+        DE: الألمانية
+        FR: الفرنسية
+        IN: الهندية
+        JP: اليابانية
+        UK: البريطانية
+        US: الأمريكية
+      pref: AmazonLocale
+    - موقع ويب.
+  - - ضع الوسم المرتبط
+    - pref: AmazonAssocTag
+    - على روابط لأمازون. يمكن لذلك أن يصفي رسوم الإحالة الخاصة بمكتبتك في حال قرر
+      المستفيد شراء مادة.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 1
+      pref: AmazonCoverImages
+    - صور الغلاف من أمازون في نتائج البحث وصفحات تفاصيل المادة في واجهة الموظف.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 1
+      pref: OPACAmazonCoverImages
+    - صور الغلاف من أمازون في نتائج البحث وصفحات تفاصيل المادة في الأوباك.
+  الدليل:
+  - - موقع دليل كوها
+    - class: url
+      pref: KohaManualBaseURL
+    - يمكنك تحديد موقع دليل كوها لاستخدامه. افتراضيًا هو https://koha-community.org/manual/
+    - إذا بدأت بـ '/', فسيتم استخدام قيمة <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=staffClientBaseURL">staffClientBaseURL</a>كبادئة.
+    - لاحظ أنه سيكون ملحوقًا بالإصدار / اللغة / التنسيق (/17.11/en/html)
+  - - لغة الدليل على الإنترنت
+    - choices:
+        ar: العربية
+        cs: التشيكية
+        de: الألمانية
+        en: الإنجليزية
+        es: الأسبانية
+        fr: الفرنسية
+        it: الإيطالية
+        pt_BR: البرتغالية– البرازيل
+        tr: التركية
+        zh_TW: الصينية– تايوان
+      pref: KohaManualLanguage
+    - سيتم استخدامه كقيمة احتياطية إذا كانت اللغة المستخدمة بواسطة الواجهة لا تحتوي
+      على إصدار يدوي عبر الإنترنت.
+  الكل:
+  - - <strong>ملاحظة:</strong> يمكنك فقط اختيار أحد مصادر صور الغلاف أدناه، وإلا سيقوم
+      كوها بعرض الصور من جميع المصادر المحددة.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: FRBRizeEditions
+    - طبعات أخرى من المادة في واجهة الموظف (إذا تم العثور عليها بواسطة إحدى الخدمات
+      أدناه).
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: 0
+      pref: OPACFRBRizeEditions
+    - طبعات أخرى من مادة في الأوباك.
+  المكتبة:
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: Babeltheque
+    - إدراج معلومات (مثل المراجعات والاستشهادات) من Babelthèque في صفحات تفاصيل الأوباك.
+  - - 'استخدم عنوان ال URL هذا لملف سكريبت Babelthèque: '
+    - class: url
+      pref: Babeltheque_url_js
+    - '(مثال: http://www.babeltheque.com/bw_XX.js).'
+  - - 'استخدم عنوان ال URL هذا لتحديث Babelthèque الدوري: '
+    - class: url
+      pref: Babeltheque_url_update
+    - '(مثال: http://www.babeltheque.com/.../file.csv.bz2).'
+  المكتبة المفتوحة:
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: OpenLibraryCovers
+    - صور غلاف الكتب من المكتبة المفتوحة في نتائج البحث و صفحات تفاصيل المادة في الأوباك.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OpenLibrarySearch
+    - نتائج البحث من المكتبة المفتوحة في الأوباك.
+  الوسم:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: TagsEnabled
+    - للمستفيدين والموظفين بوضع وسوم على المواد.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: TagsModeration
+    - قيام الموظف بمراجعة الوسوم التي يرسلها المستفيدون قبل عرضها.
+  - - عرض
+    - class: integer
+      pref: TagsShowOnList
+    - الوسوم في نتائج البحث في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: TagsInputOnList
+    - المستفيدين بإدخال الوسوم في نتائج البحث في الأوباك.
+  - - عرض
+    - class: integer
+      pref: TagsShowOnDetail
+    - الوسوم في صفحات تفاصيل المادة في الأوباك.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: TagsInputOnDetail
+    - المستفيدين بإدخال الوسوم في صفحات تفاصيل المادة في الأوباك.
+  - - السماح بالوسوم في قاموس ispell قابل التنفيذ
+    - class: file
+      pref: TagsExternalDictionary
+    - على الخادم للقبول دون إشراف.
+  بايكر وتايلور:
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: BakerTaylorEnabled
+    - روابط بيكر وتايلور وصور الغلاف للأوباك ووواجهة الموظف. يتطلب ذلك إدخال اسم مستخدم
+      وكلمة مرور (والتي يمكن رؤيتها في روابط الصورة).
+  - - بيكر وتايلور وينبغي الوصول إلى "مكتبة تخزين الكتب الخاصة بي" وصلات في https://
+      <code>
+    - class: url
+      pref: BakerTaylorBookstoreURL
+    - <em>ردمك</em></code> (يجب ملء هذا بشيء كـ <code>ocls.mylibrarybookstore.com/MLB/actions/searchHandler.do?nextPage=bookDetails&amp;parentNum=10923&amp;key=</code>).
+      اتركه خاليا لتعطيل هذه الروابط.
+  - - الوصول إلى باركو وتايلر باستخدام اسم المستخدم
+    - class: password
+      pref: BakerTaylorUsername
+    - وكلمة المرور
+    - class: password
+      pref: BakerTaylorPassword
+    - .
+  تخبأة صور غلاف Coce:
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: OpacCoce
+    - خدمة تخبئة صورة Coce في الأوباك.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: IntranetCoce
+    - خدمة تخبئة الصورة من Coce في واجهة الموظف.
+  - - رابط خادم ال Coce
+    - class: url
+      pref: CoceHost
+  - - استخدام رمز العميل
+    - multiple:
+        aws: خدمات الويب من أمازون
+        gb: كتب جوجل
+        ol: المكتبة المفتوحة
+      pref: CoceProviders
+  جوجل:
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: GoogleJackets
+    - صور الغلاف من كتب جوجل لصفحات نتائج البحث وتفاصيل المادة في الأوباك ( واجهة
+      المستفيد).
+  صور الغلاف المحلية أو البعيدة:
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: LocalCoverImages
+    - صور الغلاف المحلية في واجهة بحث الموظف وصفحات التفاصيل.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACLocalCoverImages
+    - صور الغلاف المحلية على أوباك وصفحات التفاصيل.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowMultipleCovers
+    - صور متعددة لإرفاقها في كل مادة وتسجيلة بيبليوغرافية.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: CustomCoverImages
+    - تخصيص صور url البعيدة في واجهة الموظف.<br/>
+    - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: OPACCustomCoverImages
+    - تخصيص صور url البعيدة في الأوباك.<br/>
+    - 'باستخدام عنوان URL التالي:'
+    - class: url
+      pref: CustomCoverImagesURL
+    - 'يمكنك تعريفه باستخدام الأنماط التالية: {isbn}, {issn}, {normalized_isbn}.<br/>'
+    - 'أو يمكنك استخدام الجملة التالية لتحديد قيمة field$subfield: {field$subfield}.
+      على سبيل المثال: {024$a}.'
+    - لحقول التحكم يمكنك استخدام فقط  {field}، مثل {001}.
+  وسائط HTML5:
+  - - عرض تبويب بمشغل وسائط HTML5للملفات المفهرسة في الحقل  856
+    - choices:
+        both: في الأوباك وواجهة الموظف.
+        not: على الإطلاق.
+        opac: في الأوباك.
+        staff: في واجهة الموظف.
+      pref: HTML5MediaEnabled
+  - - امتدادات ملف الوسائط
+    - class: multi
+      pref: HTML5MediaExtensions
+    - (مفصول بـ |).
+  - - choices:
+        '0': عدم تضمين
+        '1': تضمين
+      pref: HTML5MediaYouTube
+    - روابط يوتيوب كفيديوهات.

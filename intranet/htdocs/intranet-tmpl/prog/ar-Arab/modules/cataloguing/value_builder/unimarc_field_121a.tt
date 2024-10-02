@@ -1,0 +1,371 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 121a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_121a" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 121</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">البعد المادي</label></td>
+ <td>
+ <select name="f1" id="f1">
+
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">2- الأبعاد</option>
+ [% ELSE %]
+ <option value="a">2- الأبعاد</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">ثلاثي الأبعاد</option>
+ [% ELSE %]
+ <option value="b">ثلاثي الأبعاد</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f2">صورة خرائطية رئيسية 1:</label></td>
+ <td>
+ <select name="f2" id="f2">
+
+ [% IF ( f2space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+ [% IF ( f2a ) %]
+ <option value="a" selected="selected">يدوياً ومحبوكاً</option>
+ [% ELSE %]
+ <option value="a">يدوياً ومحبوكاً</option>
+ [% END %]
+ [% IF ( f2b ) %]
+ <option value="b" selected="selected">فوتوغرافيا</option>
+ [% ELSE %]
+ <option value="b">فوتوغرافيا</option>
+ [% END %]
+ [% IF ( f2c ) %]
+ <option value="c" selected="selected">بواسطة الكمبيوتر</option>
+ [% ELSE %]
+ <option value="c">بواسطة الكمبيوتر</option>
+ [% END %]
+ [% IF ( f2d ) %]
+ <option value="d" selected="selected">بواسطة تقنيات استشعار عن بعد نشطة</option>
+ [% ELSE %]
+ <option value="d">بواسطة تقنيات استشعار عن بعد نشطة</option>
+ [% END %]
+ [% IF ( f2e ) %]
+ <option value="e" selected="selected">باستخدام تقنيات استشعار عن بعد سلبية</option>
+ [% ELSE %]
+ <option value="e">باستخدام تقنيات استشعار عن بعد سلبية</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f3">صورة خرائطية رئيسية 2:</label></td>
+ <td>
+ <select name="f3" id="f3">
+ [% IF ( f3space ) %]
+ <option value=" " selected="selected">قيمة غير مطلوبة</option>
+ [% ELSE %]
+ <option value=" ">قيمة غير مطلوبة</option>
+ [% END %]
+
+ [% IF ( f3a ) %]
+ <option value="a" selected="selected">يدوياً ومحبوكاً</option>
+ [% ELSE %]
+ <option value="a">يدوياً ومحبوكاً</option>
+ [% END %]
+ [% IF ( f3b ) %]
+ <option value="b" selected="selected">فوتوغرافيا</option>
+ [% ELSE %]
+ <option value="b">فوتوغرافيا</option>
+ [% END %]
+ [% IF ( f3c ) %]
+ <option value="c" selected="selected">بواسطة الكمبيوتر</option>
+ [% ELSE %]
+ <option value="c">بواسطة الكمبيوتر</option>
+ [% END %]
+ [% IF ( f3d ) %]
+ <option value="d" selected="selected">بواسطة تقنيات استشعار عن بعد نشطة</option>
+ [% ELSE %]
+ <option value="d">بواسطة تقنيات استشعار عن بعد نشطة</option>
+ [% END %]
+ [% IF ( f3e ) %]
+ <option value="e" selected="selected">باستخدام تقنيات استشعار عن بعد سلبية</option>
+ [% ELSE %]
+ <option value="e">باستخدام تقنيات استشعار عن بعد سلبية</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f4">الوسيط المادي</label></td>
+ <td>
+ <select name="f4" id="f4">
+ [% IF ( f4aa ) %]
+ <option value="aa" selected="selected">ورقة</option>
+ [% ELSE %]
+ <option value="aa">ورقة</option>
+ [% END %]
+ [% IF ( f4ab ) %]
+ <option value="ab" selected="selected">خشب</option>
+ [% ELSE %]
+ <option value="ab">خشب</option>
+ [% END %]
+ [% IF ( f4ac ) %]
+ <option value="ac" selected="selected">حجر</option>
+ [% ELSE %]
+ <option value="ac">حجر</option>
+ [% END %]
+ [% IF ( f4ad ) %]
+ <option value="ad" selected="selected">معدن</option>
+ [% ELSE %]
+ <option value="ad">معدن</option>
+ [% END %]
+ [% IF ( f4ae ) %]
+ <option value="ae" selected="selected">مواد تركيبية (مثال: البلاستيك، الفينيل)</option>
+ [% ELSE %]
+ <option value="ae">مواد تركيبية (مثال: البلاستيك، الفينيل)</option>
+ [% END %]
+ [% IF ( f4af ) %]
+ <option value="af" selected="selected">جلد (مثال مخطوطة رقية، رق)</option>
+ [% ELSE %]
+ <option value="af">جلد (مثال مخطوطة رقية، رق)</option>
+ [% END %]
+ [% IF ( f4ag ) %]
+ <option value="ag" selected="selected"> النسيج يتضمن منسوجات الألياف الصناعية (مثال: الحرير, القماش, النايلون)</option>
+ [% ELSE %]
+ <option value="ag"> النسيج يتضمن منسوجات الألياف الصناعية (مثال: الحرير, القماش, النايلون)</option>
+ [% END %]
+ [% IF ( f4ah ) %]
+ <option value="ah" selected="selected">وسيط تخزين مغناطيسي - متوافق مع الحاسب</option>
+ [% ELSE %]
+ <option value="ah">وسيط تخزين مغناطيسي - متوافق مع الحاسب</option>
+ [% END %]
+ [% IF ( f4ai ) %]
+ <option value="ai" selected="selected">وسيط تخزين مغناطيسي - غير متوافق مع الحاسب</option>
+ [% ELSE %]
+ <option value="ai">وسيط تخزين مغناطيسي - غير متوافق مع الحاسب</option>
+ [% END %]
+ [% IF ( f4aj ) %]
+ <option value="aj" selected="selected">ورق الإستشفاف</option>
+ [% ELSE %]
+ <option value="aj">ورق الإستشفاف</option>
+ [% END %]
+ [% IF ( f4ak ) %]
+ <option value="ak" selected="selected">لوح كارتوني</option>
+ [% ELSE %]
+ <option value="ak">لوح كارتوني</option>
+ [% END %]
+ [% IF ( f4ap ) %]
+ <option value="ap" selected="selected">جص</option>
+ [% ELSE %]
+ <option value="ap">جص</option>
+ [% END %]
+ [% IF ( f4au ) %]
+ <option value="au" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="au">غير معروف</option>
+ [% END %]
+ [% IF ( f4az ) %]
+ <option value="az" selected="selected">وسيط غير فوتوغرافي آخر</option>
+ [% ELSE %]
+ <option value="az">وسيط غير فوتوغرافي آخر</option>
+ [% END %]
+ [% IF ( f4ba ) %]
+ <option value="ba" selected="selected"> قاعدة مرنة شفافة أو معتمة موجبة</option>
+ [% ELSE %]
+ <option value="ba"> قاعدة مرنة شفافة أو معتمة موجبة</option>
+ [% END %]
+ [% IF ( f4bb ) %]
+ <option value="bb" selected="selected">قاعدة مرنة شفافة أو معتمة سالبة</option>
+ [% ELSE %]
+ <option value="bb">قاعدة مرنة شفافة أو معتمة سالبة</option>
+ [% END %]
+ [% IF ( f4bc ) %]
+ <option value="bc" selected="selected">قاعدة غير مرنة شفافة أو معتمة موجبة</option>
+ [% ELSE %]
+ <option value="bc">قاعدة غير مرنة شفافة أو معتمة موجبة</option>
+ [% END %]
+ [% IF ( f4bd ) %]
+ <option value="bd" selected="selected">قاعدة غير مرنة شفافة أو معتمة سالبة</option>
+ [% ELSE %]
+ <option value="bd">قاعدة غير مرنة شفافة أو معتمة سالبة</option>
+ [% END %]
+ [% IF ( f4bz ) %]
+ <option value="bz" selected="selected">وسيط فوتوغرافي آخر</option>
+ [% ELSE %]
+ <option value="bz">وسيط فوتوغرافي آخر</option>
+ [% END %]
+ </select>
+ </td></tr><tr>
+ <td><label for="f5">تقنية الإنشاء</label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5a ) %]
+ <option value="a" selected="selected">مخطوط</option>
+ [% ELSE %]
+ <option value="a">مخطوط</option>
+ [% END %]
+ [% IF ( f5b ) %]
+ <option value="b" selected="selected">طباعة</option>
+ [% ELSE %]
+ <option value="b">طباعة</option>
+ [% END %]
+ [% IF ( f5c ) %]
+ <option value="c" selected="selected">التصوير</option>
+ [% ELSE %]
+ <option value="c">التصوير</option>
+ [% END %]
+ [% IF ( f5d ) %]
+ <option value="d" selected="selected">تصوير فوتوغرافي مصغر</option>
+ [% ELSE %]
+ <option value="d">تصوير فوتوغرافي مصغر</option>
+ [% END %]
+ [% IF ( f5u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f5y ) %]
+ <option value="y" selected="selected">المادة الخرائطية ليست الانتاج النهائي</option>
+ [% ELSE %]
+ <option value="y">المادة الخرائطية ليست الانتاج النهائي</option>
+ [% END %]
+ [% IF ( f5z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td>
+ </tr><tr>
+ <td><label for="f6">شكل إعادة الإنتاج</label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">باليد</option>
+ [% ELSE %]
+ <option value="a">باليد</option>
+ [% END %]
+ [% IF ( f6b ) %]
+ <option value="b" selected="selected">مطبوع</option>
+ [% ELSE %]
+ <option value="b">مطبوع</option>
+ [% END %]
+ [% IF ( f6c ) %]
+ <option value="c" selected="selected">تصوير</option>
+ [% ELSE %]
+ <option value="c">تصوير</option>
+ [% END %]
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">نقل خط الطباعة</option>
+ [% ELSE %]
+ <option value="d">نقل خط الطباعة</option>
+ [% END %]
+ [% IF ( f6y ) %]
+ <option value="y" selected="selected">ليس إعادة إنتاج</option>
+ [% ELSE %]
+ <option value="y">ليس إعادة إنتاج</option>
+ [% END %]
+ </select>
+ </td>
+ </tr><tr>
+ <td><label for="f7">التكيف الجيوديسي</label></td>
+ <td>
+ <select name="f7" id="f7">
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">a- لا تعديل</option>
+ [% ELSE %]
+ <option value="a">a- لا تعديل</option>
+ [% END %]
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">b- تعديل ولكن بدون النظام الشبكي</option>
+ [% ELSE %]
+ <option value="b">b- تعديل ولكن بدون النظام الشبكي</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">c- معدّل بنظام شبكي</option>
+ [% ELSE %]
+ <option value="c">c- معدّل بنظام شبكي</option>
+ [% END %]
+ [% IF ( f7x ) %]
+ <option value="x" selected="selected">x- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">x- غير قابل للتطبيق</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f8">الشكل المادي للنشر</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8a ) %]
+ <option value="a" selected="selected">مفرد</option>
+ [% ELSE %]
+ <option value="a">مفرد</option>
+ [% END %]
+ [% IF ( f8b ) %]
+ <option value="b" selected="selected">في أجزاء</option>
+ [% ELSE %]
+ <option value="b">في أجزاء</option>
+ [% END %]
+ [% IF ( f8c ) %]
+ <option value="c" selected="selected">أطلس يحتوي على أطلس مرن منشور</option>
+ [% ELSE %]
+ <option value="c">أطلس يحتوي على أطلس مرن منشور</option>
+ [% END %]
+ [% IF ( f8d ) %]
+ <option value="d" selected="selected">كملحق منفصل لمجلة، لدراسة ...الخ.</option>
+ [% ELSE %]
+ <option value="d">كملحق منفصل لمجلة، لدراسة ...الخ.</option>
+ [% END %]
+ [% IF ( f8e ) %]
+ <option value="e" selected="selected">منضمة إلى مجلة ، دراسة ...الخ.</option>
+ [% ELSE %]
+ <option value="e">منضمة إلى مجلة ، دراسة ...الخ.</option>
+ [% END %]
+ [% IF ( f8z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value =  document.f_pop.f1.value + document.f_pop.f2.value +document.f_pop.f3.value +document.f_pop.f4.value +document.f_pop.f5.value +document.f_pop.f6.value +document.f_pop.f7.value +document.f_pop.f8.value;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

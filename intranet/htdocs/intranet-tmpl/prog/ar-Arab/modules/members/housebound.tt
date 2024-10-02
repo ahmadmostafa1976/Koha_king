@@ -1,0 +1,464 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE KohaDates %]
+[% USE AuthorisedValues %]
+[% USE Branches %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Details for") | html %] [% INCLUDE 'patron-title.inc' no_html = 1 %] &rsaquo;
+ [% t("Housebound") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="housebound-home" class="housebound">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'patron-search-header.inc' %]
+[% END %]
+
+[% BLOCK 'homebound-details' %]
+ <div class="rows">
+ <ol>
+ <li>
+ <span class="label" class="required"> يوم التسليم:</span>
+ [% hpd = housebound_profile.day %]
+ [% IF hpd == 'any' %]<span>أي</span>
+ [% ELSIF hpd == 'monday' %]<span>الإثنين</span>
+ [% ELSIF hpd == 'tuesday' %]<span>الثلاثاء</span>
+ [% ELSIF hpd == 'wednesday' %]<span>الأربعاء</span>
+ [% ELSIF hpd == 'thursday' %]<span>الخميس</span>
+ [% ELSIF hpd == 'friday' %]<span>الجمعة</span>
+ [% ELSIF hpd == 'saturday' %]<span>السبت</span>
+ [% ELSIF hpd == 'sunday' %]<span>الأحد</span>
+ [% END %]
+ </li>
+ <li>
+ <span class="label" class="required">التواتر:</span>
+ [% AuthorisedValues.GetByCode( 'HSBND_FREQ', housebound_profile.frequency, 0 ) || housebound_profile.frequency | html %]
+ </li>
+ <li>
+ <span class="label">المادة:</span><br />
+ [% housebound_profile.fav_itemtypes | html | html_line_break %]
+ </li>
+ <li>
+ <span class="label">موضوعات:</span><br />
+ [% housebound_profile.fav_subjects | html | html_line_break %]
+ </li>
+ <li>
+ <span class="label">المؤلفين:</span><br />
+ [% housebound_profile.fav_authors | html | html_line_break %]
+ </li>
+ <li>
+ <span class="label">مرجعي:</span><br />
+ [% housebound_profile.referral | html | html_line_break %]
+ </li>
+ <li>
+ <span class="label">ملاحظات:</span><br />
+ [% housebound_profile.notes | html | html_line_break %]
+ </li>
+ </ol>
+ </div>
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/members-home.pl">المستفيدين</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% patron.borrowernumber | uri %]">[% INCLUDE 'patron-title.inc' %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تفاصيل المرابطة بالمنزل</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% INCLUDE 'members-toolbar.inc' %]
+
+ <h1>تفاصيل المرابطة بالمنزل لـ [% INCLUDE 'patron-title.inc' %]</h1>
+
+ [% FOR m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'error_on_profile_store' %]
+ <span>حدث خطأ أثناء تحديث بروفايل مرابط بالمنزل هذا</span>
+ [% CASE 'error_on_profile_create' %]
+ <span>حدث خطأ أثناء إنشاء بروفايل المرابط بالمنزل هذا</span>
+ [% CASE 'error_on_visit_load' %]
+ <span>حدث خطأ أثناء تحميل زيارة مرابط بالمنزل</span>
+ [% CASE 'error_on_visit_delete' %]
+ <span>حدث خطأ أثناء حذف زيارة مرابط بالمنزل</span>
+ [% CASE 'error_on_visit_store' %]
+ <span>حدث خطأ أثناء تحديث زيارة مرابط بالمنزل</span>
+ [% CASE 'error_on_visit_create' %]
+ <span>حدث خطأ أثناء إنشاء زيارة مرابط بالمنزل جديدة</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ <span>يرجى المحاولة مرة أخرى في وقت لاحق</span>
+ </div>
+ [% END %]
+
+ <!-- Create or edit housebound_profile -->
+ [% IF ( op == 'update_or_create' ) %]
+ <form id="editform" method="post" name="editform" action="/cgi-bin/koha/members/housebound.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="borrowernumber" value="[% patron.borrowernumber | html %]" />
+ [% IF ( housebound_profile ) %]
+ <input type="hidden" name="op" value="cud-updateconfirm" />
+ [% ELSE %]
+ <input type="hidden" name="op" value="cud-createconfirm" />
+ [% END %]
+ <fieldset id="houseboundentry" class="rows">
+ <legend>إدارة الملف الشخصي المحلي</legend>
+ <ol>
+ <li>
+ <label for="day" class="required">يوم التسليم:</label>
+ <select id="day" name="day" class="required" required="required">
+ <option value="">حدد يوما</option>
+ [% IF ( housebound_profile ) %]
+ [% IF ( housebound_profile.day == 'any' ) %]
+ <option value="any" selected='selected'>أي</option>
+ [% ELSE %]
+ <option value="any">أي</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'monday' ) %]
+ <option value="monday" selected='selected'>الإثنين</option>
+ [% ELSE %]
+ <option value="monday">الإثنين</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'tuesday' ) %]
+ <option value="tuesday" selected='selected'>الثلاثاء</option>
+ [% ELSE %]
+ <option value="tuesday">الثلاثاء</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'wednesday' ) %]
+ <option value="wednesday" selected='selected'>الأربعاء</option>
+ [% ELSE %]
+ <option value="wednesday">الأربعاء</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'thursday' ) %]
+ <option value="thursday" selected='selected'>الخميس</option>
+ [% ELSE %]
+ <option value="thursday">الخميس</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'friday' ) %]
+ <option value="friday" selected='selected'>الجمعة</option>
+ [% ELSE %]
+ <option value="friday">الجمعة</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'saturday' ) %]
+ <option value="saturday" selected='selected'>السبت</option>
+ [% ELSE %]
+ <option value="saturday">السبت</option>
+ [% END %]
+ [% IF ( housebound_profile.day == 'sunday' ) %]
+ <option value="sunday" selected='selected'>الأحد</option>
+ [% ELSE %]
+ <option value="sunday">الأحد</option>
+ [% END %]
+ [% ELSE %]
+ <option value="any">أي</option>
+ <option value="monday">الإثنين</option>
+ <option value="tuesday">الثلاثاء</option>
+ <option value="wednesday">الأربعاء</option>
+ <option value="thursday">الخميس</option>
+ <option value="friday">الجمعة</option>
+ <option value="saturday">السبت</option>
+ <option value="sunday">الأحد</option>
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="frequency" class="required">التواتر:</label>
+ <select id="frequency" name="frequency" class="required" required="required">
+ <option value="">اختر تواتر</option>
+ [% FOREACH frequency IN AuthorisedValues.GetAuthValueDropbox('HSBND_FREQ') %]
+ [% IF housebound_profile.frequency == frequency.authorised_value %]
+ <option value="[% frequency.authorised_value | html %]" selected="selected">[% frequency.lib | html %]</option>
+ [% ELSE %]
+ <option value="[% frequency.authorised_value | html %]">[% frequency.lib | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="fav_itemtypes">المواد المفضلة:</label>
+ [% IF ( housebound_profile ) %]
+ <textarea id="fav_itemtypes" name="fav_itemtypes" cols="110" rows="10">[% housebound_profile.fav_itemtypes | html  %]</textarea>
+ [% ELSE %]
+ <textarea id="fav_itemtypes" name="fav_itemtypes" cols="110" rows="10"></textarea>
+ [% END %]
+ </li>
+ <li>
+ <label for="fav_subjects">موضوعات:</label>
+ [% IF ( housebound_profile ) %]
+ <textarea id="fav_subjects" name="fav_subjects" cols="110" rows="10">[% housebound_profile.fav_subjects | html %]</textarea>
+ [% ELSE %]
+ <textarea id="fav_subjects" name="fav_subjects" cols="110" rows="10"></textarea>
+ [% END %]
+ </li>
+ <li>
+ <label for="fav_authors">المؤلفين:</label>
+ [% IF ( housebound_profile ) %]
+ <textarea id="fav_authors" name="fav_authors" cols="110" rows="10">[% housebound_profile.fav_authors | html %]</textarea>
+ [% ELSE %]
+ <textarea id="fav_authors" name="fav_authors" cols="110" rows="10"></textarea>
+ [% END %]
+ </li>
+ <li>
+ <label for="referral">مرجعي:</label>
+ [% IF ( housebound_profile ) %]
+ <textarea id="referral" name="referral" cols="110" rows="10">[% housebound_profile.referral | html %]</textarea>
+ [% ELSE %]
+ <textarea id="referral" name="referral" cols="110" rows="10"></textarea>
+ [% END %]
+ </li>
+ <li>
+ <label for="notes">ملاحظات:</label>
+ [% IF ( housebound_profile ) %]
+ <textarea id="notes" name="notes" cols="110" rows="10">[% housebound_profile.notes | html %]</textarea>
+ [% ELSE %]
+ <textarea id="notes" name="notes" cols="110" rows="10"></textarea>
+ [% END %]
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> حفظ التغييرات</button>
+ <a class="cancel btn btn-link"
+                        href="/cgi-bin/koha/members/housebound.pl?borrowernumber=[% patron.borrowernumber | html %]">
+ إلغاء </a>
+ </fieldset>
+ </form>
+
+ <!-- Create or edit housebound_visit -->
+ [% ELSIF ( op == 'visit_update_or_create' ) %]
+ <h4>إدارة التوصيلات المحلية</h4>
+ <form name="form" id="instance_form" method="post" action="/cgi-bin/koha/members/housebound.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ [% IF ( visit ) %]
+ <input type="hidden" name="op" value="cud-editvisitconfirm" />
+ <input type="hidden" name="visit_id" value="[% visit.id | html %]" />
+ [% ELSE %]
+ <input type="hidden" name="op" value="cud-addvisitconfirm" />
+ [% END %]
+ <input type="hidden" name="borrowernumber" value="[% patron.borrowernumber | html %]" />
+ <fieldset class="rows" id="instance">
+ <legend>تفاصيل التسليم</legend>
+ <ol>
+ <li>
+ <label for="date" class="required">التاريخ: </label>
+ [% IF ( visit ) %]
+ <input type="text" id="date" class="flatpickr required"
+                               value="[% visit.appointment_date | $KohaDates %]"
+                               name="date" size="20" required="required"/>
+ [% ELSE %]
+ <input type="text" id="date" class="flatpickr required"
+                               value="" name="date" size="20" required="required"/>
+ [% END %]
+ <span class="required">مطلوب</span>
+ <div class="hint">[% INCLUDE 'date-format.inc' %]</div>
+ </li>
+ <li>
+ <label for="segment" class="required">وقت:</label>
+ <select id="segment" name="segment" required="required"
+                              class="required">
+ <option value="">تحديد وقت</option>
+ [% IF ( visit ) %]
+ [% IF ( visit.day_segment == 'morning' ) %]
+ <option value="morning" selected="selected">
+ الصباح </option>
+ [% ELSE %]
+ <option value="morning">الصباح</option>
+ [% END %]
+ [% IF ( visit.day_segment == 'afternoon' ) %]
+ <option value="afternoon" selected="selected">
+ بعد الظهر </option>
+ [% ELSE %]
+ <option value="afternoon">بعد الظهر</option>
+ [% END %]
+ [% IF ( visit.day_segment == 'evening' ) %]
+ <option value="evening" selected="selected">
+ المساء </option>
+ [% ELSE %]
+ <option value="evening">المساء</option>
+ [% END %]
+ [% ELSE %]
+ <option value="morning">الصباح</option>
+ <option value="afternoon">بعد الظهر</option>
+ <option value="evening">المساء</option>
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="chooser" class="required"> إختر:</label>
+ <select id="chooser" name="chooser" class="required" required="required">
+ <option value="">حدد اختيار</option>
+ [% IF ( visit ) %]
+ [% FOREACH chooser IN choosers %]
+ [% IF ( visit.chooser_brwnumber == chooser.borrowernumber ) %]
+ <option value="[% chooser.borrowernumber | html %]" selected="selected">
+ [% INCLUDE 'patron-title.inc' patron = chooser invert_name = 0 %]
+ </option>
+ [% ELSE %]
+ <option value="[% chooser.borrowernumber | html %]">
+ [% INCLUDE 'patron-title.inc' patron = chooser invert_name = 0 %]
+ </option>
+ [% END %]
+ [% END %]
+ [% ELSE %]
+ [% FOREACH chooser IN choosers %]
+ <option value="[% chooser.borrowernumber | html %]">
+ [% INCLUDE 'patron-title.inc' patron = chooser invert_name = 0 %]
+ </option>
+ [% END %]
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="deliverer" class="required">التسليم:</label>
+ <select id="deliverer" name="deliverer" class="required" required="required">
+ <option value="">اختر موصل</option>
+ [% IF ( visit ) %]
+ [% FOREACH deliverer IN deliverers %]
+ [% IF ( visit.deliverer_brwnumber == deliverer.borrowernumber ) %]
+ <option value="[% deliverer.borrowernumber | html %]" selected="selected">
+ [% INCLUDE 'patron-title.inc' patron = deliverer invert_name = 0 %]
+ </option>
+ [% ELSE %]
+ <option value="[% deliverer.borrowernumber | html %]">
+ [% INCLUDE 'patron-title.inc' patron = deliverer invert_name = 0 %]
+ </option>
+ [% END %]
+ [% END %]
+ [% ELSE %]
+ [% FOREACH deliverer IN deliverers %]
+ <option value="[% deliverer.borrowernumber | html %]">
+ [% INCLUDE 'patron-title.inc' patron = deliverer invert_name = 0 %]
+ </option>
+ [% END %]
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-save"></i> حفظ</button>
+ <a class="cancel"
+                     href="/cgi-bin/koha/members/housebound.pl?borrowernumber=[% patron.borrowernumber | html %]">
+ إلغاء </a>
+ </fieldset>
+ </form>
+ <div class="page-section">
+ <h3>تفاصيل المرابطة بالمنزل</h3>
+ [% PROCESS 'homebound-details' %]
+ <!-- Display a housebound_profile -->
+ </div> <!-- /.page-section -->
+ [% ELSIF ( housebound_profile ) %]
+ <div class="page-section">
+ [% PROCESS 'homebound-details' %]
+ <div class="action">
+ <a class="btn btn-default btn-xs" href="/cgi-bin/koha/members/housebound.pl?borrowernumber=[% patron.borrowernumber | html %]&op=update_or_create"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ </div>
+ </div> <!-- /.page-section -->
+
+ <div class="page-section">
+ <h3>التسليمات</h3>
+ [% housebound_visits = housebound_profile.housebound_visits %]
+ [% IF  housebound_visits.count > 0 %]
+ <table id="deliveries">
+ <thead>
+ <tr>
+ <th>معرِّف</th>
+ <th>التاريخ</th>
+ <th>اختر</th>
+ <th>التسليم</th>
+ <th class="noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH entry IN housebound_visits %]
+ <tr>
+ <td>[% entry.id | html %]</td>
+ <td>[% entry.appointment_date | $KohaDates %] ([% entry.day_segment | html %])</td>
+ <td>
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% entry.chooser.borrowernumber | uri %]">
+ [% INCLUDE 'patron-title.inc' patron = entry.chooser invert_name = 0 %]
+ </a>
+ </td>
+ <td>
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% entry.deliverer.borrowernumber | uri %]">
+ [% INCLUDE 'patron-title.inc' patron = entry.deliverer invert_name = 0 %]
+ </a>
+ </td>
+ <td class="actions">
+ <a class="btn btn-default btn-xs" href="/cgi-bin/koha/members/housebound.pl?op=visit_update_or_create&visit_id=[% entry.id | html %]&borrowernumber=[% patron.borrowernumber | html %]"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <form action="/cgi-bin/koha/members/housebound.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-visit_delete" />
+ <input type="hidden" name="visit_id" value="[% entry.id | html %]" />
+ <input type="hidden" name="borrowernumber" value="[% patron.borrowernumber | html %]" />
+ <button class="delete btn btn-default btn-xs"><i class="fa fa-trash-can"></i> حذف</button>
+ </form>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ [% END %]
+ <div class="action">
+ <a href="/cgi-bin/koha/members/housebound.pl?op=visit_update_or_create&borrowernumber=[% patron.borrowernumber | uri %]"
+                        class="btn btn-default btn-sm">
+ <i class="fa fa-plus"></i> إضافة توصيل جديد </a>
+ </div>
+ </div> <!-- /.page-section -->
+
+ [% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'circ-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'calendar.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+        $(document).ready(function() {
+            $(".delete").click(function(){
+                return confirm(_("هل أنت متأكد من أنك تريد حذف هذا التوصيل؟"));
+            });
+        });
+        KohaTable("deliveries", {
+            "pagingType": "full",
+            "autoWidth": false,
+        });
+    </script>
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

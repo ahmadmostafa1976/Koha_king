@@ -1,0 +1,202 @@
+[% USE raw %]
+[% USE Koha %]
+[% USE Branches %]
+[% USE Registers %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Tools") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="tools_tools-home" class="tools">
+[% WRAPPER 'header.inc' %]
+[% INCLUDE 'cat-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>الأدوات</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+ [% INCLUDE 'messages.inc' %]
+ <h1>الأدوات</h1>
+ <div class="row">
+ <div class="col-sm-6">
+ [% IF ( CAN_user_tools_manage_patron_lists || CAN_user_clubs || CAN_user_tools_moderate_comments || CAN_user_tools_import_patrons  || CAN_user_tools_edit_notices || CAN_user_tools_edit_notice_status_triggers || CAN_user_tools_label_creator || CAN_user_tools_delete_anonymize_patrons  || CAN_user_tools_edit_patrons || CAN_user_tools_batch_extend_due_dates || CAN_user_tools_moderate_tags || CAN_user_tools_rotating_collections || ( CAN_user_tools_batch_upload_patron_images && Koha.Preference('patronimages') ) ) %]
+ <h3>المستفيدين والإعارة</h3>
+ [% END %]
+ <dl>
+ [% IF (CAN_user_tools_manage_patron_lists) %]
+ <dt><a href="/cgi-bin/koha/patron_lists/lists.pl">قوائم المستفيد</a></dt>
+ <dd>إدارة قوائم المستفيدين</dd>
+ [% END %]
+
+ [% IF (CAN_user_clubs) %]
+ <dt><a href="/cgi-bin/koha/clubs/clubs.pl">أندية المستفيد</a></dt>
+ <dd>إدارة أندية المستفيد</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_moderate_comments ) %]
+ <dt>
+ <a href="/cgi-bin/koha/reviews/reviewswaiting.pl">التعليقات</a>
+ [% IF ( pendingcomments ) %]
+ <span class="number_box"><a href="/cgi-bin/koha/reviews/reviewswaiting.pl">[% pendingcomments | html %]</a></span>
+ [% END %]
+ </dt>
+ <dd>مراقبة تعليقات المستفيدين</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_import_patrons ) %]
+ <dt><a href="/cgi-bin/koha/tools/import_borrowers.pl">إستيراد مستفيدين</a></dt>
+ <dd>استيراد بيانات مستفيد</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_edit_notices ) %]
+ <dt><a href="/cgi-bin/koha/tools/letter.pl">الإخطارات والكعوب</a></dt>
+ <dd>تعريف الإخطارات (إطبع و إرسل الاخطارات بالبريد الالكترونى ل للمتأخرات, إلخ.)</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_edit_notice_status_triggers ) %]
+ <dt><a href="/cgi-bin/koha/tools/overduerules.pl">إخطار التأخير / محفزات الحالة</a></dt>
+ <dd>اضبط محفزات الحالة/الإخطارات للتنبيه عن المواد المتأخرة</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_label_creator ) %]
+ <dt><a href="/cgi-bin/koha/patroncards/home.pl">منشئ بطاقات المستفيدين</a></dt>
+ <dd>إنشاء بطاقات المستفيد القابلة للطباعة</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_delete_anonymize_patrons ) %]
+ <dt><a href="/cgi-bin/koha/tools/cleanborrowers.pl">حذف وعدم تعريف هوية المستفيد بالدفعة</a></dt>
+ <dd>حذف المستفيدين بالدفعة وحذف سجل إعارة المستفيد</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_edit_patrons ) %]
+ <dt><a href="/cgi-bin/koha/tools/modborrowers.pl">تعديل المستفيد بالدفعة</a></dt>
+ <dd>تعديل المستفيدين بالدفعة</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_batch_extend_due_dates ) %]
+ <dt><a href="/cgi-bin/koha/tools/batch_extend_due_dates.pl">تمديد تواريخ الاستحقاق بالدفعة</a></dt>
+ <dd>تعديل تاريخ الاستحقاق للإعارات بالدفعة</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_moderate_tags ) %]
+ <dt>
+ <a href="/cgi-bin/koha/tags/review.pl">الوسوم</a>
+ [% IF ( pendingtags ) %]
+ <span class="number_box"><a href="/cgi-bin/koha/tags/review.pl">[% pendingtags | html %]</a></span>
+ [% END %]
+ </dt>
+ <dd>تعديل وسوم المستفيد</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_batch_upload_patron_images && Koha.Preference('patronimages') ) %]
+ <dt><a href="/cgi-bin/koha/tools/picture-upload.pl">تحميل صور مستفيد</a></dt>
+ <dd>تحميل صور المستفيد بالدفعة أو واحدة تلو الأخرى</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_rotating_collections ) %]
+ <dt><a href="/cgi-bin/koha/rotating_collections/rotatingCollections.pl">مجموعات التدوير</a></dt>
+ <dd>إدارة مجموعات التدوير</dd>
+ [% END %]
+ </dl>
+ </div> <!-- /.col-sm-6 -->
+
+ <div class="col-sm-6">
+ [% IF ( CAN_user_tools_edit_calendar || CAN_user_tools_manage_csv_profiles || CAN_user_tools_view_system_logs || CAN_user_tools_edit_additional_contents  || CAN_user_tools_schedule_tasks || CAN_user_tools_edit_quotes || ( plugins_enabled && CAN_user_plugins_tool )  || CAN_user_tools_upload_general_files || CAN_user_tools_access_files ) %]
+ <h3>أدوات إضافية</h3>
+ [% END %]
+ <dl>
+ [% IF ( CAN_user_tools_edit_calendar ) %]
+ <dt><a href="/cgi-bin/koha/tools/holidays.pl">التقويم</a></dt>
+ <dd>حدد الإجازات (الايام التى تغلق فيها المكتبة)</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_manage_csv_profiles ) %]
+ <dt><a href="/cgi-bin/koha/tools/csv-profiles.pl">ملفات CSV</a></dt>
+ <dd>إدارة تصدير الملفات الشخصية</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_view_system_logs ) %]
+ <dt><a href="/cgi-bin/koha/tools/viewlog.pl">عارض السجل</a></dt>
+ <dd>تصفح سجلات النظام</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_edit_additional_contents ) %]
+ <dt><a href="/cgi-bin/koha/tools/additional-contents.pl?category=news">أخبار</a></dt>
+ <dd>قم بكتابة الأخبار للأوباك وواجهة العميل</dd>
+
+ <dt><a href="/cgi-bin/koha/tools/additional-contents.pl?category=html_customizations">تخصيصات HTML</a></dt>
+ <dd>اكتب تخصيصات HTML</dd>
+
+ <dt><a href="/cgi-bin/koha/tools/additional-contents.pl?category=pages">صفحات</a></dt>
+ <dd>كتابة صفحات مخصصة</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_schedule_tasks ) %]
+ <dt><a href="/cgi-bin/koha/tools/scheduler.pl">مجدول المهام</a></dt>
+ <dd>جدولة المهام للتشغيل</dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_edit_quotes ) %]
+ <dt><a href="/cgi-bin/koha/tools/quotes.pl">محرر الاقتباس</a></dt>
+ <dd>أدر اقتباسات 'اقتباس اليوم'</dd>
+ [% END %]
+
+ [% IF ( plugins_enabled && CAN_user_plugins_tool && tool_plugins ) %]
+ <dt><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=tool">برامج الأدوات المساعدة</a></dt>
+ <dd>
+ استخدم برامج الأدوات المساعدة <ul>
+ [% FOREACH plugin IN tool_plugins %]
+ <li class="plugin_link">
+ <a href="/cgi-bin/koha/plugins/run.pl?class=[% plugin.class | uri %]&method=tool">
+ <span class="plugin_name">[% plugin.metadata.name | html %]</span>
+ </a>
+ </li>
+ [% END %]
+ </ul>
+ </dd>
+ [% END %]
+
+ [% IF ( CAN_user_tools_upload_general_files ) %]
+ <dt><a href="/cgi-bin/koha/tools/upload.pl">تحميلات</a></dt>
+ <dd>تحميل أي نوع من الملفات، إدارة التحميلات</dd>
+ [% END %]
+
+ [% IF CAN_user_tools_access_files %]
+ <dt><a href="/cgi-bin/koha/tools/access_files.pl">الوصول للملفات</a></dt>
+ <dd>الوصول للملفات المخزنة في الخادم، مثل ملفات السجل أو التقارير</dd>
+ [% END %]
+
+ [% IF ( Koha.Preference('OPACReportProblem') && CAN_user_problem_reports ) %]
+ <dt><a href="/cgi-bin/koha/tools/problem-reports.pl">تقارير مشكلات الأوباك</a></dt>
+ <dd>إدارة تقارير مشكلات الأوباك المقدمة من المستفيدين</dd>
+ [% END %]
+ </dl>
+
+ [% IF ( Koha.Preference('UseCashRegisters') && ( CAN_user_cash_management_cashup || CAN_user_cash_management_anonymous_refund ) ) %]
+ <h3>إدارة النقد</h3>
+ <dl>
+ <dt><a href="/cgi-bin/koha/pos/registers.pl">ملخص الدفع النقدي لـ [% Branches.GetLoggedInBranchname | html %]</a></dt>
+ <dd>عرض عمليات الاستلام النقدي للمكتبة الحالية</dd>
+
+ <dt><a href="/cgi-bin/koha/pos/register.pl">سِجل المعاملات لـ [% Registers.session_register_name | html %]</a></dt>
+ <dd>عرض تاريخ المعاملات للسجل النقدي الحالي</dd>
+ </dl>
+ [% END %]
+
+ </div> <!-- /.col-sm-6 -->
+ </div> <!-- /.row -->
+ </div> <!-- /.col-md-10 -->
+ </div> <!-- /.row -->
+
+[% INCLUDE 'intranet-bottom.inc' %]

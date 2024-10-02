@@ -1,0 +1,290 @@
+---
+admin.pref:
+  اتصال  OpenID من جوجل:
+  - - 'استخدم بيانات الدخول الخاصة بـ Google OpenID لتسجيل الدخول إلى الأوباك: '
+    - choices:
+        '0': لا
+        '1': نعم
+      pref: GoogleOpenIDConnect
+    - يجب عليك تحديد OAuth2 عند إنشاء تطبيق في جهاز سحابة جوجل، وضبط أصل الويب إلى
+      your_opac_url وإعادة توجيه عنوان الurl إلى your_opac_url/cgi-bin/koha/svc/auth/googleopenidconnect
+      . يتطلب ضبط التفضيلين a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOAuth2ClientID">GoogleOAuth2ClientID</a>
+      و <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOAuth2ClientSecret">GoogleOAuth2ClientSecret</a>.
+  - - 'معرف عميل OAuth2 من جوجل: '
+    - pref: GoogleOAuth2ClientID
+    - مع <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOAuth2ClientSecret">GoogleOAuth2ClientSecret</a>,
+      يقوم بتفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOpenIDConnect">GoogleOpenIDConnect.</a>
+  - - 'سر عميل OAuth2 من جوجل: '
+    - pref: GoogleOAuth2ClientSecret
+    - مع <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOAuth2ClientID">GoogleOAuth2ClientID</a>,
+      يقوم بتفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOpenIDConnect">GoogleOpenIDConnect.</a>
+  - - 'تقييد Google OpenID Connect بهذا النطاق (او النطاق الفرعي لهذا النطاق): '
+    - pref: GoogleOpenIDConnectDomain
+    - اتركه فارغاً لكل نطاقات جوجل. يتطلب <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOpenIDConnect">GoogleOpenIDConnect</a>.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: GoogleOpenIDConnectAutoRegister
+    - للمستفيدين مسجلي الدخول بمعرف جوجل أوبن Google Open بالتسجيل تلقائياً. يتطلب
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOpenIDConnect">GoogleOpenIDConnect</a>.
+  - - 'اسنخدم رمز هذه الفئة عند تسجيل مستفيد بمعرف Google Open تلقائياً: '
+    - choices: patron-categories
+      pref: GoogleOpenIDConnectDefaultCategory
+    - يتطلب <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOpenIDConnect">GoogleOpenIDConnect</a>.
+  - - 'استخدم رمز هذا الفرع عند تسجيل مستفيد بمعرف Google Open تلقائياً: '
+    - pref: GoogleOpenIDConnectDefaultBranch
+    - يتطلب <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=GoogleOpenIDConnect">GoogleOpenIDConnect</a>.
+  استيثاق CAS:
+  - - 'استخدم CAS  لاستيثاق الدخول: '
+    - choices:
+        '0': لا
+        '1': نعم
+      default: 0
+      pref: casAuthentication
+  - - 'سجل الخروج من CAS  عند تسجيل الخروج من كوها: '
+    - choices:
+        '0': dmin.pref#casLogout# لا
+        '1': dmin.pref#casLogout# لا
+      default: 0
+      pref: casLogout
+  - - 'عنوان URL لخادم خدمة الاستيثاق المركزية (CAS): '
+    - class: url
+      pref: casServerUrl
+  - - 'إصدار خادم CAS الذي سيتصل به خادم كوها: '
+    - choices:
+        '2': الإصدار CAS2 أو ما قبله
+        '3': الإصدار CAS3 أو ما يليه
+      pref: casServerVersion
+  خيارات الدخول:
+  - - 'المهلة يالثواني عند البقاء بدون أي نشاط قبل خروج المستخدمين من النظام تلقائيا: '
+    - class: integer
+      pref: timeout
+    - إضافة d سوف يحدد عدد الأيام، على سبيل المثال 1d تعني مهلة يوم واحد.
+  - - 'Limit the libraries staff can select at login to those where their computer''s
+      IP address is within the library''s specified range or to libraries without
+      an IP restriction: '
+    - choices:
+        '0': No
+        '1': Yes
+      default: 0
+      pref: StaffLoginRestrictLibraryByIP
+    - <a href="/cgi-bin/koha/admin/branches.pl">Link to library administration</a>
+    - Staff can only choose their library at login if they have the "loggedinlibrary"
+      permission. This setting will override the <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=StaffLoginLibraryBasedOnIP">StaffLoginLibraryBasedOnIP</a>
+      system preference. In the event of multiple libraries with matching IPs, branchcode
+      (alphabetically) will be the tie breaker.
+  - - 'تفعيل التأكد من تغييرات عنوان ال IP عن بعد لضمان حماية وأمان الجلسة: '
+    - choices:
+        '0': لا
+        '1': نعم
+      default: 1
+      pref: SessionRestrictionByIP
+    - (قم بتعطيله فقط في حالة لاحظت تغير عنوان ال IP عن بعد بشكل متكرر.)
+  - - 'Set logged in library for staff by matching their current IP to the library
+      configuration: '
+    - choices:
+        '0': No
+        '1': Yes
+      default: 0
+      pref: StaffLoginLibraryBasedOnIP
+    - 'Note: If IPs overlap, the first found match will be used.'
+    - This setting will be overridden by <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=StaffLoginRestrictLibraryByIP">StaffLoginRestrictLibraryByIP</a>
+      system preference. In the event of multiple libraries with matching IPs, branchcode
+      (alphabetically) will be the tie breaker.
+  - - 'مستودع بيانات الجلسة القائمة: '
+    - choices:
+        Pg: قاعدة PostgreSQL (غير مدعومة)
+        memcached: خادم Memcached
+        mysql: قاعدة MySQL
+        tmp: ملفات مؤقتة
+      default: mysql
+      pref: SessionStorage
+  - - 'منع الموظفين (باستثناء الـمكتبي المميز) من تعديل الكائنات (الحجوزات، المواد،
+      المستفيدين، إلخ) التي تنتمي إلى مكتبات أخرى: '
+    - choices:
+        '0': لا
+        '1': نعم
+      default: 0
+      pref: IndependentBranches
+    - <p class='text-danger'><strong>تحذير:</strong> سيؤدي تغيير تفضيل النظام هذا
+      إلى تغيير جذري في سلوك كوها. لا ينصح على الإطلاق بتغيير التفضيل في نظام الإنتاج.</p>
+  - - 'منع الموظفين (باستثناء المكتبي المميز) من عرض طلبات تعديل المستفيد والموافقة
+      عليها أو رفضها والمقدمة من مستفيدين ينتمون إلى مكتبات أخرى: '
+    - choices:
+        '0': لا
+        '1': نعم
+      default: 0
+      pref: IndependentBranchesPatronModifications
+  - - 'منع الموظفين (باستثناء المكتبيين المميزين) من نقل المواد إلى مكتبات أخرى: '
+    - choices:
+        '0': لا
+        '1': نعم
+      default: 0
+      pref: IndependentBranchesTransfers
+  - - choices:
+        '0': عدم فرض
+        '1': فرض
+      pref: ForceLibrarySelection
+    - اختيار المكتبة عند تسجيل الدخول إلى واجهة الموظفين.
+  خيارات الواجهة:
+  - - 'البريد الالكتروني الخاص بمدير كوها: '
+    - class: email
+      pref: KohaAdminEmailAddress
+    - (هذا هو اامصدر الافتراضي للعناوين الإلكترونية الا في حالة وجود عنوان محدد لمكتبة
+      معينة، وتم الرجوع اليه عند حدوث خطأ داخلي.
+  - - 'البريد الإلكتروني المُفترض استقبال الردود عليه: '
+    - class: email
+      pref: ReplytoDefault
+  - - 'مسار العودة المفترض استلام الرسائل البريدية الراجعة عليه: '
+    - class: email
+      pref: ReturnpathDefault
+    - إذا تركت هذا فارغاً، سيتم استخدام عنوان النموذج (يتم تعيين الافتراضي غالباً
+      إلى عنوان المسؤول).
+  - - 'البريد الإلكتروني لإعادة توجيه كل الرسائل إليه: '
+    - class: email
+      pref: SendAllEmailsTo
+    - (اترك هذا الحقل خالياً لإرسال الرسائل إلى متلقيها العادي.)
+  - - 'فشل عنوان البريد الإلكتروني تم إرسال إخطارات التأخير إلى: '
+    - class: email
+      pref: AddressForFailedOverdueNotices
+    - 'إذا تم تركه فارغاً فسيرجع إلى أول عنوان معرّف في القائمة التالية: Library ReplyTo,
+      Library Email, <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ReplytoDefault">ReplytoDefault</a>
+      و <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress">KohaAdminEmailAddress</a>'
+  - - 'كمية المعلومات المطلوب عرضها في المتصفح عن الفحص عندما يحصل خطأ داخلي: '
+    - choices:
+        '0': بدون
+        '1': بعض
+        '2': الكل
+      default: 0
+      pref: DebugLevel
+  - - choices:
+        '0': عرض
+        '1': عدم عرض
+      default: 0
+      pref: noItemTypeImages
+    - أيقونات نوع المادة في واجهة الموظفين.
+  - - 'الفاصل الافتراضي للأعمدة في ملف CSV مصدر: '
+    - choices:
+        '#': الخاص بـ
+        ',': فواصل
+        /: علامات مائلة
+        ;: فواصل منقوطة
+        \: خطوط مائلة
+        tabulation: تبويبات
+      default: ','
+      pref: CSVDelimiter
+  - - 'Allow staff and patrons to create and view saved lists of bibliographic records: '
+    - choices:
+        '0': لا
+        '1': نعم
+      pref: virtualshelves
+  - - 'المشاهدة الافتراضية عند تحرير سياسات الاعارة: '
+    - choices:
+        '0': كل المكتبات
+        '1': المكتبة المسجل الدخول عليها
+      pref: DefaultToLoggedInLibraryCircRules
+  - - 'المشاهدة الافتراضية عن تحرير الملاحظات والايصالات: '
+    - choices:
+        '0': كل المكتبات
+        '1': مكتبة الدخول
+      pref: DefaultToLoggedInLibraryNoticesSlips
+  - - 'المظهر الافتراضي عند تحرير إخطار التأخير/ محفزات الحالة: '
+    - choices:
+        '0': كل المكتبات
+        '1': مكتبة الدخول
+      pref: DefaultToLoggedInLibraryOverdueTriggers
+  - - choices:
+        '0': عدم إرسال
+        '1': إرسال
+      pref: EmailOverduesNoEmail
+    - إخطارات التأخير للمستفيدين بدون عنوان بريد إلكتروني للموظفين.
+  شهادة العميل للاستيثاق من نوع SSL:
+  - - 'حقل لاستخدامه من أجل استيثاق شهادة عميل SSL '
+    - choices:
+        Common Name: اسم عام
+        None: بدون
+        emailAddress: emailAddress
+      default: None
+      pref: AllowPKIAuth
+  محرك بحث:
+  - - 'استخدم محرك البحث التالي: '
+    - choices:
+        Elasticsearch: elasticsearch
+        Zebra: زيبرا
+      default: Zebra
+      pref: SearchEngine
+  - - 'تنسيق مارك Elasticsearch: '
+    - choices:
+        ARRAY: مصفوفة قابلة للبحث
+        ISO2709: iSO2709 (تبديل التنسيق)
+      default: ISO2709
+      pref: ElasticsearchMARCFormat
+    - <br> يوصى بتنسيق ISO2709 لأنه أسرع ويشغل مساحة أقل، بينما يجعل تنسيق المصفوفة
+      تسجيلة مارك بالكامل قابلة للبحث.
+    - <br><strong>ملاحظة:</strong> قد يؤدي جعل التسجيلة بأكملها قابلة للبحث إلى نتيجة
+      سلبية على ترتيب الصلة لنتائج البحث.
+  مشاركة احصائيات الاستخدام المجهولة:
+  - - 'شارك احصائيات استخدام كوها مع مجتمع كوها: '
+    - choices:
+        '0': لا
+        '1': نعم
+        '2': لا، دعني أفكر بالأمر
+      default: 2
+      pref: UsageStats
+    - .
+    - '<br>الموقع الإلكتروني المنشور به إحصائيات الاستخدام: <a href="https://hea.koha-community.org">موقع
+      مجتمع كوها Hea الإلكتروني</a>.'
+    - <br><strong>ملاحظة:</strong>ليس لمفضلات <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      الأخرى أي تأثير إذا تم ضبط هذا التفضيل إلى "لا" (عدم مشاركة).
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/share_usage_with_koha_community.pl</code>
+      . اطلب من مسؤول النظام جدولته.
+    - <br><strong>ملاحظة:</strong> قم باستخدام صفحة <a href="/cgi-bin/koha/admin/usage_statistics.pl">
+      المخصصة للتهيئة </a> لتحرير الإحصائية التي تقوم بمشاركتها.
+  - - 'استخدم اسم المكتبة التالي ليتم عرضه في موقع مجتمع Hea: '
+    - pref: UsageStatsLibraryName
+    - إذا كان هذا الحقل فارغاً سيتم إرسال البيانات بدون تعريف.
+    - <br><strong>ملاحظة:</strong>ليس لهذه القيمة أي تأثير إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      إلى "لا" (عدم مشاركة).
+  - - 'البلد التي تقع فيها مكتبتك وترغب ان تظهر في موقع Hea  الاجتماعي: '
+    - pref: UsageStatsCountry
+      type: countries
+    - . سيتم عرض ذلك في <a href="https://hea.koha-community.org">Hea موقع مجتمع كوها
+      </a>.
+    - <br><strong>ملاحظة:</strong>ليس لهذه القيمة أي تأثير إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      إلى "لا" (عدم مشاركة).
+  - - 'عنوان URL المكتبة ليظهر في موقع مجتمع hea: '
+    - class: url
+      pref: UsageStatsLibraryUrl
+    - <br><strong>ملاحظة:</strong>ليس لهذه القيمة أي تأثير إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      إلى "لا" (عدم مشاركة).
+  - - 'ٍسيظهر نوع المكتبة في موقع مجتمع Hea: '
+    - choices:
+        '': 'admin.pref#UsageStatsCountry# '
+        academic: أكاديمي
+        corporate: مؤسسي
+        government: حكومة
+        private: خاص
+        public: عام
+        religiousOrg: منظمة دينية
+        research: بحث
+        school: مدرسة
+        societyAssociation: مجتمع أو جمعية
+        subscription: اشتراك
+      default: ''
+      pref: UsageStatsLibraryType
+    - <br><strong>ملاحظة:</strong>ليس لهذه القيمة أي تأثير إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      إلى "لا" (عدم مشاركة).
+  - - choices:
+        '0': عدم مشاركة
+        '1': مشاركة
+      pref: UsageStatsLibrariesInfo
+    - معلومات المكتبة (الاسم، عنوان URL، البلد).
+    - <br><strong>ملاحظة:</strong>ليس لهذه القيمة أي تأثير إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      إلى "لا" (عدم مشاركة).
+  - - 'الموقع الجغرافي للمكتبة الرئيسية: '
+    - pref: UsageStatsGeolocation
+    - <br><strong>ملاحظة:</strong>ليس لهذه القيمة أي تأثير إذا تم ضبط تفضيل النظام
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UsageStats">UsageStats</a>
+      إلى "لا" (عدم مشاركة).
+    - <br><strong>ملاحظة:</strong> يجب عليك استخدام صفحة <a href="/cgi-bin/koha/admin/usage_statistics.pl">
+      المخصصة لتهيئة الإدارة </a> لضبط وتحرير هذا التفضيل.

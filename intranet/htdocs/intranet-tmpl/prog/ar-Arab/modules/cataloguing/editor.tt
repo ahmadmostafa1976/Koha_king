@@ -1,0 +1,357 @@
+[% USE raw %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% USE Koha %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Editor") | html %] &rsaquo;
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% Asset.css("css/cateditor.css") | $raw %]
+[% Asset.css("lib/codemirror/codemirror.min.css") | $raw %]
+[% Asset.css("css/humanmsg.css") | $raw %]
+[% Asset.js("js/cataloging.js") | $raw %]
+[% Asset.js("lib/jquery/plugins/humanmsg.js") | $raw %]
+</head>
+<body id="cat_addbiblio" class="cat">
+
+ <div id="loading">
+ <div>جاري التحميل، انتظر من فضلك...</div>
+ </div>
+
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'cat-search.inc' %]
+[% END %]
+[% PROCESS 'keyboard_shortcuts.inc' %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/cataloguing/cataloging-home.pl">الفهرسة</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>المحرر</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% IF Koha.Preference('EnableAdvancedCatalogingEditor') %]
+ <div id="toggle-editor">
+ <label for="toggle-editor">محرر متقدم: </label>
+ <label class="switch">
+ <input id="toggleEditor" type="checkbox" checked="checked">
+ <span class="slider"></span>
+ </label>
+ </div>
+[% END %]
+
+<h1 id="title">محرر الفهرسة</h1>
+
+
+<div id="editor">
+ <input id="import-records-input" type="file" style="display: none">
+ <div id="toolbar" class="btn-toolbar">
+ <button class="btn btn-default" id="new-record" title="فتح تسجيلة جديدة"><i class="fa fa-plus"></i> <span>تسجيلة جديدة</span></button>
+ <div class="btn-group">
+ <button class="btn btn-default" id="save-record" title="حفظ التسجيلة الحالية (Ctrl-S)"><i class="fa-solid fa-hard-drive"></i> <span>حفظ</span></button>
+ <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+ <span class="caret"></span>
+ </button>
+ <ul class="dropdown-menu" id="save-dropdown">
+ </ul>
+ </div>
+ <button class="btn btn-default" id="import-records" title="استيراد تسجيلة مارك (ISO 2709) أو MARCXML"><i class="fa fa-download"></i> <span>استيراد التسجيلة...</span></button>
+ <button class="btn btn-default" id="open-macros" title="تشغيل وتحرير الماكرو"><i class="fa fa-play"></i> <span>ماكرو...</span></button>
+ <div class="btn-group">
+ <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> الإعدادات <span class="caret"></span></button>
+ <ul id="prefs-menu" class="dropdown-menu">
+ <li><a id="switch-editor" href="#">التبديل للمحرر الأساسي</a></li>
+ <li><a id="set-field-widgets" href="#"></a></li>
+ <li class="dropdown-header">تغيير الإطار</li>
+ <li>
+ <a class="change-framework" data-frameworkcode="">
+ <i class="fa fa-fw unselected">&nbsp;</i>
+ <i class="fa fa-fw fa-check selected">&nbsp;</i>
+ الافتراضي </a>
+ </li>
+ [% FOREACH framework IN frameworks %]
+ <li>
+ <a class="change-framework" data-frameworkcode="[% framework.frameworkcode | html %]">
+ <i class="fa fa-fw fa-check selected"></i>
+ <i class="fa fa-fw unselected">&nbsp;</i>
+ [% framework.frameworktext | html %]
+ </a>
+ </li>
+ [% END %]
+ <li class="divider"></li>
+ <li><a class="set-fontSize" style="font-size: .92em" href="#">نص صغير</a></li>
+ <li><a class="set-fontSize" style="font-size: 1em" href="#">نص عادي</a></li>
+ <li><a class="set-fontSize" style="font-size: 1.08em" href="#">نص كبير</a></li>
+ <li><a class="set-fontSize" style="font-size: 1.18em" href="#">نص كبير</a></li>
+ <li class="divider"></li>
+ <li><a class="set-font" style="font-family: monospace" href="#">الخط الافتراضي</a></li>
+ <li><a class="set-font" style="font-family: Consolas" href="#">Consolas</a></li>
+ <li><a class="set-font" style="font-family: 'Courier New'" href="#">إرسال جديد</a></li>
+ <li><a class="set-font" style="font-family: 'DejaVu Sans Mono'" href="#">DejaVu Sans Mono</a></li>
+ <li><a class="set-font" style="font-family: 'Lucida Console'" href="#">Lucida Console</a></li>
+ <li><a class="set-font" style="font-family: Monaco" href="#">موناكو</a></li>
+ </ul>
+ </div>
+ <button class="btn btn-default" id="show-alerts" title="تنبيهات سابقة"><i class="fa fa-bell"></i> تنبيهات <span class="caret"></span></button>
+ <button class="btn btn-default" id="show-shortcuts" title="اختصارات لوحة المفاتيح المدعومة"><i class="fa-solid fa-keyboard"></i> اختصارات لوحة المفاتيح <span class="caret"></span></button>
+ <button class="btn btn-default hide" data-target="#keyboard-layout" data-toggle="modal" id="set-keyboard-layout" title="ضبط تخطيط لوحة المفاتيح الافتراضية"><i class="fa-solid fa-keyboard"></i> تخطيط لوحة المفاتيح </button>
+ </div>
+ [%# CodeMirror instance will be inserted here %]
+ <div id="statusbar">
+ <div id="status-tag-info">
+ </div>
+ <div id="status-subfield-info">
+ </div>
+ </div>
+</div>
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ <h3>بحث</h3>
+ <form method="get" id="quicksearch">
+ <fieldset class="brief">
+ <ol>
+ <li><label for="search-by-keywords">كلمات مفتاحية:</label></li>
+ <li><input class="search-box" data-qualifier="term" id="search-by-keywords" placeholder="(Ctrl-Alt-K)" /></li>
+ <li><label for="search-by-author">المؤلف:</label></li>
+ <li><input class="search-box" data-qualifier="author" id="search-by-author" placeholder="(Ctrl-Alt-A)" /></li>
+ <li><label for="search-by-isbn">تدمك:</label></li>
+ <li><input class="search-box" data-qualifier="isbn" id="search-by-isbn" placeholder="(Ctrl-Alt-I)" /></li>
+ <li><label for="search-by-title">العنوان:</label></li>
+ <li><input class="search-box" data-qualifier="title" id="search-by-title" placeholder="(Ctrl-Alt-T)" /></li>
+ <li><a href="#" id="show-advanced-search" title="عرض البحث المتقدم (Ctrl-Alt-S)">متقدم &raquo;</a></li>
+ </fieldset>
+ </form>
+ <h3>الحافظة</h3>
+ <fieldset class="brief">
+ <select id="clipboard" name="clipboard" size=10>
+ </select>
+ </fieldset>
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+</div>
+
+<div id="advanced-search-ui" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="advanced-search-title" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+
+<div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="advanced-search-title">بحث متقدم</h3>
+</div>
+<div class="modal-body">
+ <form method="get" id="advanced-search">
+ <div class="row">
+ <div class="col-md-3">
+ <div id="search-facets">
+ <ul>
+ <li>خوادم:<ul id="advanced-search-servers"></ul></li>
+ </ul>
+ </div>
+ </div>
+ <div class="col-md-9">
+ <div id="toolbar" class="btn-toolbar">
+ <button class="btn btn-default" type="submit"><i class="fa fa-search"></i> <span>بحث</span></button>
+ <button class="btn btn-default" type="reset"><i class="fa fa-trash-can"></i> <span>مسح</span></button>
+ </div>
+ <ul id="advanced-search-fields">
+ <li>
+ <label for="advanced-search-by-isbn">تدمك:</label>
+ <input class="search-box" data-qualifier="isbn" id="advanced-search-by-isbn" />
+ </li>
+ <li>
+ <label for="advanced-search-by-issn">تدمد:</label>
+ <input class="search-box" data-qualifier="issn" id="advanced-search-by-issn" />
+ </li>
+ <li>
+ <label for="advanced-search-by-title">العنوان:</label>
+ <input class="search-box" data-qualifier="title" id="advanced-search-by-title" />
+ </li>
+ <li>
+ <label for="advanced-search-by-author">المؤلف:</label>
+ <input class="search-box" data-qualifier="author" id="advanced-search-by-author" />
+ </li>
+ <li>
+ <label for="advanced-search-by-subject">الموضوع:</label>
+ <input class="search-box" data-qualifier="subject" id="advanced-search-by-subject" />
+ </li>
+ <li>
+ <label for="advanced-search-by-lc-number">رقم استدعاء مكتبة الكونغرس:</label>
+ <input class="search-box" data-qualifier="cn_lc" id="advanced-search-by-lc-number" />
+ </li>
+ <li>
+ <label for="advanced-search-by-lccn">LCCN:</label>
+ <input class="search-box" data-qualifier="lccn" id="advanced-search-by-lccn" />
+ </li>
+ <li>
+ <label for="advanced-search-by-control-number">رقم التجكم:</label>
+ <input class="search-box" data-qualifier="local_number" id="advanced-search-by-control-number" />
+ </li>
+ <li>
+ <label for="advanced-search-by-dewey">رقم ديوي:</label>
+ <input class="search-box" data-qualifier="cn_dewey" id="advanced-search-by-dewey" />
+ </li>
+ <li>
+ <label for="advanced-search-by-standard-number">الرقم المعياري:</label>
+ <input class="search-box" data-qualifier="standard_identifier" id="advanced-search-by-standard-number" />
+ </li>
+ <li>
+ <label for="advanced-search-by-publisher-number">رقم الناشر:</label>
+ <input class="search-box" data-qualifier="music_identifier" id="advanced-search-by-publisher-number" />
+ </li>
+ <li>
+ <label for="advanced-search-by-publication-date">تاريخ النشر:</label>
+ <input class="search-box" data-qualifier="date" id="advanced-search-by-publication-date" />
+ </li>
+ </ul>
+ </div>
+ </div>
+ </form>
+</div>
+</div>
+</div>
+</div>
+
+<div id="search-results-ui" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="search-results-title" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+
+<div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="search-results-title">نتائج</h3>
+</div>
+
+<div class="modal-body">
+ <div class="row">
+ <div class="col-md-3">
+ <div id="search-facets">
+ <ul>
+ <li>خوادم:<ul id="search-serversinfo"></ul></li>
+ </ul>
+ </div>
+ </div>
+ <div class="col-md-9">
+ <!-- tabindex attribute allows JS-controlled focus -->
+ <div id="searchresults" tabindex="-1">
+ <div id="search-top-pages">
+ <nav aria-label="تصفح نتائج البحث">
+ </nav>
+ </div>
+
+ <table class="dataTable"> <!-- This is not a real dataTable but we want to inherit the CSS rules -->
+ <thead>
+ <tr></tr>
+ </thead>
+ <tbody></tbody>
+ </table>
+
+ <div id="search-bottom-pages">
+ <nav aria-label="تصفح نتائج البحث">
+ </nav>
+ </div>
+ </div>
+ </div>
+ </div>
+ <div id="search-overlay"><span>جاري التحميل...</span><div class="progress"><div class="progress-bar progress-bar-striped active" style="width: 100%"></div></div></div>
+</div>
+</div>
+</div>
+
+</div>
+
+<div id="macro-ui" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="macro-title" aria-hidden="true">
+<div class="modal-dialog modal-lg">
+<div class="modal-content">
+
+<div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="macro-title">ماكرو</h3>
+</div>
+
+<div class="modal-body">
+ <div class="row">
+ <div class="col-md-3"><ul id="macro-list"></ul></div>
+ <div class="col-md-9" id="macro-editor">
+ <div id="macro-toolbar" class="btn-toolbar">
+ <button class="btn btn-default" id="run-macro" title="تشغيل وتحرير الماكرو"><i class="fa fa-play"></i> تشغيل الماكرو</button>
+ <button class="btn btn-default" id="delete-macro" title="حذف الماكرو"><i class="fa fa-trash-can"></i> حذف الماكرو</button>
+ <label class="macro_shared" for="public" style="display:none;">ماكرو عام:</label>
+ [% IF CAN_user_editcatalogue_create_shared_macros %]
+ <input class="macro_shared" type="checkbox" name="public" style="display:none;"/>
+ [% ELSE %]
+ <input class="macro_shared" type="checkbox" name="public" style="display:none;" disabled/>
+ [% END %]
+ <div id="macro-save-message"></div>
+ </div>
+ </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="keyboard-layout" class="modal fade" role="dialog">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button aria-label="إغلاق" class="closebtn" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+ <h4 class="modal-title">ضبط تخطيط لوحة المفاتيح الافتراضية</h4>
+ </div>
+ <div class="modal-body">
+ <div class="form-group">
+ <label for="exampleInputEmail1">تنقيح المخططات</label>
+ <input type="search" class="form-control filter"/>
+ </div>
+ <hr/>
+ <div class="layouts"></div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<div id="shortcuts-contents" style="display: none">
+[% IF ( CAN_user_parameters_manage_keyboard_shortcuts ) %]
+ <a id="redefine_shortcuts" href="/cgi-bin/koha/admin/adveditorshortcuts.pl">إعادة تعريف الاختصارات</a>
+[% END %]
+<table class="table table-condensed">
+ <thead>
+ <tr>
+ <th>اختصار</th>
+ <th>سلوك</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH shortcut IN shortcuts %]
+ <tr>
+ <td>[% shortcut.shortcut_keys | html %]</td>
+ <td>[% PROCESS keyboard_shortcut_descriptions shortcut_name=shortcut.shortcut_name %]</td>
+ </tr>
+ [% END %]
+ <tr>
+ <td>Ctrl-S</td>
+ <td>حفظ التسجيلة (لا يمكن إعادة تخطيطها)</td>
+ </tr>
+ </tbody>
+</table>
+</div>
+
+[% PROCESS 'cateditor-ui.inc' %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

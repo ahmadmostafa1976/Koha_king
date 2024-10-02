@@ -1,0 +1,187 @@
+---
+description:
+- عينة مواد الأخبار
+tables:
+- additional_contents:
+    multiline: []
+    rows:
+    - category: news
+      code: News_1
+      expirationdate: 2099-01-10
+      location: staff_only
+      number: 1
+      published_on: 2007-10-29 05:25:58
+    - category: news
+      code: News_2
+      expirationdate: 2099-01-10
+      location: staff_only
+      number: 2
+      published_on: 2007-10-29 05:34:45
+    - category: html_customizations
+      code: CatalogConcernHelp_1
+      expirationdate: 2099-01-10
+      location: CatalogConcernHelp
+      number: 1
+      published_on: 2007-10-29 05:25:58
+    - category: html_customizations
+      code: CatalogConcernTemplate_1
+      expirationdate: 2099-01-10
+      location: CatalogConcernTemplate
+      number: 1
+      published_on: 2007-10-29 05:25:58
+    - category: html_customizations
+      code: CookieConsentBar_1
+      expirationdate: 2099-01-10
+      location: CookieConsentBar
+      number: 1
+      published_on: 2007-10-29 05:25:58
+    - category: html_customizations
+      code: CookieConsentPopup_1
+      expirationdate: 2099-01-10
+      location: CookieConsentPopup
+      number: 1
+      published_on: 2007-10-29 05:25:58
+    translatable: []
+- additional_contents_localizations:
+    multiline:
+    - content
+    rows:
+    - additional_content_id: 1
+      content:
+      - مرحبًا بك في كوها. كوها هو نظام تكامل مكتبات مفتوح المصدر كامل المواصفات.
+        تم تطوير كوها في البداية في نيوزيلندا بواسطة Katipo Communications Ltd وتم
+        نشره لأول مرة في يناير 2000 لصالح Horowhenua Library Trust، ويدير نظام كوها
+        حاليًا فريق من مقدمي الخدمات البرمجية وموظفي تكنولوجيا المكتبات من جميع أنحاء
+        العالم.
+      lang: default
+      title: مرحباً في كوها
+    - additional_content_id: 2
+      content:
+      - 'الآن بعد إتمام تثبيت كوها، ما التالي؟ إليك بعض المقترحات:'
+      - <ul>
+      - <li><a href="http://koha-community.org/documentation/">قراءة توثيق كوها</a></li>
+      - <li><a href="http://wiki.koha-community.org">القراءة/الكتابة في كوها ويكي</a></li>
+      - <li><a href="http://koha-community.org/support/">القراءة والمساهمة في المناقشات</a></li>
+      - <li><a href="http://bugs.koha-community.org">الإبلاغ عن أخطاء كوها</a></li>
+      - <li><a href="http://wiki.koha-community.org/wiki/Version_Control_Using_Git">تقديم
+        التصحيحات إلى كوها باستخدام Git (نظام التحكم في الإصدار)</a></li>
+      - <li><a href="http://koha-community.org/support/">دردش مع مستخدمي ومطوري كوها</a></li>
+      - </ul>
+      - ''
+      lang: default
+      title: ما التالي؟
+    - additional_content_id: 3
+      content:
+      - يرجى وصف شكواك بوضوح وستحاول المكتبة التعامل معها في أسرع وقت ممكن
+      lang: default
+      title: نص مساعدة شكوى الفهرس
+    - additional_content_id: 4
+      content:
+      - '**وصف الشكوى**'
+      - وصف واضح وموجز للشكوى.
+      - ''
+      - '**للاستنساخ**'
+      - 'خطوات إعادة إنتاج السلوك:'
+      - 1. اذهب إلى '...'
+      - 2. قم بالنقر على '....'
+      - 3. قم بالتمرير لأسفل إلى '....'
+      - 4. انظر الخطأ
+      - ''
+      - '**سلوك متوقع**'
+      - وصف واضح وموجز لما كنت تتوقع حدوثه.
+      lang: default
+      title: نص قالب شكوى الفهرس
+    - additional_content_id: 5
+      content:
+      - '%يستخدم الفهرس عبر الإنترنت ملفات تعريف الارتباط الوظيفية: وهي ضرورية لتشغيل
+        الموقع.<p>'
+      lang: default
+      title: شريط سياسة ملفات تعريف الارتباط
+    - additional_content_id: 6
+      content:
+      - '%ما هي ملفات تعريف الارتباط؟<h3>'
+      - <p>Cookies are small text files placed on your browser by websites. They help
+        make websites work, or work more efficiently. They also "remember" some of
+        your preferences, so you don't have to set a preference again every time you
+        switch to a different page on the same website.</p>
+      - <p>إذا كانت ملفات تعريف الارتباط تشكل مصدر قلق بالنسبة لك، فقد ترغب في مسح
+        ملفات تعريف الارتباط الخاصة بك بشكل منتظم على متصفحك أو استخدام وضع المتصفح
+        الخاص. تحقق من إعدادات المتصفح الخاص بك بحثاً عن هذه الخيارات.</p>
+      - '%ملفات تعريف الارتباط الأساسية<h3>'
+      - <p>إليك قائمة بملفات تعريف الارتباط الأساسية المستخدمة في فهرس كوها عبر الإنترنت.</p>
+      - '%بعض هذه الملفات يعتمد على الإعدادات التي اختارها فريق المكتبة؛ ولذلك فإن
+        كافة ملفات تعريف الارتباط المذكورة قد لا تنطبق على هذا الموقع.<p>'
+      - <table id="cookiesinfot" class="table table-bordered table-striped">
+      - '  <thead>'
+      - '    <tr>'
+      - '      <th>المخزون</th>'
+      - '      <th>الاسم</th>'
+      - '      <th>القيمة</th>'
+      - '      <th>الانتهاء</th>'
+      - '      <th>الوصف</th>'
+      - '    </tr>'
+      - '  </thead>'
+      - '  <tbody>'
+      - '    <tr>'
+      - '      <td>ملف تعريف الارتباط</td>'
+      - '      <td>CGISESSID</td>'
+      - '      <td>معرف الجلسة</td>'
+      - '      <td>حتى تسجيل الخروج أو نهاية الجلسة</td>'
+      - '      <td>ملف تعريف الارتباط للجلسة</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>ملف تعريف الارتباط</td>'
+      - '      <td>لغة أوباك كوها</td>'
+      - '      <td>رمز اللغة</td>'
+      - '      <td>3 سنوات</td>'
+      - '      <td>يخزن اللغة التي قام المستخدم بتحديدها، بحيث يظهر الفهرس عبر الإنترنت
+        بنفس اللغة في المرة التالية التي تتم زيارته فيها.</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>ملف تعريف الارتباط</td>'
+      - '      <td>'
+      - '        <p>form_serialized</p>'
+      - '        <p>form_serialized_limits</p>'
+      - '      </td>'
+      - '      <td>مصطلحات وحدود البحث</td>'
+      - '      <td>نهاية الجلسة أو عند الوصول إلى صفحة البحث المتقدم مرة أخرى.</td>'
+      - '      <td>ملف تعريف ارتباط استعلام jQuery. يقوم بتخزين مصطلحات البحث وحدود
+        آخر بحث متقدم. قم بالتعيين عند إرسال بحث متقدم.</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>ملف تعريف الارتباط</td>'
+      - '      <td>search_path_code</td>'
+      - '      <td>ads (أقل) أو exs (أكثر)</td>'
+      - '      <td>نهاية الجلسة أو عند الوصول إلى صفحة البحث المتقدم مرة أخرى.</td>'
+      - '      <td>ملف تعريف ارتباط استعلام jQuery. ذو صلة بملفات تعريف الارتباط serialized_form*.
+        يقوم بالتخزين إذا تم استخدام نموذج البحث المتقدم مع ''خيارات أكثر'' أو ''خيارات
+        أقل''.</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>ملف تعريف الارتباط</td>'
+      - '      <td>num_paragraph</td>'
+      - '      <td>عدد خيارات البحث التي تمت إضافتها</td>'
+      - '      <td>نهاية الجلسة أو عند الوصول إلى صفحة البحث المتقدم مرة أخرى.</td>'
+      - '      <td>ملف تعريف ارتباط استعلام jQuery. يستخدم لتخزين عدد الخيارات التي
+        تم إنشاؤها عندما يقوم المستخدم بتحديد ''خيارات أكثر'' في البحث المتقدم لزيادة
+        مربعات البحث.</td>'
+      - '    </tr>'
+      - '    <tr>'
+      - '      <td>ملف تعريف الارتباط</td>'
+      - '      <td>bib_list</td>'
+      - '      <td>قائمة معرفات التسجيلات (الأرقام الببليوغرافية) مفصولة بـ /</td>'
+      - '      <td>نهاية الجلسة أو حتى إفراغ السلة.</td>'
+      - '      <td>يقوم بتخزين محتويات السلة في الفهرس عبر الإنترنت. قم بالتعيين عند
+        إضافة التسجيلات إلى السلة لأول مرة.</td>'
+      - '    </tr>'
+      - '  </tbody>'
+      - </table>
+      - <h3>ملفات تعريف الارتباط غير الأساسية</h3>
+      - <p>قد يقوم فريق المكتبة بإنشاء ملفات تعريف ارتباط إضافية. هذه الملفات اختيارية
+        وستتطلب موافقتك قبل استخدامها.</p>
+      - <p>إذا تم إنشاء أي ملفات تعريف ارتباط غير أساسية، فسوف تظهر أدناه.</p>
+      lang: default
+      title: معلومات ملفات تعريف الارتباط
+    translatable:
+    - title
+    - content

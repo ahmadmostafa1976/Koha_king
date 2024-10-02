@@ -1,0 +1,111 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 182a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_182a" class="cat value_builder">
+
+ <h3>باني حقل يونيمارك 182a</h3>
+
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">رمز نوع الوسائط </label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1 == "a" ) %]
+ <option value="a" selected="selected">a - سمعي</option>
+ [% ELSE %]
+ <option value="a">a - سمعي</option>
+ [% END %]
+
+ [% IF ( f1 == "b" ) %]
+ <option value="b" selected="selected">b - إلكتروني</option>
+ [% ELSE %]
+ <option value="b">b - إلكتروني</option>
+ [% END %]
+
+ [% IF ( f1 == "c" ) %]
+ <option value="c" selected="selected">c - ميكروفورم</option>
+ [% ELSE %]
+ <option value="c">c - ميكروفورم</option>
+ [% END %]
+
+ [% IF ( f1 == "d" ) %]
+ <option value="d" selected="selected">d - مجهري</option>
+ [% ELSE %]
+ <option value="d">d - مجهري</option>
+ [% END %]
+
+ [% IF ( f1 == "e" ) %]
+ <option value="e" selected="selected">e - مسقط</option>
+ [% ELSE %]
+ <option value="e">e - مسقط</option>
+ [% END %]
+
+ [% IF ( f1 == "f" ) %]
+ <option value="f" selected="selected">f - مجسم</option>
+ [% ELSE %]
+ <option value="f">f - مجسم</option>
+ [% END %]
+
+ [% IF ( f1 == "g" ) %]
+ <option value="g" selected="selected">g - فيديو</option>
+ [% ELSE %]
+ <option value="g">g - فيديو</option>
+ [% END %]
+
+ [% IF ( f1 == "m" ) %]
+ <option value="m" selected="selected">m - وسائط متعددة</option>
+ [% ELSE %]
+ <option value="m">m - وسائط متعددة</option>
+ [% END %]
+
+ [% IF ( f1 == "n" ) %]
+ <option value="n" selected="selected">n - بدون وسائط</option>
+ [% ELSE %]
+ <option value="n">n - بدون وسائط</option>
+ [% END %]
+
+ [% IF ( f1 == "z" ) %]
+ <option value="z" selected="selected">z- وسائط أخرى</option>
+ [% ELSE %]
+ <option value="z">z- وسائط أخرى</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="submitMyForm();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+<script>
+
+    function submitMyForm() {
+        var doc   = opener.document;
+        var field = doc.getElementById("[% index | html %]");
+
+        field.value = document.f_pop.f1.value;
+        window.close();
+        return false;
+    }
+</script>
+
+[% INCLUDE 'popup-bottom.inc' %]

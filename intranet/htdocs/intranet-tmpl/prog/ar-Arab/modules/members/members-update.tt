@@ -1,0 +1,233 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE AuthorisedValues %]
+[% USE Branches %]
+[% USE Categories %]
+[% USE KohaDates %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Update patron records") | html %] &rsaquo;
+ [% t("Patrons") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="pat_update" class="pat">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'patron-search-header.inc' %]
+[% END %]
+
+[% BLOCK display_names %]
+[% SWITCH field %]
+[% CASE 'branchcode'          %]<span>المكتبة الرئيسية (رمز الفرع)</span>
+[% CASE 'surname'             %]<span>اللقب</span>
+[% CASE 'firstname'           %]<span>الاسم الاول</span>
+[% CASE 'middle_name'         %]<span>الاسم الأوسط</span>
+[% CASE 'title'               %]<span>عنوان</span>
+[% CASE 'othernames'          %]<span>أسماء أخرى</span>
+[% CASE 'initials'            %]<span>الحروف الأولى من الاسم</span>
+[% CASE 'pronouns'            %]<span>الضمائر الشخصية</span>
+[% CASE 'streetnumber'        %]<span>رقم الشارع</span>
+[% CASE 'streettype'          %]<span>نوع الشارع</span>
+[% CASE 'address'             %]<span>عنوان</span>
+[% CASE 'address2'            %]<span>العنوان 2</span>
+[% CASE 'city'                %]<span>مدينة</span>
+[% CASE 'state'               %]<span>المحافظة</span>
+[% CASE 'zipcode'             %]<span>الرمز البريدى</span>
+[% CASE 'country'             %]<span>البلد</span>
+[% CASE 'email'               %]<span>البريد الإلكتروني</span>
+[% CASE 'phone'               %]<span>الهاتف الرئيسي</span>
+[% CASE 'mobile'              %]<span>هاتف آخر</span>
+[% CASE 'fax'                 %]<span>فاكس</span>
+[% CASE 'emailpro'            %]<span>البريد الالكتروني الثانوي</span>
+[% CASE 'phonepro'            %]<span>الهاتف الثانوي</span>
+[% CASE 'B_streetnumber'      %]<span>العنوان البديل: رقم الشارع</span>
+[% CASE 'B_streettype'        %]<span>العنوان البديل : نوع الشارع</span>
+[% CASE 'B_address'           %]<span>العنوان البديل: العنوان</span>
+[% CASE 'B_address2'          %]<span>العنوان البديل: العنوان 2</span>
+[% CASE 'B_city'              %]<span>العنوان البديل: المدينة</span>
+[% CASE 'B_state'             %]<span>العنوان البديل: المحافظة</span>
+[% CASE 'B_zipcode'           %]<span>العنوان البديل: الرمز البريدي</span>
+[% CASE 'B_email'             %]<span>العنوان البديل: البريد الالكتروني</span>
+[% CASE 'B_phone'             %]<span>العنوان البديل: الهاتف</span>
+[% CASE 'contactnote'         %]<span>العنوان البديل: ملاحظة الاتصال</span>
+[% CASE 'dateofbirth'         %]<span>تاريخ الميلاد</span>
+[% CASE 'contactname'         %]<span>جهة الاتصال: الاسم الأخير</span>
+[% CASE 'contactfirstname'    %]<span>جهة الاتصال: الاسم الأول</span>
+[% CASE 'contacttitle'        %]<span>جهة الاتصال: العنوان</span>
+[% CASE 'relationship'        %]<span>جهة الاتصال: العلاقة</span>
+[% CASE 'sex'                 %]<span>النوع</span>
+[% CASE 'autorenew_checkouts' %]<span>تجديد تلقائي</span>
+[% CASE 'altcontactfirstname' %]<span>جهة الاتصال البديلة: الاسم الأول</span>
+[% CASE 'altcontactsurname'   %]<span>جهة الاتصال البديلة: اللقب</span>
+[% CASE 'altcontactaddress1'  %]<span>جهة الاتصال البديل: العنوان</span>
+[% CASE 'altcontactaddress2'  %]<span>جهة الاتصال البديلة: العنوان 2</span>
+[% CASE 'altcontactaddress3'  %]<span>جهة الاتصال البديلة: المدينة</span>
+[% CASE 'altcontactstate'     %]<span>جهة الاتصال البديلة: المحافظة</span>
+[% CASE 'altcontactzipcode'   %]<span>جهة الاتصال البديلة: الرمز البريدي</span>
+[% CASE 'altcontactcountry'   %]<span>جهة الاتصال البديلة: البلد</span>
+[% CASE 'altcontactphone'     %]<span>جهة الاتصال البديلة: الهاتف</span>
+[% CASE 'smsalertnumber'      %]<span>رقم تنبيهات الرسائل القصيرة</span>
+[% CASE 'extended_attributes' %]<span>معرفات وسمات إضافية</span>
+[% CASE %][% field | html %]
+[% END %]
+[% END %]
+
+[% BLOCK display_extended_attributes %]
+ [% IF attrs and attrs.size > 1 %]
+ <ul>
+ [% FOREACH attr IN attrs %]
+ <li>[% PROCESS display_attribute attr=attr type=type %]</li>
+ [% END %]
+ <ul>
+ [% ELSIF attrs %]
+ [% PROCESS display_attribute attr=attrs.0 type=type %]
+ [% END %]
+[% END %]
+
+[% BLOCK display_attribute %]
+ [% IF type.authorised_value_category %]
+ [% AuthorisedValues.GetByCode(type.authorised_value_category,attr.attribute) | html %]
+ [% ELSE %]
+ [% attr.attribute | html %]
+ [% END %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/members-home.pl">المستفيدين</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تحديث تسجيلات المستفيد</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-8 col-md-offset-2">
+ [% INCLUDE 'messages.inc' %]
+
+ <h1>تحديث تسجيلات المستفيد</h1>
+ [% IF PendingModifications %]
+ <form method="post" action="members-update-do.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ [% WRAPPER accordion panelgroup_id="pending_updates" %]
+ [% FOREACH pm IN PendingModifications %]
+ [% SET borrowernumber = pm.borrowernumber %]
+ [% WRAPPER accordion_item %]
+ [% WRAPPER accordion_heading panel_id="panel-${pm.borrowernumber}" %]
+ [% borrowers.$borrowernumber.surname | html %][% IF ( borrowers.$borrowernumber.firstname ) %], [% borrowers.$borrowernumber.firstname | html %][% END %] - [% Categories.GetName( borrowers.$borrowernumber.categorycode ) | html %] ([% Branches.GetName( borrowers.$borrowernumber.branchcode ) | html %]) ([% borrowers.$borrowernumber.cardnumber | html %]) - Requested on [% pm.timestamp | $KohaDates with_hours = 1 %]
+ [% END %]
+ [% WRAPPER accordion_panel panel_id="panel-${pm.borrowernumber}" %]
+
+ <div class="btn-toolbar">
+
+ <label for="approve_modify_[% pm.borrowernumber | html %]"><input type="radio" id="approve_modify_[% pm.borrowernumber | html %]" name="modify_[% pm.borrowernumber | html %]" value="approve" /> قبول</label>
+
+
+ <label for="deny_modify_[% pm.borrowernumber | html %]"><input type="radio" id="deny_modify_[% pm.borrowernumber | html %]" name="modify_[% pm.borrowernumber | html %]" value="deny" /> رفض</label>
+
+
+ <label for="ignore_modify_[% pm.borrowernumber | html %]"><input type="radio" id="ignore_modify_[% pm.borrowernumber | html %]" name="modify_[% pm.borrowernumber | html %]" value="ignore" checked="checked"/> تجاهل</label>
+ &nbsp;|&nbsp; <a target="_blank" href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% pm.borrowernumber | html %]" >تفاصيل المستفيد</a>
+ </div>
+
+ [% IF borrowers.$borrowernumber.gonenoaddress > 0 %]
+ <div class="dialog message" style="margin-top:.8em">
+ <h4>عنوان المستفيد مشكوك فيه</h4>
+ <p>ال <strong>ذهب بلا عنوان</strong> تم وضع علامة على هذا المستفيد. إذا كان طلب هذا التعديل يحل المشكلة، يرجى الغاء العلامة.</p>
+ <input type="checkbox" id="unset_gna_[% pm.borrowernumber | html %]" name="unset_gna_[% pm.borrowernumber | html %]" value="unset_gna_[% pm.borrowernumber | html %]"/>
+ <label for="unset_gna_[% pm.borrowernumber | html %]">الغاء ضبط ذهب لا عنوان لهذا المستفيد</label>
+ </div>
+ [% END %]
+
+ [% IF !pm.extended_attributes and pm.size > 3 or pm.extended_attributes and pm.size > 4 %]
+ [%# timestamp+verification_token+borrowernumber=3 %]
+ <div class="members-update-table">
+ <table>
+ <tr>
+ <th>حقل</th>
+ <th>قيمة قديمة</th>
+ <th>قيمة جديدة</th>
+ </tr>
+
+
+ [% FOREACH key IN pm.keys %]
+ [% IF ( key != "timestamp" and key != "extended_attributes" ) %]
+ [% IF ( ( pm.$key OR borrowers.$borrowernumber.$key ) && ( pm.$key != borrowers.$borrowernumber.$key ) ) %]
+ <tr>
+ <td>[% PROCESS display_names field = key %]</td>
+ [% IF ( key == "dateofbirth" ) %]
+ <td>[% borrowers.$borrowernumber.$key | $KohaDates %]</td>
+ <td>[% pm.$key | $KohaDates %]</td>
+ [% ELSIF key == 'branchcode' %]
+ <td>[% Branches.GetName( borrowers.$borrowernumber.$key ) | html %]</td>
+ <td>[% Branches.GetName( pm.$key ) | html %]</td>
+ [% ELSE %]
+ <td>[% borrowers.$borrowernumber.$key | html %]</td>
+ <td>[% pm.$key | html %]</td>
+ [% END %]
+ </tr>
+ [% END %]
+ [% END %]
+ [% END %]
+ </table>
+ </div> <!-- /.members-update-table -->
+ [% END # /!pm.extended_attributes %]
+ [% IF borrowers.$borrowernumber.modified_attributes %]
+ <div class="members-update-table">
+ <h4>[% PROCESS display_names field='extended_attributes' %]</h4>
+ <table>
+ <tr>
+ <th>حقل</th>
+ <th>قيمة قديمة</th>
+ <th>قيمة جديدة</th>
+ </tr>
+ [% FOREACH attribute_group IN borrowers.$borrowernumber.modified_attributes %]
+ <tr>
+ <td>[% attribute_group.type.description | html %]</td>
+ <td>[% PROCESS display_extended_attributes attrs=attribute_group.before type=attribute_group.type %]</td>
+ <td>[% PROCESS display_extended_attributes attrs=attribute_group.after type=attribute_group.type %]</td>
+ </tr>
+ [% END %]
+ </table>
+ </div> <!-- /.members-update-table -->
+ [% END # / borrowers.$borrowernumber.modified_attributes %]
+ [% END %]
+ [% END %]
+ [% END # /FOREACH pm %]
+ [% END # /collapse %]
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-update" />
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ </fieldset>
+ </form>
+ [% ELSE %]
+ <div class="dialog message">
+ <p>لا توجد أي تعديلات مستفيد في الانتظار.</p>
+ </div>
+ [% END %]
+
+ </div>
+ </div>
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+ <script>
+        $(document).ready(function(){
+            [%- IF ( active ) -%]
+                $("#pending_updates_group a[href='#panel-" + [% active | html %] + "_panel']").click();
+            [%- ELSE -%]
+                $("#pending_updates_group a.collapsed:eq(0)").click();
+            [%- END -%]
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

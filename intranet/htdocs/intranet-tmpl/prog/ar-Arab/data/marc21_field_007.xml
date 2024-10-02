@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE stylesheet>
+
+<Tagfield tag="007" xmlns="http://koha-community.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="./marc21_field_CF.xsd">
+ <Material id="MPS"><name>خرائط</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="a"><description>تخطيط</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة الخرائطية التي تنتمي لها المادة. عادةً ما تكون رتبة الكيان المادي، مثال: رسم بياني.</description>
+ <Value code="d"><description>أطلس</description></Value>
+ <Value code="g"><description>رسم بياني</description></Value>
+ <Value code="j"><description>تخطيط</description></Value>
+ <Value code="k"><description>الملف التعريفي</description></Value>
+ <Value code="q"><description>نموذج</description></Value>
+ <Value code="r"><description>صورة استشعار عن بعد</description></Value>
+ <Value code="s"><description>قسم</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="y"><description>عرض</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>لون</name><description>ما إذا كانت المادة بلون واحد أو متعددة الألوان</description>
+ <Value code="a"><description>لون واحد</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>الوصف المادي</name><description>المادة المصنوع منها المادة الخرائطية.</description>
+ <Value code="a"><description>الورق</description></Value>
+ <Value code="b"><description>خشب</description></Value>
+ <Value code="c"><description>حجر</description></Value>
+ <Value code="d"><description>معدن</description></Value>
+ <Value code="e"><description>اصطناعي</description></Value>
+ <Value code="f"><description>جلد</description></Value>
+ <Value code="g"><description>منسوجات</description></Value>
+ <Value code="i"><description>بلاستيك</description></Value>
+ <Value code="j"><description>زجاج</description></Value>
+ <Value code="l"><description>فينيل</description></Value>
+ <Value code="n"><description>رق الكتابة</description></Value>
+ <Value code="p"><description>جص</description></Value>
+ <Value code="q"><description>قاعدة صور مرنة، إيجابي</description></Value>
+ <Value code="r"><description>قاعدة صور مرنة، سلبي</description></Value>
+ <Value code="s"><description>قاعدة فوتوغرافية غير مرنة، ايجابي</description></Value>
+ <Value code="t"><description>قاعدة فوتوغرافية غير مرنة، سلبي</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>جلد</description></Value>
+ <Value code="w"><description>مخطوطة ورقية</description></Value>
+ <Value code="x"><description>غير قابل للتطبيق</description></Value>
+ <Value code="y"><description>وسيط تصوير فوتوغرافي آخر</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>نوع إعادة الإنتاج</name><description>ما إذا كانت المادة الخرائطية صورة طبق الأصل أو نوعاً آخر من الاستنساخ.</description>
+ <Value code="f"><description>صورة طبق الأصل</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>الإنتاج/تفاصيل إعادة الإنتاج</name><description>تقنية تصوير فوتوغرافي تستخدم لإنتاج المادة الخرائطية.</description>
+ <Value code="a"><description>نسخة ضوئية، طبعة زرقاء</description></Value>
+ <Value code="b"><description>نسخة ضوئية</description></Value>
+ <Value code="c"><description>ما قبل الإنتاج</description></Value>
+ <Value code="d"><description>فيلم</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>الجانب الموجب/السالب</name><description>المظهر الموجب/السالب للصورة الضوئية أو الفيلم للمادة الخرائطية، والمعروف أيضا باسم القطبية.</description>
+ <Value code="a"><description>موجب</description></Value>
+ <Value code="b"><description>نيجاتيف (الصور) / سلبي</description></Value>
+ <Value code="m"><description>قطبية مختلطة</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="ER"><name>موارد إلكترونية</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>كود من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة هي مورد الكتروني (مثال: برامج، ملفات بيانات، ملفات صور، شرائط صوت وفيديو مرقمنة، إلخ).</description>
+ <Value code="c"><description>مورد إلكتروني</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة (عادةً رتبة الكيان المادي) التي تنتمي لها المادة (مثال: قرص ممغنط).</description>
+ <Value code="a"><description>خرطوشة شريط</description></Value>
+ <Value code="b"><description>خرطوشة شريحة</description></Value>
+ <Value code="c"><description>خرطوشة قرص ضوئي للحاسوب</description></Value>
+ <Value code="d"><description>قرص حاسب، النوع غير محدد</description></Value>
+ <Value code="e"><description>خرطوشة قرص للحاسب</description></Value>
+ <Value code="f"><description>شريط كاسيت</description></Value>
+ <Value code="h"><description>بكرة شريط</description></Value>
+ <Value code="j"><description>قرص ممغنط</description></Value>
+ <Value code="k"><description>بطاقة حاسوب</description></Value>
+ <Value code="m"><description>قرص ممغنط ضوئي</description></Value>
+ <Value code="o"><description>قرص ضوئي</description></Value>
+ <Value code="r"><description>عن بعد</description></Value>
+ <Value code="s"><description>جهاز مستقل</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>لون</name><description>ما إذا كانت المادة بلون واحد أو متعددة الألوان.</description>
+ <Value code="a"><description>لون واحد</description></Value>
+ <Value code="b"><description>أسود وأبيض</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="g"><description>تدرج رمادي</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>أبعاد</name><description>أبعاد الوسط المستخدم لترميز المورد الالكتروني. يتم توضيح الأبعاد الأكثر شيوعا فقط. في العديد من الحالات، يتم تطبيق الأبعاد على الحاوية المغلف بها الوسط البصري أو المغناطيسي. يتم اسخدام كود الحقل 007/04 المقابل للأبعاد المعطاة في وصف المادة. إذا لم يطابق أي كود أبعاد الوسط (أو الحاوية) بالضبط، يتم استخدام الكود Z. </description>
+ <Value code="a"><description>1/2 3 بوصة.</description></Value>
+ <Value code="e"><description>12 بوصة.</description></Value>
+ <Value code="g"><description>4 3/4 بوصة أو 12 سم.</description></Value>
+ <Value code="i"><description>1 1/8 x 2 3/8 بوصة.</description></Value>
+ <Value code="j"><description>3 7/8 x 2 1/2 بوصة.</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="o"><description>5 1/4 بوصة.</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>8 بوصة.</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>الصوت</name><description>ما إذا كان إنتاج الصوت جزءاً متكاملاً من مورد الكتروني.</description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>الصوت</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06-08"><name>عمق بت الصورة</name><description>عمق البت الدقيق للصورة (الصور) الممسوحة ضوئيا والذي يشمل المورد الالكتروني، أو كود مكون من ثلاثة أحرف أبجدية للإشارة إلى أن عدم إمكانية تسجيل عمق البت بالضبط. وحيث أن عمق البت الدقيق فقط هو المفيد، فإن الترميز لا يجب أن يحتوي على أرقام مفقودة ممثلة بعلامة الوصل (-)</description>
+ <Value code="001-999"><description>عمق البت بالضبط</description></Value>
+ <Value code="mmm"><description>متعدد</description></Value>
+ <Value code="nnn"><description>غير قابل للتطبيق</description></Value>
+ <Value code="---"><description>غير معروف</description></Value>
+ <Value code="|||"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="09"><name>تنسيقات الملفات</name><description>ما إذا كان الملف الذي يحتوي على المورد الالكتروني من نفس تنسيق أو نوع المواد المعاد تنسيقها رقمياً.</description>
+ <Value code="a"><description>تنسيق ملف واحد</description></Value>
+ <Value code="m"><description>تنسيقات ملفات متعددة</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="10"><name>هدف (أهداف) ضمان الجودة</name><description>ما إذا تم إدراج أهداف ضمان الجودة بشكل ملائم أثناء إعادة تنسيق/إنشاء المورد الالكتروني. </description>
+ <Value code="a"><description>مفقود</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="p"><description>الحالي</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="11"><name>سالف/مصدر</name><description>معلومات حول مصدر الفيلم الرقمي الضرورية لإنشاء واستخدام وإدارة المواد الرقمية المعاد تنسيقها. </description>
+ <Value code="a"><description>ملف مستنسخ من الأصل‬</description></Value>
+ <Value code="b"><description>ملف مستنسخ من الميكروفورم</description></Value>
+ <Value code="c"><description>الملف مستنسخ من مورد إلكتروني</description></Value>
+ <Value code="d"><description>ملف مستنسخ من وسيط(ليس الميكروفورم)</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="12"><name>مستوى الضغط</name><description>نوع الضغط الذي تعرض له المورد الالكرتوني. يستخدم في الحكم على ولاء الملف للأصلي.</description>
+ <Value code="a"><description>غير مضغوط</description></Value>
+ <Value code="b"><description>بدون خسائر</description></Value>
+ <Value code="d"><description>مبدد</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="13"><name>جودة إعادة التنسيق</name><description>إعادة تنسيق جودة للمورد الالكتروني، وهو تقييم إجمالي لجودة المورد الالكتروني المادية فيما يتعلق باستخدامه المقصود. يمكن استخدامه للحكم على مستوى جودة ملف، والتزام المؤسسة بضمان إتاحته مع مرور الوقت.</description>
+ <Value code="a"><description>وصول</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="p"><description>حفظ</description></Value>
+ <Value code="r"><description>استبدال</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="GL"><name>نموذج كرة أرضية</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>رمز من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة هي الكرة الأرضية، والمعرفة كنموذج للجرم السماوي، غالبا كوكب الأرض أو الكرة السماوية، ممثلة على سطح كرة. يتم استخدام الرمز d عندما تحتوي 008/25 (نوع المادة الخرائطية) على الرمز A. غير مسموح بحرف حشو (|) في هذا الموضع.</description>
+ <Value code="d"><description>نموذج كرة أرضية</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة (عادةً رتبة الكيان المادي) التي تنتمي لها المادة، على سبيل المثال: الكرة السماوية.</description>
+ <Value code="a"><description>كرة سماوية</description></Value>
+ <Value code="b"><description>الكرة الكوكبية أو القمرية</description></Value>
+ <Value code="c"><description>الكرة الأرضية</description></Value>
+ <Value code="e"><description>كرة أرضية قمريّة</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>لون</name><description>ما إذا كانت الكرة الأرضية بلون واحد أو متعددة الألوان.</description>
+ <Value code="a"><description>لون واحد</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>الوسيط المادي</name><description>المادة المصنوع منها الكرة الأرضية.</description>
+ <Value code="a"><description>الورق</description></Value>
+ <Value code="b"><description>خشب</description></Value>
+ <Value code="c"><description>حجر</description></Value>
+ <Value code="d"><description>معدن</description></Value>
+ <Value code="e"><description>اصطناعي</description></Value>
+ <Value code="f"><description>جلد</description></Value>
+ <Value code="g"><description>نسيج</description></Value>
+ <Value code="i"><description>بلاستيك</description></Value>
+ <Value code="l"><description>فينيل</description></Value>
+ <Value code="n"><description>رق الكتابة</description></Value>
+ <Value code="p"><description>جص</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>جلد</description></Value>
+ <Value code="w"><description>مخطوطة ورقية</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>نوع إعادة الإنتاج</name><description>ما إذا كانت الكرة الأرضية صورة طبق الأصل أو نوعاً آخر من الاستنساخ.</description>
+ <Value code="f"><description>صورة طبق الأصل</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="TM"><name>مادة لمسية</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>رمز من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة هي مادة لمسية. تستخدم للمواد المعدة للقراءة عن طريق اللمس. غير مسموح بحرف حشو (|) في هذا الموضع.</description>
+ <Value code="f"><description>مادة لمسية</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة الخاصة باللمس التي تنتمي لها المادة.</description>
+ <Value code="a"><description>قمر</description></Value>
+ <Value code="b"><description>طريقة برايل</description></Value>
+ <Value code="c"><description>تركيبة</description></Value>
+ <Value code="d"><description>عن طريق اللمس، بدون نظام كتابة</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03-04"><name>رتبة الكتابة بطريقة برايل</name><description>عائلة برايل التي تنتمي لها المادة. وهي ليست كود برايل المحدد، لكن نوع كود برايل المستخدم، ممثلا الأنواع المختلفة للرموز المكتوبة. يمكن الإشارة إلى نوع حتى نوعين من أنواع برايل، أو يمكن لوكالة الفهرسة اختيار ترميز النوع السائد. يتم ترميز العديد من الأكواد بترتيب السيادة، إن وجدت. إذا تم تعيين أقل من كودين، تترك الأكواد مسوغة بينما تحتوي الأماكن غير المستخدمة على فراغات (#).</description>
+ <Value code="#"><description>لا توجد رتبة محددة لطريقة برايل للكتابة</description></Value>
+ <Value code="a"><description>أدب بطريقة برايل</description></Value>
+ <Value code="b"><description>تنسيق كود بطريقة برايل</description></Value>
+ <Value code="c"><description>الرياضيات والعلوم بطريقة برايل</description></Value>
+ <Value code="d"><description>الكمبيوتر بطريقة برايل</description></Value>
+ <Value code="e"><description>موسيقى بطريقة برايل</description></Value>
+ <Value code="m"><description>أنواع برايل متعددة</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="||"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>مستوى التقليص</name><description>ما إذا كانت التقليصات مستخدمة. التقليصات هي اختصارات مكونة من أحد أحرف مون أو برايل أو أكثر لتمثل تركيبات الحروف العادية.</description>
+ <Value code="a"><description>غير مختصرة</description></Value>
+ <Value code="b"><description>متعاقد</description></Value>
+ <Value code="m"><description>تركيبة</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>تنسيق الموسيقى بطريقة برايل 1</name><description>كود من ثلاثة أحرف للإشارة إلى تنسيق برايل للمادة. التنسيقات الموسيقية هي طريقة عرض القياسات، والأقسام، والأجزاء، والمعلومات ذات الصلة فيما يتعلق ببعضها البعض. يمكن الإشارة إلى ما يصل إلى ثلاثة تنسيقات، وضبطها بترتيب الأهمية. إذا تم تعيين عدد أقل من ثلاثة أكواد، يتم تركها بترتيبها ووضع علامة (#) في المواضع غير المستخدمة التي تحتوي على فراغات.</description>
+ <Value code="#"><description>بدون تنسيق موسيقى محدد بتنسيق برايل</description></Value>
+ <Value code="a"><description>شريط فوق شريط</description></Value>
+ <Value code="b"><description>شريط بشريط</description></Value>
+ <Value code="c"><description>سطر فوق سطر</description></Value>
+ <Value code="d"><description>فقرة</description>></Value>
+ <Value code="e"><description>سطر مفرد</description></Value>
+ <Value code="f"><description>قسم بقسم</description></Value>
+ <Value code="g"><description>سطر بسطر</description></Value>
+ <Value code="h"><description>نطاق مفتوح</description></Value>
+ <Value code="i"><description>تدوين الشكل المختصر</description></Value>
+ <Value code="j"><description>تسجيل بالصيغة المختصرة</description></Value>
+ <Value code="k"><description>خطة</description></Value>
+ <Value code="l"><description>تدوين عمودي</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>تنسيق الموسيقى بطريقة برايل 2</name><description></description>
+ <Value code="#"><description>بدون تنسيق موسيقى محدد بتنسيق برايل</description></Value>
+ <Value code="a"><description>شريط فوق شريط</description></Value>
+ <Value code="b"><description>شريط بشريط</description></Value>
+ <Value code="c"><description>سطر فوق سطر</description></Value>
+ <Value code="d"><description>فقرة</description>></Value>
+ <Value code="e"><description>سطر مفرد</description></Value>
+ <Value code="f"><description>قسم بقسم</description></Value>
+ <Value code="g"><description>سطر بسطر</description></Value>
+ <Value code="h"><description>نطاق مفتوح</description></Value>
+ <Value code="i"><description>تدوين الشكل المختصر</description></Value>
+ <Value code="j"><description>تسجيل بالصيغة المختصرة</description></Value>
+ <Value code="k"><description>خطة</description></Value>
+ <Value code="l"><description>تدوين عمودي</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="08"><name>تنسيق الموسيقى بطريقة برايل 3</name><description></description>
+ <Value code="#"><description>بدون تنسيق موسيقى محدد بتنسيق برايل</description></Value>
+ <Value code="a"><description>شريط فوق شريط</description></Value>
+ <Value code="b"><description>شريط بشريط</description></Value>
+ <Value code="c"><description>سطر فوق سطر</description></Value>
+ <Value code="d"><description>فقرة</description>></Value>
+ <Value code="e"><description>سطر مفرد</description></Value>
+ <Value code="f"><description>قسم بقسم</description></Value>
+ <Value code="g"><description>سطر بسطر</description></Value>
+ <Value code="h"><description>نطاق مفتوح</description></Value>
+ <Value code="i"><description>تدوين الشكل المختصر</description></Value>
+ <Value code="j"><description>تسجيل بالصيغة المختصرة</description></Value>
+ <Value code="k"><description>خطة</description></Value>
+ <Value code="l"><description>تدوين عمودي</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="09"><name>الخصائص المادية الخاصة</name><description>خصائص مادية خاصة أخرى حول طريقة برايل.</description>
+ <Value code="a"><description>طباعة/طريقة برايل</description></Value>
+ <Value code="b"><description>طريقة برايل مكبرة أو مضخمة</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="PG"><name>رسم معروض</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>رمز من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة هي الرسم البياني المعروض والمعرف كعرض ثنائي الأبعاد ليتم عرضه بدون حركة بواسطة جهاز بصري، على سبيل المثال: شريط عرض فيلم، شريحة، أو شفافية. غير مسموح بحرف حشو (|) في هذا الموضع.</description>
+ <Value code="g"><description>رسم معروض</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للرسم المعروض الذي تنتمي له المادة. مثال: شريحة.</description>
+ <Value code="c"><description>خرطوشة شريط عرض الفيلم</description></Value>
+ <Value code="d"><description>قصاصة الفيلم</description></Value>
+ <Value code="f"><description>شريط عرض الفيلم، النوع غير محدد</description></Value>
+ <Value code="o"><description>بكرة شريط عرض الفيلم</description></Value>
+ <Value code="s"><description>شريحة</description></Value>
+ <Value code="t"><description>شفافية</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description></Position>
+ <Position pos="03"><name>لون</name><description>خصائص اللون للرسم البياني غير المعروض.</description>
+ <Value code="a"><description>لون واحد</description></Value>
+ <Value code="b"><description>أسود وأبيض</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="h"><description>ملون باليد</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>قاعدة طبقة الفيلم الحساسة</name><description>نوع المادة لقاعدة الطبقة الحساسية للصور السلبية، شريط الفيلم، الشريحة أو الشفافية.</description>
+ <Value code="d"><description>زجاج</description></Value>
+ <Value code="e"><description>اصطناعي</description></Value>
+ <Value code="j"><description>فيلم الأمان</description></Value>
+ <Value code="k"><description>أساس الفيلم ، غير فيلم الأمان</description></Value>
+ <Value code="m"><description>مجموعة مختلطة</description></Value>
+ <Value code="o"><description>الورق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>الصوت على وسيط أو منفصل</name><description>ما إذا كان الصوت على الرسوم المعروضة أو منفصلاً عنها (أي: على مادة مصاحبة). </description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>صوت على وسيط</description></Value>
+ <Value code="b"><description>الصوت منفصل عن الوسيط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>وسيط الصوت</name><description>وسيط محدد يستخدم لحمل صوت المادة (سواء كان الصوت على الرسم المعروض أو منفصلاً) ونوع تشغيل الصوت المطلوب للمادة.</description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>مسار صوتي ضوئي على فيلم صور متحركة</description></Value>
+ <Value code="b"><description>مسار صوتي ممغنط في فيلم صور متحركة</description></Value>
+ <Value code="c"><description>شريط صوتي ممغنط في خرطوشة</description></Value>
+ <Value code="d"><description>قرص صوتي</description></Value>
+ <Value code="e"><description>‫شريط صوتي ممغنط في بكرة‬</description></Value>
+ <Value code="f"><description>شريط صوتي ممغنط في كاسيت</description></Value>
+ <Value code="g"><description>مسار ضوئي وممغنط على فيلم صور متحركة</description></Value>
+ <Value code="h"><description>شريط فيديو</description></Value>
+ <Value code="i"><description>قرص فيديو</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>أبعاد</name><description>عرض أو أبعاد المادة البيانية المعروضة.</description>
+ <Value code="a"><description>عرض الفيلم القياسي 8 ملليمتر</description></Value>
+ <Value code="b"><description>عرض الفيلم سوبر 8مم/ مفرد 8مم</description></Value>
+ <Value code="c"><description>عرض الفيلم 9.5 مللي</description></Value>
+ <Value code="d"><description>عرض الفيلم 16 ملليمتر</description></Value>
+ <Value code="e"><description>عرض الفيلم 28 مللي</description></Value>
+ <Value code="f"><description>عرض الفيلم 35 ملليمتر</description></Value>
+ <Value code="g"><description>عرض الفيلم 70 ملليمتر</description></Value>
+ <Value code="j"><description>شريحة 2x2 بوصة أو 5x5 سم</description></Value>
+ <Value code="k"><description>شريحة 6×6 سم أ 1/4 2 × 1/4 2 بوصة</description></Value>
+ <Value code="s"><description>الشفافية 4x5 بوصة أو 10x13 سم</description></Value>
+ <Value code="t"><description>الشفافية 5x7 بوصة أو 13x18 سم</description></Value>
+ <Value code="v"><description>شفافية 8x10 بوصة أو 21x26 سم</description></Value>
+ <Value code="w"><description>شفافية 9x9 بوصة أو 23x23 سم</description></Value>
+ <Value code="x"><description>شفافية 26×26 سم أو 10×10 بوصة</description></Value>
+ <Value code="y"><description>الشفافية 7x7 بوصة أو 18x18 سم</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="08"><name>دعم مادي ثانوي</name><description>نوع مادة تثبيت الشريحة أو الشفافية للرسوم المعروضة.</description>
+ <Value code="#"><description>بدون دعم ثانوي</description></Value>
+ <Value code="c"><description>لوح ورق مقوى (كرتون)</description></Value>
+ <Value code="d"><description>زجاج</description></Value>
+ <Value code="e"><description>اصطناعي</description></Value>
+ <Value code="h"><description>معدن</description></Value>
+ <Value code="j"><description>معدن وزجاج</description></Value>
+ <Value code="k"><description>اصطناعي وزجاج</description></Value>
+ <Value code="m"><description>مجموعة مختلطة</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="MF"><name>ميكروفيلم</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>رمز من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة هي ميكروفورم (شكل مصغر). الميكروفورم هو مصطلح عام لأي وسيط، شفاف أو معتم، يحمل صوراً مصغرة. الصورة المصغرة هي وحدة (مثال: صفحة) لمادة نصية، تخطيطية، أو مولدة عبر الحاسب مدرجة في بطاقات ذات فتحة، ميكروفيش، ميكروفيلم، ميكروأوباك،أو أي تنسيقات مصغرة أخرى أصغر من أن تتم قراءتها بدون تكبير. قد تكون الأشكال المصغرة استنساخ لمواد نصية أو رسومية حالية أو قد تكون منشورات أصلية. غير مسموح بحرف حشو (|) في هذا الموضع.</description>
+ <Value code="h"><description>ميكروفيلم</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للميكروفورم الذي تنتمي له المادة. (مثال: ميكروأوباك)</description>
+ <Value code="a"><description>بطاقة مثقوبة</description></Value>
+ <Value code="b"><description>خرطوشة ميكروفيلم</description></Value>
+ <Value code="c"><description>كاسيت ميكروفيلم</description></Value>
+ <Value code="d"><description>بكرة ميكروفيلم</description></Value>
+ <Value code="e"><description>ميكروفيش</description></Value>
+ <Value code="f"><description>كاسيت ميكروفيش</description></Value>
+ <Value code="g"><description>مصغرة غير شفافة</description></Value>
+ <Value code="h"><description>شريط ميكروفيلم</description></Value>
+ <Value code="j"><description>بكرة ميكروفيلم</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description></Position>
+ <Position pos="03"><name>الجانب الموجب/السالب</name><description>القطبية السلبية/الموجبة للميكروفورم.</description>
+ <Value code="a"><description>موجب</description></Value>
+ <Value code="b"><description>نيجاتيف (الصور) / سلبي</description></Value>
+ <Value code="m"><description>قطبية مختلطة</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>أبعاد</name><description>أبعاد الميكروفيلم، لا تشير إلى أبعاد الصورة.</description>
+ <Value code="a"><description>8 ملليمتر.</description></Value>
+ <Value code="d"><description>16 مللي.</description></Value>
+ <Value code="f"><description>35 ملليمتر.</description></Value>
+ <Value code="g"><description>70 ملليمتر.</description></Value>
+ <Value code="h"><description>105 مللي.</description></Value>
+ <Value code="l"><description>3x5 بوصة أو 8x13 سم.</description></Value>
+ <Value code="m"><description>4x6 بوصة أو 11x15 سم.</description></Value>
+ <Value code="o"><description>6x9 بوصة أو 16x23 سم.</description></Value>
+ <Value code="p"><description>3 1/4 x 7 3/8 بوصة أو 9x19 سم.</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>نطاق نسبة التصغير</name><description>نطاق نسبة التصغير للميكروفورم. نسبة التصغير المحددة مسجلة في 007/06-08 (نسبة التصغير).</description>
+ <Value code="a"><description>نسبة تصغير منخفضة</description></Value>
+ <Value code="b"><description>تصغير عادي</description></Value>
+ <Value code="c"><description>تصغير عالي</description></Value>
+ <Value code="d"><description>تصغير عالي جداً</description></Value>
+ <Value code="e"><description>تصغير فائق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>تنوع معدل التصغير</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06-08"><name>نسبة التصغير</name><description>عدد يحدد نسبة تصغير الميكروفورم، مسجل على هيئة ثلاثة أرقام. العدد مرتب جهة اليمين وكل موضع غير مستخدم يحتوي على صفر، (مثال: 015، 048). ويتم استخدام واصلة لأي جزء غير معروف من نسبة التصغير (مثال: 03-، 1--، أو --)</description>
+ <Value code="#"><description>عنصر النسبة غير قابل للتطبيق</description></Value>
+ <Value code="1"><description>نسبة</description></Value>
+ <Value code="2"><description>نسبة</description></Value>
+ <Value code="3"><description>نسبة</description></Value>
+ </Position>
+ <Position pos="09"><name>لون</name><description>لون الصورة للنماذج المصغرة.</description>
+ <Value code="b"><description>أسود وأبيض</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="10"><name>الطبقة الحساسة على الفيلم</name><description>نوع المادة الحساسة للضوء الموجودة على الفيلم.</description>
+ <Value code="a"><description>هاليد الفضة</description></Value>
+ <Value code="b"><description>الديازين (صبغ ثنائي النيتروجين)‬</description></Value>
+ <Value code="c"><description>حويصلي</description></Value>
+ <Value code="m"><description>طبقة حساسة مختلطة</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="11"><name>توليد</name><description>جانب توليد الميكروفيلم. </description>
+ <Value code="a"><description>الجيل الأول (الرئيسي)</description></Value>
+ <Value code="b"><description>الطباعة الرئيسية</description></Value>
+ <Value code="c"><description>نسخة الخدمة</description></Value>
+ <Value code="m"><description>توليد مختلط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="12"><name>قاعدة الفيلم</name><description>قاعدة الفيلم.</description>
+ <Value code="a"><description>قاعدة السلامة، غير محدد</description></Value>
+ <Value code="c"><description>قاعدة الأمان، أسيتات (خلات) غير محددة</description></Value>
+ <Value code="d"><description>قاعدة الأمان، ثنائي الأسيتات (الخلات)</description></Value>
+ <Value code="i"><description>قاعدة نترات</description></Value>
+ <Value code="m"><description>قاعدة مختلطة (نيترات وأمان)</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="p"><description>قاعدة الأمان، بوليستر</description></Value>
+ <Value code="r"><description>قاعدة الأمان، مزيج</description></Value>
+ <Value code="t"><description>قاعدة السلامة، ثلاثي الأسيتات</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="NG"><name>رسم غير إسقاطي</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="k"><description>رسم غير إسقاطي</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للرسم غير المعروض الذي تنتمي له المادة، (مثال: صورة).</description>
+ <Value code="a"><description>بطاقة النشاط</description></Value>
+ <Value code="c"><description>ملصقة</description></Value>
+ <Value code="d"><description>رسم</description></Value>
+ <Value code="e"><description>اللوحة</description></Value>
+ <Value code="f"><description>طبعة ميكانيكية ضوئية</description></Value>
+ <Value code="g"><description>الصورة السلبية</description></Value>
+ <Value code="h"><description>طباعة الصور</description></Value>
+ <Value code="i"><description>صورة</description></Value>
+ <Value code="j"><description>طباعة</description></Value>
+ <Value code="k"><description>ملصق إعلاني</description></Value>
+ <Value code="l"><description>رسم تقني</description></Value>
+ <Value code="n"><description>خريطة</description></Value>
+ <Value code="o"><description>بطاقة ومضية</description></Value>
+ <Value code="p"><description>بطاقة بريدية</description></Value>
+ <Value code="q"><description>أيقونة</description></Value>
+ <Value code="r"><description>صورة بالأشعة</description></Value>
+ <Value code="s"><description>طباعة دراسية</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="v"><description>صورة فوتوغرافية، النوع غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>لون</name><description>خصائص اللون للرسم البياني غير المعروض.</description>
+ <Value code="a"><description>لون واحد</description></Value>
+ <Value code="b"><description>أسود وأبيض</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="h"><description>ملون باليد</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>المواد المساندة الأساسية</name><description>نوع المادة المستخدمة للدعم أو القاعدة التي جرى تنفيذ أو طباعة الصورة عليها.</description>
+ <Value code="a"><description>لوحة قماشية</description></Value>
+ <Value code="b"><description>لوح كرتون برستول</description></Value>
+ <Value code="c"><description>لوح كرتون/لوح شرح</description></Value>
+ <Value code="d"><description>زجاج</description></Value>
+ <Value code="e"><description>اصطناعي</description></Value>
+ <Value code="f"><description>جلد</description></Value>
+ <Value code="g"><description>نسيج</description></Value>
+ <Value code="h"><description>معدن</description></Value>
+ <Value code="i"><description>بلاستيك</description></Value>
+ <Value code="l"><description>فينيل</description></Value>
+ <Value code="m"><description>مجموعة مختلطة</description></Value>
+ <Value code="n"><description>رق الكتابة</description></Value>
+ <Value code="o"><description>الورق</description></Value>
+ <Value code="p"><description>جص</description></Value>
+ <Value code="q"><description>لوح صلب</description></Value>
+ <Value code="r"><description>خزف</description></Value>
+ <Value code="s"><description>حجر</description></Value>
+ <Value code="t"><description>خشب</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>جلد</description></Value>
+ <Value code="w"><description>مخطوطة ورقية</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>دعم مادي ثانوي</name><description>نوع المادة (غير تغليف المتحف المعتاد) المرفق بها الدعم الأولي (007/04)</description>
+ <Value code="#"><description>بدون دعم ثانوي</description></Value>
+ <Value code="a"><description>لوحة قماشية</description></Value>
+ <Value code="b"><description>لوح كرتون برستول</description></Value>
+ <Value code="c"><description>لوح كرتون/لوح شرح</description></Value>
+ <Value code="d"><description>زجاج</description></Value>
+ <Value code="e"><description>اصطناعي</description></Value>
+ <Value code="f"><description>جلد</description></Value>
+ <Value code="g"><description>نسيج</description></Value>
+ <Value code="h"><description>معدن</description></Value>
+ <Value code="i"><description>بلاستيك</description></Value>
+ <Value code="l"><description>فينيل</description></Value>
+ <Value code="m"><description>مجموعة مختلطة</description></Value>
+ <Value code="n"><description>رق الكتابة</description></Value>
+ <Value code="o"><description>الورق</description></Value>
+ <Value code="p"><description>جص</description></Value>
+ <Value code="q"><description>لوح صلب</description></Value>
+ <Value code="r"><description>خزف</description></Value>
+ <Value code="s"><description>حجر</description></Value>
+ <Value code="t"><description>خشب</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>جلد</description></Value>
+ <Value code="w"><description>مخطوطة ورقية</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="MP"><name>الصور المتحركة</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="m"><description>الصور المتحركة</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للصورة المتحركة التي تنتمي لها المادة. مثال: بكرة الفيلم.</description>
+ <Value code="c"><description>خرطوشة الفيلم</description></Value>
+ <Value code="f"><description>فيلم كاسيت</description></Value>
+ <Value code="o"><description>بكرة الفيلم</description></Value>
+ <Value code="r"><description>بكرة الفيلم</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>لون</name><description>خصائص الألوان للصورة المتحركة.</description>
+ <Value code="b"><description>أسود وأبيض</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="h"><description>ملون باليد</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>تنسق عرض الصور المتحركة</name><description>تنسيق العرض للصور المتحركة.</description>
+ <Value code="a"><description>فتحة صوت معيارية (إطار مصغر)</description></Value>
+ <Value code="b"><description>صورة غير مشوهة (شاشة عريضة)</description></Value>
+ <Value code="c"><description>ثلاثي الأبعاد</description></Value>
+ <Value code="d"><description>صورة بصرية مشوهة (شاشة عريضة)</description></Value>
+ <Value code="e"><description>تنسيق شاشة عريضة آخر</description></Value>
+ <Value code="f"><description>فتحة صامتة معيارية (إطار كامل)</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>الصوت على وسيط أو منفصل</name><description>ما إذا كان الصوت على المادة أو منفصلاً عنها. </description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>صوت على وسيط</description></Value>
+ <Value code="b"><description>الصوت منفصل عن الوسيط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>وسيط الصوت</name><description>وسيط محدد يستخدم لحمل صوت المادة (سواء كان الصوت محمولاً على المادة نفسها أو على هيئة مادة مصاحبة) ونوع تشغيل الصوت المطلوب.</description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>مسار صوتي ضوئي على فيلم صور متحركة</description></Value>
+ <Value code="b"><description>مسار صوتي ممغنط في فيلم صور متحركة</description></Value>
+ <Value code="c"><description>شريط صوتي ممغنط في خرطوشة</description></Value>
+ <Value code="d"><description>قرص صوتي</description></Value>
+ <Value code="e"><description>‫شريط صوتي ممغنط في بكرة‬</description></Value>
+ <Value code="f"><description>شريط صوتي ممغنط في كاسيت</description></Value>
+ <Value code="g"><description>مسار ضوئي وممغنط على فيلم صور متحركة</description></Value>
+ <Value code="h"><description>شريط فيديو</description></Value>
+ <Value code="i"><description>قرص فيديو</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>أبعاد</name><description>عرض الصورة المتحركة.</description>
+ <Value code="a"><description>معيارى 8مم.</description></Value>
+ <Value code="b"><description>سوبر 8مم / مفرد 8مم.</description></Value>
+ <Value code="c"><description>9.5 مللي.</description></Value>
+ <Value code="d"><description>16 مللي.</description></Value>
+ <Value code="e"><description>28 مللي.</description></Value>
+ <Value code="f"><description>35 ملليمتر.</description></Value>
+ <Value code="g"><description>70 ملليمتر.</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="08"><name>تهيئة قنوات إعادة التشغيل</name><description>تهيئة قنوات إعادة الشتغيل لحصة الصوت من الصورة المتحركة.</description>
+ <Value code="k"><description>مختلط</description></Value>
+ <Value code="m"><description>أحادي الصوت</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="q"><description>رباعي الصوت، متعدد القنوات‬، أومحيط</description></Value>
+ <Value code="s"><description>صوت مجسم</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="09"><name>عناصر الإنتاج</name><description>ما إذا كان الفيلم جزءاً من إنتاج كامل أم عنصر أولي أم عنصر لما بعد الإنتاج.</description>
+ <Value code="a"><description>طباعة العمل</description></Value>
+ <Value code="b"><description>تقليمات</description></Value>
+ <Value code="c"><description>مقتطفات مختارة</description></Value>
+ <Value code="d"><description>استعجالات (مسودات التصوير)</description></Value>
+ <Value code="e"><description>مسارات مختلطة</description></Value>
+ <Value code="f"><description>مسارات العنوان/لفائف بين العنوان</description></Value>
+ <Value code="g"><description>لفائف الإنتاج</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="10"><name>الجانب الموجب/السالب</name><description>ما إذا كان الفيلم موجباً أو سالباً.</description>
+ <Value code="a"><description>موجب</description></Value>
+ <Value code="b"><description>نيجاتيف (الصور) / سلبي</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="11"><name>توليد</name><description>بعد المادة عن المادة الأصلية (مثال: فيلم النيجاتيف الأصلي أو شريط الفيديو الأصلي في الكاميرا). يتم استخدام بيانات التوليد في تقييم جودة النسخ المتاحة، ولاتخاذ قرارات الحفظ، وتعريف المواد المتاحة للعرض والبحث.</description>
+ <Value code="d"><description>مكرر</description></Value>
+ <Value code="e"><description>رئيسي</description></Value>
+ <Value code="o"><description>الأصلي</description></Value>
+ <Value code="r"><description>طباعة المرجع/نسخة العرض</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="12"><name>قاعدة الفيلم</name><description></description>
+ <Value code="a"><description>قاعدة السلامة، غير محدد</description></Value>
+ <Value code="c"><description>قاعدة الأمان، أسيتات (خلات) غير محددة</description></Value>
+ <Value code="d"><description>قاعدة الأمان، ثنائي الأسيتات (الخلات)</description></Value>
+ <Value code="i"><description>قاعدة نترات</description></Value>
+ <Value code="m"><description>قاعدة مختلطة (نيترات وأمان)</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="p"><description>قاعدة الأمان، بوليستر</description></Value>
+ <Value code="r"><description>قاعدة الأمان، مزيج</description></Value>
+ <Value code="t"><description>قاعدة السلامة، ثلاثي الأسيتات</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="13"><name>فئات اللون المنقحة</name><description>المزيد من خصائص اللون المحددة للصورة المتحركة أكثر من الموجودة في 007/03 (لون). </description>
+ <Value code="a"><description>لون من 3 طبقات</description></Value>
+ <Value code="b"><description>شريط مفرد، لونين</description></Value>
+ <Value code="c"><description>لونان غير محددان</description></Value>
+ <Value code="d"><description>٣ ألوان غير محددة‬</description></Value>
+ <Value code="e"><description>لون من 3 أشرطة</description></Value>
+ <Value code="f"><description>2 لون الشريط</description></Value>
+ <Value code="g"><description>شريط أحمر</description></Value>
+ <Value code="h"><description>شريط أزرق أو أخضر</description></Value>
+ <Value code="i"><description>شريط سماوي</description></Value>
+ <Value code="j"><description>شريط أرجواني</description></Value>
+ <Value code="k"><description>شريط أصفر</description></Value>
+ <Value code="l"><description>S E N 2</description></Value>
+ <Value code="m"><description>S E N 3</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="p"><description>التأثير البني على الصور</description></Value>
+ <Value code="q"><description>نغمة أخرى</description></Value>
+ <Value code="r"><description>صبغة</description></Value>
+ <Value code="s"><description>مظلل ومتجانس‬</description></Value>
+ <Value code="t"><description>لون المرسام</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>ملون باليد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="14"><name>نوع مخزون اللون أو الطباعة</name><description>نوع مخزون فيلم اللون أو طبعة اللون التي تمثله المادة.</description>
+ <Value code="a"><description>طبعات منقولة متشربة الصبغة</description></Value>
+ <Value code="b"><description>مخزون من ثلاث طبقات</description></Value>
+ <Value code="c"><description>مخزون من ثلاث طبقات، تلاشي منخفض‬</description></Value>
+ <Value code="d"><description>مخزون مكرر</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="15"><name>تدهور المرحلة</name><description>مستوى تدهور فيلم الصور المتحركة.</description>
+ <Value code="a"><description>غير ظاهر</description></Value>
+ <Value code="b"><description>نترات:رائحة مريبة</description></Value>
+ <Value code="c"><description>نيترات :رائحة نفاذة</description></Value>
+ <Value code="d"><description>نيترات: بني، إزالة اللون، باهت‬،ترابي</description></Value>
+ <Value code="e"><description>نترات: لزجة</description></Value>
+ <Value code="f"><description>نيترات: رغوية،فقاعات، بثور</description></Value>
+ <Value code="g"><description>نيترات: مجمد</description></Value>
+ <Value code="h"><description>نترات: مسحوق</description></Value>
+ <Value code="k"><description>غير نيترات: تدهور قابل للاكتشاف</description></Value>
+ <Value code="l"><description>غير نيترات: تدهور متقدم</description></Value>
+ <Value code="m"><description>غير نيترات: كارثة</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="16"><name>مكتمل</name><description>ما إذا تم الحكم على المادة الموجودة قيد الفهرسة بالاستكمال أو لا.</description>
+ <Value code="c"><description>تام</description></Value>
+ <Value code="i"><description>غير مكتمل</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="17-22"><name>تاريخ فحص الفيلم</name><description>ستة أحرف للإشارة إلى تاريخ أحدث فحص للفيلم، يتم تسجيل التاريخ بالنمط ccyymm (القرن/السنة/الشهر). يتم استخدام الواصلة لأي جزء غير معروف من التاريخ. يتم استخدام ست علامات حشو (||||||) في حالة عدم وجود أي محاولات لترميز مواضع هذه الأحرف.</description>
+ </Position>
+ </Material>
+ <Material id="KT"><name>عدة</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="o"><description>عدة</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة النصية التي تنتمي لها المادة.</description>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="NM"><name>الموسيقى المنوّتة</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="q"><description>الموسيقى المنوّتة</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة النصية التي تنتمي لها المادة.</description>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="RI"><name>صورة استشعار عن بعد</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="r"><description>صورة استشعار عن بعد</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة، عادةً رتبة الكيان المادي، التي تنتمي لها المادة.</description>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|).</description>
+ </Position>
+ <Position pos="03"><name>إرتفاع جهاز الإستشعار</name><description>الوضع العام لجهاز الاستشعار بالنسبة للكائن الموجودة قيد الدراسة.</description>
+ <Value code="a"><description>السطح</description></Value>
+ <Value code="b"><description>محمول جواً</description></Value>
+ <Value code="c"><description>فضائي</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>موضع جهاز الاستشعار</name><description>الزاوية العامة للآلة التي صنعت منها صورة الاستشعار عن بعد.</description>
+ <Value code="a"><description>انحراف منخفض</description></Value>
+ <Value code="b"><description>إنحراف مرتفع</description></Value>
+ <Value code="c"><description>عمودي</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>غطاء السحابة</name><description>مقدار الغطاء السحابي أثناء التقاط صورة الاستشعار عن بعد.</description>
+ <Value code="0"><description>0-9%</description></Value>
+ <Value code="1"><description>10-19%</description></Value>
+ <Value code="2"><description>20-29%</description></Value>
+ <Value code="3"><description>30-39%</description></Value>
+ <Value code="4"><description>40-49%</description></Value>
+ <Value code="5"><description>50-59%</description></Value>
+ <Value code="6"><description>60-69%</description></Value>
+ <Value code="7"><description>70-79%</description></Value>
+ <Value code="8"><description>80-89%</description></Value>
+ <Value code="9"><description>90-100%</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>نوع بنية المنصة</name><description>نوع بنية المنصة التي تعمل كقاعدة لجهاز الاستشعار عن بعد. بالنسبة للغرض من عنصر البيانات هذا، تشير "المنصة" إلى أي بنية تعمل كقاعدة، وليست الأسطح المسطحة فقط.</description>
+ <Value code="a"><description>بالون</description></Value>
+ <Value code="b"><description>مركبة جوية--ارتفاع منخفض</description></Value>
+ <Value code="c"><description>مركبة جوية--ارتفاع متوسط</description></Value>
+ <Value code="d"><description>مركبة جوية--ارتفاع عال</description></Value>
+ <Value code="e"><description>مركبة فضائية مأهولة</description></Value>
+ <Value code="f"><description>مركبة فضائية بدون طيار</description></Value>
+ <Value code="g"><description>جهاز استشعار عن بعد بقاعدة أرضية</description></Value>
+ <Value code="h"><description>أداة فوق سطح الماء للاستشعار عن بعد</description></Value>
+ <Value code="i"><description>أداة مغمورة للاستشعار عن بعد</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>فئة استخدام المنصة</name><description>الاستخدام الرئيسي المخصص للمنصة والمحدد في 007/06 (نوع بنية المنصة)</description>
+ <Value code="a"><description>أرصادي/جوي</description></Value>
+ <Value code="b"><description>مراقبة السطح</description></Value>
+ <Value code="c"><description>مراقبة الفضاء</description></Value>
+ <Value code="m"><description>استخدامات مختلطة</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="08"><name>نوع الاستشعار</name><description>لوضع التسجيل لجهاز الاستتشعار عن بعد، وعلى وجه التحديد، ما إذا تمت مشاركة جهاز الاستشعار في إنشاء البث الذي يقوم بقياسه في نهاية المطاف.</description>
+ <Value code="a"><description>نشط</description></Value>
+ <Value code="b"><description>سلبي</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="09-10"><name>نوع البيانات</name><description>الخصائص الطيفية، الصوتية أو المغناطيسية للبيانات التي يتلقاها الجهاز لإنتاج صورة الاستشعار عن بعد. يمكن استخدامها للإشارة إلى كل من طول موجة الإشعاع التي تم قياسها ونوع جهاز الاستشعار المستخدم في قياسها.</description>
+ <Value code="aa"><description>ضوء مرئي</description></Value>
+ <Value code="da"><description>الأشعة تحت الحمراء القريبة</description></Value>
+ <Value code="db"><description>أشعة تحت الحمراء متوسطة</description></Value>
+ <Value code="dc"><description>أشعة تحت الحمراء بعيدة</description></Value>
+ <Value code="dd"><description>أشعة حرارية تحت الحمراء</description></Value>
+ <Value code="de"><description>‫أشعة تحت الحمراء ذات موجات قصيرة (SWIR)</description></Value>
+ <Value code="df"><description>أشعة تحت الحمراء عاكسة</description></Value>
+ <Value code="dv"><description>مزيج</description></Value>
+ <Value code="dz"><description>بيانات أشعة تحت الحمراء أخرى‬</description></Value>
+ <Value code="ga"><description>رادار المنظار الجوي (SLAR)</description></Value>
+ <Value code="gb"><description>رادار العدسة الصناعية (‪-(SAR‬تردد مفرد‬</description></Value>
+ <Value code="gc"><description>رادار العدسة الصناعية متعدد الذبذبات (متعددالقنوات)</description></Value>
+ <Value code="gd"><description>استقطاب شبيه برادار العدسة الصناعية</description></Value>
+ <Value code="ge"><description>رادار العدسة الصناعية -استقطاب متقاطع</description></Value>
+ <Value code="gf"><description>رادار العدسة الصناعية</description></Value>
+ <Value code="gg"><description>رادار العدسة الصناعية</description></Value>
+ <Value code="gu"><description>تخطيط الميكروويف السلبي</description></Value>
+ <Value code="gz"><description>بيانات ميكروويف أخرى</description></Value>
+ <Value code="ja"><description>أشعة فوق بنفسجية بعيدة</description></Value>
+ <Value code="jb"><description>أشعة فوق بنفسجية متوسطة</description></Value>
+ <Value code="jc"><description>الأشعة فوق البنفسجية القريبة</description></Value>
+ <Value code="jv"><description>تركيبات الأشعة فوق البنفسجية</description></Value>
+ <Value code="jz"><description>بيانات أشعة فوق بنفسجية أخرى</description></Value>
+ <Value code="ma"><description>متعدد الطيف، متعدد البيانات</description></Value>
+ <Value code="mb"><description>متعدد الأزمان</description></Value>
+ <Value code="mm"><description>مزيج من أنواع البيانات المختلفة</description></Value>
+ <Value code="nn"><description>غير قابل للتطبيق</description></Value>
+ <Value code="pa"><description>سونار--عمق المياه</description></Value>
+ <Value code="pb"><description>سونار--صور تضاريس قاع البحر، مسح جانبي</description></Value>
+ <Value code="pc"><description>سونار--تضاريس قاع البحر، بالقرب من السطح</description></Value>
+ <Value code="pd"><description>سونار-- تضاريس قاع البحر، بالقرب من القاع</description></Value>
+ <Value code="pe"><description>استبيانات الزلازل</description></Value>
+ <Value code="pz"><description>البيانات الصوتية الأخرى</description></Value>
+ <Value code="ra"><description>انحرافات الجاذبية (عام)</description></Value>
+ <Value code="rb"><description>مفرغ من الهواء</description></Value>
+ <Value code="rc"><description>شمعة احتراق</description></Value>
+ <Value code="rd"><description>متوازن التضاغط</description></Value>
+ <Value code="sa"><description>حقل مغناطيسي</description></Value>
+ <Value code="ta"><description>مسوحات إشعاعية</description></Value>
+ <Value code="uu"><description>غير معروف</description></Value>
+ <Value code="zz"><description>آخر</description></Value>
+ <Value code="||"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="SR"><name>تسجيل صوتي</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="s"><description>تسجيل صوتي</description></Value>
+ </Position>
+ <Position pos="01">التحديد المخصص للمادة<name></name><description>الرتبة الخاصة للتسجيل الصوتي الذي تنتمي له المادة (مثال: أسطوانة).</description>
+ <Value code="b"><description>حزام</description></Value>
+ <Value code="d"><description>قرص صوتي</description></Value>
+ <Value code="e"><description>أسطوانة</description></Value>
+ <Value code="g"><description>الخرطوشة الصوتية</description></Value>
+ <Value code="i"><description>فيلم المسار الصوتي</description></Value>
+ <Value code="q"><description>لفة</description></Value>
+ <Value code="r"><description>عن بعد</description></Value>
+ <Value code="s"><description>كاسيت صوتي</description></Value>
+ <Value code="t"><description>بكرة الشريط الصوتي</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="w"><description>تسجيل سلكي</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>السرعة</name><description>سرعة تشغيل التسجيل الصوتي. ويهدف هذا الكود فقط للإشارة إلى سرعة تشغيل تسجيل صوتي مقدم على جهاز آلي.</description>
+ <Value code="d"><description>قرص صوتي</description></Value>
+ <Value code="a"><description>16 لفة في الدقيقة (أقراص)</description></Value>
+ <Value code="b"><description>33 1/3 لفة في الدقيقة (أقراص)</description></Value>
+ <Value code="c"><description>45 لفة في الدقيقة (أقراص)</description></Value>
+ <Value code="d"><description>78 لفة في الدقيقة (أقراص)</description></Value>
+ <Value code="e"><description>8 لفة في الدقيقة (أقراص)</description></Value>
+ <Value code="f"><description>1.4 متراً في الثانية (أقراص)</description></Value>
+ <Value code="h"><description>120 لفة في الدقيقة (اسطوانات)</description></Value>
+ <Value code="i"><description>160 لفة في الدقيقة (أسطوانات)</description></Value>
+ <Value code="k"><description>15/16بوصة في الثانية (شرائط)</description></Value>
+ <Value code="l"><description>1 7/8 بوصة في الثانية (شرائط)</description></Value>
+ <Value code="m"><description>3 3/4 بوصة في الثانية (شرائط)</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="o"><description>7 1/2 بوصة في الثانية (شرائط)</description></Value>
+ <Value code="p"><description>15 بوصة في الثانية (شرائط)</description></Value>
+ <Value code="r"><description>30 لفة في الثانية (شريط)</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>تهيئة قنوات إعادة التشغيل</name><description>تهيئة قنوات إعادة التشغيل للتسجيلات الصوتية.</description>
+ <Value code="m"><description>أحادي الصوت</description></Value>
+ <Value code="q"><description>رباعي الصوت، متعدد القنوات‬، أومحيط</description></Value>
+ <Value code="s"><description>صوت مجسم</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>عرض الثلم/ نبرة الثلم‬</name><description>عرض ثلم التسجيل للأقراص أو نغمة الثلم للأسطوانات.</description>
+ <Value code="m"><description>ثلم مصغر/دقيق</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="s"><description>خشن/معياري</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>أبعاد</name><description>قطر البكرة أو القرص المفتوح، أو أبعاد الكاسيت، الخرطوشة، أو الأسطوانة.</description>
+ <Value code="a"><description>قطر 3 بوصة</description></Value>
+ <Value code="b"><description>القطر 5 بوصة</description></Value>
+ <Value code="c"><description>القطر 7 بوصة</description></Value>
+ <Value code="d"><description>قطر 10 بوصة</description></Value>
+ <Value code="e"><description>قطر 12 بوصة</description></Value>
+ <Value code="f"><description>القطر 16 بوصة</description></Value>
+ <Value code="g"><description>القطر 4 3/4 بوصة أو  12 سم</description></Value>
+ <Value code="j"><description>3 7/8 x 2 1/2 بوصة.</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="o"><description>5 1/4 x 3 7/8 بوصة.</description></Value>
+ <Value code="s"><description>4×3/4 2 بوصة.</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>عرض الشريط</name><description>عرض الشريط.</description>
+ <Value code="l"><description>1/8 بوصة.</description></Value>
+ <Value code="m"><description>1/4 بوصة.</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="o"><description>1/2 بوصة.</description></Value>
+ <Value code="p"><description>1 بوصة.</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="08"><name>تهيئة الشريط</name><description>عدد المسارات في الشريط.</description>
+ <Value code="a"><description>المسار (1) الكامل</description></Value>
+ <Value code="b"><description>نصف (2) مسار</description></Value>
+ <Value code="c"><description>الربع (4) المسار</description></Value>
+ <Value code="d"><description>المسار الثامن</description></Value>
+ <Value code="e"><description>المسار الثاني عشر</description></Value>
+ <Value code="f"><description>ستة عشر مسارا</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="09"><name>نوع القرص، الأسطوانة أو الشريط</name><description></description>
+ <Value code="a"><description>الشريط الرئيسي</description></Value>
+ <Value code="b"><description>شريط تكرار رئيسي</description></Value>
+ <Value code="d"><description>القرص الرئيسي (سلبي)</description></Value>
+ <Value code="i"><description>لحظي (مسجل للتو)</description></Value>
+ <Value code="m"><description>ذو إنتاج كبير</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="r"><description>أم (إيجابي)</description></Value>
+ <Value code="s"><description>ختام (سلبي)</description></Value>
+ <Value code="t"><description>اختبار الضغط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="10"><name>نوع المادة</name><description>نوع المادة المستخدمة في صناعة التسجيلات الصوتية (كلا من التسجيلات الفورية وذات الإنتاج الضخم). يقصد بهذا الرمز فقط الربط بتسجل صوتي مقدم على جهاز آلي.</description>
+ <Value code="a"><description>طبقة طلاء/ورنيش خارجية</description></Value>
+ <Value code="b"><description>نترات السليلوز</description></Value>
+ <Value code="c"><description>شريط خلات (أسيتات) مع أكسيد الحديد</description></Value>
+ <Value code="g"><description>زجاج مطلي</description></Value>
+ <Value code="i"><description>ألومنيوم مع طلاء</description></Value>
+ <Value code="l"><description>معدن</description></Value>
+ <Value code="m"><description>بلاستيك مع معدن</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="p"><description>بلاستيك</description></Value>
+ <Value code="r"><description>‫ورق مع طلاء أو أُكسيد الحديد‬</description></Value>
+ <Value code="s"><description>صمغ اللك</description></Value>
+ <Value code="w"><description>شمع</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="11"><name>نوع التقطيع</name><description>نوع التقليم المستخدم على القرص.</description>
+ <Value code="a"><description>طبقة طلاء/ورنيش خارجية</description></Value>
+ <Value code="h"><description>تقطيع عمودي</description></Value>
+ <Value code="l"><description>تقطيع جانبي أو مجمع</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="12"><name>خصائص التشغيل الخاصة</name><description>خصائص إعادة التشغيل للتسجيلات الصوتية، بما في ذلك المعدات الخاصة أو المعادلة اللازمة لإعادة تشغيل ملائمة. لا يتم استخدام هذا الكود للإشارة إلى عمليات خاصة مستخدمة أثناء التسجيل إلا إذا كان يجب تطبيق تلك العمليات أثناء التشغيل.</description>
+ <Value code="a"><description>طبقة طلاء/ورنيش خارجية</description></Value>
+ <Value code="a"><description>NAB معيار</description></Value>
+ <Value code="b"><description>معيار CCIR (اللجنة الاستشارية للإذاعة الدولية)</description></Value>
+ <Value code="c"><description>ترميز دولبي-B</description></Value>
+ <Value code="d"><description>ترميز دي بي إكس</description></Value>
+ <Value code="e"><description>تسجيل رقمي</description></Value>
+ <Value code="f"><description>‫ترميز دولبي-A</description></Value>
+ <Value code="g"><description>ترميز دولبي-C</description></Value>
+ <Value code="h"><description>CX مرمز</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="13"><name>تقنية الالتقاط والتخزين الأصلية</name><description>كيفية التقاط الصوت وتخزينه في الأصل. يجب ترميز التسجيلات الصوتية لتقنيات الالتقاط والتخزين الأصلية،بغض النظر عن التنسيق المادي للمظهر الذي يتم فهرسته أو ما إذا كان المحتوى الصوتي للمظهر الذي يتم فهرسته قد تم تحسينه باستخدام تقنيات أخرى.</description>
+ <Value code="a"><description>التقاط صوتي، تخزين مباشر تناظري</description></Value>
+ <Value code="b"><description>التقاط كهربي، تخزين مباشر تناظري</description></Value>
+ <Value code="d"><description>التقاط كهربي، تخزين رقمي</description></Value>
+ <Value code="e"><description>التقاط كهربي، وتخزين كهربي تناظري</description></Value>
+ <Value code="u"><description>التقاط وتخزين غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="TC"><name>نص</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description></description>
+ <Value code="t"><description>نص</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description></description>
+ <Value code="a"><description>طبعة منتظمة</description></Value>
+ <Value code="b"><description>طبعة ضخمة</description></Value>
+ <Value code="c"><description>طريقة برايل</description></Value>
+ <Value code="d"><description>سائب</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="VR"><name>تسجيل موسيقي</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>رمز من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة هي تسجيل فيديو، والمعرف بأنه تسجيل لصور مرئية تكون غالبا متحركة ومصحوبة بصوت. وهو مصمم لإعادة تشغيله على جهاز استقبال تليفزيوني أو شاشة فيديو. غير مسموح بحرف حشو (|) في هذا الموضع.</description>
+ <Value code="v"><description>تسجيل موسيقي</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الفئة الخاصة لتسجيل الفيديو الذي تنتمي له المادة.</description>
+ <Value code="c"><description>خرطوشة فيديو</description></Value>
+ <Value code="d"><description>قرص فيديو</description></Value>
+ <Value code="f"><description>فيديوكاسيت</description></Value>
+ <Value code="r"><description>بكرة فيديو</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="02"><name>غير معرّف</name><description>يحتوي على فراغ (#) أو حرف حشو (|)</description>
+ </Position>
+ <Position pos="03"><name>لون</name><description>خصائص الألوان لتسجيل الفيديو.</description>
+ <Value code="a"><description>لون واحد</description></Value>
+ <Value code="b"><description>أسود وأبيض</description></Value>
+ <Value code="c"><description>متعدد الألوان</description></Value>
+ <Value code="m"><description>مختلط</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="04"><name>تنسيق تسجيل فيديو</name><description>تنسيق تسجيل قرص فيديو أو شريط فيديو.</description>
+ <Value code="a"><description>بيتا (1/2 بوصة، فيديوكاسيت)</description></Value>
+ <Value code="b"><description>في إتش إس (1/2 بوصة، فيديوكاسيت)</description></Value>
+ <Value code="c"><description>يو-ماتك (٣/٤ بوصة، شريط فيديو)‬</description></Value>
+ <Value code="d"><description>EIAJ (1/2 بوصة، بكرة)</description></Value>
+ <Value code="e"><description>النوع سي (1 بوصة ،بكرة)</description></Value>
+ <Value code="f"><description>رباعي الإرسال (1 بوصة أو 2 بوصة، بكرة)</description></Value>
+ <Value code="g"><description>قرص ليزر</description></Value>
+ <Value code="h"><description>قرص فيديو CED (قرص سعة الكتروني)</description></Value>
+ <Value code="i"><description>بيتا كام (1/2 بوصة، فيديوكاسيت)</description></Value>
+ <Value code="j"><description>كاميرا بيتا SP  (1/2 بوصة، فيديوكاسيت)</description></Value>
+ <Value code="k"><description>سوبر في إتش إس (بوصة 1/2 ،فيديوكاسيت)</description></Value>
+ <Value code="m"><description>M-II (١/٢ بوصة، فيديوكاسيت)</description></Value>
+ <Value code="o"><description>D-2 (3/4 بوصة، فيديوكاسيت)</description></Value>
+ <Value code="p"><description>8 ملليمتر.</description></Value>
+ <Value code="q"><description>ارتفاع-8 ملليمتر.</description></Value>
+ <Value code="s"><description>قرص بلو راي</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="v"><description>قرص فيديو رقمي (DVD)</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="05"><name>الصوت على وسيط أو منفصل</name><description>ما إذا كان الصوت على المادة أو منفصلاً عنها (أي: على مادة مصاحبة). </description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>صوت على وسيط</description></Value>
+ <Value code="b"><description>الصوت منفصل عن الوسيط</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="06"><name>وسيط الصوت</name><description>وسيط محدد يستخدم لحمل صوت المادة، سواء كان الصوت محمولاً على تسجيل الفيديو أو منفصلاً، ونوع تشغيل الصوت المطلوب للمادة.</description>
+ <Value code="#"><description>بدون صوت (صامت)</description></Value>
+ <Value code="a"><description>مسار صوتي ضوئي على فيلم صور متحركة</description></Value>
+ <Value code="b"><description>مسار صوتي ممغنط في فيلم صور متحركة</description></Value>
+ <Value code="c"><description>شريط صوتي ممغنط في خرطوشة</description></Value>
+ <Value code="d"><description>قرص صوتي</description></Value>
+ <Value code="e"><description>‫شريط صوتي ممغنط في بكرة‬</description></Value>
+ <Value code="f"><description>شريط صوتي ممغنط في كاسيت</description></Value>
+ <Value code="g"><description>مسار ضوئي وممغنط على فيلم صور متحركة</description></Value>
+ <Value code="h"><description>شريط فيديو</description></Value>
+ <Value code="i"><description>قرص فيديو</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="07"><name>أبعاد</name><description> عرض تسجيل الفيديو. لتسجيلات الفيديو، يجب استخدام الأكواد المطابقة لقياسات المادة بالضبط كما هو مذكور في الوصف المادي. في حالة عدم مطابقة أي أكواد، يتم استخدام الكود Z.</description>
+ <Value code="a"><description>8 ملليمتر.</description></Value>
+ <Value code="m"><description>1/4 بوصة.</description></Value>
+ <Value code="o"><description>1/2 بوصة.</description></Value>
+ <Value code="p"><description>1 بوصة.</description></Value>
+ <Value code="q"><description>2 بوصة.</description></Value>
+ <Value code="r"><description>3/4 بوصة.</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ <Position pos="08"><name>تهيئة قنوات إعادة التشغيل</name><description>تهية قنوات إعادة التشغيل المعدة لحصة الصوت من تسجيل الفيديو.</description>
+ <Value code="k"><description>مختلط</description></Value>
+ <Value code="m"><description>أحادي الصوت</description></Value>
+ <Value code="n"><description>غير قابل للتطبيق</description></Value>
+ <Value code="q"><description>رباعي الصوت، متعدد القنوات‬، أومحيط</description></Value>
+ <Value code="s"><description>صوت مجسم</description></Value>
+ <Value code="u"><description>غير معروف</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+ <Material id="UN"><name>غير محدد</name><description></description>
+ <Position pos="00"><name>فئة المادة</name><description>رمز من حرف أبجدي واحد يشير إلى أن فئة المادة التي تنتمي لها المادة غير محددة، مما يعني أن المادة غير معرفة بأي من قيم الرمز 007 الأخرى أو أن أشكالها المادية المتعددة لم يتم تحديدها برمز (على سبيل المثال: إذا كانت المادة المشار إليها عبارة عن مجموعة تحتوي على فئات مواد مختلفة واختارت المؤسسة عدم إدخال حقول 007 متفرقة للمكونات المختلفة). غير مسموح بحرف حشو (|) في هذا الموضع.</description>
+ <Value code="z"><description>غير محدد</description></Value>
+ </Position>
+ <Position pos="01"><name>التحديد المخصص للمادة</name><description>الرتبة الخاصة للمادة التي تنتمي لها المادة</description>
+ <Value code="m"><description>أشكال مادية متعددة</description></Value>
+ <Value code="u"><description>غير محدد</description></Value>
+ <Value code="z"><description>آخر</description></Value>
+ <Value code="|"><description>لا توجد محاولة للترميز</description></Value>
+ </Position>
+ </Material>
+</Tagfield>

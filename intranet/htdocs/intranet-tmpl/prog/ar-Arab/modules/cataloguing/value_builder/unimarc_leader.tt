@@ -1,0 +1,328 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC leader builder") | html %]
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_leader" class="cat value_builder">
+ <h1>يونيمارك باني حقل الفاتح</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td>1-4 طول التسجيلة</td>
+ <td>(حساب آلى)</td>
+ </tr>
+ <tr>
+ <td><label for="f5">5- حالة التسجيلة</label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f5c ) %]
+ <option value="c" selected="selected">c- تسجيلة مصححة أو محدثة</option>
+ [% ELSE %]
+ <option value="c">c- تسجيلة مصححة</option>
+ [% END %]
+ [% IF ( f5d ) %]
+ <option value="d" selected="selected">d - تسجيلة محذوفة</option>
+ [% ELSE %]
+ <option value="d">d - تسجيلة محذوفة</option>
+ [% END %]
+ [% IF ( f5n ) %]
+ <option value="n" selected="selected">n - تسجيلة جديدة</option>
+ [% ELSE %]
+ <option value="n">n - تسجيلة جديدة</option>
+ [% END %]
+ [% IF ( f5o ) %]
+ <option value="o" selected="selected">o - تسجيلة عالية المستوى تم اصدارها مسبقا</option>
+ [% ELSE %]
+ <option value="o">o - تسجيلة عالية المستوى تم اصدارها مسبقا</option>
+ [% END %]
+ [% IF ( f5p ) %]
+ <option value="p" selected="selected">p - تم إصداره مسبقا كتيجيلة غير مكتملة، ما قبل النشر</option>
+ [% ELSE %]
+ <option value="p">p - تم إصداره مسبقا كتيجيلة غير مكتملة، ما قبل النشر</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f6">6- نوع التسجيلة</label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f6a ) %]
+ <option value="a" selected="selected">a - مواد اللغة، مطبوع</option>
+ [% ELSE %]
+ <option value="a">a - مواد اللغة، مطبوع</option>
+ [% END %]
+
+ [% IF ( f6b ) %]
+ <option value="b" selected="selected">b - مواد لغة, مخطوطة</option>
+ [% ELSE %]
+ <option value="b">b - مواد لغة, مخطوطة</option>
+ [% END %]
+
+ [% IF ( f6c ) %]
+ <option value="c" selected="selected">c- النتائج الموسيقية - مطبوعة</option>
+ [% ELSE %]
+ <option value="c">c- النتائج الموسيقية - مطبوعة</option>
+ [% END %]
+
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">d - مقطوعات موسيقية، مخطوطة</option>
+ [% ELSE %]
+ <option value="d">d - مقطوعات موسيقية، مخطوطة</option>
+ [% END %]
+
+ [% IF ( f6e ) %]
+ <option value="e" selected="selected">e - مواد خرائطية, مطبوعى</option>
+ [% ELSE %]
+ <option value="e">e - مواد خرائطية, مطبوعى</option>
+ [% END %]
+
+ [% IF ( f6f ) %]
+ <option value="f" selected="selected">f - مواد خرائطية، مخطوطة</option>
+ [% ELSE %]
+ <option value="f">f - مواد خرائطية، مخطوطة</option>
+ [% END %]
+
+ [% IF ( f6g ) %]
+ <option value="g" selected="selected">g - المواد المسقطة والفيديو</option>
+ [% ELSE %]
+ <option value="g">g - المواد المسقطة والفيديو</option>
+ [% END %]
+
+ [% IF ( f6i ) %]
+ <option value="i" selected="selected">i - تسجيلات صوتية, اداء غير موسيقي</option>
+ [% ELSE %]
+ <option value="i">i - تسجيلات صوتية, اداء غير موسيقي</option>
+ [% END %]
+
+ [% IF ( f6j ) %]
+ <option value="j" selected="selected">j - تسجيلات صوتية ، أداء موسيقي</option>
+ [% ELSE %]
+ <option value="j">j - تسجيلات صوتية ، أداء موسيقي</option>
+ [% END %]
+
+ [% IF ( f6k ) %]
+ <option value="k" selected="selected">k - رسوم ثنائية الأبعاد</option>
+ [% ELSE %]
+ <option value="k">k - رسوم ثنائية الأبعاد</option>
+ [% END %]
+
+ [% IF ( f6l ) %]
+ <option value="l" selected="selected">l - موارد الكترونية</option>
+ [% ELSE %]
+ <option value="l">l - موارد الكترونية</option>
+ [% END %]
+
+ [% IF ( f6m ) %]
+ <option value="m" selected="selected">m - وسائط متعددة</option>
+ [% ELSE %]
+ <option value="m">m - وسائط متعددة</option>
+ [% END %]
+
+ [% IF ( f6r ) %]
+ <option value="r" selected="selected">r - المصنوعات اليدوية ثلاثية الأبعاد والواقعية</option>
+ [% ELSE %]
+ <option value="r">r - المصنوعات اليدوية ثلاثية الأبعاد والواقعية</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f7">7- المستوى الببليوغرافي</label></td>
+ <td>
+ <select name="f7" id="f7">
+ [% IF ( f7pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">a - تحليلي (جزء مكوِّن)</option>
+ [% ELSE %]
+ <option value="a">a - تحليلي (جزء مكوِّن)</option>
+ [% END %]
+ [% IF ( f7i ) %]
+ <option value="i" selected="selected">i - مورد متكامل</option>
+ [% ELSE %]
+ <option value="i">i - مورد متكامل</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">c- مجموعة - مادة ببليوغرافية تمثل مجموعة مختلقة</option>
+ [% ELSE %]
+ <option value="c">c- مجموعة - مادة ببليوغرافية تمثل مجموعة مختلقة</option>
+ [% END %]
+ [% IF ( f7m ) %]
+ <option value="m" selected="selected">m -دراسية - مادة ببليوغرافية</option>
+ [% ELSE %]
+ <option value="m">m -دراسية - مادة ببليوغرافية</option>
+ [% END %]
+ [% IF ( f7s ) %]
+ <option value="s" selected="selected">s - دورية - مادة ببليوغرافية</option>
+ [% ELSE %]
+ <option value="s">s - دورية - مادة ببليوغرافية</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f8">8- رمز المستوى الهرمي</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f8space ) %]
+ <option value=" " selected="selected"> - العلاقة الهرمية غير محددة</option>
+ [% ELSE %]
+ <option value=" "> - العلاقة الهرمية غير محددة</option>
+ [% END %]
+
+ [% IF ( f80 ) %]
+ <option value="0" selected="selected">0 - لا توجد علاقة هرمية</option>
+ [% ELSE %]
+ <option value="0">0 - لا توجد علاقة هرمية</option>
+ [% END %]
+
+ [% IF ( f81 ) %]
+ <option value="1" selected="selected">1- تسجيلة على أعلى مستوى</option>
+ [% ELSE %]
+ <option value="1">1- تسجيلة على أعلى مستوى</option>
+ [% END %]
+
+ [% IF ( f82 ) %]
+ <option value="2" selected="selected">2 - التسجيلة أدنى المستوى الأعلى (كل المستويات أدناه)</option>
+ [% ELSE %]
+ <option value="2">2 - التسجيلة أدنى المستوى الأعلى (كل المستويات أدناه)</option>
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>16-9مؤشر/الحقول الفرعية/الحجم</td>
+ <td>(ملء تلقائي)</td>
+ </tr>
+ <tr>
+ <td><label for="f17">17- مستوى الترميز</label></td>
+ <td>
+ <select name="f17" id="f17">
+ [% IF ( f17pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f17space ) %]
+ <option value=" " selected="selected"> المستوى الكامل ("item in hand")</option>
+ [% ELSE %]
+ <option value=" "> المستوى الكامل ("item in hand")</option>
+ [% END %]
+ [% IF ( f171 ) %]
+ <option value="1" selected="selected">1- المستوى الفرعي 1 (ليس"المادة في اليد")</option>
+ [% ELSE %]
+ <option value="1">1- المستوى الفرعي 1 (ليس"المادة في اليد")</option>
+ [% END %]
+ [% IF ( f172 ) %]
+ <option value="2" selected="selected">2 - المستوى الفرعي 2. التسجيلة هي تسجيلة ما قبل النشر (الفهرسة في النشر)</option>
+ [% ELSE %]
+ <option value="2">2 - المستوى الفرعي 2. التسجيلة هي تسجيلة ما قبل النشر (الفهرسة في النشر)</option>
+ [% END %]
+ [% IF ( f173 ) %]
+ <option value="3" selected="selected">3- المستوى الفرعي 3. تسجيلة غير مكتملة</option>
+ [% ELSE %]
+ <option value="3">3- المستوى الفرعي 3. تسجيلة غير مكتملة</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f18">18 -نموذج الفهرسة الوصفية</label></td>
+ <td>
+ <select name="f18" id="f18">
+ [% IF ( f18pipe ) %]
+ <option value="|" selected="selected">|- ملء الحرف</option>
+ [% ELSE %]
+ <option value="|">|- ملء الحرف</option>
+ [% END %]
+
+ [% IF ( f18space ) %]
+ <option value=" " selected="selected"> - باستخدام نموذج تدوب الكامل</option>
+ [% ELSE %]
+ <option value=" "> - باستخدام نموذج تدوب الكامل</option>
+ [% END %]
+ [% IF ( f18i ) %]
+ <option value="i" selected="selected">i - في شكل تدمك جزئي أو غير مكتمل</option>
+ [% ELSE %]
+ <option value="i">i - في شكل تدمك جزئي أو غير مكتمل</option>
+ [% END %]
+ [% IF ( f18n ) %]
+ <option value="n" selected="selected">n - بشكل غير تدمك</option>
+ [% ELSE %]
+ <option value="n">n - بشكل غير تدمك</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>19-24 خريطة وأطوال المدخل</td>
+ <td>(ملء تلقائي)</td>
+ </tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value =  '     '+document.f_pop.f5.value +
+            document.f_pop.f6.value+ document.f_pop.f7.value+
+            document.f_pop.f8.value+ '        '+
+            document.f_pop.f17.value+ document.f_pop.f18.value+' 4500';
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

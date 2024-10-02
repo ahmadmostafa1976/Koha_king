@@ -1,0 +1,210 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC leader builder") | html %]
+ [% t("Cataloging") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="cat_unimarc_leader_authorities" class="cat value_builder">
+ <h3>000 - الفاتح</h3>
+ <form method="get" name="f_pop" onsubmit="report()" action="">
+ <div class="page-section">
+ <input name="plugin_name" value="unimarc_leader_authorities.pl" type="hidden">
+ <table>
+ <tr>
+ <td>1-4 طول التسجيلة</td>
+ <td>(حساب آلى)</td>
+ </tr>
+ <tr>
+ <td><label for="f5">5- حالة التسجيلة</label></td>
+ <td>
+ <select name="f5" id="f5">
+ [% IF ( f5c ) %]
+ <option value="c" selected="selected">c- مصحح أو مراجع</option>
+ [% ELSE %]
+ <option value="c">c- مصحح أو مراجع</option>
+ [% END %]
+ [% IF ( f5d ) %]
+ <option value="d" selected="selected">d-محذوف</option>
+ [% ELSE %]
+ <option value="d">d-محذوف</option>
+ [% END %]
+ [% IF ( f5n ) %]
+ <option value="n" selected="selected">n - جديد</option>
+ [% ELSE %]
+ <option value="n">n - جديد</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f6">6- نوع التسجيلة</label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6x ) %]
+ <option value="x" selected="selected">x- نسجيلة مدخل الاستناد</option>
+ [% ELSE %]
+ <option value="x">x- نسجيلة مدخل الاستناد</option>
+ [% END %]
+
+ [% IF ( f6y ) %]
+ <option value="y" selected="selected">y- تسجيلة مدخل المرجع</option>
+ [% ELSE %]
+ <option value="y">y- تسجيلة مدخل المرجع</option>
+ [% END %]
+
+ [% IF ( f6z ) %]
+ <option value="z" selected="selected">z - سجل إدخال توضيحي عام</option>
+ [% ELSE %]
+ <option value="z">z - سجل إدخال توضيحي عام</option>
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f7">7-8غير معرف</label></td>
+ <td></td>
+ </tr>
+
+ <tr>
+ <td><label for="f9">9- نوع الكينونة</label></td>
+ <td>
+ <select name="f9" id="f9">
+ [% IF ( f9a ) %]
+ <option value="a" selected="selected">a- مدخل الاسم الشخصي</option>
+ [% ELSE %]
+ <option value="a">a- مدخل الاسم الشخصي</option>
+ [% END %]
+
+ [% IF ( f9b ) %]
+ <option value="b" selected="selected">b- مدخل الاسم المؤسسي</option>
+ [% ELSE %]
+ <option value="b">b- مدخل الاسم المؤسسي</option>
+ [% END %]
+
+ [% IF ( f9c ) %]
+ <option value="c" selected="selected">c - الاسم الإقليمي أو الجغرافي</option>
+ [% ELSE %]
+ <option value="c">c - الاسم الإقليمي أو الجغرافي</option>
+ [% END %]
+
+ [% IF ( f9d ) %]
+ <option value="d" selected="selected">d - علامة تجارية</option>
+ [% ELSE %]
+ <option value="d">d - علامة تجارية</option>
+ [% END %]
+
+ [% IF ( f9e ) %]
+ <option value="e" selected="selected">e- اسم العائلة</option>
+ [% ELSE %]
+ <option value="e">e- اسم العائلة</option>
+ [% END %]
+
+ [% IF ( f9f ) %]
+ <option value="f" selected="selected">f - الاسم الموحد</option>
+ [% ELSE %]
+ <option value="f">f - الاسم الموحد</option>
+ [% END %]
+
+ [% IF ( f9g ) %]
+ <option value="g" selected="selected">g- اسم موحد جماعي</option>
+ [% ELSE %]
+ <option value="g">g- اسم موحد جماعي</option>
+ [% END %]
+
+ [% IF ( f9h ) %]
+ <option value="h" selected="selected">h - الاسم/ العنوان</option>
+ [% ELSE %]
+ <option value="h">h - الاسم/ العنوان</option>
+ [% END %]
+
+ [% IF ( f9i ) %]
+ <option value="i" selected="selected">i - الاسم/ العنوان الموحد الجماعي</option>
+ [% ELSE %]
+ <option value="i">i - الاسم/ العنوان الموحد الجماعي</option>
+ [% END %]
+
+ [% IF ( f9j ) %]
+ <option value="j" selected="selected">j- الموضوع</option>
+ [% ELSE %]
+ <option value="j">j- الموضوع</option>
+ [% END %]
+
+ [% IF ( f9k ) %]
+ <option value="k" selected="selected">k - وصول المكان</option>
+ [% ELSE %]
+ <option value="k">k - وصول المكان</option>
+ [% END %]
+
+ [% IF ( f9l ) %]
+ <option value="l" selected="selected">l  - الشكل أو النوع أو الخصائص المادية</option>
+ [% ELSE %]
+ <option value="l">l  - الشكل أو النوع أو الخصائص المادية</option>
+ [% END %]
+
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f10">10-16 مؤشر/الحقول الفرعية/حجم</label></td>
+ <td>(حساب آلى)</td>
+ </tr>
+
+ <tr>
+ <td><label for="f17">17- مستوى الترميز</label></td>
+ <td>
+ <select name="f17" id="f17">
+ [% IF ( f17space ) %]
+ <option value=" " selected="selected"> - كامل</option>
+ [% ELSE %]
+ <option value=" "> - كامل</option>
+ [% END %]
+ [% IF ( f183 ) %]
+ <option value="3" selected="selected">3 - جزئي</option>
+ [% ELSE %]
+ <option value="3">3 - جزئي</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>18-19 غير معرّف</td>
+ <td></td>
+ </tr>
+
+ <tr>
+ <td>20-24 خريطة إدخال  &amp; أطوال</td>
+ <td>(ملء تلقائي)</td>
+ </tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+<script>
+    function report() {
+        var doc   = opener.document;
+        var field = doc.getElementById("[% index | html %]");
+
+        field.value ='     '+document.f_pop.f5.value+document.f_pop.f6.value+'  '+document.f_pop.f9.value+'22     '+document.f_pop.f17.value+'  '+'45  ';
+
+        self.close();
+        return false;
+    }
+</script>
+
+[% INCLUDE 'popup-bottom.inc' %]

@@ -1,0 +1,167 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 125a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_125a" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 125a</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">نوع الدرجة:</label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">النتيجة الكاملة، النتيجة الرسومية</option>
+ [% ELSE %]
+ <option value="a">النتيجة الكاملة، النتيجة الرسومية</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">نوتة موسيقية (مصغرة أو قياس الدراسة )</option>
+ [% ELSE %]
+ <option value="b">نوتة موسيقية (مصغرة أو قياس الدراسة )</option>
+ [% END %]
+ [% IF ( f1c ) %]
+ <option value="c" selected="selected">النتيجة الصوتية, انخفاض المرافقات للوحة المفاتيح</option>
+ [% ELSE %]
+ <option value="c">النتيجة الصوتية, انخفاض المرافقات للوحة المفاتيح</option>
+ [% END %]
+ [% IF ( f1d ) %]
+ <option value="d" selected="selected">نتيجة الصوت, نتيجة الجوقة, تم إسقاط المرافقات</option>
+ [% ELSE %]
+ <option value="d">نتيجة الصوت, نتيجة الجوقة, تم إسقاط المرافقات</option>
+ [% END %]
+ [% IF ( f1e ) %]
+ <option value="e" selected="selected">condensed score, pianoconductor score</option>
+ [% ELSE %]
+ <option value="e">condensed score, pianoconductor score</option>
+ [% END %]
+ [% IF ( f1f ) %]
+ <option value="f" selected="selected">نتيجة الجرافيك</option>
+ [% ELSE %]
+ <option value="f">نتيجة الجرافيك</option>
+ [% END %]
+ [% IF ( f1g ) %]
+ <option value="g" selected="selected">وثيقة تسجيل (مثل التراتيل الدينية)</option>
+ [% ELSE %]
+ <option value="g">وثيقة تسجيل (مثل التراتيل الدينية)</option>
+ [% END %]
+ [% IF ( f1h ) %]
+ <option value="h" selected="selected">منظّم الجداول</option>
+ [% ELSE %]
+ <option value="h">منظّم الجداول</option>
+ [% END %]
+ [% IF ( f1i ) %]
+ <option value="i" selected="selected">كتاب-الجوقة</option>
+ [% ELSE %]
+ <option value="i">كتاب-الجوقة</option>
+ [% END %]
+ [% IF ( f1j ) %]
+ <option value="j" selected="selected">نتيجة مضغوطة</option>
+ [% ELSE %]
+ <option value="j">نتيجة مضغوطة</option>
+ [% END %]
+ [% IF ( f1k ) %]
+ <option value="k" selected="selected">النتيجة الزائفة</option>
+ [% ELSE %]
+ <option value="k">النتيجة الزائفة</option>
+ [% END %]
+ [% IF ( f1l ) %]
+ <option value="l" selected="selected">جزء منفرد</option>
+ [% ELSE %]
+ <option value="l">جزء منفرد</option>
+ [% END %]
+ [% IF ( f1m ) %]
+ <option value="m" selected="selected">تنسيقات متعددة</option>
+ [% ELSE %]
+ <option value="m">تنسيقات متعددة</option>
+ [% END %]
+ [% IF ( f1u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f1x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق، ليس هدف</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق، ليس هدف</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">آخر</option>
+ [% ELSE %]
+ <option value="z">آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ <tr>
+ <td><label for="f2">مؤشر الأجزاء:</label></td>
+ <td>
+ <select name="f2" id="f2">
+
+ [% IF ( f2a ) %]
+ <option value="a" selected="selected">الأجزاء الموجودة (صوتية وآلية)</option>
+ [% ELSE %]
+ <option value="a">الأجزاء الموجودة (صوتية وآلية)</option>
+ [% END %]
+ [% IF ( f2b ) %]
+ <option value="b" selected="selected">أجزاء آلية</option>
+ [% ELSE %]
+ <option value="b">أجزاء آلية</option>
+ [% END %]
+ [% IF ( f2c ) %]
+ <option value="c" selected="selected">أجزاء صوتية</option>
+ [% ELSE %]
+ <option value="c">أجزاء صوتية</option>
+ [% END %]
+ [% IF ( f2u ) %]
+ <option value="u" selected="selected">غير معروف</option>
+ [% ELSE %]
+ <option value="u">غير معروف</option>
+ [% END %]
+ [% IF ( f2x ) %]
+ <option value="x" selected="selected">غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="x">غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f2y ) %]
+ <option value="y" selected="selected">الأجزاء غير مقدمة</option>
+ [% ELSE %]
+ <option value="y">الأجزاء غير مقدمة</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+            field.value = document.f_pop.f1.value+document.f_pop.f2.value;
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

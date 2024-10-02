@@ -1,0 +1,772 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("008 builder") | html %] &rsaquo;
+ [% t("Authorities") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_marc21_field_008_authorities" class="cat value_builder">
+
+ <h1> 008 عناصر بيانات ذات طول ثابت</h1>
+
+ <form method="get" name="f_pop" onsubmit="report()" action="">
+ <input type="hidden" name="plugin_name" value="marc21_field_008_authorities.pl" />
+ <input name="f1" value="[% f1 | html %]" type="hidden" />
+
+ <div class="page-section">
+ <table>
+ <tr>
+ <td>00-05- التاريخ الذي تم إدخاله إلى الملف</td>
+ <td>[% f1 | html %]</td>
+ </tr>
+ <tr>
+ <td><label for="f6">06- تقسيم جغرافي فرعي مباشر أو غير مباشر</label></td>
+ <td>
+ <select name="f6" id="f6">
+ [% IF ( f6 ) %]
+ <option value=" " selected="selected">#- غير مقسم جغرافيًا</option>
+ [% ELSE %]
+ <option value=" ">#- غير مقسم جغرافيًا</option>
+ [% END %]
+ [% IF ( f6d ) %]
+ <option value="d" selected="selected">d- مقسمة جغرافياً&mdash;مباشر</option>
+ [% ELSE %]
+ <option value="d">d- مقسمة جغرافياً&mdash;مباشر</option>
+ [% END %]
+ [% IF ( f6i ) %]
+ <option value="i" selected="selected">i-مقسمة جغرافياً&mdash;غير مباشر</option>
+ [% ELSE %]
+ <option value="i">i-مقسمة جغرافياً&mdash;غير مباشر</option>
+ [% END %]
+ [% IF ( f6n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f6pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td><label for="f7">07- مخطط الكتابة بالحروف اللاتينية</label></td>
+ <td>
+ <select name="f7" id="f7">
+ [% IF ( f7a ) %]
+ <option value="a" selected="selected">a- معيار دولي</option>
+ [% ELSE %]
+ <option value="a">a- معيار دولي</option>
+ [% END %]
+ [% IF ( f7b ) %]
+ <option value="b" selected="selected">b- معيار وطني</option>
+ [% ELSE %]
+ <option value="b">b- معيار وطني</option>
+ [% END %]
+ [% IF ( f7c ) %]
+ <option value="c" selected="selected">c- معيار جمعية المكتبة الوطنية</option>
+ [% ELSE %]
+ <option value="c">c- معيار جمعية المكتبة الوطنية</option>
+ [% END %]
+ [% IF ( f7d ) %]
+ <option value="d" selected="selected">d- ‫معيار المكتبة الوطنية أو الوكالة الببليوجرافية‬</option>
+ [% ELSE %]
+ <option value="d">d- ‫معيار المكتبة الوطنية أو الوكالة الببليوجرافية‬</option>
+ [% END %]
+ [% IF ( f7e ) %]
+ <option value="e" selected="selected">e- معيار محلي</option>
+ [% ELSE %]
+ <option value="e">e- معيار محلي</option>
+ [% END %]
+ [% IF ( f7f ) %]
+ <option value="f" selected="selected">f- معيار مجهول المصدر</option>
+ [% ELSE %]
+ <option value="f">f- معيار مجهول المصدر</option>
+ [% END %]
+ [% IF ( f7g ) %]
+ <option value="g" selected="selected">g- تحويل للحروف اللاتينية تقليدي أو شكل تقليدي للاسم بلغة وكالة الفهرسة</option>
+ [% ELSE %]
+ <option value="g">g- تحويل للحروف اللاتينية تقليدي أو شكل تقليدي للاسم بلغة وكالة الفهرسة</option>
+ [% END %]
+ [% IF ( f7n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f7pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f8">08- لغة الفهرس</label></td>
+ <td>
+ <select name="f8" id="f8">
+ [% IF ( f8 ) %]
+ <option value=" " selected="selected">#- لم يتم توفير أي معلومات</option>
+ [% ELSE %]
+ <option value=" ">#- لم يتم توفير أي معلومات</option>
+ [% END %]
+ [% IF ( f8b ) %]
+ <option value="b" selected="selected">b- الإنجليزية والفرنسية</option>
+ [% ELSE %]
+ <option value="b">b- الإنجليزية والفرنسية</option>
+ [% END %]
+ [% IF ( f8e ) %]
+ <option value="e" selected="selected">e- الإنجليزية فقط</option>
+ [% ELSE %]
+ <option value="e">e- الإنجليزية فقط</option>
+ [% END %]
+ [% IF ( f8f ) %]
+ <option value="f" selected="selected">f- الفرنسية فقط</option>
+ [% ELSE %]
+ <option value="f">f- الفرنسية فقط</option>
+ [% END %]
+ [% IF ( f8pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f9">09- نوع التسجيلة</label></td>
+ <td>
+ <select name="f9" id="f9">
+ [% IF ( f9a ) %]
+ <option value="a" selected="selected">a- عنوان ثابت</option>
+ [% ELSE %]
+ <option value="a">a- عنوان ثابت</option>
+ [% END %]
+ [% IF ( f9b ) %]
+ <option value="b" selected="selected">b- مرجع لا يمكن تتبعه</option>
+ [% ELSE %]
+ <option value="b">b- مرجع لا يمكن تتبعه</option>
+ [% END %]
+ [% IF ( f9c ) %]
+ <option value="c" selected="selected">c-مرجع يمكن تتبعه</option>
+ [% ELSE %]
+ <option value="c">c-مرجع يمكن تتبعه</option>
+ [% END %]
+ [% IF ( f9d ) %]
+ <option value="d" selected="selected">d- التقسيم</option>
+ [% ELSE %]
+ <option value="d">d- التقسيم</option>
+ [% END %]
+ [% IF ( f9e ) %]
+ <option value="e" selected="selected">e- مسمى العقدة</option>
+ [% ELSE %]
+ <option value="e">e- مسمى العقدة</option>
+ [% END %]
+ [% IF ( f9f ) %]
+ <option value="f" selected="selected">f- رأس مؤسس وتقسيم فرعي</option>
+ [% ELSE %]
+ <option value="f">f- رأس مؤسس وتقسيم فرعي</option>
+ [% END %]
+ [% IF ( f9g ) %]
+ <option value="g" selected="selected">g- إحالة وتقسيم فرعي</option>
+ [% ELSE %]
+ <option value="g">g- إحالة وتقسيم فرعي</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f10">10- قواعد الفهرسة الوصفية</label></td>
+ <td>
+ <select name="f10" id="f10">
+ [% IF ( f10a ) %]
+ <option value="a" selected="selected">a- قواعد سابقة</option>
+ [% ELSE %]
+ <option value="a">a- قواعد سابقة</option>
+ [% END %]
+ [% IF ( f10b ) %]
+ <option value="b" selected="selected">b- AACR 1</option>
+ [% ELSE %]
+ <option value="b">b- AACR 1</option>
+ [% END %]
+ [% IF ( f10c ) %]
+ <option value="c" selected="selected">c- AACR 2</option>
+ [% ELSE %]
+ <option value="c">c- AACR 2</option>
+ [% END %]
+ [% IF ( f10d ) %]
+ <option value="d" selected="selected">d- رأس متوافق مع AACR 2</option>
+ [% ELSE %]
+ <option value="d">d- رأس متوافق مع AACR 2</option>
+ [% END %]
+ [% IF ( f10n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f10z ) %]
+ <option value="z" selected="selected">z- أخرى</option>
+ [% ELSE %]
+ <option value="z">z- أخرى</option>
+ [% END %]
+ [% IF ( f10pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f11">11- مكنز/نظام رؤوس الموضوعات</label></td>
+ <td>
+ <select name="f11" id="f11">
+ [% IF ( f11a ) %]
+ <option value="a" selected="selected">a- رؤوس موضوعات مكتبة الكونجرس</option>
+ [% ELSE %]
+ <option value="a">a- رؤوس موضوعات مكتبة الكونجرس</option>
+ [% END %]
+ [% IF ( f11b ) %]
+ <option value="b" selected="selected">b- رؤوس موضوعات مكتبة الكونجرس ﻷدب الأطفال</option>
+ [% ELSE %]
+ <option value="b">b- رؤوس موضوعات مكتبة الكونجرس ﻷدب الأطفال</option>
+ [% END %]
+ [% IF ( f11c ) %]
+ <option value="c" selected="selected">c- رؤوس موضوعات طبية</option>
+ [% ELSE %]
+ <option value="c">c- رؤوس موضوعات طبية</option>
+ [% END %]
+ [% IF ( f11d ) %]
+ <option value="d" selected="selected">d- ‫ملف استناد موضوعات المكتبة الزراعية الوطنية‬</option>
+ [% ELSE %]
+ <option value="d">d- ‫ملف استناد موضوعات المكتبة الزراعية الوطنية‬</option>
+ [% END %]
+ [% IF ( f11k ) %]
+ <option value="k" selected="selected">k- رؤوس الموضوعات الكندية</option>
+ [% ELSE %]
+ <option value="k">k- رؤوس الموضوعات الكندية</option>
+ [% END %]
+ [% IF ( f11n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f11r ) %]
+ <option value="r" selected="selected">r- مكانز الفنون والهندسة المعمارية</option>
+ [% ELSE %]
+ <option value="r">r- مكانز الفنون والهندسة المعمارية</option>
+ [% END %]
+ [% IF ( f11s ) %]
+ <option value="s" selected="selected">s- قائمة رؤوس الموضوعات من سيرز</option>
+ [% ELSE %]
+ <option value="s">s- قائمة رؤوس الموضوعات من سيرز</option>
+ [% END %]
+ [% IF ( f11v ) %]
+ <option value="v" selected="selected">v- ‫دليل رؤوس الموضوعات الفرنسية</option>
+ [% ELSE %]
+ <option value="v">v- ‫دليل رؤوس الموضوعات الفرنسية</option>
+ [% END %]
+ [% IF ( f11z ) %]
+ <option value="z" selected="selected">z- أخرى</option>
+ [% ELSE %]
+ <option value="z">z- أخرى</option>
+ [% END %]
+ [% IF ( f11pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f12">12- نوع السلسلة</label></td>
+ <td>
+ <select name="f12" id="f12">
+ [% IF ( f12a ) %]
+ <option value="a" selected="selected">a- سلسلة تخصصية</option>
+ [% ELSE %]
+ <option value="a">a- سلسلة تخصصية</option>
+ [% END %]
+ [% IF ( f12b ) %]
+ <option value="b" selected="selected">b- مادة متعددة الأجزاء</option>
+ [% ELSE %]
+ <option value="b">b- مادة متعددة الأجزاء</option>
+ [% END %]
+ [% IF ( f12c ) %]
+ <option value="c" selected="selected">c- عبارة شبيهة بالسلسلة</option>
+ [% ELSE %]
+ <option value="c">c- عبارة شبيهة بالسلسلة</option>
+ [% END %]
+ [% IF ( f12n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f12z ) %]
+ <option value="z" selected="selected">z- أخرى</option>
+ [% ELSE %]
+ <option value="z">z- أخرى</option>
+ [% END %]
+ [% IF ( f12pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f13">13- سلسلة مرقمة أو غير مرقمة</label></td>
+ <td>
+ <select name="f13" id="f13">
+ [% IF ( f13a ) %]
+ <option value="a" selected="selected">a- مرقّم</option>
+ [% ELSE %]
+ <option value="a">a- مرقّم</option>
+ [% END %]
+ [% IF ( f13b ) %]
+ <option value="b" selected="selected">b- غير مرقم</option>
+ [% ELSE %]
+ <option value="b">b- غير مرقم</option>
+ [% END %]
+ [% IF ( f13c ) %]
+ <option value="c" selected="selected">c-ترقيم متعدد</option>
+ [% ELSE %]
+ <option value="c">c-ترقيم متعدد</option>
+ [% END %]
+ [% IF ( f13n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f13pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f14">14- استخدام الرأس- - مدخل رئيسي أو إضافي‬</label></td>
+ <td>
+ <select name="f14" id="f14">
+ [% IF ( f14a ) %]
+ <option value="a" selected="selected">a- مناسب</option>
+ [% ELSE %]
+ <option value="a">a- مناسب</option>
+ [% END %]
+ [% IF ( f14b ) %]
+ <option value="b" selected="selected">b- غير مناسب</option>
+ [% ELSE %]
+ <option value="b">b- غير مناسب</option>
+ [% END %]
+ [% IF ( f14pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f15">15- استخدام الرأس--مدخل الموضوع الإضافي</label></td>
+ <td>
+ <select name="f15" id="f15">
+ [% IF ( f15a ) %]
+ <option value="a" selected="selected">a- مناسب</option>
+ [% ELSE %]
+ <option value="a">a- مناسب</option>
+ [% END %]
+ [% IF ( f15b ) %]
+ <option value="b" selected="selected">b- غير مناسب</option>
+ [% ELSE %]
+ <option value="b">b- غير مناسب</option>
+ [% END %]
+ [% IF ( f15pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f16">16- استخدام الرأس--مدخل السلسلة الإضافي</label></td>
+ <td>
+ <select name="f16" id="f16">
+ [% IF ( f16a ) %]
+ <option value="a" selected="selected">a- مناسب</option>
+ [% ELSE %]
+ <option value="a">a- مناسب</option>
+ [% END %]
+ [% IF ( f16b ) %]
+ <option value="b" selected="selected">b- غير مناسب</option>
+ [% ELSE %]
+ <option value="b">b- غير مناسب</option>
+ [% END %]
+ [% IF ( f16pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f17">17- نوع التقسيم الفرعي للموضوع</label></td>
+ <td>
+ <select name="f17" id="f17">
+ [% IF ( f17a ) %]
+ <option value="a" selected="selected">a-موضوعي</option>
+ [% ELSE %]
+ <option value="a">a-موضوعي</option>
+ [% END %]
+ [% IF ( f17b ) %]
+ <option value="b" selected="selected">b- نموذج</option>
+ [% ELSE %]
+ <option value="b">b- نموذج</option>
+ [% END %]
+ [% IF ( f17c ) %]
+ <option value="c" selected="selected">c- زمني</option>
+ [% ELSE %]
+ <option value="c">c- زمني</option>
+ [% END %]
+ [% IF ( f17d ) %]
+ <option value="d" selected="selected">d- جغرافي</option>
+ [% ELSE %]
+ <option value="d">d- جغرافي</option>
+ [% END %]
+ [% IF ( f17e ) %]
+ <option value="e" selected="selected">e- اللغة</option>
+ [% ELSE %]
+ <option value="e">e- اللغة</option>
+ [% END %]
+ [% IF ( f17n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f17pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>18-27 موقع الحروف غير محدد</td>
+ <td></td>
+ </tr>
+
+ <tr>
+ <td><label for="f28">28- نوع الوكالة الحكومية</label></td>
+ <td>
+ <select name="f28" id="f28">
+ [% IF ( f28 ) %]
+ <option value=" " selected="selected">#- ليست وكالة حكومية</option>
+ [% ELSE %]
+ <option value=" ">#- ليست وكالة حكومية</option>
+ [% END %]
+ [% IF ( f28a ) %]
+ <option value="a" selected="selected">a- مكوّن مستقل ذاتيا أو نصف مستقل ذاتيا</option>
+ [% ELSE %]
+ <option value="a">a- مكوّن مستقل ذاتيا أو نصف مستقل ذاتيا</option>
+ [% END %]
+ [% IF ( f28c ) %]
+ <option value="c" selected="selected">c- متعدد المحلية</option>
+ [% ELSE %]
+ <option value="c">c- متعدد المحلية</option>
+ [% END %]
+ [% IF ( f28f ) %]
+ <option value="f" selected="selected">f- اتحادي/وطني</option>
+ [% ELSE %]
+ <option value="f">f- اتحادي/وطني</option>
+ [% END %]
+ [% IF ( f28i ) %]
+ <option value="i" selected="selected">i- حكومي مشترك مع الدولي</option>
+ [% ELSE %]
+ <option value="i">i- حكومي مشترك مع الدولي</option>
+ [% END %]
+ [% IF ( f28l ) %]
+ <option value="l" selected="selected">l- محلى</option>
+ [% ELSE %]
+ <option value="l">l- محلى</option>
+ [% END %]
+ [% IF ( f28m ) %]
+ <option value="m" selected="selected">m- متعدد الحالات</option>
+ [% ELSE %]
+ <option value="m">m- متعدد الحالات</option>
+ [% END %]
+ [% IF ( f28o ) %]
+ <option value="o" selected="selected">o- وكالة حكومية&mdash;النوع غير محدد</option>
+ [% ELSE %]
+ <option value="o">o- وكالة حكومية&mdash;النوع غير محدد</option>
+ [% END %]
+ [% IF ( f28s ) %]
+ <option value="s" selected="selected">s- محافظة، إقليمي،قطري، تابع، إلخ.</option>
+ [% ELSE %]
+ <option value="s">s- محافظة، إقليمي،قطري، تابع، إلخ.</option>
+ [% END %]
+ [% IF ( f28u ) %]
+ <option value="u" selected="selected">u- غير معروف إذا كان العنوان وكالة حكومية</option>
+ [% ELSE %]
+ <option value="u">u- غير معروف إذا كان العنوان وكالة حكومية</option>
+ [% END %]
+ [% IF ( f28z ) %]
+ <option value="z" selected="selected">z- أخرى</option>
+ [% ELSE %]
+ <option value="z">z- أخرى</option>
+ [% END %]
+ [% IF ( f28pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f29">29- تقيم المرجع</label></td>
+ <td>
+ <select name="f29" id="f29">
+ [% IF ( f29a ) %]
+ <option value="a" selected="selected">a- المتابعات متسقة مع الرأس</option>
+ [% ELSE %]
+ <option value="a">a- المتابعات متسقة مع الرأس</option>
+ [% END %]
+ [% IF ( f29b ) %]
+ <option value="b" selected="selected">b- التتبع لا يتناسق بالضرورة مع الرأس</option>
+ [% ELSE %]
+ <option value="b">b- التتبع لا يتناسق بالضرورة مع الرأس</option>
+ [% END %]
+ [% IF ( f29n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f29pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>30 موقع حروف غير معرف</td>
+ <td></td>
+ </tr>
+
+ <tr>
+ <td><label for="f31">31- جاري تحديث التسجيلة</label></td>
+ <td>
+ <select name="f31" id="f31">
+ [% IF ( f31a ) %]
+ <option value="a" selected="selected">a- يمكن استخدام التسجيلة</option>
+ [% ELSE %]
+ <option value="a">a- يمكن استخدام التسجيلة</option>
+ [% END %]
+ [% IF ( f31b ) %]
+ <option value="b" selected="selected">b- يتم تحديث التسجيلة</option>
+ [% ELSE %]
+ <option value="b">b- يتم تحديث التسجيلة</option>
+ [% END %]
+ [% IF ( f31pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f32">32- اسم شخصي غير متمايز</label></td>
+ <td>
+ <select name="f32" id="f32">
+ [% IF ( f32a ) %]
+ <option value="a" selected="selected">a-اسم شخصي متباين</option>
+ [% ELSE %]
+ <option value="a">a-اسم شخصي متباين</option>
+ [% END %]
+ [% IF ( f32b ) %]
+ <option value="b" selected="selected">b- اسم شخصي غير متمايز</option>
+ [% ELSE %]
+ <option value="b">b- اسم شخصي غير متمايز</option>
+ [% END %]
+ [% IF ( f32n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f32pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f33">33- مستوى التأسيس</label></td>
+ <td>
+ <select name="f33" id="f33">
+ [% IF ( f33a ) %]
+ <option value="a" selected="selected">a- منشئة بشكل كامل</option>
+ [% ELSE %]
+ <option value="a">a- منشئة بشكل كامل</option>
+ [% END %]
+ [% IF ( f33b ) %]
+ <option value="b" selected="selected">b- مذكرة</option>
+ [% ELSE %]
+ <option value="b">b- مذكرة</option>
+ [% END %]
+ [% IF ( f33c ) %]
+ <option value="c" selected="selected">c- مؤقت</option>
+ [% ELSE %]
+ <option value="c">c- مؤقت</option>
+ [% END %]
+ [% IF ( f33d ) %]
+ <option value="d" selected="selected">d- تمهيدي</option>
+ [% ELSE %]
+ <option value="d">d- تمهيدي</option>
+ [% END %]
+ [% IF ( f33n ) %]
+ <option value="n" selected="selected">n- غير قابل للتطبيق</option>
+ [% ELSE %]
+ <option value="n">n- غير قابل للتطبيق</option>
+ [% END %]
+ [% IF ( f33pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+
+ <tr>
+ <td>34-37 موقع حروف غير محدد</td>
+ <td></td>
+ </tr>
+
+ <tr>
+ <td><label for="f38">38- تسجيلة معدلة</label></td>
+ <td>
+ <select name="f38" id="f38">
+ [% IF ( f38 ) %]
+ <option value=" " selected="selected">#- غير معدل</option>
+ [% ELSE %]
+ <option value=" ">#- غير معدل</option>
+ [% END %]
+ [% IF ( f38s ) %]
+ <option value="s" selected="selected">s- مختصر</option>
+ [% ELSE %]
+ <option value="s">s- مختصر</option>
+ [% END %]
+ [% IF ( f38x ) %]
+ <option value="x" selected="selected">x- محارف مفقودة</option>
+ [% ELSE %]
+ <option value="x">x- محارف مفقودة</option>
+ [% END %]
+ [% IF ( f38pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ <tr>
+ <td><label for="f39">39- مصدر الفهرسة</label></td>
+ <td>
+ <select name="f39" id="f39">
+ [% IF ( f39 ) %]
+ <option value=" " selected="selected">#- الوكالة الوطنية للضبط الببليوغرافي</option>
+ [% ELSE %]
+ <option value=" ">#- الوكالة الوطنية للضبط الببليوغرافي</option>
+ [% END %]
+ [% IF ( f39c ) %]
+ <option value="c" selected="selected">c- برنامج الفهرسة التعاوني</option>
+ [% ELSE %]
+ <option value="c">c- برنامج الفهرسة التعاوني</option>
+ [% END %]
+ [% IF ( f39d ) %]
+ <option value="d" selected="selected">d- آخر</option>
+ [% ELSE %]
+ <option value="d">d- آخر</option>
+ [% END %]
+ [% IF ( f39u ) %]
+ <option value="u" selected="selected">u- غير معروف</option>
+ [% ELSE %]
+ <option value="u">u- غير معروف</option>
+ [% END %]
+ [% IF ( f39pipe ) %]
+ <option value="|" selected="selected">|- لا توجد محاولة للترميز</option>
+ [% ELSE %]
+ <option value="|">|- لا توجد محاولة للترميز</option>
+ [% END %]
+ </select>
+ </td>
+ </tr>
+ </table>
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+ </div> <!-- /.page-section -->
+</form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+
+            field.value =
+            document.f_pop.f1.value +
+            document.f_pop.f6.value +
+            document.f_pop.f7.value +
+            document.f_pop.f8.value +
+            document.f_pop.f9.value +
+            document.f_pop.f10.value +
+            document.f_pop.f11.value +
+            document.f_pop.f12.value +
+            document.f_pop.f13.value +
+            document.f_pop.f14.value +
+            document.f_pop.f15.value +
+            document.f_pop.f16.value +
+            document.f_pop.f17.value +
+            '          '+
+            document.f_pop.f28.value +
+            document.f_pop.f29.value +
+            ' '+
+            document.f_pop.f31.value +
+            document.f_pop.f32.value +
+            document.f_pop.f33.value +
+            '    '+
+            document.f_pop.f38.value +
+            document.f_pop.f39.value;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

@@ -1,0 +1,80 @@
+---
+‫interlibrary_loans.pref:
+  الأوباك:
+  - - 'نهايات الإعارة البينية الخلفية المفعلة لطلبات الأوباك التي بدأت:'
+    - class: multi
+      pref: ILLOpacbackends
+    - (مفصولة بواسطة |). إذا ترك خاليًأ، سيتم تفعيل جميع الخلفيات المثبتة.
+  الإشعارات:
+  - - 'إرسال إخطارات الإعارة البينية التالية إلى الموظفين عند الاقتضاء:'
+    - class: multi
+      pref: ILLSendStaffNotices
+    - '(مفصولة بعلامة |). مثال: ILL_REQUEST_CANCEL|ILL_REQUEST_MODIFIED إذا تم تركه
+      فارغاً، لن يتم إرسال إخطارات موظفي الإعارة البينية.'
+  - - 'عنوان البريد الإلكتروني الاحتياطي لإخطارات موظفي الإعارة البينية ليتم إرسالها
+      في حالة عدم وجود عنوان مكتبة:'
+    - class: email
+      pref: ILLDefaultStaffEmail
+  خصائص:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: ILLModule
+    - نظام الإعاة بين المكتبات الفرعي (التبديل الرئيسي)
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: ILLModuleUnmediated
+    - طلبات الإعارة البينية دون وساطة. عند التفعيل ودعم النظام الخلفي للإعارة البينية
+      لها، يتم طلب طلبات الإعارة الحديثة في الحال بواسطة النظام الخلفي.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: CirculateILL
+    - إعارة مواد الإعارة البينية المطلوبة.
+  - - 'حالات الإعارة البينية التي تعتبر منتهية ويجب عدم عرضها في نظام الإعارة البنية
+      الفرعي: '
+    - class: multi
+      pref: ILLHiddenRequestStatuses
+    - (مفصول بعلامة |). إذا تم تركه فارغاً، سيتم عرض كل طلبات الإعارة البينية. يتم
+      تعريف رموز الطلب في الواجهات الخلفية ويمكن تهيئة أسماء بديلة إضافية عبر فئة
+      قيم الاستناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=ILL_STATUS_ALIAS">ILL_STATUS_ALIAS</a>
+  - - استخدام المستفيدين من الفئة
+    - choices: patron-categories
+      pref: ILLPartnerCode
+    - كشركاء لوضع طلبات إعارة بينية معهم.
+  سير العمل:
+  - - choices:
+        '0': عدم تحديد
+        '1': تحديد
+      default: 0
+      pref: ILLCheckAvailability
+    - مصادر خارجية للإتاحة أثناء عملية الطلب.
+  - - إذا كانت الواجهة الخلفية للإعارة البينية تدعم ذلك، فإن إضافة YAML ستؤدي إلى
+      تفعيل مرحلة إخلاء المسؤولية عن نوع الطلب في إنشاء الطلب،مما سيطالب المستخدم
+      بإخلاء المسؤولية الخاص بنوع الطلب كما هو محدد (واجهة الموظفين والأوباك).
+    - 'لكل نوع طلب، يمكنك الحصول على 3 خيارات تهيئة: <code>text</code>, <code>av_category_code</code>
+      و <code>bypass</code><ul>'
+    - <li><code>text</code> is HTML الذي سيكون مرئيًا لنوع الطلب المحدد.</li>
+    - <li><code>av_category_code</code> هي فئة قيم الاستناد التي سيتم استخدامها للخياراتالتي
+      يتم تقديمها في مرحلة إخلاء المسؤولية.</li>
+    - <li><code>bypass</code> يسمح بنوع طلب محدد لتخطي مرحلة إخلاء المسؤولية.</li></ul>
+    - 'مثال (قم بلصق الكود في مربع الإدخال): <br>'
+    - <code>الكل:<br>
+    - '&nbsp;نص: |<br>'
+    - '&nbsp;&nbsp;&lt;h2&gt;HTML عنوان&lt;/h2&gt;<br>'
+    - '&nbsp;&nbsp;&lt;p&gt;هذه فقرة HTML &lt;/p&gt;<br>'
+    - '&nbsp;&nbsp;&lt;p&gt;هذه فقرة HTML أخرى&lt;/p&gt;<br>'
+    - '&nbsp;av_category_code: YES_NO<br>'
+    - مقال:<br>
+    - '&nbsp;text: نص حقوق النشر لكل طلبات أنواع المقال<br>'
+    - '&nbsp;av_category_code: YES_NO<br>'
+    - '&nbsp;bypass: 1<br>'
+    - </code>
+    - class: code
+      pref: ILLModuleDisclaimerByType
+      syntax: text/x-yaml
+      type: textarea

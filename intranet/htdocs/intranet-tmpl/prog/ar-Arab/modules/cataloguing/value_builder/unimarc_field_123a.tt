@@ -1,0 +1,64 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 123a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="cat_unimarc_field_123a" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 123a</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">نوع النطاق:</label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1a ) %]
+ <option value="a" selected="selected">مقياس خطي</option>
+ [% ELSE %]
+ <option value="a">مقياس خطي</option>
+ [% END %]
+ [% IF ( f1b ) %]
+ <option value="b" selected="selected">مقياس زاوي (بزاوية)</option>
+ [% ELSE %]
+ <option value="b">مقياس زاوي (بزاوية)</option>
+ [% END %]
+ [% IF ( f1z ) %]
+ <option value="z" selected="selected">نوع نطاق آخر ( مثال ، نطاق زمني نطاق إحصائي كمي)</option>
+ [% ELSE %]
+ <option value="z">نوع نطاق آخر ( مثال ، نطاق زمني نطاق إحصائي كمي)</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function report() {
+            var doc   = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+            field.value =  document.f_pop.f1.value;
+            self.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

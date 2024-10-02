@@ -1,0 +1,241 @@
+---
+description:
+- بعض قيم الاستناد الأساسية الافتراضية لمواقع المكتبة، وحالة المواد المفقودة، وما
+  إلى ذلك.
+- يمكنك تغيير هذه في أي وقت بعد التثبيت.
+tables:
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: BSELL
+      category: SUGGEST
+      lib: الأكثر مبيعاً
+    - authorised_value: SCD
+      category: SUGGEST
+      lib: نسخة رف تالفة
+    - authorised_value: LCL
+      category: SUGGEST
+      lib: نسخة مكتبة ضائعة
+    - authorised_value: AVILL
+      category: SUGGEST
+      lib: متاح عبر الإعارة البينية
+    - authorised_value: Budget
+      category: SUGGEST
+      lib: ميزانية غير كافية
+    - authorised_value: Expensive
+      category: SUGGEST
+      lib: المستند مكلف للغاية
+    - authorised_value: Poldoc
+      category: SUGGEST
+      lib: المستند لا يتوافق مع سياسة التزويد الخاصة بنا
+    translatable:
+    - lib
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: BOOK
+      category: SUGGEST_FORMAT
+      lib: كتاب
+      lib_opac: كتاب
+    - authorised_value: LP
+      category: SUGGEST_FORMAT
+      lib: طبعة ضخمة
+      lib_opac: طبعة ضخمة
+    - authorised_value: EBOOK
+      category: SUGGEST_FORMAT
+      lib: كتاب إلكتروني
+      lib_opac: كتاب إلكتروني
+    - authorised_value: AUDIOBOOK
+      category: SUGGEST_FORMAT
+      lib: كتاب سمعي
+      lib_opac: كتاب سمعي
+    - authorised_value: DVD
+      category: SUGGEST_FORMAT
+      lib: قرص فيديو رقمي (DVD)
+      lib_opac: قرص فيديو رقمي (DVD)
+    translatable:
+    - lib
+    - lib_opac
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: '2'
+      category: LOST
+      lib: متأخرة لفترة طويلة (ضائعة)
+    - authorised_value: '1'
+      category: LOST
+      lib: ضائعة
+    - authorised_value: '3'
+      category: LOST
+      lib: ضائعة وتم دفع ثمنها
+    - authorised_value: '4'
+      category: LOST
+      lib: مفقود
+    - authorised_value: '5'
+      category: LOST
+      lib: مفقود من الحزمة
+    - authorised_value: '1'
+      category: DAMAGED
+      lib: تالفة
+    - authorised_value: FIC
+      category: LOC
+      lib: خيال
+    - authorised_value: CHILD
+      category: LOC
+      lib: منطقة أطفال
+    - authorised_value: DISPLAY
+      category: LOC
+      lib: قيد العرض
+    - authorised_value: NEW
+      category: LOC
+      lib: رف مواد جديد
+    - authorised_value: STAFF
+      category: LOC
+      lib: مكتب الموظفين
+    - authorised_value: GEN
+      category: LOC
+      lib: رفوف عامة
+    - authorised_value: AV
+      category: LOC
+      lib: سمعي بصري
+    - authorised_value: REF
+      category: LOC
+      lib: مرجع
+    - authorised_value: CART
+      category: LOC
+      lib: سلة الكتب
+    - authorised_value: PROC
+      category: LOC
+      lib: مركز المعالجة
+    - authorised_value: FIC
+      category: CCODE
+      lib: خيال
+    - authorised_value: REF
+      category: CCODE
+      lib: مرجع
+    - authorised_value: NFIC
+      category: CCODE
+      lib: غير أدبي
+    - authorised_value: '1'
+      category: WITHDRAWN
+      lib: مسحوبة
+    - authorised_value: '-1'
+      category: NOT_LOAN
+      lib: تم الطلب
+    - authorised_value: '1'
+      category: NOT_LOAN
+      lib: لا تعار
+    - authorised_value: '2'
+      category: NOT_LOAN
+      lib: مجموعة الموظفين
+    - authorised_value: '3'
+      category: NOT_LOAN
+      lib: مضاف إلى الحزمة
+    - authorised_value: '1'
+      category: RESTRICTED
+      lib: وصول مقيد
+    - authorised_value: ADDR
+      category: BOR_NOTES
+      lib: ملاحظات العنوان
+    translatable:
+    - lib
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: damaged
+      category: OPAC_SUG
+      lib: النسخة الموجودة على الرف تالفة
+      lib_opac: النسخة الموجودة على الرف تالفة
+    - authorised_value: bestseller
+      category: OPAC_SUG
+      lib: عنوان قادم بواسطة مؤلف شهير
+      lib_opac: عنوان قادم بواسطة مؤلف شهير
+    translatable:
+    - lib
+    - lib_opac
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: CIRC
+      category: REPORT_GROUP
+      lib: الإعارة
+    - authorised_value: CAT
+      category: REPORT_GROUP
+      lib: الفهرس
+    - authorised_value: PAT
+      category: REPORT_GROUP
+      lib: المستفيدين
+    - authorised_value: ACQ
+      category: REPORT_GROUP
+      lib: التزويد
+    - authorised_value: ACC
+      category: REPORT_GROUP
+      lib: الحسابات
+    - authorised_value: SER
+      category: REPORT_GROUP
+      lib: الدوريات
+    - authorised_value: '000'
+      category: SIP_MEDIA_TYPE
+      lib: آخر
+    - authorised_value: '001'
+      category: SIP_MEDIA_TYPE
+      lib: كتاب
+    - authorised_value: '002'
+      category: SIP_MEDIA_TYPE
+      lib: مجلة
+    - authorised_value: '003'
+      category: SIP_MEDIA_TYPE
+      lib: مذكرات بغلاف مربوط
+    - authorised_value: '004'
+      category: SIP_MEDIA_TYPE
+      lib: شريط صوتي
+    - authorised_value: '005'
+      category: SIP_MEDIA_TYPE
+      lib: شريط فيديو
+    - authorised_value: '006'
+      category: SIP_MEDIA_TYPE
+      lib: قرص مضغوط/قرص مدمج
+    - authorised_value: '007'
+      category: SIP_MEDIA_TYPE
+      lib: قرص مرن
+    - authorised_value: '008'
+      category: SIP_MEDIA_TYPE
+      lib: كتاب مع قرص مرن
+    - authorised_value: '009'
+      category: SIP_MEDIA_TYPE
+      lib: كتاب مع قرص مضغوط
+    - authorised_value: '010'
+      category: SIP_MEDIA_TYPE
+      lib: كتاب مع شريط صوتي
+    - authorised_value: 0
+      category: ORDER_CANCELLATION_REASON
+      lib: لم يتم توفير سبب
+    - authorised_value: 1
+      category: ORDER_CANCELLATION_REASON
+      lib: انتهى من المخزون
+    - authorised_value: 2
+      category: ORDER_CANCELLATION_REASON
+      lib: إعادة التخزين
+    - authorised_value: RET_BY_PATRON
+      category: RETURN_CLAIM_RESOLUTION
+      lib: تمت إعادتها بواسطة المستفيد
+    - authorised_value: FOUND_IN_LIB
+      category: RETURN_CLAIM_RESOLUTION
+      lib: تم العثور عليه في المكتبة
+    - authorised_value: NOT_FOUND
+      category: HOLD_CANCELLATION
+      lib: تعذر تحديد موقع المادة على الرف
+    - authorised_value: DAMAGED
+      category: HOLD_CANCELLATION
+      lib: المادة في غاية التلف ولا يمكن استخدامها لملء حجز
+    - authorised_value: NOT_FOUND
+      category: AR_CANCELLATION
+      lib: تعذر تحديد موقع المادة على الرف
+    - authorised_value: DAMAGED
+      category: AR_CANCELLATION
+      lib: المادة في غاية التلف ولا يمكن استخدامها لملء طلب مقال
+    - authorised_value: OPAC
+      category: AR_CANCELLATION
+      lib: تم الإلغاء من صفحة مستخدم الأوباك
+    translatable:
+    - lib

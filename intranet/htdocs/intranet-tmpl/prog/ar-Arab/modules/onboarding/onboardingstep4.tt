@@ -1,0 +1,75 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Create a new item type") | html %] &rsaquo;
+ [% t("Web installer") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'installer-doc-head-close.inc' %]
+</head>
+
+<body id="installer" class="installer">
+ <div class="container-fluid">
+ <div class="row">
+ <div id="onboarding-step4" class="installer-main col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2">
+ <div id="logo"><a href="#">كوها</a></div>
+ <h1>مثبت الويب &rsaquo; إنشاء نوع مادة جديد</h1>
+
+ [% INCLUDE 'onboarding_messages.inc' %]
+
+ <div id="steps">
+ <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> تثبيت</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> بدء عملية الإعداد <ol>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء مكتبة</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء فئة مستفيد</li>
+ <li class="complete"><i class="fa fa-check-square" aria-hidden="true"></i> إنشاء مستفيد مدير في كوها</li>
+ <li class="current open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء نوع مادة جديد</li>
+ <li class="open"><i class="fa fa-square" aria-hidden="true"></i> إنشاء قاعدة إعارة جديدة</li>
+ </ol>
+ </li>
+ </ol>
+ </div>
+
+ <!--Create a item type screen 1-->
+
+ <p> تستخدم أنواع المواد في تجميع المواد المتشابهة. من أمثلة أنواع المادة: الكتب، الاسطوانات المدمجة، و الأقراص الرقمية DVDs.</p>
+ <p> عند الإضافة إلى فهرس مؤسستك ستقوم بإنشاء مادة من نوع مادة محدد.</p>
+ <p> هام: أنواع المواد هي ما تقوم بتطبيق قواعد الإعارة عليها. تتحكم قواعد الإعارة في كيفية قيام مؤسستك بإعارة المواد: مدة الإعارة، سياسة التجديد، سياسة الحجز،إلخ. على سبيل المثال: قاعدة الإعارة المطبقة على نوع المادة DVD قد تؤدي إلى دفع مبلغ 1.00$ لإعارة أي DVD.</p>
+
+ <form id="createitemform" method="post" action="onboarding.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset class="rows">
+ <input type="hidden" name="step" value="4" />
+ <input type="hidden" name="op" value="cud-add_validate_itemtype" />
+ <ol>
+ <li>
+ <label for="itemtype" class="required">رمز نوع المادة: </label>
+ <input type="text" name="itemtype" pattern="[0-9A-Za-z]{1,10}" id="itemtype" size="10" maxlength="10"  class="required" required="required" value="[% itemtype.itemtype | html %]" />
+ <span class="required">مطلوب</span>
+ </li>
+
+ <li>
+ <label for="description" class="required">الوصف: </label>
+ <input type="text" name="description" id="description" size="42" value="[% itemtype.description | html %]" class="required" required="required">
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+
+ <p> لإنشاء نوع مادة آخر لاحقا وللمزيد من الإعدادات اذهب إلى: <span class="breadcrumbs"> الإدارة &rsaquo; أنواع المادة </span>
+ </p>
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ </fieldset>
+ </form>
+ </div> <!-- / #onboarding-step4 -->
+ </div> <!-- / .row -->
+ </div><!-- / .container-fluid -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'validator-strings.inc' %]
+ [% INCLUDE 'installer-strings.inc' %]
+ <script src="[% interface | html %]/[% theme | html %]/js/onboarding.js"></script>
+[% END %]
+
+[% INCLUDE 'installer-intranet-bottom.inc' %]

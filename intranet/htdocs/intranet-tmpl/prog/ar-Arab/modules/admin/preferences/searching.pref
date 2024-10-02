@@ -1,0 +1,340 @@
+---
+searching.pref:
+  خصائص:
+  - - إجراء بحث بدل (حيث - على سبيل المثال- <cite>Har</cite> قد يطابق <cite>Harry</cite>
+      و <cite>harp</cite>)
+    - choices:
+        '0': فقط في حالة إضافة*.
+        '1': تلقائياً.
+      pref: QueryAutoTruncate
+      type: boolean
+    - '<br />(المحرف * سيستخدم كالتالي: <cite>مكتب*</cite> أو<cite>*مكتبة</cite>.)'
+    - <strong>NOTE:</strong> Record identifiers (biblionumber, authid) will never
+      be autotruncated.
+  - - choices:
+        '0': عدم محاولة
+        '1': محاولة
+      pref: QueryFuzzy
+      type: boolean
+    - لمطابقة الكلمات المتشابهة هجائيا في البحث (على سبيل المثال, البحث عن <cite>flang</cite>
+      قد يطابق <cite>flange</cite> و <cite>fang</cite>; يؤثر حاليًا فقط على عمليات
+      بحث زيبرا.يمكن جعل أي مصطلح في Elasticsearch ضبابياً عن طريق إضافة ~ مباشرة
+      بعد المصطلح.).
+  - - choices:
+        '0': عدم محاولة
+        '1': محاولة
+      pref: QueryStemming
+      type: boolean
+    - لمطابقة كلمات من نفس الأصل في البحث(على سبيل المثال, البحث عن <cite>enabling</cite>
+      قد يطابق أيضاً <cite>enable</cite> و <cite>enabled</cite>; يتطلب زيبرا).
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: QueryWeightFields
+      type: boolean
+    - تصنيف نتائج البحث بالصلة  (يتطلب زيبرا).
+  - - choices:
+        dont_escape: عدم تخطي
+        escape: تخطي
+        unescape_escaped: عدم تخطي التخطي
+      default: escape
+      pref: QueryRegexEscapeOptions
+    - التعبيرات المنتظمة في مقاطع الاستعلام. إذا تم تحديد "تخطي"، فسيتم تلقائيًا تخطي
+      "/" في مصطلحات البحث، وسيتم تفسير التعبيرات المنتظمة كمقاطع منتظمة. إذا تم تحديد
+      "عدم تخطي التخطي" ، فسيسمح لك بكتابة التعبيرات المنتظمة"\ / مثل هذا \ /" بينما
+      سيتم تخطي "/ هذا/" ، "أو / ذاك" وتفسيرها كمقاطع منتظمة. (Elasticsearch فقط.)
+  - - choices:
+        '0': عدم فرض
+        '1': فرض
+      default: 0
+      pref: TraceCompleteSubfields
+    - تتبع الموضوع في الأوباك وواجهة الموظف للبحث فقط عن التطابقات الكاملة للحقول
+      الفرعية.
+  - - choices:
+        '0': عدم إدراج
+        '1': إدراج
+      default: 0
+      pref: TraceSubjectSubdivisions
+    - الأقسام الفرعية لعمليات البحث المولدة بالنقر على تتبع الموضوع.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: 0
+      pref: UseICUStyleQuotes
+    - الأقواس النصية بنمط ICU({}) عند تتبع الموضوعات. الافتراضي هو استخدام علامات
+      الاقتباس القياسية ("").
+  - - choices:
+        '0': عدم إدراج
+        '1': إدارج
+      default: 0
+      pref: IncludeSeeFromInSearches
+    - '<em>انظر من</em> (شكل غير مفضل) عناوين في عمليات البحث الببليوغرافية. يرجى
+      ملاحظة: سوف تحتاج إلى إعادة فهرسة قاعدة البيانات الببليوغرافية الخاصة بك عند
+      تغيير هذا التفضيل.'
+  - - choices:
+        '0': عدم الاحتفاظ بـ
+        '1': الاحتفاظ بـ
+      default: 0
+      pref: EnableSearchHistory
+    - سجل بحث المستفيد في واجهة الموظف.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: BrowseResultSelection
+    - تصفح نتائج البحث من صفحة تفاصيل التسجيلة الببليوغرافية في واجهة الموظف.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: ElasticsearchCrossFields
+    - خيار المجالات المتداخلة لعمليات بحث Elasticsearch المدعومة في إصدارة Elasticsearch
+      6.X وما فوق.
+    - انظر التوثيق الكامل في https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html#type-cross-fields
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: 0
+      pref: SavedSearchFilters
+    - خيار للموظفين الذين لديهم صلاحية إنشاء/تحرير منقحات البحث المحفوظة المخصصة.
+  - - 'List of search fields (separated by | or ,) that should not be autotruncated
+      by Elasticsearch even if <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=QueryAutoTruncate''>QueryAutoTruncate</a>
+      is set to ''Yes'':'
+    - class: long
+      pref: ESPreventAutoTruncate
+  عرض النتائج:
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: no
+      pref: numSearchResultsDropdown
+      type: boolean
+    - النتائج لكل صفحة منسدلة في نتائج بحث واجهة الموظف.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: no
+      pref: OPACnumSearchResultsDropdown
+      type: boolean
+    - قائمة نتيجة لكل صفحة المنسدلة من نتائج بحث الأوباك.
+  - - افتراضياً، قم بفرز نتائج البحث في واجهة الموظف حسب
+    - choices:
+        acqdate: تاريخ الإضافة
+        author: المؤلف
+        call_number: رقم الاستدعاء
+        popularity: إجمالي عدد الإعارات
+        pubdate: تاريخ النشر
+        relevance: الصلة
+        title: العنوان
+      default: relevance
+      pref: defaultSortField
+    - ،
+    - choices:
+        asc: تصاعديا.
+        az: من الألف إلى الياء.
+        dsc: تنازليا.
+        za: من الياء إلى الألف.
+      pref: defaultSortOrder
+  - - افتراضياً، قم بفرز نتائج البحث من روابط المؤلف في صفحات تفاصيل مارك21 وقوائم
+      النتائج حسب
+    - choices:
+        acqdate: تاريخ الإضافة
+        call_number: رقم الاستدعاء
+        default: حقل الفرز الافتراضي والترتيب المحدد في defaultSortField أو OPACdefaultSortField
+        pubdate: تاريخ النشر
+        title: العنوان
+      default: default
+      pref: AuthorLinkSortBy
+    - ،
+    - choices:
+        asc: تصاعديا
+        az: من الألف إلى الياء
+        dsc: تنازليا
+        za: من الياء إلى الألف
+      pref: AuthorLinkSortOrder
+    - ،.
+  - - عند تقييد نتائج البحث بمكتبة أو مجموعة مكتبة، قم بالتحديد بواسطة الخاص بالمادة
+    - choices:
+        both: المكتبة الرئيسية والمكتبة المقتنية.
+        holdingbranch: المكتبة المقتنية.
+        homebranch: المكتبة الرئيسية.
+      pref: SearchLimitLibrary
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: no
+      pref: displayFacetCount
+      type: boolean
+    - حسابات الواجهة. تعتمد صلة هذه الأرقام بشكل كبير على قيمة تفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=maxRecordsForFacets">maxRecordsForFacets</a>.
+      المطبق على الأوباك وواجهة الموظف.
+  - - افتراضياً، قم بعرض
+    - class: integer
+      pref: numSearchResults
+    - نتيحة لكل صفحة في واجهة الموظف.
+  - - للتسجيلات ذات المواد الكثيرة، تحقق من حالة الإتاحة فقط لأول
+    - class: integer
+      pref: MaxSearchResultsItemsPerRecordStatusCheck
+    - مواد.
+    - <br/>قد تظهر حالات الإتاحة بشكل غير صحيح في نتائج البحث إذا كان في التسجيلة
+      عدد من المواد أكثر من الحد الأقصى. الحالات ستعرض بشكل صحيح في تفاصيل التسجيلة.
+    - <br/> اتركه فارغاً لعدم وضع حد.
+  - - افتراضياً، قم بترتيب نتائج البحث في الأوباك حسب
+    - choices:
+        acqdate: تاريخ الإضافة
+        author: المؤلف
+        call_number: رقم الاستدعاء
+        popularity: إجمالي عدد الإعارات
+        pubdate: تاريخ النشر
+        relevance: الصلة
+        title: العنوان
+      default: relevance
+      pref: OPACdefaultSortField
+    - ،
+    - choices:
+        asc: تصاعدياً.
+        az: من الألف للياء.
+        dsc: تنازليا.
+        za: من الياء للألف.
+      pref: OPACdefaultSortOrder
+    - ''
+  - - عرض حتى
+    - class: integer
+      pref: maxItemsInSearchResults
+    - مواد لكل تسجيلة ببليوغرافية في نتائج البحث
+  - - بناء الواجهة بناء على
+    - class: integer
+      default: 20
+      pref: maxRecordsForFacets
+    - تسجيلة من نتائج البحث.
+  - - عرض حتى
+    - class: integer
+      default: 20
+      pref: FacetMaxCount
+    - واجهات لكل فئة.
+  - - فرز الفاست
+    - choices:
+        Alphabetical: أبجدياً
+        Usage: حسب عدد الاستخدام
+      default: Alphabetical
+      pref: FacetOrder
+      type: choice
+    - لكل فئة.
+  - - افتراضيا، عرض
+    - class: integer
+      pref: OPACnumSearchResults
+    - نتيجة لكل صفحة في الأوباك.
+  - - عرض الواجهات لـ
+    - choices:
+        both: كلا من المكتبة الرئيسية والمقتنية
+        holding: المكتبة المقتنية
+        home: المكتبة الرئيسية
+      pref: DisplayLibraryFacets
+      type: choice
+    - (Zebra only).
+  - - تقصير طول الواجهة إلى
+    - class: integer
+      pref: FacetLabelTruncationLength
+    - حرفاً، في الأوباك/واجهة الموظف.
+  - - استخدم النص التالي كفاصل لفاست المؤلفين في يونيمارك
+    - class: short
+      pref: UNIMARCAuthorsFacetsSeparator
+  - - عند بحث فهرس ISBN،
+    - choices:
+        '0': عدم بحث
+        '1': بحث
+      pref: SearchWithISBNVariations
+    - على كل تنويعات ISBN.
+  - - عند بحث فهرس ISSN،
+    - choices:
+        '0': عدم بحث
+        '1': بحث
+      pref: SearchWithISSNVariations
+    - على كل تنويعات الردمك.
+  - - choices:
+        '0': عدم الاحتفاظ بـ
+        '1': الاحتفاظ بـ
+      pref: RetainCatalogSearchTerms
+    - مصطلحات البحث بين عمليات البحث عند البحث من تبويب 'بحث الفهرس' في رأس واجهة
+      الموظفين.
+  - - choices:
+        '0': عدم الاحتفاظ بـ
+        '1': الاحتفاظ بـ
+      pref: RetainPatronsSearchTerms
+    - مصطلحات البحث بين عمليات البحث عند البحث من تبويب 'إعارة' و'بحث المستفيد' في
+      رأس واجهة الموظفين.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: BiblioItemtypeInfo
+    - معلومات نوع المادة على مستوى تسجيلة كوها في صفحات التفاصيل والنتائج في الأوباك
+      وواجهة الموظف. تعرض هذه المعلومات أيضًا إذا تم تعيين تفضيل النظام <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=item-level_itypes">item-level_itypes</a>
+      إلى التسجيلة الببليوغرافية.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: PassItemMarcToXSLT
+      type: boolean
+    - اجعل وسوم مارك للمواد متاحة لأنماط XSLT. الافتراضي هو "عدم القيام بـ"، يتم عرض
+      المواد باستخدام طرق أخرى.
+    - اجعل وسوم مارك للمواد متاحة لأنماط XSLT. الافتراضي هو "عدم القيام بـ"، يتم عرض
+      المواد باستخدام طرق أخرى.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: ShowHeadingUse
+    - ما إذا كان التسجيلة الاستنادية تحتوي على عنوان محدد يتوافق مع قواعد الفهرسة
+      الوصفية، وبالتالي يمكن استخدامها كمدخل رئيسي أو مضاف، أو موضوع، أو عنوان سلسلة.
+  - - choices:
+        '0': Don't redirect
+        '1': Redirect
+      pref: RedirectToSoleResult
+    - to the result if a catalog search via the OPAC or staff interface returns only
+      one record.
+  نموذج البحث:
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      default: 0
+      pref: LoadSearchHistoryToTheFirstLoggedUser
+    - سجل البحث الخاص بالمستخدم غير المسجل إلى المستفيد التالي مسجل الدخول.
+  - - عرض التبويبات في البحث المتقدم في واجهة الموظفين لتقييد عمليات البحث على
+    - class: long
+      pref: AdvancedSearchTypes
+    - الحقول (افصل بين الحقول باستخدام | ). التبويبات التي تظهر في الطلب المدرج.<br/>
+    - '‫<em>القيم المدعومة حالياً</em>: أنواع المواد (<strong>itemtypes</strong>),
+      المجموعة(<strong>ccode</strong>) وموقع الترفيف (<strong>loc</strong>).'
+  - - تحديد اللغات المدرجة في قائمة البحث المتقدم المسدلة إلى ال
+    - class: long
+      pref: AdvancedSearchLanguages
+    - isO 639-2رموز لغة  (فصل القيم بـ| أو ,).
+    - 'على سبيل المثال: لقصر الإدراج على الفرنسية والإيطالية، قم بإدخال <em>ita|fre</em>.'
+  - - افتراضياً،
+    - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: expandedSearchOption
+      type: boolean
+    - '"المزيد من الخيارات" على صفحات البحث المتقدم في الأوباك وواجهة الموظف.'
+  - - افتراضيا،
+    - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: OPACNumbersPreferPhrase
+      type: boolean
+    - المعامل "phr" في عمليات البحث عن رقم الاستدعاء والرقم المعياري في الأوباك.
+  - - افتراضياً،
+    - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: IntranetNumbersPreferPhrase
+      type: boolean
+    - المعامل "phr" في عمليات البحث عن رقم الاستدعاء والرقم المعياري في واجهة الموظف.
+  هل تعني/التدقيق الإملائي:
+  - - الخدمة السويدية للتدقيق الإملائي<br/>
+    - مفتاح API للتدقيق الإملائي من LIBRIS
+    - pref: LibrisKey
+    - يمكن الحصول عليه عبر http://api.libris.kb.se/bibspell.
+  - - عنوانURL الأساسي لـ LIBRIS
+    - class: url
+      pref: LibrisURL
+    - يرجى التغيير فقط إذا كنت متأكدّا من الحاجة إلى التغيير.

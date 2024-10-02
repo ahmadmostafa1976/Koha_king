@@ -1,0 +1,144 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE AdditionalContents %]
+[% SET OpacNav = AdditionalContents.get( location => "OpacNav", lang => lang, library => logged_in_user.branchcode || default_branch, blocktitle => 0 ) %]
+[% SET OpacNavBottom = AdditionalContents.get( location => "OpacNavBottom", lang => lang, library => logged_in_user.branchcode || default_branch, blocktitle => 0 ) %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>تغيير كلمة المرور الخاصة بك &rsaquo; [% IF ( LibraryNameTitle ) %][% LibraryNameTitle | html %][% ELSE %]كوها أونلاين[% END %] الفهرس</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% BLOCK cssinclude %][% END %]
+</head>
+[% INCLUDE 'bodytag.inc' bodyid='opac-passwd' %]
+[% INCLUDE 'masthead.inc' %]
+
+<div class="main">
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/opac-user.pl">[% INCLUDE 'patron-title.inc' patron = logged_in_user %]</a>
+ [% END %]
+ [% IF ( password_updated ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/opac-passwd.pl">تغيير كلمة المرور الخاصة بك</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تم تحديث كلمة المرور</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تغيير كلمة المرور الخاصة بك</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+
+ <div class="container-fluid">
+ <div class="row">
+ <div class="col-lg-2">
+ <div id="navigation">
+ [% INCLUDE 'navigation.inc' IsPatronPage=1 %]
+ </div>
+ </div>
+ <div class="col-10 order-first order-lg-2">
+ <div id="userpasswd" class="maincontent">
+ <h1>تغيير كلمة المرور الخاصة بك </h1>
+
+ [% IF ( Error_messages ) %]
+ <div class="alert alert-warning">
+ <h2>هــناك مشكلة مع تسجيلك</h2>
+ <p>
+ [% IF ( passwords_mismatch ) %]
+ <span>كلمة المرور غير مطابقة. يرجى إعادة كتابة كلمة المرور الجديدة.</span>
+ [% END %]
+ [% IF password_too_short %]
+ <span>يجب أن تتكون كلمة المرور من [% minPasswordLength | html %] حرفاً على الأقل.</span>
+ [% END %]
+ [% IF password_too_weak %]
+ <span>يجب أن تحتوي كلمة المرور على الأقل على رقم واحد، وحرف صغير، وحرف كبير.</span>
+ [% END %]
+ [% IF password_has_whitespaces %]
+ <span>لا يجب أن تحتوي كلمة المرور على مسافات سابقة أو لاحقة.</span>
+ [% END %]
+
+ [% IF ( WrongPass ) %]
+ <span>تم إدخال كلمة المرور الحالية بشكل غير صحيح. إذا استمرت هذه المشكلة، فيرجى مطالبة موظف المكتبة بإعادة تعيين كلمة المرور الخاصة بك نيابةً عنك.</span>
+ [% END %]
+ </p>
+ </div>
+ [% END # /IF Error_messages %]
+
+ [% IF logged_in_user.category.effective_change_password %]
+ [% IF ( Ask_data ) %]
+ <form action="/cgi-bin/koha/opac-passwd.pl" name="mainform" id="mainform" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <legend class="sr-only">تغيير كلمة المرور الخاصة بك</legend>
+ <fieldset>
+ [% IF ( logged_in_user.category.effective_require_strong_password ) %]
+ <div class="alert alert-info">يجب أن تحتوي كلمة المرور على الأقل على [% logged_in_user.category.effective_min_password_length | html %] حرفًا، بما في ذلك حروف كبيرة وصغيرة وأرقام.</div>
+ [% ELSE %]
+ <div class="alert alert-info">يجب أن يكون طول كلمة المرور [% logged_in_user.category.effective_min_password_length | html %] حرفاً على الأقل.</div>
+ [% END %]
+ <div class="form-group">
+ <label for="Oldkey">كلمة المرور الحالية:</label>
+ <input class="form-control focus" type="password" id="Oldkey" size="25"  name="Oldkey" autocomplete="current-password" />
+ </div>
+ <div class="form-group">
+ <label for="Newkey">كلمة مرور جديدة:</label>
+ <input class="form-control" type="password" id="Newkey"  size="25"  name="Newkey" autocomplete="new-password" />
+ </div>
+ <div class="form-group">
+ <label for="Confirm">أعد كتابة كلمة المرور الجديدة:</label>
+ <input class="form-control" type="password"  id="Confirm" size="25" name="Confirm" autocomplete="new-password" />
+ </div>
+ </fieldset>
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-change_password" />
+ <input class="btn btn-primary" type="submit" value="تغيير كلمة المرور" />
+ <a href="/cgi-bin/koha/opac-user.pl" class="cancel">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END # /IF Ask_data %]
+ [% ELSE %]
+ <div class="alert alert-warning">لا تستطيع تغيير كلمة مرورك.</div>
+ [% END # /IF logged_in_user.category.effective_change_password %]
+
+ [% IF ( password_updated ) %]
+ <div class="alert alert-info">
+ <strong>تم تحديث كلمة المرور</strong>
+ <br />
+ لقد تمّ تغيير كلمة المرور الخاصة بك </div>
+ <form action="/cgi-bin/koha/opac-user.pl" method="post" autocomplete="off">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="borrowernumber" value="[% borrowernumber | html %]" />
+ <p><input class="btn btn-primary" type="submit" value="العودة إلى حسابي" /></p>
+ </form>
+ [% END # /IF password_updated %]
+ </div> <!-- / #userpasswd -->
+ </div> <!-- / .col-10 -->
+ </div> <!-- / .row -->
+ </div> <!-- / .container-fluid -->
+</div> <!-- / .main -->
+
+
+
+[% INCLUDE 'opac-bottom.inc' %]
+[% BLOCK jsinclude %]
+ [% Asset.js("lib/jquery/plugins/jquery.validate.min.js") | $raw %]
+ [% PROCESS 'password_check.inc' new_password => 'Newkey', minPasswordLength => logged_in_user.category.effective_min_password_length, RequireStrongPassword => logged_in_user.category.effective_require_strong_password %]
+ <script>
+        $(document).ready(function() {
+            $("#mainform").validate({
+                rules: {
+                    Newkey: {
+                        required: true,
+                        password_strong: true,
+                        password_no_spaces: true
+                    },
+                    Confirm: {
+                        required: true,
+                        password_match: true
+                    }
+                }
+            });
+        });
+    </script>
+[% END %]

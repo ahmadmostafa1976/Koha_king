@@ -1,0 +1,508 @@
+---
+patrons.pref:
+  الإخطارات والإشعارات:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: EnhancedMessagingPreferences
+    - للموظفين بإدارة الإخطارات التي سيتلقاها المستفيدون ومتى سيستلمونها.
+    - <br><strong>ملاحظة:</strong> ينطبق هذا فقط على إخطارات الكياسة. لإدارة وصول
+      المستفيد إلى هذه الإعدادات أيضًا، استخدم <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EnhancedMessagingPreferencesOPAC">EnhancedMessagingPreferencesOPAC</a>.
+    - <br><strong>ملاحظة:</strong>يتطلب هذا التفضيل الكرون <code>misc/cronjobs/process_message_queue.pl</code>
+      والكرون <code>misc/cronjobs/advance_notices.pl</code> اطلب من مدير نظامك جدولتهما.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: EnhancedMessagingPreferencesOPAC
+    - إعدادات مراسلة المستفيد في الأوباك.
+    - <br><strong>ملاحظة:</strong> يجب تفعيل </strong> <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EnhancedMessagingPreferences">EnhancedMessagingPreferences</a>
+      .
+  - - choices:
+        '0': عدم إرسال
+        '1': إرسال
+      pref: AutoEmailNewUser
+    - بريد إلكتروني إلى المستفيدين الجدد.
+    - <br><strong>ملاحظة:</strong> يستخدم ذلك إخطار WELCOME .
+  - - choices:
+        '0': عدم إخطار
+        '1': إخطار
+      pref: NotifyPasswordChange
+    - المستفيدين عند تغيير كلمة المرور الخاصة بهم.
+  - - choices:
+        '0': عدم إرسال
+        '1': إرسال
+      pref: UseEmailReceipts
+    - إيصالات البريد الإلكتروني للمستفيدين للمدفوعات والمبالغ المشطوبة.
+  - - استخدام
+    - choices:
+        B_email: البريد الإلكتروني البديل
+        MULTI: selected addresses
+        OFF: أول عنوان بريد إلكتروني صالح
+        cardnumber: رقم البطاقة
+        email: البريد الإلكتروني الرئيسي
+        emailpro: جهة الاتصال - البريد الإلكتروني الثانوي
+      default: OFF
+      pref: EmailFieldPrimary
+    - لإرسال الإخطارات عبر البريد الإلكتروني.
+    - ‫<br><strong>ملاحظة:</strong> إذا تم الضبط إلى "أول صالح", سيتم ضبط الترتيب
+      الذي يتم به التحقق من عناوين البريد الإلكتروني <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EmailFieldPrecedence">EmailFieldPrecedence</a>."a>.
+    - <br><strong>NOTE:</strong> If set to "selected addresses", the selection refers
+      to the email address fields set in <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EmailFieldSelection">EmailFieldSelection</a>.
+  - - 'عند ضبط التفضيل <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EmailFieldPrimary''>EmailFieldPrimary</a>
+      إلى ''<strong>أول صالح</strong>'', تحقق من حقول عنوان البريد الإلكتروني للمستفيد
+      بالترتيب التالي واستخدم أول عنوان بريد إلكتروني صالح تم العثور عليه:'
+    - class: multi
+      pref: EmailFieldPrecedence
+    - <br><strong>ملاحظة:</strong> يمكن استخدام كل حقول المستفيد،ولكن لكي تعمل بشكل
+      صحيح، يجب أن تحتوي على عنوان بريد إلكتروني صالح أو مقطع فارغ.
+    - الخيارات الصالحة هي <a href='http://schema.koha-community.org/__VERSION__/tables/borrowers.html'
+      target='blank'>أعمدة قاعدة البيانات</a> في جدول المستعيرين، مفصولة بعلامة |
+      (عمود).
+    - 'مثال: email|emailpro|B_email'
+  - - 'When <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EmailFieldPrimary''>EmailFieldPrimary</a>
+      is set to ''<strong>selected addresses</strong>'', send email to all valid email
+      addresses in the selected fields:'
+    - default: email
+      multiple:
+        B_email: alternate email
+        email: primary email
+        emailpro: secondary email
+      pref: EmailFieldSelection
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: TalkingTechItivaPhoneNotification
+    - تنبيه المستفيد عبر الهاتف باستخدام تقنية الحديث  i-tiva ( المدعوم حالياً إشعارات
+      المواد المتأخرة ، قبل التأخر والحجوزات).
+    - <br/><i class="fa fa-exclamation-triangle"></i> إذا كان <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=TalkingTechItivaPhoneNotification">TalkingTechItivaPhoneNotification</a>
+      مفعلاً، فيجب تعطيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PhoneNotification">PhoneNotification</a>.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: PhoneNotification
+    - توليد الإشعارات عبر الهاتف للمستفيد. سيتطلب الأمر برنامجاً مساعداً لمعالجة إشعارات
+      الهاتف.
+    - <br/><i class="fa fa-exclamation-triangle"></i> إذا كان <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PhoneNotification">PhoneNotification</a>
+      مفعلاً، يجب تعطيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=TalkingTechItivaPhoneNotification">TalkingTechItivaPhoneNotification</a>.
+  - - 'قم باستخدام SMS::Send::'
+    - pref: SMSSendDriver
+    - برنامج لإرسال الرسائل النصية القصيرة.
+    - '<br>إذا كنت تفضل إرسال الرسائل النصية القصيرة عبر البريد الإلكتروني، قم بضبط
+      SMSendDriver إلى: البريد الإلكتروني'
+    - <br><strong>ملاحظة:</strong> لقد توقف العديد من مقدمي خدماتالهاتف المحمول عن
+      دعم هذه الميزة ولا يوصى باستخدامها إلا إذا كان لديك رسالة نصية قصيرة مخصصة إلى
+      بوابة البريد الإلكتروني.
+  - - قم بتعريف اسم مستخدم/تسجيل دخول
+    - pref: SMSSendUsername
+    - وكلمة مرور
+    - pref: SMSSendPassword
+    - . تخطي من عنوان بـ
+    - class: email
+      pref: EmailSMSSendDriverFromAddress
+    - لرسائل البريد الالكترونية المرسلة باستخدام مشغل إرسال "البريد الإلكتروني".
+    - 'If the SMS::Send driver requires more options that just username/login and
+      password, entire them here as YAML key/value pairs:'
+    - pref: SMSSendAdditionalOptions
+      syntax: text/x-yaml
+      type: textarea
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: FallbackToSMSIfNoEmail
+    - إرسال رسائل مقترح الشراء عن طريق الرسائل القصيرة إذا لم يتم تحديد بريد إلكتروني
+      للمستفيد.
+  - - 'إرسال إخطارات التجديد التلقائي: '
+    - choices:
+        cron: (مهملة) وفقًا لتبديل كرون --send-notices
+        never: مطلقاً
+        preferences: وفقًا لتفضيلات مراسلات المستفيد
+      pref: AutoRenewalNotices
+  الحماية والأمان:
+  - - يجب أن تكون كلمة مرور تسجيل الدخول للموظفين والمستفيدين على الأقل
+    - class: integer
+      pref: minPasswordLength
+    - طول الأحرف.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: RequireStrongPassword
+    - كلمة مرور قوية للموظفين والمستفيدين
+    - (يجب أن تحتوي على رقم واحد على الأقل، وحرف صغير واحد وحرف كبير واحد).
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: EnableExpiredPasswordReset
+    - قدرة المستفيدين على إعادة تعيين كلمة المرور الخاصة بهم مباشرة عند انتهائها.
+    - إذا لم يتم تفعيل المستفيدين، فيجب عليهم إما استخدام ميزة 'نسيت كلمة المرور'
+      أو أن يجعلوا موظفاً
+    - إعادة تعيين كلمة المرور الخاصة بهم.
+  - - حظر حساب مستفيد إذا وصل إلى
+    - class: integer
+      pref: FailedLoginAttempts
+    - محاولات تسجيل دخول فاشلة.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: Pseudonymization
+    - التسمية البديلة للامتثال للائحة العامة لحماية البيانات للمعلومات الشخصية.
+    - سيتم نسخ المستفيدين والمعاملات إلى جدول منفصل لأغراض إحصائية.
+    - '<br/> استخدم الحقول التالية للمستفيدين:'
+    - multiple:
+        branchcode: مكتبة المستفيد
+        categorycode: فئة المستفيد
+        city: المدينة
+        country: البلد
+        dateenrolled: تاريخ إضافة المستفيد إلى كوها
+        sex: جنس المستفيد
+        sort1: فرز1
+        sort2: فرز2
+        state: المحافظة/الإقليم
+        title: لقب المستفيد
+        zipcode: الرقم البريدي
+      pref: PseudonymizationPatronFields
+    - '<br/> والحقول التالية للمعاملات:'
+    - multiple:
+        ccode: المجموعة
+        datetime: تاريخ ووقت المعاملة
+        holdingbranch: المكتبة المقتنية
+        homebranch: المكتبة الرئيسية
+        itemcallnumber: رقم استدعاء المادة
+        itemnumber: رقم المادة
+        itemtype: نوع المادة
+        location: الموقع
+        transaction_branchcode: المكتبة التي جرت بها المعاملة
+        transaction_type: نوع المعاملة
+      pref: PseudonymizationTransactionFields
+  الخصوصية:
+  - - استخدم عنوان URL التالي
+    - class: url
+      pref: PrivacyPolicyURL
+    - للإشارة إلى سياسة الخصوصية المحلية الخاصة بك في الرسائل حول الخصوصية وحماية
+      البيانات. (إذا كنت تطبق سياسة خصوصية بيانات، تأكد من عدم حظر هذه الصفحة)
+    - ‫<br><strong>ملاحظة:</strong> سيتم عرض عنوان URL إذا تم ضبط <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PrivacyPolicyConsent">PrivacyPolicyConsent</a>.
+  - - 'تعيين الموافقة على سياسة خصوصية البيانات إلى:'
+    - choices:
+        '': معطل
+        Enforced: مفروض
+        Permissive: جائز
+      pref: PrivacyPolicyConsent
+    - حين تقوم بفرض سياسة خصوصية البيانات،يجب على  المستفيدين منح الموافقة قبل استخدام
+      الأوباك. إذا قمت بضبط السماح، فإن كوها سوف يحذرك ولكن لن يقوم بالتنفيذ.
+    - ‫<br><strong>ملاحظة:</strong> إذا قمت بتفعيل هذا،يجب عليك أيضًا ضبط URL لسياسة
+      الخصوصية العامة الخاصة بك بإعدادا"<a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PrivacyPolicyURL">PrivacyPolicyURL</a>.
+  - - تجميد/إنهاء المستفيدين الذين قدموا طلب إلغاء اشتراك (موافقة مرفوضة) بعد
+    - pref: UnsubscribeReflectionDelay
+    - يومًا، عدم تعريف هوية الحسابات المجمدة/المنتهية بعد
+    - pref: PatronAnonymizeDelay
+    - يومًا وإزالة حسابات المستفيد بدون تعريف الهوية بعد
+    - pref: PatronRemovalDelay
+    - 'يومًا. <br>هام: لا يتم تنفيذ أي إجراء عندما تكون هذه التأخيرات فارغة (بدون
+      نص). لكن القيمة صفر (''0'') تترجم بأنها لا توجد تأخيرات (قم بذلك الآن)! تتم
+      الإجراءات بواسطة كرون مسح قاعدة البيانات.'
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: CookieConsent
+    - سيتم عرض موافقة ملفات تعريف الارتباط في الأوباك وواجهة الموظفين.
+    - <br><strong>ملاحظة:</strong> The cookie banner canbe customised using the <a
+      href="/cgi-bin/koha/tools/additional-contents.pl?category=html_customizations"
+      target="_blank">CookieConsentBar</a> html تخصيص.
+  - - قم بتشغيل الجافا سكريبت التالي إذا تم توفير موافقة ملفات تعريف الارتباط (على
+      سبيل المثال، رمز التتبع).
+    - initiator: populateCookieConsentedJS
+      pref: CookieConsentedJS
+      processor: prepareCookieConsentedJS
+      type: modaljs
+    - <br><strong>ملاحظة:</strong> يمكن تخصيص وحدة الموافقة على ملفات تعريف الارتباطباستخدام
+      <a href="/cgi-bin/koha/tools/additional-contents.pl?category=html_customizations"
+      target="_blank">CookieConsentPopup</a> html تخصيص.
+  انتهاء العضوية:
+  - - عند تجديد الإعارة، وضع تاريخ الانتهاء الجديد على أساس
+    - choices:
+        combination: اللاحق للتاريخ الحالي وتاريخ الانتهاء.
+        dateexpiry: التاريخ الحالي لانتهاء العضوية.
+        now: التاريخ الحالي.
+      pref: BorrowerRenewalPeriodBase
+  - - عرض إخطار إذا كان المستفيد على وشك الانتهاء أو انتهى بالفعل
+    - class: integer
+      pref: NotifyBorrowerDeparture
+    - يوما سلفاً.
+  - - إرسال إخطار بانتهاء لحساب عند قرب انتهاء بطاقة المستفيد
+    - class: integer
+      pref: MembershipExpiryDaysNotice
+    - أيام.
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/membership_expiry.pl</code>.
+      اطلب من مدير النظام جدولته.
+  عام:
+  - - choices:
+        hardno: عدم القيام بـ
+        hardyes: القيام بـ
+        softno: إلا في حالة التخطي بواسطة فئة المستفيد، لا تقم بـ
+        softyes: إلا في حالة التخطي بواسطة فئة المستفيد قم بـ
+      default: no
+      pref: CheckPrevCheckout
+    - فحص سجل المستعير لمعرفة فيما أنه سبق أن استعار هذه المادة من قبل.
+  - - قم بإطلاق تحذير إذا تمت إعارة المادة الحالية منذ أقل من
+    - default: 0
+      pref: CheckPrevCheckoutDelay
+    - منذ أيام.
+    - يتطلب تفعيل <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CheckPrevCheckout'>CheckPrevCheckout</a>.
+      لا يوجد حد زمني إذا كان 0 أو فارغاً.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: ExtendedPatronAttributes
+    - من البحث وتحرير وعرض سمات مستفيدين مخصصة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: intranetreadinghistory
+    - للموظفين للوصول إلى سجل استعارة وحجوزات المستفيد (لا يزال سجل الإعارة مخزناً،
+      بغض النظر عن السماح للموظفين بالوصول أم لا).
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: IntranetReadingHistoryHolds
+    - للموظفين للوصول إلى سجل حجوزات المستفيد (لا يزال سجل الحجوزات مخزناً، بغض النظر
+      عن السماح للموظفين بالوصول أم لا).
+  - - عند حذف المستفيد الذي يمتلك قوائم عامة أو مشتركة،
+    - choices:
+        delete: حذف هذه القوائم.
+        transfer: تغيير مالك هذه القوائم.
+      pref: ListOwnershipUponPatronDeletion
+    - جميع القوائم العامة أو المشتركة لهذا المستفيد إما سيتم حذفها أو نقلها إلى مالك
+      جديد حسب اختيارك؛ سيتم حذف القوائم الخاصة الأخرى (غير المشتركة).
+    - '<br/>عند تغيير المالك فيحذف المستفيد، استخدم رقم المستعير '
+    - class: integer
+      pref: ListOwnerDesignated
+    - كمالك جديد للقائمة، أو اترك هذا الحقل فارغًا لتغيير المالك إلى الموظف النشط
+      الذي يقوم بحذف المستفيد.
+  - - الغرامات المتأخرة لجميع الإعارات سوف ترتفع فقط حتى
+    - class: currency
+      pref: MaxFine
+    - '[% local_currency %].'
+    - تعني قيمة فارغ أنه لا يوجد حد. يتم تحديد الحد الأقصى للمادة الواحدة في مصفوفة
+      قواعد الإعارة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: patronimages
+    - يتم تحميل الصور وعرضها للمستفيدين على واجهة الموظفين.
+  - - افتراضيا، عرض
+    - class: integer
+      pref: PatronsPerPage
+    - نتيجة لكل صفحة في واجهة الموظف.
+  - - 'قائمة مفصولة بفواصل تحدد الحقول الافتراضية التي سيتم استخدامها أثناء بحث المستفيد
+      باستخدام الخيار "قياسي"في نظام المستفيدين أو نظام الإعارة الفرعي:'
+    - exclusions: anonymized|auth_method|autorenew_checkouts|date_renewed|dateenrolled|dateexpiry|lang|lastseen|login_attempts|overdrive_auth_token|password|password_expiration_date|primary_contact_method|gonenoaddress|lost|debarred|debarredcomment|branchcode|categorycode|flags|guarantorid|relationship|privacy|privacy_guarantor_checkouts|privacy_guarantor_fines|pronouns|secret|sms_provider_id|updated_on|checkprevcheckout
+      pref: DefaultPatronSearchFields
+      source: borrowers
+      type: modalselect
+    - إذا كان فارغاً، سيجعل كوها الافتراضي هو "firstname,surname,othernames,cardnumber,userid".
+      ستتم إضافة حقول إضافية إلى هذا التفضيل كخيارات بحث في القائمة المنسدلة في صفحة
+      بحث المستفيد.
+  - - choices:
+        contains: يحتوي على
+        starts_with: يبدأ بـ
+      pref: DefaultPatronSearchMethod
+    - تفعيل طريقة البحث هذه لتحديد ما إذا كان سيتم استخدام "يبدأ بـ" أو "يحتوي على"
+      لجميع عمليات بحث المستفيد، بما في ذلك الإكمال التلقائي.
+  - - 'عرض الحقول التالية من جدول قاعدة بيانات المواد كأعمدة في تبويب الإحصائيات في
+      تسجيلة المستفيد: '
+    - pref: StatisticsFields
+      source: items
+      type: modalselect
+    - 'إذا كان فارغاً، يكون الافتراضي: location|itype|ccode'
+  - - choices:
+        '0': عدم القيام
+        '1': القيام
+      pref: EnableBorrowerFiles
+    - تفعيل القدرة على رفع وإرفاق الملفات تعسفياً لتسجيلة المستعير.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: useDischarge
+    - موظفي المكتبة لإخلاء طرف المستعيرين والمستعيرين لطلب إخلاء الطرف.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: FeeOnChangePatronCategory
+    - قم بفرض رسوم عندما يقوم المستفيد بالتغيير إلى فئة ذات رسم تسجيل.
+  - - حدد أنشطة المستفيد التي يجب تتبعها للدلالة على نشاط المستفيد. في كل مرة يتم
+      فيها حدوث أحد هذه الأنشطة، سيتم تحديثborders.lastseen بالتاريخ والوقت الحاليين.
+    - multiple:
+        article: وضع طلب مقال
+        check_in: رد مادة
+        check_out: إعارة مادة
+        connection: الاتصال بكوها عبر SIP أو ILSDI
+        hold: وضع حجز على مادة
+        login: تسجيل الدخول
+        renewal: تجديد مادة
+      pref: TrackLastPatronActivityTriggers
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: AutoApprovePatronProfileSettings
+    - الموافقة التلقائية على تغييرات تفاصيل المستفيد من الأوباك.
+    - يتطلب تفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACPatronDetails">OPACPatronDetails</a>.
+  - - choices:
+        '0': السماح لكل المستخدمين المصرح لهم
+        '1': السماح للمكتبيين المميزين فقط
+      pref: ProtectSuperlibrarianPrivileges
+    - للوصول إلى/تغيير امتيازات المكتبي المميز.
+    - <br><strong>ملاحظة:</strong> يحتاج المستخدم المصرح له إلى إشارة 'صلاحية' (إذا
+      لم مكتبيًا مميزًا)
+  - - choices:
+        '0': السماح للموظفين فقط
+        '1': السماح للمستفيدين
+      pref: AllowPatronToControlAutorenewal
+    - بالسماح/عدم السماح بالتجديد التلقائي للحساب. عند السماح، سيكون المستفيد قادراً
+      على تحديث حسابه الخاص للسماح/عدم السماح بالتجديد التلقائي.
+  - - تجميد المستفيدين المنتهية حساباتهم بعد
+    - class: integer
+      pref: LockExpiredDelay
+    - يوماً. اتركه فارغاً لتعطيل هذا السلوك.
+    - <br><strong>ملاحظة:</strong>يتطلب هذا التفضيل الكرون misc/cronjobs/cleanup_database.pl.
+      اطلب من مدير نظامك جدولته.
+  علاقات المستفيد:
+  - - 'يمكن أن يكون الكفيل أحد التاليين للذين يقوم بكفالتهم:'
+    - class: multi
+      pref: borrowerRelationship
+    - (input multiple choices separated by |).
+  - - 'When adding a guarantee to a guarantor, whether it''s from the guarantor''s
+      form or the guarantee''s form, fill the following fields in the guarantee''s
+      member entry form from the guarantors record:'
+    - multiple:
+        B_address: العنوان البديل - العنوان
+        B_address2: العنوان البديل - العنوان 2
+        B_city: العنوان البديل - المدينة
+        B_country: العنوان البديل - البلد
+        B_email: العنوان البديل - البريد الإلكتروني
+        B_phone: العنوان البديل - الهاتف
+        B_state: العنوان البديل - المحافظة/الإقليم
+        B_streetnumber: العنوان البديل - رقم الشارع
+        B_streettype: العنوان البديل - نوع الشارع
+        B_zipcode: العنوان البديل - الرمز البريدي
+        address: العنوان الرئيسي - العنوان
+        address2: العنوان الرئيسي - العنوان 2
+        altcontactaddress1: جهة الاتصال البديلة- العنوان
+        altcontactaddress2: جهة الاتصال البديلة- العنوان 2
+        altcontactaddress3: جهة الاتصال البديلة- المدينة
+        altcontactcountry: جهة الاتصال البديلة- البلد
+        altcontactfirstname: جهة الاتصال البديلة- الاسم الأول
+        altcontactphone: جهة الاتصال البديلة- الهاتف
+        altcontactstate: جهة الاتصال البديلة- المحافظة/ الإقليم
+        altcontactsurname: جهة الاتصال البديلة- اللقب
+        altcontactzipcode: جهة الاتصال البديلة - الرمز البريدي
+        city: العنوان الرئيسي - المدينة
+        contactnote: العنوان البديل - ملاحظة جهة الاتصال
+        country: العنوان الرئيسي - البلد
+        email: جهة الاتصال - البريد الإلكتروني الرئيسي
+        emailpro: جهة الاتصال - البريد الإلكتروني الثانوي
+        fax: جهة الاتصال - الفاكس
+        mobile: جهة الاتصال - هاتف آخر
+        phone: جهة الاتصال - الهاتف الرئيسي
+        phonepro: جهة الاتصال - الهاتف الثانوي
+        state: العنوان الرئيسي - المحافظة/الإقليم
+        streetnumber: العنوان الرئيسي - رقم الشارع
+        streettype: العنوان الرئيسي - نوع الشارع
+        surname: اسم العائلة
+        zipcode: العنوان الرئيسي - الرمز البريدي
+      pref: PrefillGuaranteeField
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowStaffToSetCheckoutsVisibilityForGuarantor
+    - الموظفين لضبط قدرة عرض إعارات المستفيد بواسطة المستفيدين المرتبطين في الأوباك.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: RedirectGuaranteeEmail
+    - إرسال رسائل البريد الإلكتروني إلى كل من المكفولين وضامنيهم. لا يؤثر هذا على
+      المستفيدين بدون ضامنين.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowStaffToSetFinesVisibilityForGuarantor
+    - للموظفين بضبط قدرة عرض غرامات المستفيد بواسطة المستفيدين المرتبطين بهم في الأوباك.
+  - - معلومات الضامن
+    - choices:
+        '0': لا يحتاج إلى
+        '1': يجب أن يكون لديه
+      pref: ChildNeedsGuarantor
+    - ضامن عند إضافة المستفيد.
+  نماذج المستفيد:
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''>التالية </a> يجب ملؤها في شاشة إدخال المستفيد:'
+    - exclusions: flags
+      pref: BorrowerMandatoryField
+      source: borrowers
+      type: modalselect
+    - <strong>ملاحظة:</strong>عند تفعيل  <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=autoMemberNum">autoMemberNum</a>،
+      يجب ألا يحتوي التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=BorrowerMandatoryField">BorrowerMandatoryField</a>على
+      حقل <code>cardnumber</code>.
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''>التالية </a> لن تظهر في شاشة إدخال المستفيد:'
+    - exclusions: branchcode|categorycode|flags
+      pref: BorrowerUnwantedField
+      source: borrowers
+      type: modalselect
+  - - 'يمكن أن يحمل المستعيرون أحد العناوين التالية:'
+    - class: multi
+      pref: BorrowersTitles
+    - (قم بفصل الخيارات المتعددة بواسطة |)
+  - - choices:
+        '0': عدم القيام
+        '1': القيام بـ
+      pref: autoMemberNum
+    - اجعل الافتراضي لحقل رقم البطاقة في شاشة إضافة المستفيد هو رقم البطاقة التالي
+      المتاح (على سبيل المثال, إذا كان أكبر رقم بطاقة مستخدم حاليا هو26345000012941,سيكون
+      افتراضي الحقل هو  26345000012942).
+    - <strong>ملاحظة:</strong> إذا تم تفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=autoMemberNum">autoMemberNum</a>
+      يجب ألا يحتوي التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=BorrowerMandatoryField">BorrowerMandatoryField</a>
+      على الحقل <code>cardnumber</code>.
+  - - أرقام البطاقات للمستفيدين يجب أن تكون
+    - pref: CardnumberLength
+    - حرفا. يمكن أن يكون الطول رقما مفرداً لتحديد طولا بالضبط، نطاق مفصول بفاصلة (أي
+      "حد أدنى، حد أقصى)، أو الحد الأقصى بدون حد أدنى (أي "حد لأقصى").
+    - إذا تم إدراج "رقم البطاقة" في قائمة <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=BorrowerMandatoryField">BorrowerMandatoryField</a>،
+      يصبح الحد الأدنى لطول الرقم افتراضياً هو واحد، في حالة عدم تحديد الطول هنا.
+      ولا يمكن أن يكون الحد الأقصى أكبر من حجم حقل قاعدة البيانات وهو 32.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: uppercasesurnames
+    - تخزين وعرض أسماء العائلة بالخط العريض.
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''>التالية</a>:'
+    - pref: PatronQuickAddFields
+      source: borrowers
+      type: modalselect
+    - ستتم إضافته إلى نموذج الإضافة السريعة للمستفيد عند إدخال مستفيد جديد. يعرض فقط
+      الحقول الإلزامية والحقول المحددة هنا. إذا كان قابلا للتطبيق، فسيتم عرض نموذج
+      الكفيل أيضًا، وسيتم تجاهل الحقول الفردية في هذا النموذج.
+  - - 'عند إضافة مستفيدين جدد أو تعديل المستفيدين الحاليين، قم بطي الحقول التالية
+      من النموذج الكامل (لا يزال من الممكن توسيعها لاحقًا):'
+    - multiple:
+        additional: سمات ومعرفات إضافية
+        alt_address: عنوان بديل
+        alt_contact: جهة اتصال بديلة
+        debarments: قيود المستفيد (المستفيدين (المستفيدين الحاليين)
+        flags: إشارات حساب المستفيد (المستفيدين (المستفيدين الحاليين)
+        guarantor: كفيل مستفيد
+        housebound: أدوار المرابطة بالمنزل
+        identity: هوية المستفيد
+        lib_mgmt: إدارة المكتبة
+        lib_setup: تنصيب المكتبة
+        login: تسجيل دخول واجهة الموظف/الأوباك
+        messaging: تفضيلات مراسلة المستفيد
+        nonpatron_guarantor: كفيل غير مستفيد
+        primary_address: العنوان الرئيسي
+        primary_contact: معلومات جهة الاتصال
+      pref: CollapseFieldsPatronAddForm
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/borrowers.html''
+      target=''blank''>التالية</a>:'
+    - pref: PatronDuplicateMatchingAddFields
+      source: borrowers
+      type: modalselect
+    - سيستخدم لاكتشاف التكرارات المحتملة عند إضافة مستفيد جديد.

@@ -1,0 +1,400 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 128a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_128a" class="cat value_builder">
+ <h1>يونيمارك باني الحقل 128a</h1>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td><label for="f1">شكل العمل الموسيقي:</label></td>
+ <td>
+ <select name="f1" id="f1">
+ [% IF ( f1ai ) %]
+ <option value="ai#" selected="selected">هواء</option>
+ [% ELSE %]
+ <option value="ai#">هواء</option>
+ [% END %]
+ [% IF ( f1an ) %]
+ <option value="an#" selected="selected">النشيد الوطني </option>
+ [% ELSE %]
+ <option value="an#">النشيد الوطني </option>
+ [% END %]
+ [% IF ( f1ar ) %]
+ <option value="ar#" selected="selected">نغم</option>
+ [% ELSE %]
+ <option value="ar#">نغم</option>
+ [% END %]
+ [% IF ( f1bt ) %]
+ <option value="bt#" selected="selected">رقص الباليه</option>
+ [% ELSE %]
+ <option value="bt#">رقص الباليه</option>
+ [% END %]
+ [% IF ( f1bd ) %]
+ <option value="bd#" selected="selected">أغنية راقصة</option>
+ [% ELSE %]
+ <option value="bd#">أغنية راقصة</option>
+ [% END %]
+ [% IF ( f1bg ) %]
+ <option value="bg#" selected="selected">موسيقى البلوجراس</option>
+ [% ELSE %]
+ <option value="bg#">موسيقى البلوجراس</option>
+ [% END %]
+ [% IF ( f1bl ) %]
+ <option value="bl#" selected="selected">موسيقى البلوز</option>
+ [% ELSE %]
+ <option value="bl#">موسيقى البلوز</option>
+ [% END %]
+ [% IF ( f1cb ) %]
+ <option value="cb#" selected="selected">أنشودة، غير مسيحية</option>
+ [% ELSE %]
+ <option value="cb#">أنشودة، غير مسيحية</option>
+ [% END %]
+ [% IF ( f1cc ) %]
+ <option value="cc#" selected="selected">انشودة، مسيحية</option>
+ [% ELSE %]
+ <option value="cc#">انشودة، مسيحية</option>
+ [% END %]
+ [% IF ( f1cl ) %]
+ <option value="cl#" selected="selected">تمهيد- الكورال</option>
+ [% ELSE %]
+ <option value="cl#">تمهيد- الكورال</option>
+ [% END %]
+ [% IF ( f1cg ) %]
+ <option value="cg#" selected="selected">حفلة موسيقية كبيرة</option>
+ [% ELSE %]
+ <option value="cg#">حفلة موسيقية كبيرة</option>
+ [% END %]
+ [% IF ( f1ch ) %]
+ <option value="ch#" selected="selected">كورالي</option>
+ [% ELSE %]
+ <option value="ch#">كورالي</option>
+ [% END %]
+ [% IF ( f1cn ) %]
+ <option value="cn#" selected="selected">شريعة</option>
+ [% ELSE %]
+ <option value="cn#">شريعة</option>
+ [% END %]
+ [% IF ( f1co ) %]
+ <option value="co#" selected="selected">كونشرتو</option>
+ [% ELSE %]
+ <option value="co#">كونشرتو</option>
+ [% END %]
+ [% IF ( f1cp ) %]
+ <option value="cp#" selected="selected">أغنية، مجسمة</option>
+ [% ELSE %]
+ <option value="cp#">أغنية، مجسمة</option>
+ [% END %]
+ [% IF ( f1cr ) %]
+ <option value="cr#" selected="selected">ترنيمة</option>
+ [% ELSE %]
+ <option value="cr#">ترنيمة</option>
+ [% END %]
+ [% IF ( f1cs ) %]
+ <option value="cs#" selected="selected">تلحين بالصدفة / موسيقى بالصدفة</option>
+ [% ELSE %]
+ <option value="cs#">تلحين بالصدفة / موسيقى بالصدفة</option>
+ [% END %]
+ [% IF ( f1ct ) %]
+ <option value="ct#" selected="selected">الكانتاتة (قصة)</option>
+ [% ELSE %]
+ <option value="ct#">الكانتاتة (قصة)</option>
+ [% END %]
+ [% IF ( f1cy ) %]
+ <option value="cy#" selected="selected">موسيقى الكانتري</option>
+ [% ELSE %]
+ <option value="cy#">موسيقى الكانتري</option>
+ [% END %]
+ [% IF ( f1cz ) %]
+ <option value="cz#" selected="selected">قصيدة غنائية</option>
+ [% ELSE %]
+ <option value="cz#">قصيدة غنائية</option>
+ [% END %]
+ [% IF ( f1df ) %]
+ <option value="df#" selected="selected">نموذج الرقص</option>
+ [% ELSE %]
+ <option value="df#">نموذج الرقص</option>
+ [% END %]
+ [% IF ( f1dv ) %]
+ <option value="dv#" selected="selected">مقطوعة موسيقية خفيفة</option>
+ [% ELSE %]
+ <option value="dv#">مقطوعة موسيقية خفيفة</option>
+ [% END %]
+ [% IF ( f1fg ) %]
+ <option value="fg#" selected="selected">موسيقى فوغا</option>
+ [% ELSE %]
+ <option value="fg#">موسيقى فوغا</option>
+ [% END %]
+ [% IF ( f1fm ) %]
+ <option value="fm#" selected="selected">موسيقى شعبية</option>
+ [% ELSE %]
+ <option value="fm#">موسيقى شعبية</option>
+ [% END %]
+ [% IF ( f1ft ) %]
+ <option value="ft#" selected="selected">فنتازيا لحن موسيقي</option>
+ [% ELSE %]
+ <option value="ft#">فنتازيا لحن موسيقي</option>
+ [% END %]
+ [% IF ( f1gm ) %]
+ <option value="gm#" selected="selected">الموسيقى الإنجيلية</option>
+ [% ELSE %]
+ <option value="gm#">الموسيقى الإنجيلية</option>
+ [% END %]
+ [% IF ( f1hy ) %]
+ <option value="hy#" selected="selected">نشيد</option>
+ [% ELSE %]
+ <option value="hy#">نشيد</option>
+ [% END %]
+ [% IF ( f1in ) %]
+ <option value="in#" selected="selected">اللحن الفاصل</option>
+ [% ELSE %]
+ <option value="in#">اللحن الفاصل</option>
+ [% END %]
+ [% IF ( f1jz ) %]
+ <option value="jz#" selected="selected">جاز</option>
+ [% ELSE %]
+ <option value="jz#">جاز</option>
+ [% END %]
+ [% IF ( f1li ) %]
+ <option value="li#" selected="selected">كذب</option>
+ [% ELSE %]
+ <option value="li#">كذب</option>
+ [% END %]
+ [% IF ( f1mc ) %]
+ <option value="mc#" selected="selected">موسيقى ساخرة وكوميدية</option>
+ [% ELSE %]
+ <option value="mc#">موسيقى ساخرة وكوميدية</option>
+ [% END %]
+ [% IF ( f1md ) %]
+ <option value="md#" selected="selected">قصيدة قصيرة</option>
+ [% ELSE %]
+ <option value="md#">قصيدة قصيرة</option>
+ [% END %]
+ [% IF ( f1mi ) %]
+ <option value="mi#" selected="selected">المينيويت رقصة بطيئة</option>
+ [% ELSE %]
+ <option value="mi#">المينيويت رقصة بطيئة</option>
+ [% END %]
+ [% IF ( f1mr ) %]
+ <option value="mr#" selected="selected">مارس</option>
+ [% ELSE %]
+ <option value="mr#">مارس</option>
+ [% END %]
+ [% IF ( f1ms ) %]
+ <option value="ms#" selected="selected">كتلة</option>
+ [% ELSE %]
+ <option value="ms#">كتلة</option>
+ [% END %]
+ [% IF ( f1mo ) %]
+ <option value="mo#" selected="selected">ترنيمة</option>
+ [% ELSE %]
+ <option value="mo#">ترنيمة</option>
+ [% END %]
+ [% IF ( f1mp ) %]
+ <option value="mp#" selected="selected">موسيقى صورة متحركة</option>
+ [% ELSE %]
+ <option value="mp#">موسيقى صورة متحركة</option>
+ [% END %]
+ [% IF ( f1mu ) %]
+ <option value="mu#" selected="selected">أشكال متعددة</option>
+ [% ELSE %]
+ <option value="mu#">أشكال متعددة</option>
+ [% END %]
+ [% IF ( f1mz ) %]
+ <option value="mz#" selected="selected">مازوركا (رقصة بولندية)</option>
+ [% ELSE %]
+ <option value="mz#">مازوركا (رقصة بولندية)</option>
+ [% END %]
+ [% IF ( f1nc ) %]
+ <option value="nc#" selected="selected">مقطوعة حالمة</option>
+ [% ELSE %]
+ <option value="nc#">مقطوعة حالمة</option>
+ [% END %]
+ [% IF ( f1op ) %]
+ <option value="op#" selected="selected">أوبرا</option>
+ [% ELSE %]
+ <option value="op#">أوبرا</option>
+ [% END %]
+ [% IF ( f1or ) %]
+ <option value="or#" selected="selected">خطابة</option>
+ [% ELSE %]
+ <option value="or#">خطابة</option>
+ [% END %]
+ [% IF ( f1ov ) %]
+ <option value="ov#" selected="selected">استهلال</option>
+ [% ELSE %]
+ <option value="ov#">استهلال</option>
+ [% END %]
+ [% IF ( f1pf ) %]
+ <option value="pf#" selected="selected">مقدمة وفوجة</option>
+ [% ELSE %]
+ <option value="pf#">مقدمة وفوجة</option>
+ [% END %]
+ [% IF ( f1pg ) %]
+ <option value="pg#" selected="selected">موسيقى مبرمجة</option>
+ [% ELSE %]
+ <option value="pg#">موسيقى مبرمجة</option>
+ [% END %]
+ [% IF ( f1pm ) %]
+ <option value="pm#" selected="selected">شغف الموسيقى</option>
+ [% ELSE %]
+ <option value="pm#">شغف الموسيقى</option>
+ [% END %]
+ [% IF ( f1po ) %]
+ <option value="po#" selected="selected">البولونيز</option>
+ [% ELSE %]
+ <option value="po#">البولونيز</option>
+ [% END %]
+ [% IF ( f1pp ) %]
+ <option value="pp#" selected="selected">موسيقى شعبية</option>
+ [% ELSE %]
+ <option value="pp#">موسيقى شعبية</option>
+ [% END %]
+ [% IF ( f1ps ) %]
+ <option value="ps#" selected="selected">باساكاليا</option>
+ [% ELSE %]
+ <option value="ps#">باساكاليا</option>
+ [% END %]
+ [% IF ( f1pt ) %]
+ <option value="pt#" selected="selected">أغنية مجزأة</option>
+ [% ELSE %]
+ <option value="pt#">أغنية مجزأة</option>
+ [% END %]
+ [% IF ( f1pv ) %]
+ <option value="pv#" selected="selected">بافان</option>
+ [% ELSE %]
+ <option value="pv#">بافان</option>
+ [% END %]
+ [% IF ( f1rc ) %]
+ <option value="rc#" selected="selected">موسيقى الروك</option>
+ [% ELSE %]
+ <option value="rc#">موسيقى الروك</option>
+ [% END %]
+ [% IF ( f1rd ) %]
+ <option value="rd#" selected="selected">الرندة مقطوعة موسيقية</option>
+ [% ELSE %]
+ <option value="rd#">الرندة مقطوعة موسيقية</option>
+ [% END %]
+ [% IF ( f1rg ) %]
+ <option value="rg#" selected="selected">موسيقى الزنوج</option>
+ [% ELSE %]
+ <option value="rg#">موسيقى الزنوج</option>
+ [% END %]
+ [% IF ( f1ri ) %]
+ <option value="ri#" selected="selected">للبحث</option>
+ [% ELSE %]
+ <option value="ri#">للبحث</option>
+ [% END %]
+ [% IF ( f1rp ) %]
+ <option value="rp#" selected="selected">قصيدة ملحمية</option>
+ [% ELSE %]
+ <option value="rp#">قصيدة ملحمية</option>
+ [% END %]
+ [% IF ( f1rq ) %]
+ <option value="rq#" selected="selected">قداس جنائزي</option>
+ [% ELSE %]
+ <option value="rq#">قداس جنائزي</option>
+ [% END %]
+ [% IF ( f1sg ) %]
+ <option value="sg#" selected="selected">أغنية</option>
+ [% ELSE %]
+ <option value="sg#">أغنية</option>
+ [% END %]
+ [% IF ( f1si ) %]
+ <option value="si#" selected="selected">سمفونية</option>
+ [% ELSE %]
+ <option value="si#">سمفونية</option>
+ [% END %]
+ [% IF ( f1sn ) %]
+ <option value="sn#" selected="selected">سوناتا لحن موسيقي</option>
+ [% ELSE %]
+ <option value="sn#">سوناتا لحن موسيقي</option>
+ [% END %]
+ [% IF ( f1sp ) %]
+ <option value="sp#" selected="selected">قصيدة سيمفونية</option>
+ [% ELSE %]
+ <option value="sp#">قصيدة سيمفونية</option>
+ [% END %]
+ [% IF ( f1sq ) %]
+ <option value="sq#" selected="selected">ساحة الرقص</option>
+ [% ELSE %]
+ <option value="sq#">ساحة الرقص</option>
+ [% END %]
+ [% IF ( f1st ) %]
+ <option value="st#" selected="selected">دراسة, تمرين</option>
+ [% ELSE %]
+ <option value="st#">دراسة, تمرين</option>
+ [% END %]
+ [% IF ( f1su ) %]
+ <option value="su#" selected="selected">ملائم</option>
+ [% ELSE %]
+ <option value="su#">ملائم</option>
+ [% END %]
+ [% IF ( f1sy ) %]
+ <option value="sy#" selected="selected">سيمفونية</option>
+ [% ELSE %]
+ <option value="sy#">سيمفونية</option>
+ [% END %]
+ [% IF ( f1tc ) %]
+ <option value="tc#" selected="selected">توكاتا</option>
+ [% ELSE %]
+ <option value="tc#">توكاتا</option>
+ [% END %]
+ [% IF ( f1ts ) %]
+ <option value="ts#" selected="selected">سوناتة ثلاثية</option>
+ [% ELSE %]
+ <option value="ts#">سوناتة ثلاثية</option>
+ [% END %]
+ [% IF ( f1vr ) %]
+ <option value="vr#" selected="selected">التباين</option>
+ [% ELSE %]
+ <option value="vr#">التباين</option>
+ [% END %]
+ [% IF ( f1wz ) %]
+ <option value="wz#" selected="selected">الفالس</option>
+ [% ELSE %]
+ <option value="wz#">الفالس</option>
+ [% END %]
+ [% IF ( f1zz ) %]
+ <option value="zz#" selected="selected">شكل آخر</option>
+ [% ELSE %]
+ <option value="zz#">شكل آخر</option>
+ [% END %]
+ </select>
+ </td></tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="report();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+[% MACRO jsinclude BLOCK %]
+ <script>
+        var dateformat = "[% Koha.Preference('dateformat') | html %]";
+        function report() {
+            var doc = opener.document;
+            var field = doc.getElementById("[% index | html %]");
+            field.value = document.f_pop.f1.value;
+            window.close();
+            return false;
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' popup_window=1 %]

@@ -1,0 +1,120 @@
+[% INCLUDE 'doc-head-open.inc' %]
+<title>أضف إلى قائمتك &rsaquo; [% IF ( LibraryNameTitle ) %][% LibraryNameTitle | html %][% ELSE %]كوها أونلاين[% END %] الفهرس</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% BLOCK cssinclude %][% END %]
+</head>
+[% INCLUDE 'bodytag.inc' bodyid='addtolist' bodyclass='popup' %]
+ <div class="main">
+ <div class="container-fluid">
+ <div class="row">
+ <div class="col order-first order-md-first order-lg-2">
+ <div id="useraddbybiblionumber" class="maincontent">
+ [% IF ( authorized ) %]
+ [% UNLESS ( newshelf ) %]
+ [% IF ( multiple ) %]
+ <h1>إضافة [% total | html %] مواد إلى [% IF ( singleshelf ) %]<em>[% shelfname | html %]</em>: [% ELSE %]<span>قائمة:</span>[% END %]</h1>
+ [% ELSE %]
+ <h1>إضافة إلى [% IF ( singleshelf ) %]<em>[% shelfname | html %]</em>[% ELSE %]<span>قائمة:</span>[% END %]</h1>
+ [% END %]
+ <ul>
+ [% FOREACH biblio IN biblios %]
+ <li>[% INCLUDE 'biblio-title.inc' %]
+ [% IF ( biblio.author ) %]<span class="author"> [% biblio.author | html %][% END %]
+ </li>
+ [% END %]
+ </ul>
+ [% IF private_shelves.count or public_shelves.count or private_shelves_shared_with_me.count %]
+ <form name="f1" action="/cgi-bin/koha/opac-addbybiblionumber.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset>
+ <legend>اختر قائمة</legend>
+ <label for="shelfnumber">إضافة إلى قائمة:</label> <select name="shelfnumber" id="shelfnumber">
+ [% IF private_shelves.count %]<optgroup label="قوائم خاصة">
+ [% FOREACH private_shelf IN private_shelves %]
+ <option value="[% private_shelf.shelfnumber | html %]">[% private_shelf.shelfname | html %]</option>
+ [% END %]
+ </optgroup>[% END %]
+ [% IF private_shelves_shared_with_me.count %]<optgroup label="قوائم خاصة مشاركة معي">
+ [% FOREACH private_shelf IN private_shelves_shared_with_me %]
+ <option value="[% private_shelf.shelfnumber | html %]">[% private_shelf.shelfname | html %]</option>
+ [% END %]
+ </optgroup>[% END %]
+ [% IF public_shelves.count %]<optgroup label="قوائم عامة">
+ [% FOREACH public_shelf IN public_shelves %]
+ <option value="[% public_shelf.shelfnumber | html %]">[% public_shelf.shelfname | html %]</option>
+ [% END %]
+ </optgroup>[% END %]
+ </select>
+ [% FOREACH biblio IN biblios %]
+ <input type="hidden" name="biblionumber" value="[% biblio.biblionumber | html %]" />
+ [% END %]
+ <input type="hidden" name="op" value="cud-modifyshelfcontents" />
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a class="close cancel" href="#">إلغاء</a>
+ </fieldset>
+ </form>
+ <p>...أو...</p>
+ [% ELSE %]
+ [% IF ( singleshelf ) %]
+ <form name="f1" action="/cgi-bin/koha/opac-addbybiblionumber.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ [% FOREACH biblio IN biblios %]
+ <input type="hidden" name="biblionumber" value="[% biblio.biblionumber | html %]">
+ [% END %]
+ <input type="hidden" name="shelfnumber" value="[% shelfnumber | html %]" />
+ <input type="hidden" name="op" value="cud-modifyshelfcontents" /></fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a class="close cancel" href="#">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END %]
+ [% END # IF / existingshelves %]
+ [% END # / UNLESS newshelf %]
+
+ [% UNLESS ( singleshelf ) %]
+ <form name="f2" method="post" action="/cgi-bin/koha/opac-addbybiblionumber.pl">
+ [% INCLUDE 'csrf-token.inc' %]
+ <fieldset>
+ <legend>إضافة إلى قائمة جديدة:</legend>
+ <label for="newvirtualshelf">اسم القائمة:</label>
+ <input type="text" name="newvirtualshelf" id="newvirtualshelf" size="40" />
+ <label for="category">الفئة:</label>
+ <select name="public" id="public">
+ <option value="0">خاص</option>
+ [% IF (OpacAllowPublicListCreation) %]
+ <option value="1">عام</option>
+ [% END %]
+ </select>
+ </fieldset>
+ [% FOREACH biblio IN biblios %]
+ <input type="hidden" name="biblionumber" value="[% biblio.biblionumber | html %]" />
+ [% END %]
+ <fieldset class="action">
+ <input type="hidden" name="op" value="cud-add" />
+ <input type="hidden" name="sortfield" value="title" />
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a class="close cancel" href="#">إلغاء</a>
+ </fieldset>
+ </form>
+ [% END # / UNLESS singleshelf %]
+ [% ELSE %]
+ <p>
+ [% IF (errcode==1) %]
+ <span>تعذر إنشاء قائمة جديدة. يرجى التحقق مما إذا كان الاسم فريدًا.</span>
+ [% ELSE %]
+ <span>معذرة، لا يمكنك إضافة مواد إلى هذه القائمة.</span>
+ [% END %]
+ </p>
+ [% END # IF authorized %]
+ <p><a href="#" class="close">أغلق هذه النافذة.</a></p>
+ </div> <!-- / #useraddbybiblionumber -->
+ </div> <!-- / .span12 -->
+ </div> <!-- / .row -->
+ </div> <!-- / .container-fluid -->
+ </div> <!-- / .main -->
+
+[% INCLUDE 'opac-bottom.inc' is_popup=1 %]
+[% BLOCK jsinclude %][% END %]

@@ -1,0 +1,78 @@
+---
+serials.pref:
+  Notifications:
+  - - Use the from email address
+    - class: email
+      pref: SerialsDefaultEmailAddress
+    - when sending serial claim notices.
+    - '<br>If left empty, it will fall back to the first defined address in the following
+      list: library email, <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress">KohaAdminEmailAddress</a>.'
+  - - Use the reply-to email address
+    - class: email
+      pref: SerialsDefaultReplyTo
+    - when sending serial claim notices.
+    - '<br>If left empty, it will fall back to the first defined address in the following
+      list: Library ReplyTo, Library Email, <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ReplytoDefault">ReplytoDefault</a>,
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress">KohaAdminEmailAddress</a>.'
+  خصائص:
+  - - عرض
+    - choices:
+        holdings: تبويب المقتنيات
+        serialcollection: تبويب مجموعة الدورية
+        subscriptions: تبويب الاشتراكات
+        titlenotes: title notes tab
+      pref: opacSerialDefaultTab
+    - كتبويب افتراضي للدوريات في الأوباك. يرجى ملاحظة أن تبويب مجموعة الدورية متاح
+      حاليًا فقط ليونيمارك.
+  - - choices:
+        '0': عدم إضافة
+        '1': إضافة
+      pref: RenewSerialAddsSuggestion
+    - اقتراح للتسجيلة الببليوغرافية عند تجديد الدورية المرفقة بها.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: RoutingSerials
+    - خاصية قائمة التمرير في نظام الدوريات الفرعي.
+  - - choices:
+        '0': عدم وضع
+        '1': وضع
+      pref: RoutingListAddReserves
+    - الدوريات المستلمة في الحجز إذا كانت في قائمة تمرير.
+  - - 'إدراج الملاحظة التالية في جميع قوائم التمرير:'
+    - class: code
+      pref: RoutingListNote
+      type: textarea
+  - - عرض الـ
+    - class: integer
+      pref: StaffSerialIssueDisplayCount
+    - الأعداد السابقة من الدورية على واجهة الموظف.
+  - - عرض الـ
+    - class: integer
+      pref: OPACSerialIssueDisplayCount
+    - الأعداد السابقة من دورية في الأوباك.
+  - - عند عرض معلومات الاشتراك للتسجيلة البيبليوغرافية، قم مسبقاً بتحديد
+    - choices:
+        full: سجل كامل
+        simplified: سجل موجز
+      pref: SubscriptionHistory
+    - عرض أعداد الدورية.
+  - - قائمة الحقول التي يجب عدم إعادة كتابتها عند تكرار الاشتراك (مفصولة بعلامة |)
+    - pref: SubscriptionDuplicateDroppedInput
+  - - choices:
+        '0': لا تجعل
+        '1': اجعل
+      pref: makePreviousSerialAvailable
+    - الدورية السابقة متاحة تلقائيًا عند استلام عدد دورية جديد. كما يمكن أيضًا تعيين
+      العدد السابق لنوع مادة أخرى عند استلام عدد جديد. يرجى ملاحظة أنه يجب تعيين تفضيل
+      النظام <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=item-level_itypes">item-level_itypes</a>
+      إلى مادة معينة.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: PreserveSerialNotes
+    - ملء الملاحظات مسبقًا من آخر دورية 'وصلت' عند توليد العدد التالي 'المتوقع'.
+  - - فقط عرض الـ
+    - class: integer
+      pref: SerialsSearchResultsLimit
+    - دوريات الأولى عند إجراء بحث دوريات متقدم.

@@ -1,0 +1,3865 @@
+---
+description:
+- قيم استناد نظام كوها الافتراضية
+tables:
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: '0'
+      category: YES_NO
+      lib: لا
+      lib_opac: لا
+    - authorised_value: '1'
+      category: YES_NO
+      lib: نعم
+      lib_opac: نعم
+    - authorised_value: SIP00
+      category: PAYMENT_TYPE
+      lib: نقداً من خلال SIP2
+      lib_opac: نقداً
+    - authorised_value: SIP01
+      category: PAYMENT_TYPE
+      lib: فيزا عبر SIP2
+      lib_opac: فيزا
+    - authorised_value: SIP02
+      category: PAYMENT_TYPE
+      lib: بطاقة ائتمان عبر SIP2
+      lib_opac: بطاقة ائتمان
+    - authorised_value: CASH
+      category: PAYMENT_TYPE
+      lib: نقداً
+      lib_opac: نقداً
+    translatable:
+    - lib
+    - lib_opac
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: EW
+      category: HSBND_FREQ
+      lib: كل أسبوع
+    - authorised_value: active
+      category: ERM_AGREEMENT_STATUS
+      lib: نشط
+    - authorised_value: in_negotiation
+      category: ERM_AGREEMENT_STATUS
+      lib: قيد التفاوض
+    - authorised_value: closed
+      category: ERM_AGREEMENT_STATUS
+      lib: مغلق
+    - authorised_value: expired
+      category: ERM_AGREEMENT_CLOSURE_REASON
+      lib: منتهى
+    - authorised_value: cancelled
+      category: ERM_AGREEMENT_CLOSURE_REASON
+      lib: ملغاة
+    - authorised_value: for_review
+      category: ERM_AGREEMENT_RENEWAL_PRIORITY
+      lib: للمراجعة
+    - authorised_value: renew
+      category: ERM_AGREEMENT_RENEWAL_PRIORITY
+      lib: تجديد
+    - authorised_value: cancel
+      category: ERM_AGREEMENT_RENEWAL_PRIORITY
+      lib: إلغاء
+    - authorised_value: librarian
+      category: ERM_USER_ROLES
+      lib: موظف المكتبة لإدارة الموارد الإلكترونية
+    - authorised_value: subject_specialist
+      category: ERM_USER_ROLES
+      lib: متخصص الموضوع
+    - authorised_value: local
+      category: ERM_LICENSE_TYPE
+      lib: محلي
+    - authorised_value: consortial
+      category: ERM_LICENSE_TYPE
+      lib: اتحادي
+    - authorised_value: national
+      category: ERM_LICENSE_TYPE
+      lib: وطني
+    - authorised_value: alliance
+      category: ERM_LICENSE_TYPE
+      lib: تحالف
+    - authorised_value: in_negotiation
+      category: ERM_LICENSE_STATUS
+      lib: قيد التفاوض
+    - authorised_value: not_yet_active
+      category: ERM_LICENSE_STATUS
+      lib: غير نشط بعد
+    - authorised_value: active
+      category: ERM_LICENSE_STATUS
+      lib: نشط
+    - authorised_value: rejected
+      category: ERM_LICENSE_STATUS
+      lib: مرفوض
+    - authorised_value: expired
+      category: ERM_LICENSE_STATUS
+      lib: منتهى
+    - authorised_value: controlling
+      category: ERM_AGREEMENT_LICENSE_STATUS
+      lib: متحكم
+    - authorised_value: future
+      category: ERM_AGREEMENT_LICENSE_STATUS
+      lib: المستقبل
+    - authorised_value: history
+      category: ERM_AGREEMENT_LICENSE_STATUS
+      lib: تاريخي
+    - authorised_value: filing_cabinet
+      category: ERM_AGREEMENT_LICENSE_LOCATION
+      lib: خزانة الملفات
+    - authorised_value: cupboard
+      category: ERM_AGREEMENT_LICENSE_LOCATION
+      lib: خزانة
+    - authorised_value: local
+      category: ERM_PACKAGE_TYPE
+      lib: محلي
+    - authorised_value: complete
+      category: ERM_PACKAGE_TYPE
+      lib: تام
+    - authorised_value: AggregatedFullText
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: اكتمل التجميع
+    - authorised_value: AbstractAndIndex
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: الملخص والفهرس
+    - authorised_value: EBook
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: كتاب إلكتروني
+    - authorised_value: MixedContent
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: محتوى مختلط
+    - authorised_value: EJournal
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: دورية إلكترونية
+    - authorised_value: OnlineReference
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: مرجع على الإنترنت
+    - authorised_value: Print
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: طباعة
+    - authorised_value: StreamingMedia
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: وسائل الإعلام
+    - authorised_value: Unknown
+      category: ERM_PACKAGE_CONTENT_TYPE
+      lib: غير معروف
+    - authorised_value: journal
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: دورية
+    - authorised_value: newsletter
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: نشرة أخبار
+    - authorised_value: report
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: تقرير
+    - authorised_value: proceedings
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: الإجراءات
+    - authorised_value: website
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: موقع إلكتروني
+    - authorised_value: newspaper
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: جريدة
+    - authorised_value: unspecified
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: غير محدد
+    - authorised_value: book
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: كتاب
+    - authorised_value: ebook
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: كتاب إلكتروني
+    - authorised_value: bookseries
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: سلسلة كتب
+    - authorised_value: database
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: قاعدة البيانات
+    - authorised_value: thesisdissertation
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: أطروحة/رسالة علمية
+    - authorised_value: streamingaudio
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: بث صوتي عبر الإنترنت
+    - authorised_value: streamingvideo
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: بث فيديو عبر الإنترنت
+    - authorised_value: audiobook
+      category: ERM_TITLE_PUBLICATION_TYPE
+      lib: كتاب سمعي
+    - authorised_value: PR
+      category: ERM_REPORT_TYPES
+      lib: PR - التقرير الرئيسي للمنصة
+    - authorised_value: PR_P1
+      category: ERM_REPORT_TYPES
+      lib: PR_P1 - استخدام المنصة
+    - authorised_value: DR
+      category: ERM_REPORT_TYPES
+      lib: DR - التقرير الرئيسي لقاعدة البيانات
+    - authorised_value: DR_D1
+      category: ERM_REPORT_TYPES
+      lib: DR_D1 - البحث في قاعدة البيانات واستخدام المواد
+    - authorised_value: DR_D2
+      category: ERM_REPORT_TYPES
+      lib: DR_D2 - تم رفض الوصول إلى قاعدة البيانات
+    - authorised_value: TR
+      category: ERM_REPORT_TYPES
+      lib: TR - التقرير الرئيسي للعنوان
+    - authorised_value: TR_B1
+      category: ERM_REPORT_TYPES
+      lib: TR_B1 - طلبات الكتب (باستثناء OA_Gold)
+    - authorised_value: TR_B2
+      category: ERM_REPORT_TYPES
+      lib: TR_B2 - تم رفض الوصول إلى الكتاب
+    - authorised_value: TR_B3
+      category: ERM_REPORT_TYPES
+      lib: TR_B3 - استخدام الكتاب حسب نوع الوصول
+    - authorised_value: TR_J1
+      category: ERM_REPORT_TYPES
+      lib: TR_J1 - طلبات الدورية (باستثناء OA_Gold)
+    - authorised_value: TR_J2
+      category: ERM_REPORT_TYPES
+      lib: TR_J2 - تم رفض الوصول إلى الدورية
+    - authorised_value: TR_J3
+      category: ERM_REPORT_TYPES
+      lib: TR_J3 - استخدام الدورية حسب نوع الوصول
+    - authorised_value: TR_J4
+      category: ERM_REPORT_TYPES
+      lib: TR_J4 - طلبات الدورية بواسطة YOP(باستثناء OA_Gold)
+    - authorised_value: IR
+      category: ERM_REPORT_TYPES
+      lib: IR - التقرير الرئيسي للمادة
+    - authorised_value: IR_A1
+      category: ERM_REPORT_TYPES
+      lib: IR_A1 - طلبات مقال دورية
+    - authorised_value: IR_M1
+      category: ERM_REPORT_TYPES
+      lib: IR_M1 - طلبات مواد الوسائط المتعددة
+    - authorised_value: Searches_Platform
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: منصة البحث
+    - authorised_value: Total_Item_Investigations
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: إجمالي عمليات البحث عن المادة
+    - authorised_value: Total_Item_Requests
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: إجمالي طلبات المادة
+    - authorised_value: Unique_Item_Investigations
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: عمليات بحث المادة الفريدة
+    - authorised_value: Unique_Item_Requests
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: طلبات المادة الفريدة
+    - authorised_value: Unique_Title_Investigations
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: عمليات بحث العنوان الفريدة
+    - authorised_value: Unique_Title_Requests
+      category: ERM_PLATFORM_REPORTS_METRICS
+      lib: طلبات العنوان الفريدة
+    - authorised_value: Searches_Automated
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: عمليات البحث المؤتمتة
+    - authorised_value: Searches_Federated
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: عمليات البحث المتحدة
+    - authorised_value: Searches_Regular
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: عمليات البحث المنتظمة
+    - authorised_value: Total_Item_Investigations
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: إجمالي عمليات البحث عن المادة
+    - authorised_value: Total_Item_Requests
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: إجمالي طلبات المادة
+    - authorised_value: Unique_Item_Investigations
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: عمليات بحث المادة الفريدة
+    - authorised_value: Unique_Item_Requests
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: طلبات المادة الفريدة
+    - authorised_value: Unique_Title_Investigations
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: عمليات بحث العنوان الفريدة
+    - authorised_value: Unique_Title_Requests
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: طلبات العنوان الفريدة
+    - authorised_value: No_License
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: بدون ترخيص
+    - authorised_value: Limit_Exceeded
+      category: ERM_DATABASE_REPORTS_METRICS
+      lib: تم تجاوز الحد
+    - authorised_value: Total_Item_Investigations
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: إجمالي عمليات البحث عن المادة
+    - authorised_value: Total_Item_Requests
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: إجمالي طلبات المادة
+    - authorised_value: Unique_Item_Investigations
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: عمليات بحث المادة الفريدة
+    - authorised_value: Unique_Item_Requests
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: طلبات المادة الفريدة
+    - authorised_value: Unique_Title_Investigations
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: عمليات بحث العنوان الفريدة
+    - authorised_value: Unique_Title_Requests
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: طلبات العنوان الفريدة
+    - authorised_value: Limit_Exceeded
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: تم تجاوز الحد
+    - authorised_value: No_License
+      category: ERM_TITLE_REPORTS_METRICS
+      lib: بدون ترخيص
+    - authorised_value: Total_Item_Investigations
+      category: ERM_ITEM_REPORTS_METRICS
+      lib: إجمالي عمليات البحث عن المادة
+    - authorised_value: Total_Item_Requests
+      category: ERM_ITEM_REPORTS_METRICS
+      lib: إجمالي طلبات المادة
+    - authorised_value: Unique_Item_Investigations
+      category: ERM_ITEM_REPORTS_METRICS
+      lib: عمليات بحث المادة الفريدة
+    - authorised_value: Unique_Item_Requests
+      category: ERM_ITEM_REPORTS_METRICS
+      lib: طلبات المادة الفريدة
+    - authorised_value: Limit_Exceeded
+      category: ERM_ITEM_REPORTS_METRICS
+      lib: تم تجاوز الحد
+    - authorised_value: No_License
+      category: ERM_ITEM_REPORTS_METRICS
+      lib: بدون ترخيص
+    - authorised_value: ADMIN
+      category: VENDOR_INTERFACE_TYPE
+      lib: مسؤول
+    - authorised_value: ORDERS
+      category: VENDOR_INTERFACE_TYPE
+      lib: طلبيات
+    - authorised_value: REPORTS
+      category: VENDOR_INTERFACE_TYPE
+      lib: التقارير
+    - authorised_value: MAINTENANCE
+      category: VENDOR_ISSUE_TYPE
+      lib: الصيانة
+    - authorised_value: OUTAGE
+      category: VENDOR_ISSUE_TYPE
+      lib: انقطاع
+    translatable:
+    - lib
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: AD
+      category: COUNTRY
+      lib: أندورا
+      lib_opac: أندورا
+    - authorised_value: AE
+      category: COUNTRY
+      lib: الإمارات العربية المتحدة
+      lib_opac: الإمارات العربية المتحدة
+    - authorised_value: AF
+      category: COUNTRY
+      lib: أفغانستان
+      lib_opac: أفغانستان
+    - authorised_value: AG
+      category: COUNTRY
+      lib: أنتيغوا وبربودا
+      lib_opac: أنتيغوا وبربودا
+    - authorised_value: AI
+      category: COUNTRY
+      lib: أنغيلا
+      lib_opac: أنغيلا
+    - authorised_value: AL
+      category: COUNTRY
+      lib: ألبانيا
+      lib_opac: ألبانيا
+    - authorised_value: AM
+      category: COUNTRY
+      lib: أرمينيا
+      lib_opac: أرمينيا
+    - authorised_value: AO
+      category: COUNTRY
+      lib: أنجولا
+      lib_opac: أنجولا
+    - authorised_value: AQ
+      category: COUNTRY
+      lib: أنتاركتيكا
+      lib_opac: أنتاركتيكا
+    - authorised_value: AR
+      category: COUNTRY
+      lib: الأرجنتين
+      lib_opac: الأرجنتين
+    - authorised_value: AS
+      category: COUNTRY
+      lib: ساموا الأمريكية
+      lib_opac: ساموا الأمريكية
+    - authorised_value: AT
+      category: COUNTRY
+      lib: النمسا
+      lib_opac: النمسا
+    - authorised_value: AU
+      category: COUNTRY
+      lib: أستراليا
+      lib_opac: أستراليا
+    - authorised_value: AW
+      category: COUNTRY
+      lib: أروبا
+      lib_opac: أروبا
+    - authorised_value: AX
+      category: COUNTRY
+      lib: جزر آلاند
+      lib_opac: جزر آلاند
+    - authorised_value: AZ
+      category: COUNTRY
+      lib: أذربيجان
+      lib_opac: أذربيجان
+    - authorised_value: BA
+      category: COUNTRY
+      lib: البوسنة والهرسك
+      lib_opac: البوسنة والهرسك
+    - authorised_value: BB
+      category: COUNTRY
+      lib: بربادوس
+      lib_opac: بربادوس
+    - authorised_value: BD
+      category: COUNTRY
+      lib: بنجلاديش
+      lib_opac: بنجلاديش
+    - authorised_value: BE
+      category: COUNTRY
+      lib: بلجيكا
+      lib_opac: بلجيكا
+    - authorised_value: BF
+      category: COUNTRY
+      lib: بوركينا فاسو
+      lib_opac: بوركينا فاسو
+    - authorised_value: BG
+      category: COUNTRY
+      lib: بلغاريا
+      lib_opac: بلغاريا
+    - authorised_value: BH
+      category: COUNTRY
+      lib: البحرين
+      lib_opac: البحرين
+    - authorised_value: BI
+      category: COUNTRY
+      lib: بوروندي
+      lib_opac: بوروندي
+    - authorised_value: BJ
+      category: COUNTRY
+      lib: بنين
+      lib_opac: بنين
+    - authorised_value: BL
+      category: COUNTRY
+      lib: سانت بارتليمي
+      lib_opac: سانت بارتليمي
+    - authorised_value: BM
+      category: COUNTRY
+      lib: برمودا
+      lib_opac: برمودا
+    - authorised_value: BN
+      category: COUNTRY
+      lib: بروناي
+      lib_opac: بروناي
+    - authorised_value: BO
+      category: COUNTRY
+      lib: بوليفيا
+      lib_opac: بوليفيا
+    - authorised_value: BQ
+      category: COUNTRY
+      lib: هولندا الكاريبية
+      lib_opac: هولندا الكاريبية
+    - authorised_value: BR
+      category: COUNTRY
+      lib: البرازيل
+      lib_opac: البرازيل
+    - authorised_value: BS
+      category: COUNTRY
+      lib: جزر البهاما
+      lib_opac: جزر البهاما
+    - authorised_value: BT
+      category: COUNTRY
+      lib: بوتان
+      lib_opac: بوتان
+    - authorised_value: BV
+      category: COUNTRY
+      lib: جزيرة بوفيت
+      lib_opac: جزيرة بوفيت
+    - authorised_value: BW
+      category: COUNTRY
+      lib: بوتسوانا
+      lib_opac: بوتسوانا
+    - authorised_value: BY
+      category: COUNTRY
+      lib: بيلاروسيا
+      lib_opac: بيلاروسيا
+    - authorised_value: BZ
+      category: COUNTRY
+      lib: بليز
+      lib_opac: بليز
+    - authorised_value: CA
+      category: COUNTRY
+      lib: كندا
+      lib_opac: كندا
+    - authorised_value: CC
+      category: COUNTRY
+      lib: جزر كوكوس (كيلينغ)
+      lib_opac: جزر كوكوس (كيلينغ)
+    - authorised_value: CD
+      category: COUNTRY
+      lib: الكونغو - كينشاسا
+      lib_opac: الكونغو - كينشاسا
+    - authorised_value: CF
+      category: COUNTRY
+      lib: جمهورية أفريقيا الوسطى
+      lib_opac: جمهورية أفريقيا الوسطى
+    - authorised_value: CG
+      category: COUNTRY
+      lib: الكونغو - برازفيل
+      lib_opac: الكونغو - برازفيل
+    - authorised_value: CH
+      category: COUNTRY
+      lib: سويسرا
+      lib_opac: سويسرا
+    - authorised_value: CI
+      category: COUNTRY
+      lib: ساحل العاج
+      lib_opac: ساحل العاج
+    - authorised_value: CK
+      category: COUNTRY
+      lib: جزر كوك
+      lib_opac: جزر كوك
+    - authorised_value: CL
+      category: COUNTRY
+      lib: تشيلي
+      lib_opac: تشيلي
+    - authorised_value: CM
+      category: COUNTRY
+      lib: الكاميرون
+      lib_opac: الكاميرون
+    - authorised_value: CN
+      category: COUNTRY
+      lib: الصين
+      lib_opac: الصين
+    - authorised_value: CO
+      category: COUNTRY
+      lib: كولومبيا
+      lib_opac: كولومبيا
+    - authorised_value: CR
+      category: COUNTRY
+      lib: كوستا ريكا
+      lib_opac: كوستا ريكا
+    - authorised_value: CU
+      category: COUNTRY
+      lib: كوبا
+      lib_opac: كوبا
+    - authorised_value: CV
+      category: COUNTRY
+      lib: الرأس الأخضر
+      lib_opac: الرأس الأخضر
+    - authorised_value: CW
+      category: COUNTRY
+      lib: كوراساو
+      lib_opac: كوراساو
+    - authorised_value: CX
+      category: COUNTRY
+      lib: جزيرة عيد الميلاد
+      lib_opac: جزيرة عيد الميلاد
+    - authorised_value: CY
+      category: COUNTRY
+      lib: قبرص
+      lib_opac: قبرص
+    - authorised_value: CZ
+      category: COUNTRY
+      lib: التشيكية
+      lib_opac: التشيكية
+    - authorised_value: DE
+      category: COUNTRY
+      lib: ألمانيا
+      lib_opac: ألمانيا
+    - authorised_value: DJ
+      category: COUNTRY
+      lib: جيبوتي
+      lib_opac: جيبوتي
+    - authorised_value: DK
+      category: COUNTRY
+      lib: الدنمارك
+      lib_opac: الدنمارك
+    - authorised_value: DM
+      category: COUNTRY
+      lib: دومينيكا
+      lib_opac: دومينيكا
+    - authorised_value: DO
+      category: COUNTRY
+      lib: جمهورية الدومينكان
+      lib_opac: جمهورية الدومينكان
+    - authorised_value: DZ
+      category: COUNTRY
+      lib: الجزائر
+      lib_opac: الجزائر
+    - authorised_value: EC
+      category: COUNTRY
+      lib: الإكوادور
+      lib_opac: الإكوادور
+    - authorised_value: EE
+      category: COUNTRY
+      lib: إستونيا
+      lib_opac: إستونيا
+    - authorised_value: EG
+      category: COUNTRY
+      lib: مصر
+      lib_opac: مصر
+    - authorised_value: EH
+      category: COUNTRY
+      lib: الصحراء الغربية
+      lib_opac: الصحراء الغربية
+    - authorised_value: ER
+      category: COUNTRY
+      lib: إريتريا
+      lib_opac: إريتريا
+    - authorised_value: ES
+      category: COUNTRY
+      lib: أسبانيا
+      lib_opac: أسبانيا
+    - authorised_value: ET
+      category: COUNTRY
+      lib: أثيوبيا
+      lib_opac: أثيوبيا
+    - authorised_value: FI
+      category: COUNTRY
+      lib: فنلندا
+      lib_opac: فنلندا
+    - authorised_value: FJ
+      category: COUNTRY
+      lib: فيجي
+      lib_opac: فيجي
+    - authorised_value: FK
+      category: COUNTRY
+      lib: جزر فوكلاند
+      lib_opac: جزر فوكلاند
+    - authorised_value: FM
+      category: COUNTRY
+      lib: ميكرونيزيا
+      lib_opac: ميكرونيزيا
+    - authorised_value: FO
+      category: COUNTRY
+      lib: جزر فارو
+      lib_opac: جزر فارو
+    - authorised_value: FR
+      category: COUNTRY
+      lib: فرنسا
+      lib_opac: فرنسا
+    - authorised_value: GA
+      category: COUNTRY
+      lib: الجابون
+      lib_opac: الجابون
+    - authorised_value: GB
+      category: COUNTRY
+      lib: المملكة المتحدة
+      lib_opac: المملكة المتحدة
+    - authorised_value: GD
+      category: COUNTRY
+      lib: غرينادا
+      lib_opac: غرينادا
+    - authorised_value: GE
+      category: COUNTRY
+      lib: جورجيا
+      lib_opac: جورجيا
+    - authorised_value: GF
+      category: COUNTRY
+      lib: غيانا الفرنسية
+      lib_opac: غيانا الفرنسية
+    - authorised_value: GG
+      category: COUNTRY
+      lib: غيرنسي
+      lib_opac: غيرنسي
+    - authorised_value: GH
+      category: COUNTRY
+      lib: غانا
+      lib_opac: غانا
+    - authorised_value: GI
+      category: COUNTRY
+      lib: جبل طارق
+      lib_opac: جبل طارق
+    - authorised_value: GL
+      category: COUNTRY
+      lib: جرينلاند
+      lib_opac: جرينلاند
+    - authorised_value: GM
+      category: COUNTRY
+      lib: جامبيا
+      lib_opac: جامبيا
+    - authorised_value: GN
+      category: COUNTRY
+      lib: غينيا
+      lib_opac: غينيا
+    - authorised_value: GP
+      category: COUNTRY
+      lib: جوادلوب
+      lib_opac: جوادلوب
+    - authorised_value: GQ
+      category: COUNTRY
+      lib: غينيا الاستوائية
+      lib_opac: غينيا الاستوائية
+    - authorised_value: GR
+      category: COUNTRY
+      lib: اليونان
+      lib_opac: اليونان
+    - authorised_value: GS
+      category: COUNTRY
+      lib: جزر جورجيا الجنوبية وساندويتش الجنوبية
+      lib_opac: جزر جورجيا الجنوبية وساندويتش الجنوبية
+    - authorised_value: GT
+      category: COUNTRY
+      lib: جواتيمالا
+      lib_opac: جواتيمالا
+    - authorised_value: GU
+      category: COUNTRY
+      lib: غوام
+      lib_opac: غوام
+    - authorised_value: GW
+      category: COUNTRY
+      lib: غينيا بيساو
+      lib_opac: غينيا بيساو
+    - authorised_value: GY
+      category: COUNTRY
+      lib: غيانا
+      lib_opac: غيانا
+    - authorised_value: HK
+      category: COUNTRY
+      lib: هونغ كونغ
+      lib_opac: هونغ كونغ
+    - authorised_value: HM
+      category: COUNTRY
+      lib: جزر هيرد وماكدونالد
+      lib_opac: جزر هيرد وماكدونالد
+    - authorised_value: HN
+      category: COUNTRY
+      lib: هندوراس
+      lib_opac: هندوراس
+    - authorised_value: HR
+      category: COUNTRY
+      lib: كرواتيا
+      lib_opac: كرواتيا
+    - authorised_value: HT
+      category: COUNTRY
+      lib: هاييتي
+      lib_opac: هاييتي
+    - authorised_value: HU
+      category: COUNTRY
+      lib: المجر
+      lib_opac: المجر
+    - authorised_value: ID
+      category: COUNTRY
+      lib: أندونيسيا
+      lib_opac: أندونيسيا
+    - authorised_value: IE
+      category: COUNTRY
+      lib: أيرلندا
+      lib_opac: أيرلندا
+    - authorised_value: IL
+      category: COUNTRY
+      lib: الأراضي الفلسطينية المحتلة
+      lib_opac: الأراضي الفلسطينية المحتلة
+    - authorised_value: IM
+      category: COUNTRY
+      lib: جزيرة مان
+      lib_opac: جزيرة مان
+    - authorised_value: IN
+      category: COUNTRY
+      lib: الهند
+      lib_opac: الهند
+    - authorised_value: IO
+      category: COUNTRY
+      lib: إقليم المحيط البريطاني الهندي
+      lib_opac: إقليم المحيط البريطاني الهندي
+    - authorised_value: IQ
+      category: COUNTRY
+      lib: العراق
+      lib_opac: العراق
+    - authorised_value: IR
+      category: COUNTRY
+      lib: إيران
+      lib_opac: إيران
+    - authorised_value: IS
+      category: COUNTRY
+      lib: آيسلندا
+      lib_opac: آيسلندا
+    - authorised_value: IT
+      category: COUNTRY
+      lib: إيطاليا
+      lib_opac: إيطاليا
+    - authorised_value: JE
+      category: COUNTRY
+      lib: جيرسي
+      lib_opac: جيرسي
+    - authorised_value: JM
+      category: COUNTRY
+      lib: جامايكا
+      lib_opac: جامايكا
+    - authorised_value: JO
+      category: COUNTRY
+      lib: الأردن
+      lib_opac: الأردن
+    - authorised_value: JP
+      category: COUNTRY
+      lib: اليابان
+      lib_opac: اليابان
+    - authorised_value: KE
+      category: COUNTRY
+      lib: كينيا
+      lib_opac: كينيا
+    - authorised_value: KG
+      category: COUNTRY
+      lib: قيرغيزستان
+      lib_opac: قيرغيزستان
+    - authorised_value: KH
+      category: COUNTRY
+      lib: كمبوديا
+      lib_opac: كمبوديا
+    - authorised_value: KI
+      category: COUNTRY
+      lib: كيريباتي
+      lib_opac: كيريباتي
+    - authorised_value: KM
+      category: COUNTRY
+      lib: جزر القمر
+      lib_opac: جزر القمر
+    - authorised_value: KN
+      category: COUNTRY
+      lib: سانت كيتس ونيفيس
+      lib_opac: سانت كيتس ونيفيس
+    - authorised_value: KP
+      category: COUNTRY
+      lib: كوريا الشمالية
+      lib_opac: كوريا الشمالية
+    - authorised_value: KR
+      category: COUNTRY
+      lib: كوريا الجنوبية
+      lib_opac: كوريا الجنوبية
+    - authorised_value: KW
+      category: COUNTRY
+      lib: الكويت
+      lib_opac: الكويت
+    - authorised_value: KY
+      category: COUNTRY
+      lib: جزر كايمان
+      lib_opac: جزر كايمان
+    - authorised_value: KZ
+      category: COUNTRY
+      lib: كازاخستان
+      lib_opac: كازاخستان
+    - authorised_value: LA
+      category: COUNTRY
+      lib: لاوس
+      lib_opac: لاوس
+    - authorised_value: LB
+      category: COUNTRY
+      lib: لبنان
+      lib_opac: لبنان
+    - authorised_value: LC
+      category: COUNTRY
+      lib: سانت لوسيا
+      lib_opac: سانت لوسيا
+    - authorised_value: LI
+      category: COUNTRY
+      lib: ليختنشتاين
+      lib_opac: ليختنشتاين
+    - authorised_value: LK
+      category: COUNTRY
+      lib: سريلانكا
+      lib_opac: سريلانكا
+    - authorised_value: LR
+      category: COUNTRY
+      lib: ليبيريا
+      lib_opac: ليبيريا
+    - authorised_value: LS
+      category: COUNTRY
+      lib: ليسوتو
+      lib_opac: ليسوتو
+    - authorised_value: LT
+      category: COUNTRY
+      lib: ليتوانيا
+      lib_opac: ليتوانيا
+    - authorised_value: LU
+      category: COUNTRY
+      lib: لوكسمبورغ
+      lib_opac: لوكسمبورغ
+    - authorised_value: LV
+      category: COUNTRY
+      lib: لاتفيا
+      lib_opac: لاتفيا
+    - authorised_value: LY
+      category: COUNTRY
+      lib: ليبيا
+      lib_opac: ليبيا
+    - authorised_value: MA
+      category: COUNTRY
+      lib: المغرب
+      lib_opac: المغرب
+    - authorised_value: MC
+      category: COUNTRY
+      lib: موناكو
+      lib_opac: موناكو
+    - authorised_value: MD
+      category: COUNTRY
+      lib: مولدوفا
+      lib_opac: مولدوفا
+    - authorised_value: ME
+      category: COUNTRY
+      lib: الجبل الأسود
+      lib_opac: الجبل الأسود
+    - authorised_value: MF
+      category: COUNTRY
+      lib: سانت مارتن
+      lib_opac: سانت مارتن
+    - authorised_value: MG
+      category: COUNTRY
+      lib: مدغشقر
+      lib_opac: مدغشقر
+    - authorised_value: MH
+      category: COUNTRY
+      lib: جزر مارشال
+      lib_opac: جزر مارشال
+    - authorised_value: MK
+      category: COUNTRY
+      lib: مقدونيا الشمالية
+      lib_opac: مقدونيا الشمالية
+    - authorised_value: ML
+      category: COUNTRY
+      lib: مالي
+      lib_opac: مالي
+    - authorised_value: MM
+      category: COUNTRY
+      lib: ميانمار (بورما)
+      lib_opac: ميانمار (بورما)
+    - authorised_value: MN
+      category: COUNTRY
+      lib: منغوليا
+      lib_opac: منغوليا
+    - authorised_value: MO
+      category: COUNTRY
+      lib: ماكاو
+      lib_opac: ماكاو
+    - authorised_value: MP
+      category: COUNTRY
+      lib: جزر مريانا الشمالية
+      lib_opac: جزر مريانا الشمالية
+    - authorised_value: MQ
+      category: COUNTRY
+      lib: مارتينيك
+      lib_opac: مارتينيك
+    - authorised_value: MR
+      category: COUNTRY
+      lib: موريتانيا
+      lib_opac: موريتانيا
+    - authorised_value: MS
+      category: COUNTRY
+      lib: مونتسيرات
+      lib_opac: مونتسيرات
+    - authorised_value: MT
+      category: COUNTRY
+      lib: مالطا
+      lib_opac: مالطا
+    - authorised_value: MU
+      category: COUNTRY
+      lib: موريشيوس
+      lib_opac: موريشيوس
+    - authorised_value: MV
+      category: COUNTRY
+      lib: جزر المالديف
+      lib_opac: جزر المالديف
+    - authorised_value: MW
+      category: COUNTRY
+      lib: ملاوي
+      lib_opac: ملاوي
+    - authorised_value: MX
+      category: COUNTRY
+      lib: المكسيك
+      lib_opac: المكسيك
+    - authorised_value: MY
+      category: COUNTRY
+      lib: ماليزيا
+      lib_opac: ماليزيا
+    - authorised_value: MZ
+      category: COUNTRY
+      lib: موزمبيق
+      lib_opac: موزمبيق
+    - authorised_value: NA
+      category: COUNTRY
+      lib: ناميبيا
+      lib_opac: ناميبيا
+    - authorised_value: NC
+      category: COUNTRY
+      lib: كاليدونيا الجديدة
+      lib_opac: كاليدونيا الجديدة
+    - authorised_value: NE
+      category: COUNTRY
+      lib: النيجر
+      lib_opac: النيجر
+    - authorised_value: NF
+      category: COUNTRY
+      lib: جزيرة نورفولك
+      lib_opac: جزيرة نورفولك
+    - authorised_value: NG
+      category: COUNTRY
+      lib: نيجيريا
+      lib_opac: نيجيريا
+    - authorised_value: NI
+      category: COUNTRY
+      lib: نيكاراغوا
+      lib_opac: نيكاراغوا
+    - authorised_value: NL
+      category: COUNTRY
+      lib: هولندا
+      lib_opac: هولندا
+    - authorised_value: NO
+      category: COUNTRY
+      lib: النرويج
+      lib_opac: النرويج
+    - authorised_value: NP
+      category: COUNTRY
+      lib: نيبال
+      lib_opac: نيبال
+    - authorised_value: NR
+      category: COUNTRY
+      lib: ناورو
+      lib_opac: ناورو
+    - authorised_value: NU
+      category: COUNTRY
+      lib: نيوي
+      lib_opac: نيوي
+    - authorised_value: NZ
+      category: COUNTRY
+      lib: نيوزيلندا
+      lib_opac: نيوزيلندا
+    - authorised_value: OM
+      category: COUNTRY
+      lib: عمان
+      lib_opac: عمان
+    - authorised_value: PA
+      category: COUNTRY
+      lib: بنما
+      lib_opac: بنما
+    - authorised_value: PE
+      category: COUNTRY
+      lib: بيرو
+      lib_opac: بيرو
+    - authorised_value: PF
+      category: COUNTRY
+      lib: بولينيزيا الفرنسية
+      lib_opac: بولينيزيا الفرنسية
+    - authorised_value: PG
+      category: COUNTRY
+      lib: بابوا غينيا الجديدة
+      lib_opac: بابوا غينيا الجديدة
+    - authorised_value: PH
+      category: COUNTRY
+      lib: الفلبين
+      lib_opac: الفلبين
+    - authorised_value: PK
+      category: COUNTRY
+      lib: باكستان
+      lib_opac: باكستان
+    - authorised_value: PL
+      category: COUNTRY
+      lib: بولندا
+      lib_opac: بولندا
+    - authorised_value: PM
+      category: COUNTRY
+      lib: سانت بيير وميكلون
+      lib_opac: سانت بيير وميكلون
+    - authorised_value: PN
+      category: COUNTRY
+      lib: جزر بيتكيرن
+      lib_opac: جزر بيتكيرن
+    - authorised_value: PR
+      category: COUNTRY
+      lib: بورتوريكو
+      lib_opac: بورتوريكو
+    - authorised_value: PS
+      category: COUNTRY
+      lib: أراضي السلطة الفلسطينية
+      lib_opac: أراضي السلطة الفلسطينية
+    - authorised_value: PT
+      category: COUNTRY
+      lib: البرتغال
+      lib_opac: البرتغال
+    - authorised_value: PW
+      category: COUNTRY
+      lib: بالاو
+      lib_opac: بالاو
+    - authorised_value: PY
+      category: COUNTRY
+      lib: باراجواي
+      lib_opac: باراجواي
+    - authorised_value: QA
+      category: COUNTRY
+      lib: قطر
+      lib_opac: قطر
+    - authorised_value: RE
+      category: COUNTRY
+      lib: ريونيون
+      lib_opac: ريونيون
+    - authorised_value: RO
+      category: COUNTRY
+      lib: رومانيا
+      lib_opac: رومانيا
+    - authorised_value: RS
+      category: COUNTRY
+      lib: صربيا
+      lib_opac: صربيا
+    - authorised_value: RU
+      category: COUNTRY
+      lib: روسيا
+      lib_opac: روسيا
+    - authorised_value: RW
+      category: COUNTRY
+      lib: رواندا
+      lib_opac: رواندا
+    - authorised_value: SA
+      category: COUNTRY
+      lib: المملكة العربية السعودية
+      lib_opac: المملكة العربية السعودية
+    - authorised_value: SB
+      category: COUNTRY
+      lib: جزر سليمان
+      lib_opac: جزر سليمان
+    - authorised_value: SC
+      category: COUNTRY
+      lib: سيشيل
+      lib_opac: سيشيل
+    - authorised_value: SD
+      category: COUNTRY
+      lib: السودان
+      lib_opac: السودان
+    - authorised_value: SE
+      category: COUNTRY
+      lib: السويد
+      lib_opac: السويد
+    - authorised_value: SG
+      category: COUNTRY
+      lib: سنغافورة
+      lib_opac: سنغافورة
+    - authorised_value: SH
+      category: COUNTRY
+      lib: سانت هيلانة
+      lib_opac: سانت هيلانة
+    - authorised_value: SI
+      category: COUNTRY
+      lib: سلوفينيا
+      lib_opac: سلوفينيا
+    - authorised_value: SJ
+      category: COUNTRY
+      lib: سفالبارد وجان ماين
+      lib_opac: سفالبارد وجان ماين
+    - authorised_value: SK
+      category: COUNTRY
+      lib: سلوفاكيا
+      lib_opac: سلوفاكيا
+    - authorised_value: SL
+      category: COUNTRY
+      lib: سييراليون
+      lib_opac: سييراليون
+    - authorised_value: SM
+      category: COUNTRY
+      lib: سان مارينو
+      lib_opac: سان مارينو
+    - authorised_value: SN
+      category: COUNTRY
+      lib: السنغال
+      lib_opac: السنغال
+    - authorised_value: SO
+      category: COUNTRY
+      lib: الصومال
+      lib_opac: الصومال
+    - authorised_value: SR
+      category: COUNTRY
+      lib: سورينام
+      lib_opac: سورينام
+    - authorised_value: SS
+      category: COUNTRY
+      lib: جنوب السودان
+      lib_opac: جنوب السودان
+    - authorised_value: ST
+      category: COUNTRY
+      lib: ساو تومي وبرينسيبي
+      lib_opac: ساو تومي وبرينسيبي
+    - authorised_value: SV
+      category: COUNTRY
+      lib: السلفادور
+      lib_opac: السلفادور
+    - authorised_value: SX
+      category: COUNTRY
+      lib: سينت مارتن
+      lib_opac: سينت مارتن
+    - authorised_value: SY
+      category: COUNTRY
+      lib: سوريا
+      lib_opac: سوريا
+    - authorised_value: SZ
+      category: COUNTRY
+      lib: إسواتيني
+      lib_opac: إسواتيني
+    - authorised_value: TC
+      category: COUNTRY
+      lib: جزر تركس وكايكوس
+      lib_opac: جزر تركس وكايكوس
+    - authorised_value: TD
+      category: COUNTRY
+      lib: تشاد
+      lib_opac: تشاد
+    - authorised_value: TF
+      category: COUNTRY
+      lib: المناطق الجنوبية لفرنسا
+      lib_opac: المناطق الجنوبية لفرنسا
+    - authorised_value: TG
+      category: COUNTRY
+      lib: توجو
+      lib_opac: توجو
+    - authorised_value: TH
+      category: COUNTRY
+      lib: تايلاند
+      lib_opac: تايلاند
+    - authorised_value: TJ
+      category: COUNTRY
+      lib: طاجيكستان
+      lib_opac: طاجيكستان
+    - authorised_value: TK
+      category: COUNTRY
+      lib: توكيلاو
+      lib_opac: توكيلاو
+    - authorised_value: TL
+      category: COUNTRY
+      lib: تيمور الشرقية
+      lib_opac: تيمور الشرقية
+    - authorised_value: TM
+      category: COUNTRY
+      lib: تركمانستان
+      lib_opac: تركمانستان
+    - authorised_value: TN
+      category: COUNTRY
+      lib: تونس
+      lib_opac: تونس
+    - authorised_value: TO
+      category: COUNTRY
+      lib: تونجا
+      lib_opac: تونجا
+    - authorised_value: TR
+      category: COUNTRY
+      lib: تركيا
+      lib_opac: تركيا
+    - authorised_value: TT
+      category: COUNTRY
+      lib: ترينيداد وتوباجو
+      lib_opac: ترينيداد وتوباجو
+    - authorised_value: TV
+      category: COUNTRY
+      lib: توفالو
+      lib_opac: توفالو
+    - authorised_value: TW
+      category: COUNTRY
+      lib: تايوان
+      lib_opac: تايوان
+    - authorised_value: TZ
+      category: COUNTRY
+      lib: تنزانيا
+      lib_opac: تنزانيا
+    - authorised_value: UA
+      category: COUNTRY
+      lib: أوكرانيا
+      lib_opac: أوكرانيا
+    - authorised_value: UG
+      category: COUNTRY
+      lib: أوغندا
+      lib_opac: أوغندا
+    - authorised_value: UM
+      category: COUNTRY
+      lib: جزر الولايات المتحدة النائية
+      lib_opac: جزر الولايات المتحدة النائية
+    - authorised_value: US
+      category: COUNTRY
+      lib: الولايات المتحدة الأمريكية
+      lib_opac: الولايات المتحدة الأمريكية
+    - authorised_value: UY
+      category: COUNTRY
+      lib: أوروغواي
+      lib_opac: أوروغواي
+    - authorised_value: UZ
+      category: COUNTRY
+      lib: أوزبكستان
+      lib_opac: أوزبكستان
+    - authorised_value: VA
+      category: COUNTRY
+      lib: مدينة الفاتيكان
+      lib_opac: مدينة الفاتيكان
+    - authorised_value: VC
+      category: COUNTRY
+      lib: سانت فنسنت وغرينادين
+      lib_opac: سانت فنسنت وغرينادين
+    - authorised_value: VE
+      category: COUNTRY
+      lib: فنزويلا
+      lib_opac: فنزويلا
+    - authorised_value: VG
+      category: COUNTRY
+      lib: جزر فيرجن البريطانية
+      lib_opac: جزر فيرجن البريطانية
+    - authorised_value: VI
+      category: COUNTRY
+      lib: جزر فيرجن الأمريكية
+      lib_opac: جزر فيرجن الأمريكية
+    - authorised_value: VN
+      category: COUNTRY
+      lib: فيتنام
+      lib_opac: فيتنام
+    - authorised_value: VU
+      category: COUNTRY
+      lib: فانواتو
+      lib_opac: فانواتو
+    - authorised_value: WF
+      category: COUNTRY
+      lib: واليس وفوتونا
+      lib_opac: واليس وفوتونا
+    - authorised_value: WS
+      category: COUNTRY
+      lib: ساموا
+      lib_opac: ساموا
+    - authorised_value: YE
+      category: COUNTRY
+      lib: اليمن
+      lib_opac: اليمن
+    - authorised_value: YT
+      category: COUNTRY
+      lib: مايوت
+      lib_opac: مايوت
+    - authorised_value: ZA
+      category: COUNTRY
+      lib: جنوب أفريقيا
+      lib_opac: جنوب أفريقيا
+    - authorised_value: ZM
+      category: COUNTRY
+      lib: زامبيا
+      lib_opac: زامبيا
+    - authorised_value: ZW
+      category: COUNTRY
+      lib: زيمبابوي
+      lib_opac: زيمبابوي
+    translatable:
+    - lib
+    - lib_opac
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: aar
+      category: LANG
+      lib: العفارية
+      lib_opac: العفارية
+    - authorised_value: abk
+      category: LANG
+      lib: الأبخازية
+      lib_opac: الأبخازية
+    - authorised_value: ace
+      category: LANG
+      lib: الأتشيهية
+      lib_opac: الأتشيهية
+    - authorised_value: ach
+      category: LANG
+      lib: الأتشولية
+      lib_opac: الأتشولية
+    - authorised_value: ada
+      category: LANG
+      lib: الدانغمية
+      lib_opac: الدانغمية
+    - authorised_value: ady
+      category: LANG
+      lib: الأديغية
+      lib_opac: الأديغية
+    - authorised_value: afa
+      category: LANG
+      lib: اللغات الأفرو آسيوية
+      lib_opac: اللغات الأفرو آسيوية
+    - authorised_value: afh
+      category: LANG
+      lib: الأفريهيلية
+      lib_opac: الأفريهيلية
+    - authorised_value: afr
+      category: LANG
+      lib: الأفريكانية
+      lib_opac: الأفريكانية
+    - authorised_value: ain
+      category: LANG
+      lib: الآينوية
+      lib_opac: الآينوية
+    - authorised_value: aka
+      category: LANG
+      lib: الأكانية
+      lib_opac: الأكانية
+    - authorised_value: akk
+      category: LANG
+      lib: الأكادية
+      lib_opac: الأكادية
+    - authorised_value: alb
+      category: LANG
+      lib: الألبانية
+      lib_opac: الألبانية
+    - authorised_value: ale
+      category: LANG
+      lib: الأليوتية
+      lib_opac: الأليوتية
+    - authorised_value: alg
+      category: LANG
+      lib: اللغات الألغونكوية
+      lib_opac: اللغات الألغونكوية
+    - authorised_value: alt
+      category: LANG
+      lib: الألطائية الجنوبية
+      lib_opac: الألطائية الجنوبية
+    - authorised_value: amh
+      category: LANG
+      lib: الأمهرية
+      lib_opac: الأمهرية
+    - authorised_value: ang
+      category: LANG
+      lib: الإنجليزية القديمة (450-1100)
+      lib_opac: الإنجليزية القديمة (450-1100)
+    - authorised_value: anp
+      category: LANG
+      lib: الأنجيكية
+      lib_opac: الأنجيكية
+    - authorised_value: apa
+      category: LANG
+      lib: اللغات الأباتشية
+      lib_opac: اللغات الأباتشية
+    - authorised_value: ara
+      category: LANG
+      lib: العربية
+      lib_opac: العربية
+    - authorised_value: arc
+      category: LANG
+      lib: الآرامية الرسمية (700-300 قبل الميلاد)؛ الآرامية الإمبراطورية (700-300
+        قبل الميلاد)
+      lib_opac: الآرامية الرسمية (700-300 قبل الميلاد)؛ الآرامية الإمبراطورية (700-300
+        قبل الميلاد)
+    - authorised_value: arg
+      category: LANG
+      lib: الأراغونية
+      lib_opac: الأراغونية
+    - authorised_value: arm
+      category: LANG
+      lib: الأرمينية
+      lib_opac: الأرمينية
+    - authorised_value: arn
+      category: LANG
+      lib: المابوتشي
+      lib_opac: المابوتشي
+    - authorised_value: arp
+      category: LANG
+      lib: الأراباهو
+      lib_opac: الأراباهو
+    - authorised_value: art
+      category: LANG
+      lib: اللغات الاصطناعية
+      lib_opac: اللغات الاصطناعية
+    - authorised_value: arw
+      category: LANG
+      lib: الأراواكية
+      lib_opac: الأراواكية
+    - authorised_value: asm
+      category: LANG
+      lib: الأسامية
+      lib_opac: الأسامية
+    - authorised_value: ast
+      category: LANG
+      lib: الأستورية؛ بابل؛ الليونية؛ الأستورليونية
+      lib_opac: الأستورية؛ بابل؛ الليونية؛ الأستورليونية
+    - authorised_value: ath
+      category: LANG
+      lib: اللغات الأثابسكانية
+      lib_opac: اللغات الأثابسكانية
+    - authorised_value: aus
+      category: LANG
+      lib: اللغات الأسترالية
+      lib_opac: اللغات الأسترالية
+    - authorised_value: ava
+      category: LANG
+      lib: الأوارية
+      lib_opac: الأوارية
+    - authorised_value: ave
+      category: LANG
+      lib: الأفستية
+      lib_opac: الأفستية
+    - authorised_value: awa
+      category: LANG
+      lib: الأوادية
+      lib_opac: الأوادية
+    - authorised_value: aym
+      category: LANG
+      lib: الأيمرية
+      lib_opac: الأيمرية
+    - authorised_value: aze
+      category: LANG
+      lib: الأذريبيجانية
+      lib_opac: الأذريبيجانية
+    - authorised_value: bad
+      category: LANG
+      lib: لغات البندا
+      lib_opac: لغات البندا
+    - authorised_value: bai
+      category: LANG
+      lib: اللغات الباميليكية
+      lib_opac: اللغات الباميليكية
+    - authorised_value: bak
+      category: LANG
+      lib: الباشكيرية
+      lib_opac: الباشكيرية
+    - authorised_value: bal
+      category: LANG
+      lib: البلوشية
+      lib_opac: البلوشية
+    - authorised_value: bam
+      category: LANG
+      lib: البمبارا
+      lib_opac: البمبارا
+    - authorised_value: ban
+      category: LANG
+      lib: البالينية
+      lib_opac: البالينية
+    - authorised_value: baq
+      category: LANG
+      lib: الباسكية
+      lib_opac: الباسكية
+    - authorised_value: bas
+      category: LANG
+      lib: الباسا
+      lib_opac: الباسا
+    - authorised_value: bat
+      category: LANG
+      lib: اللغات البلطيقية
+      lib_opac: اللغات البلطيقية
+    - authorised_value: bej
+      category: LANG
+      lib: البيجا، البدوية
+      lib_opac: البيجا، البدوية
+    - authorised_value: bel
+      category: LANG
+      lib: البيلاروسية
+      lib_opac: البيلاروسية
+    - authorised_value: bem
+      category: LANG
+      lib: البيمبا
+      lib_opac: البيمبا
+    - authorised_value: ben
+      category: LANG
+      lib: البنغالية
+      lib_opac: البنغالية
+    - authorised_value: ber
+      category: LANG
+      lib: اللغات البربرية
+      lib_opac: اللغات البربرية
+    - authorised_value: bho
+      category: LANG
+      lib: البهوجبرية
+      lib_opac: البهوجبرية
+    - authorised_value: bih
+      category: LANG
+      lib: اللغات البهارية
+      lib_opac: اللغات البهارية
+    - authorised_value: bik
+      category: LANG
+      lib: البيكولية
+      lib_opac: البيكولية
+    - authorised_value: bin
+      category: LANG
+      lib: بيني؛ إيدو
+      lib_opac: بيني؛ إيدو
+    - authorised_value: bis
+      category: LANG
+      lib: البسلاما
+      lib_opac: البسلاما
+    - authorised_value: bla
+      category: LANG
+      lib: سيكسيكا
+      lib_opac: سيكسيكا
+    - authorised_value: bnt
+      category: LANG
+      lib: لغات البانتو
+      lib_opac: لغات البانتو
+    - authorised_value: bos
+      category: LANG
+      lib: البوسنية
+      lib_opac: البوسنية
+    - authorised_value: bra
+      category: LANG
+      lib: البرجية
+      lib_opac: البرجية
+    - authorised_value: bre
+      category: LANG
+      lib: البريتانية
+      lib_opac: البريتانية
+    - authorised_value: btk
+      category: LANG
+      lib: لغات الباتاك
+      lib_opac: لغات الباتاك
+    - authorised_value: bua
+      category: LANG
+      lib: البوريات
+      lib_opac: البوريات
+    - authorised_value: bug
+      category: LANG
+      lib: البوقسية
+      lib_opac: البوقسية
+    - authorised_value: bul
+      category: LANG
+      lib: البلغارية
+      lib_opac: البلغارية
+    - authorised_value: bur
+      category: LANG
+      lib: البورمية
+      lib_opac: البورمية
+    - authorised_value: byn
+      category: LANG
+      lib: البلينية
+      lib_opac: البلينية
+    - authorised_value: cad
+      category: LANG
+      lib: الكادو
+      lib_opac: الكادو
+    - authorised_value: cai
+      category: LANG
+      lib: اللغات الهندية الأمريكية الوسطى
+      lib_opac: اللغات الهندية الأمريكية الوسطى
+    - authorised_value: car
+      category: LANG
+      lib: غاليبي كاريب
+      lib_opac: غاليبي كاريب
+    - authorised_value: cat
+      category: LANG
+      lib: الكاتالونية؛ البلنسية
+      lib_opac: الكاتالونية؛ البلنسية
+    - authorised_value: cau
+      category: LANG
+      lib: اللغات القوقازية
+      lib_opac: اللغات القوقازية
+    - authorised_value: ceb
+      category: LANG
+      lib: السيبوانية
+      lib_opac: السيبوانية
+    - authorised_value: cel
+      category: LANG
+      lib: اللغات السلتية
+      lib_opac: اللغات السلتية
+    - authorised_value: cha
+      category: LANG
+      lib: التشاموروية
+      lib_opac: التشاموروية
+    - authorised_value: chb
+      category: LANG
+      lib: التشيبشا
+      lib_opac: التشيبشا
+    - authorised_value: che
+      category: LANG
+      lib: الشيشانية
+      lib_opac: الشيشانية
+    - authorised_value: chg
+      category: LANG
+      lib: الجغتائية
+      lib_opac: الجغتائية
+    - authorised_value: chi
+      category: LANG
+      lib: الصينية
+      lib_opac: الصينية
+    - authorised_value: chk
+      category: LANG
+      lib: التشكيزية
+      lib_opac: التشكيزية
+    - authorised_value: chm
+      category: LANG
+      lib: الماري
+      lib_opac: الماري
+    - authorised_value: chn
+      category: LANG
+      lib: الشينوك جارجون
+      lib_opac: الشينوك جارجون
+    - authorised_value: cho
+      category: LANG
+      lib: الشوكتو
+      lib_opac: الشوكتو
+    - authorised_value: chp
+      category: LANG
+      lib: شيبيويا؛. ديني سولين
+      lib_opac: شيبيويا؛. ديني سولين
+    - authorised_value: chr
+      category: LANG
+      lib: الشيروكى
+      lib_opac: الشيروكى
+    - authorised_value: chu
+      category: LANG
+      lib: الكنيسة السلافية؛ السلافية القديمة؛ الكنيسة السلافية؛ البلغارية القديمة؛
+        الكنيسة السلافية القديمة
+      lib_opac: الكنيسة السلافية؛ السلافية القديمة؛ الكنيسة السلافية؛ البلغارية القديمة؛
+        الكنيسة السلافية القديمة
+    - authorised_value: chv
+      category: LANG
+      lib: التشوفاشية
+      lib_opac: التشوفاشية
+    - authorised_value: chy
+      category: LANG
+      lib: الشايان
+      lib_opac: الشايان
+    - authorised_value: cmc
+      category: LANG
+      lib: اللغات التشاميكية
+      lib_opac: اللغات التشاميكية
+    - authorised_value: cnr
+      category: LANG
+      lib: المونتنغرية
+      lib_opac: المونتنغرية
+    - authorised_value: cop
+      category: LANG
+      lib: القبطية
+      lib_opac: القبطية
+    - authorised_value: cor
+      category: LANG
+      lib: الكورنية
+      lib_opac: الكورنية
+    - authorised_value: cos
+      category: LANG
+      lib: الكورسية
+      lib_opac: الكورسية
+    - authorised_value: cpe
+      category: LANG
+      lib: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب على أساس الإنجليزية
+      lib_opac: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب على أساس الإنجليزية
+    - authorised_value: cpf
+      category: LANG
+      lib: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب على أساس الفرنسية
+      lib_opac: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب على أساس الفرنسية
+    - authorised_value: cpp
+      category: LANG
+      lib: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب على أساس البرتغالية
+      lib_opac: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب على أساس البرتغالية
+    - authorised_value: cre
+      category: LANG
+      lib: الكيرية
+      lib_opac: الكيرية
+    - authorised_value: crh
+      category: LANG
+      lib: التتارية القرمية، التركية القرمية
+      lib_opac: التتارية القرمية، التركية القرمية
+    - authorised_value: crp
+      category: LANG
+      lib: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب
+      lib_opac: الكريولية واللغات المبسطة الأخرى للتفاهم بين الشعوب
+    - authorised_value: csb
+      category: LANG
+      lib: الكاشبايان
+      lib_opac: الكاشبايان
+    - authorised_value: cus
+      category: LANG
+      lib: لغات الكشيتيك
+      lib_opac: لغات الكشيتيك
+    - authorised_value: cze
+      category: LANG
+      lib: التشيكية
+      lib_opac: التشيكية
+    - authorised_value: dak
+      category: LANG
+      lib: الداكوتا
+      lib_opac: الداكوتا
+    - authorised_value: dan
+      category: LANG
+      lib: الدانماركية
+      lib_opac: الدانماركية
+    - authorised_value: dar
+      category: LANG
+      lib: الدارجوا
+      lib_opac: الدارجوا
+    - authorised_value: day
+      category: LANG
+      lib: لغات الدياك
+      lib_opac: لغات الدياك
+    - authorised_value: del
+      category: LANG
+      lib: ديلاوير
+      lib_opac: ديلاوير
+    - authorised_value: den
+      category: LANG
+      lib: سلافي (أثاباسكانية)
+      lib_opac: سلافي (أثاباسكانية)
+    - authorised_value: dgr
+      category: LANG
+      lib: الدورجية
+      lib_opac: الدورجية
+    - authorised_value: din
+      category: LANG
+      lib: الدنكا
+      lib_opac: الدنكا
+    - authorised_value: div
+      category: LANG
+      lib: المالديفية
+      lib_opac: المالديفية
+    - authorised_value: doi
+      category: LANG
+      lib: الدورجية
+      lib_opac: الدورجية
+    - authorised_value: dra
+      category: LANG
+      lib: اللغات الدرفيدية
+      lib_opac: اللغات الدرفيدية
+    - authorised_value: dsb
+      category: LANG
+      lib: الصربية السفلى
+      lib_opac: الصربية السفلى
+    - authorised_value: dua
+      category: LANG
+      lib: الدوالا
+      lib_opac: الدوالا
+    - authorised_value: dum
+      category: LANG
+      lib: الهولندية الوسطى (1050-1350)
+      lib_opac: الهولندية الوسطى (1050-1350)
+    - authorised_value: dut
+      category: LANG
+      lib: الهولندية؛ الفلمنكية
+      lib_opac: الهولندية؛ الفلمنكية
+    - authorised_value: dyu
+      category: LANG
+      lib: الديولا
+      lib_opac: الديولا
+    - authorised_value: dzo
+      category: LANG
+      lib: الدزونخية
+      lib_opac: الدزونخية
+    - authorised_value: efi
+      category: LANG
+      lib: إفيك
+      lib_opac: إفيك
+    - authorised_value: egy
+      category: LANG
+      lib: المصرية (القديمة)
+      lib_opac: المصرية (القديمة)
+    - authorised_value: eka
+      category: LANG
+      lib: إكاجوك
+      lib_opac: إكاجوك
+    - authorised_value: elx
+      category: LANG
+      lib: العيلامية
+      lib_opac: العيلامية
+    - authorised_value: eng
+      category: LANG
+      lib: الإنجليزية
+      lib_opac: الإنجليزية
+    - authorised_value: enm
+      category: LANG
+      lib: الإنجليزية الوسطى (1100-1500)
+      lib_opac: الإنجليزية الوسطى (1100-1500)
+    - authorised_value: epo
+      category: LANG
+      lib: الإسبرانتو
+      lib_opac: الإسبرانتو
+    - authorised_value: est
+      category: LANG
+      lib: الإستونية
+      lib_opac: الإستونية
+    - authorised_value: ewe
+      category: LANG
+      lib: إيوي
+      lib_opac: إيوي
+    - authorised_value: ewo
+      category: LANG
+      lib: الإوندو
+      lib_opac: الإوندو
+    - authorised_value: fan
+      category: LANG
+      lib: الفانج
+      lib_opac: الفانج
+    - authorised_value: fao
+      category: LANG
+      lib: الفاروسية
+      lib_opac: الفاروسية
+    - authorised_value: fat
+      category: LANG
+      lib: الفانتي
+      lib_opac: الفانتي
+    - authorised_value: fij
+      category: LANG
+      lib: الفيجية
+      lib_opac: الفيجية
+    - authorised_value: fil
+      category: LANG
+      lib: الفلبينية
+      lib_opac: الفلبينية
+    - authorised_value: fin
+      category: LANG
+      lib: الفنلندية
+      lib_opac: الفنلندية
+    - authorised_value: fiu
+      category: LANG
+      lib: اللغات الفنلندية-الأوغرية
+      lib_opac: اللغات الفنلندية-الأوغرية
+    - authorised_value: fon
+      category: LANG
+      lib: الفون
+      lib_opac: الفون
+    - authorised_value: fre
+      category: LANG
+      lib: الفرنسية
+      lib_opac: الفرنسية
+    - authorised_value: frm
+      category: LANG
+      lib: الفرنسية، الوسطى (1400-1600)
+      lib_opac: الفرنسية، الوسطى (1400-1600)
+    - authorised_value: fro
+      category: LANG
+      lib: الفرنسية، القديمة (842-1400)
+      lib_opac: الفرنسية، القديمة (842-1400)
+    - authorised_value: frr
+      category: LANG
+      lib: الفريزية الشمالية
+      lib_opac: الفريزية الشمالية
+    - authorised_value: frs
+      category: LANG
+      lib: الفريزية الشرقية
+      lib_opac: الفريزية الشرقية
+    - authorised_value: fry
+      category: LANG
+      lib: الفريزية الغربية
+      lib_opac: الفريزية الغربية
+    - authorised_value: ful
+      category: LANG
+      lib: الفولانية
+      lib_opac: الفولانية
+    - authorised_value: fur
+      category: LANG
+      lib: الفريولية
+      lib_opac: الفريولية
+    - authorised_value: gaa
+      category: LANG
+      lib: غا
+      lib_opac: غا
+    - authorised_value: gay
+      category: LANG
+      lib: الجايو
+      lib_opac: الجايو
+    - authorised_value: gba
+      category: LANG
+      lib: الجبايا
+      lib_opac: الجبايا
+    - authorised_value: gem
+      category: LANG
+      lib: اللغات الجرمانية
+      lib_opac: اللغات الجرمانية
+    - authorised_value: geo
+      category: LANG
+      lib: الجورجية
+      lib_opac: الجورجية
+    - authorised_value: ger
+      category: LANG
+      lib: الألمانية
+      lib_opac: الألمانية
+    - authorised_value: gez
+      category: LANG
+      lib: الجيز
+      lib_opac: الجيز
+    - authorised_value: gil
+      category: LANG
+      lib: لغة جبل طارق
+      lib_opac: لغة جبل طارق
+    - authorised_value: gla
+      category: LANG
+      lib: الغيلية؛ الغيلية الاسكتلندية
+      lib_opac: الغيلية؛ الغيلية الاسكتلندية
+    - authorised_value: gle
+      category: LANG
+      lib: الأيرلندية
+      lib_opac: الأيرلندية
+    - authorised_value: glg
+      category: LANG
+      lib: الغاليكية
+      lib_opac: الغاليكية
+    - authorised_value: glv
+      category: LANG
+      lib: المنكية
+      lib_opac: المنكية
+    - authorised_value: gmh
+      category: LANG
+      lib: الألمانية العليا الوسطى (1050-1500)
+      lib_opac: الألمانية العليا الوسطى (1050-1500)
+    - authorised_value: goh
+      category: LANG
+      lib: الألمانية العليا القديمة (750-1050)
+      lib_opac: الألمانية العليا القديمة (750-1050)
+    - authorised_value: gon
+      category: LANG
+      lib: غوندي
+      lib_opac: غوندي
+    - authorised_value: gor
+      category: LANG
+      lib: جورونتالو
+      lib_opac: جورونتالو
+    - authorised_value: got
+      category: LANG
+      lib: القوطية
+      lib_opac: القوطية
+    - authorised_value: grb
+      category: LANG
+      lib: غريبو
+      lib_opac: غريبو
+    - authorised_value: grc
+      category: LANG
+      lib: اليونانية القديمة (حتى 1453)
+      lib_opac: اليونانية القديمة (حتى 1453)
+    - authorised_value: gre
+      category: LANG
+      lib: اليونانية الحديثة (1453-)
+      lib_opac: اليونانية الحديثة (1453-)
+    - authorised_value: grn
+      category: LANG
+      lib: الغوارانية
+      lib_opac: الغوارانية
+    - authorised_value: gsw
+      category: LANG
+      lib: الألمانية السويسرية، الألزاسية
+      lib_opac: الألمانية السويسرية، الألزاسية
+    - authorised_value: guj
+      category: LANG
+      lib: الكجراتية
+      lib_opac: الكجراتية
+    - authorised_value: gwi
+      category: LANG
+      lib: جوتشين
+      lib_opac: جوتشين
+    - authorised_value: hai
+      category: LANG
+      lib: هيدا
+      lib_opac: هيدا
+    - authorised_value: hat
+      category: LANG
+      lib: الهايتية، الكريولية الهايتية
+      lib_opac: الهايتية، الكريولية الهايتية
+    - authorised_value: hau
+      category: LANG
+      lib: الهوسا
+      lib_opac: الهوسا
+    - authorised_value: haw
+      category: LANG
+      lib: الهاوايية
+      lib_opac: الهاوايية
+    - authorised_value: heb
+      category: LANG
+      lib: العبرية
+      lib_opac: العبرية
+    - authorised_value: her
+      category: LANG
+      lib: هيريرو
+      lib_opac: هيريرو
+    - authorised_value: hil
+      category: LANG
+      lib: الهيليجينون
+      lib_opac: الهيليجينون
+    - authorised_value: him
+      category: LANG
+      lib: اللغات الهيماشالية؛ اللغات البهارية الغربية
+      lib_opac: اللغات الهيماشالية؛ اللغات البهارية الغربية
+    - authorised_value: hin
+      category: LANG
+      lib: الهندية
+      lib_opac: الهندية
+    - authorised_value: hit
+      category: LANG
+      lib: الحيثية
+      lib_opac: الحيثية
+    - authorised_value: hmn
+      category: LANG
+      lib: الهمونجية
+      lib_opac: الهمونجية
+    - authorised_value: hmo
+      category: LANG
+      lib: هيري موتو
+      lib_opac: هيري موتو
+    - authorised_value: hrv
+      category: LANG
+      lib: الكرواتية
+      lib_opac: الكرواتية
+    - authorised_value: hsb
+      category: LANG
+      lib: الصربية العليا
+      lib_opac: الصربية العليا
+    - authorised_value: hun
+      category: LANG
+      lib: المجرية
+      lib_opac: المجرية
+    - authorised_value: hup
+      category: LANG
+      lib: هوبا
+      lib_opac: هوبا
+    - authorised_value: iba
+      category: LANG
+      lib: Iban
+      lib_opac: Iban
+    - authorised_value: ibo
+      category: LANG
+      lib: إيجبو
+      lib_opac: إيجبو
+    - authorised_value: ice
+      category: LANG
+      lib: الأيسلندية
+      lib_opac: الأيسلندية
+    - authorised_value: ido
+      category: LANG
+      lib: آيدو
+      lib_opac: آيدو
+    - authorised_value: iii
+      category: LANG
+      lib: سيتشوان يي
+      lib_opac: سيتشوان يي
+    - authorised_value: ijo
+      category: LANG
+      lib: لغات الإيدجو
+      lib_opac: لغات الإيدجو
+    - authorised_value: iku
+      category: LANG
+      lib: الإنكتيتوتية
+      lib_opac: الإنكتيتوتية
+    - authorised_value: ile
+      category: LANG
+      lib: إنترلنغوا؛ غربية
+      lib_opac: إنترلنغوا؛ غربية
+    - authorised_value: ilo
+      category: LANG
+      lib: إيلوكانو
+      lib_opac: إيلوكانو
+    - authorised_value: ina
+      category: LANG
+      lib: إنترلنغوا (جمعية اللغة الدولية المساعدة)
+      lib_opac: إنترلنغوا (جمعية اللغة الدولية المساعدة)
+    - authorised_value: inc
+      category: LANG
+      lib: اللغات الهندية
+      lib_opac: اللغات الهندية
+    - authorised_value: ind
+      category: LANG
+      lib: الإندونيسية
+      lib_opac: الإندونيسية
+    - authorised_value: ine
+      category: LANG
+      lib: اللغات الهندية الأوروبية
+      lib_opac: اللغات الهندية الأوروبية
+    - authorised_value: inh
+      category: LANG
+      lib: الأنغوشي
+      lib_opac: الأنغوشي
+    - authorised_value: ipk
+      category: LANG
+      lib: الإينبياك
+      lib_opac: الإينبياك
+    - authorised_value: ira
+      category: LANG
+      lib: اللغات الإيرانية
+      lib_opac: اللغات الإيرانية
+    - authorised_value: iro
+      category: LANG
+      lib: لغات الإيروكيان
+      lib_opac: لغات الإيروكيان
+    - authorised_value: ita
+      category: LANG
+      lib: الإيطالية
+      lib_opac: الإيطالية
+    - authorised_value: jav
+      category: LANG
+      lib: الجاوية
+      lib_opac: الجاوية
+    - authorised_value: jbo
+      category: LANG
+      lib: لجبان (لغة اصطناعية)
+      lib_opac: لجبان (لغة اصطناعية)
+    - authorised_value: jpn
+      category: LANG
+      lib: اليابانية
+      lib_opac: اليابانية
+    - authorised_value: jpr
+      category: LANG
+      lib: اليهودية الفارسية
+      lib_opac: اليهودية الفارسية
+    - authorised_value: jrb
+      category: LANG
+      lib: اليهودية العربية
+      lib_opac: اليهودية العربية
+    - authorised_value: kaa
+      category: LANG
+      lib: كارا-كالباك
+      lib_opac: كارا-كالباك
+    - authorised_value: kab
+      category: LANG
+      lib: القبائل
+      lib_opac: القبائل
+    - authorised_value: kac
+      category: LANG
+      lib: الكاشينية؛ جينغفو
+      lib_opac: الكاشينية؛ جينغفو
+    - authorised_value: kal
+      category: LANG
+      lib: كالاليسوت؛ الجرينلاندية
+      lib_opac: كالاليسوت؛ الجرينلاندية
+    - authorised_value: kam
+      category: LANG
+      lib: الكامبا
+      lib_opac: الكامبا
+    - authorised_value: kan
+      category: LANG
+      lib: الكنادية
+      lib_opac: الكنادية
+    - authorised_value: kar
+      category: LANG
+      lib: اللغات الكارينية
+      lib_opac: اللغات الكارينية
+    - authorised_value: kas
+      category: LANG
+      lib: الكشميرية
+      lib_opac: الكشميرية
+    - authorised_value: kau
+      category: LANG
+      lib: الكانوري
+      lib_opac: الكانوري
+    - authorised_value: kaw
+      category: LANG
+      lib: الجاوية القديمة
+      lib_opac: الجاوية القديمة
+    - authorised_value: kaz
+      category: LANG
+      lib: الكازاخية
+      lib_opac: الكازاخية
+    - authorised_value: kbd
+      category: LANG
+      lib: القبردية
+      lib_opac: القبردية
+    - authorised_value: kha
+      category: LANG
+      lib: الكازية
+      lib_opac: الكازية
+    - authorised_value: khi
+      category: LANG
+      lib: لغات خويسان
+      lib_opac: لغات خويسان
+    - authorised_value: khm
+      category: LANG
+      lib: الخميرية المركزية
+      lib_opac: الخميرية المركزية
+    - authorised_value: kho
+      category: LANG
+      lib: الخوتانية؛ ساكان
+      lib_opac: الخوتانية؛ ساكان
+    - authorised_value: kik
+      category: LANG
+      lib: الكيكويو
+      lib_opac: الكيكويو
+    - authorised_value: kin
+      category: LANG
+      lib: الكينيارواندية
+      lib_opac: الكينيارواندية
+    - authorised_value: kir
+      category: LANG
+      lib: القيرغيزية
+      lib_opac: القيرغيزية
+    - authorised_value: kmb
+      category: LANG
+      lib: كيمبوندو
+      lib_opac: كيمبوندو
+    - authorised_value: kok
+      category: LANG
+      lib: الكونكانية
+      lib_opac: الكونكانية
+    - authorised_value: kom
+      category: LANG
+      lib: كومي
+      lib_opac: كومي
+    - authorised_value: kon
+      category: LANG
+      lib: الكونغو
+      lib_opac: الكونغو
+    - authorised_value: kor
+      category: LANG
+      lib: الكورية
+      lib_opac: الكورية
+    - authorised_value: kos
+      category: LANG
+      lib: الكورية
+      lib_opac: الكورية
+    - authorised_value: kpe
+      category: LANG
+      lib: الكبيلي
+      lib_opac: الكبيلي
+    - authorised_value: krc
+      category: LANG
+      lib: الكاراتشاي-بالكا
+      lib_opac: الكاراتشاي-بالكا
+    - authorised_value: krl
+      category: LANG
+      lib: الكاريلية
+      lib_opac: الكاريلية
+    - authorised_value: kro
+      category: LANG
+      lib: لغات كرو
+      lib_opac: لغات كرو
+    - authorised_value: kru
+      category: LANG
+      lib: الكوروخ
+      lib_opac: الكوروخ
+    - authorised_value: kua
+      category: LANG
+      lib: الكيونياما
+      lib_opac: الكيونياما
+    - authorised_value: kum
+      category: LANG
+      lib: القوموقية
+      lib_opac: القوموقية
+    - authorised_value: kur
+      category: LANG
+      lib: الكردية
+      lib_opac: الكردية
+    - authorised_value: kut
+      category: LANG
+      lib: كوتيناي
+      lib_opac: كوتيناي
+    - authorised_value: lad
+      category: LANG
+      lib: الإسبانية اليهودية
+      lib_opac: الإسبانية اليهودية
+    - authorised_value: lah
+      category: LANG
+      lib: لاهندا
+      lib_opac: لاهندا
+    - authorised_value: lam
+      category: LANG
+      lib: لامبا
+      lib_opac: لامبا
+    - authorised_value: lao
+      category: LANG
+      lib: لاو
+      lib_opac: لاو
+    - authorised_value: lat
+      category: LANG
+      lib: اللاتينية
+      lib_opac: اللاتينية
+    - authorised_value: lav
+      category: LANG
+      lib: اللاتفية
+      lib_opac: اللاتفية
+    - authorised_value: lez
+      category: LANG
+      lib: الليزغينية
+      lib_opac: الليزغينية
+    - authorised_value: lim
+      category: LANG
+      lib: الليمبرجيشية
+      lib_opac: الليمبرجيشية
+    - authorised_value: lin
+      category: LANG
+      lib: اللينجالا
+      lib_opac: اللينجالا
+    - authorised_value: lit
+      category: LANG
+      lib: اللتوانية
+      lib_opac: اللتوانية
+    - authorised_value: lol
+      category: LANG
+      lib: مونجو
+      lib_opac: مونجو
+    - authorised_value: loz
+      category: LANG
+      lib: اللوزية
+      lib_opac: اللوزية
+    - authorised_value: ltz
+      category: LANG
+      lib: اللوكسمبرجية
+      lib_opac: اللوكسمبرجية
+    - authorised_value: lua
+      category: LANG
+      lib: لوبا لولوا
+      lib_opac: لوبا لولوا
+    - authorised_value: lub
+      category: LANG
+      lib: لوبا-كاتانغا
+      lib_opac: لوبا-كاتانغا
+    - authorised_value: lug
+      category: LANG
+      lib: الغندية
+      lib_opac: الغندية
+    - authorised_value: lui
+      category: LANG
+      lib: لويسينو
+      lib_opac: لويسينو
+    - authorised_value: lun
+      category: LANG
+      lib: لوندا
+      lib_opac: لوندا
+    - authorised_value: luo
+      category: LANG
+      lib: لوه (كينيا وتنزانيا)
+      lib_opac: لوه (كينيا وتنزانيا)
+    - authorised_value: lus
+      category: LANG
+      lib: لوشاي
+      lib_opac: لوشاي
+    - authorised_value: mac
+      category: LANG
+      lib: المقدونية
+      lib_opac: المقدونية
+    - authorised_value: mad
+      category: LANG
+      lib: المادريز
+      lib_opac: المادريز
+    - authorised_value: mag
+      category: LANG
+      lib: ماجاهي
+      lib_opac: ماجاهي
+    - authorised_value: mah
+      category: LANG
+      lib: المارشالية
+      lib_opac: المارشالية
+    - authorised_value: mai
+      category: LANG
+      lib: المايثيلية
+      lib_opac: المايثيلية
+    - authorised_value: mak
+      category: LANG
+      lib: ماكسار
+      lib_opac: ماكسار
+    - authorised_value: mal
+      category: LANG
+      lib: المالايالامية
+      lib_opac: المالايالامية
+    - authorised_value: man
+      category: LANG
+      lib: مندينكا
+      lib_opac: مندينكا
+    - authorised_value: mao
+      category: LANG
+      lib: الماورية
+      lib_opac: الماورية
+    - authorised_value: map
+      category: LANG
+      lib: اللغات الأسترونيزية
+      lib_opac: اللغات الأسترونيزية
+    - authorised_value: mar
+      category: LANG
+      lib: المهاراتية
+      lib_opac: المهاراتية
+    - authorised_value: mas
+      category: LANG
+      lib: الماساي
+      lib_opac: الماساي
+    - authorised_value: may
+      category: LANG
+      lib: الماليزية
+      lib_opac: الماليزية
+    - authorised_value: mdf
+      category: LANG
+      lib: الموكشا
+      lib_opac: الموكشا
+    - authorised_value: mdr
+      category: LANG
+      lib: مندر
+      lib_opac: مندر
+    - authorised_value: men
+      category: LANG
+      lib: المندي
+      lib_opac: المندي
+    - authorised_value: mga
+      category: LANG
+      lib: الأيرلندية الوسطى (900-1200)
+      lib_opac: الأيرلندية الوسطى (900-1200)
+    - authorised_value: mic
+      category: LANG
+      lib: الميكماكيونية
+      lib_opac: الميكماكيونية
+    - authorised_value: min
+      category: LANG
+      lib: مينانغكابو
+      lib_opac: مينانغكابو
+    - authorised_value: mis
+      category: LANG
+      lib: لغات غير مرمزة
+      lib_opac: لغات غير مرمزة
+    - authorised_value: mkh
+      category: LANG
+      lib: لغات المونية الخميرية
+      lib_opac: لغات المونية الخميرية
+    - authorised_value: mlg
+      category: LANG
+      lib: المالاغاسية
+      lib_opac: المالاغاسية
+    - authorised_value: mlt
+      category: LANG
+      lib: المالطية
+      lib_opac: المالطية
+    - authorised_value: mnc
+      category: LANG
+      lib: المانشو
+      lib_opac: المانشو
+    - authorised_value: mni
+      category: LANG
+      lib: مانيبوري
+      lib_opac: مانيبوري
+    - authorised_value: mno
+      category: LANG
+      lib: لغات مانوبو
+      lib_opac: لغات مانوبو
+    - authorised_value: moh
+      category: LANG
+      lib: موهوك
+      lib_opac: موهوك
+    - authorised_value: mon
+      category: LANG
+      lib: المنغولية
+      lib_opac: المنغولية
+    - authorised_value: mos
+      category: LANG
+      lib: الموسي
+      lib_opac: الموسي
+    - authorised_value: mul
+      category: LANG
+      lib: لغات متعددة
+      lib_opac: لغات متعددة
+    - authorised_value: mun
+      category: LANG
+      lib: لغات الموندا
+      lib_opac: لغات الموندا
+    - authorised_value: mus
+      category: LANG
+      lib: الكريك
+      lib_opac: الكريك
+    - authorised_value: mwl
+      category: LANG
+      lib: الميراندية
+      lib_opac: الميراندية
+    - authorised_value: mwr
+      category: LANG
+      lib: الماروارية
+      lib_opac: الماروارية
+    - authorised_value: myn
+      category: LANG
+      lib: لغات المايا
+      lib_opac: لغات المايا
+    - authorised_value: myv
+      category: LANG
+      lib: الأرزية
+      lib_opac: الأرزية
+    - authorised_value: nah
+      category: LANG
+      lib: لغات الناهواتل
+      lib_opac: لغات الناهواتل
+    - authorised_value: nai
+      category: LANG
+      lib: اللغات الهندية الأمريكية الشمالية
+      lib_opac: اللغات الهندية الأمريكية الشمالية
+    - authorised_value: nap
+      category: LANG
+      lib: النابولية
+      lib_opac: النابولية
+    - authorised_value: nau
+      category: LANG
+      lib: ناورو
+      lib_opac: ناورو
+    - authorised_value: nav
+      category: LANG
+      lib: النافاهو
+      lib_opac: النافاهو
+    - authorised_value: nbl
+      category: LANG
+      lib: نديبيلي؛ الجنوب؛ نديبيلي الجنوبية
+      lib_opac: نديبيلي؛ الجنوب؛ نديبيلي الجنوبية
+    - authorised_value: nde
+      category: LANG
+      lib: نديبيلي؛ الشمال؛ نديبيلي الشمالية
+      lib_opac: نديبيلي؛ الشمال؛ نديبيلي الشمالية
+    - authorised_value: ndo
+      category: LANG
+      lib: ندونغا
+      lib_opac: ندونغا
+    - authorised_value: nds
+      category: LANG
+      lib: الألمانية الدنيا؛ السكسونية الدنيا
+      lib_opac: الألمانية الدنيا؛ السكسونية الدنيا
+    - authorised_value: nep
+      category: LANG
+      lib: النيبالية
+      lib_opac: النيبالية
+    - authorised_value: new
+      category: LANG
+      lib: نيبال بهاسا؛ نيواري
+      lib_opac: نيبال بهاسا؛ نيواري
+    - authorised_value: nia
+      category: LANG
+      lib: النياس
+      lib_opac: النياس
+    - authorised_value: nic
+      category: LANG
+      lib: لغات النيجر-كردفانيان
+      lib_opac: لغات النيجر-كردفانيان
+    - authorised_value: niu
+      category: LANG
+      lib: النيوي
+      lib_opac: النيوي
+    - authorised_value: nno
+      category: LANG
+      lib: النرويجية؛ نينورسك
+      lib_opac: النرويجية؛ نينورسك
+    - authorised_value: nob
+      category: LANG
+      lib: بوكمال، النرويجية؛ النرويجية بوكمال
+      lib_opac: بوكمال، النرويجية؛ النرويجية بوكمال
+    - authorised_value: nog
+      category: LANG
+      lib: النوجاى
+      lib_opac: النوجاى
+    - authorised_value: non
+      category: LANG
+      lib: النوردية القديمة
+      lib_opac: النوردية القديمة
+    - authorised_value: nor
+      category: LANG
+      lib: النرويجية
+      lib_opac: النرويجية
+    - authorised_value: nqo
+      category: LANG
+      lib: النكو
+      lib_opac: النكو
+    - authorised_value: nso
+      category: LANG
+      lib: بيدي؛ سبيدي؛ السوثو الشمالية
+      lib_opac: بيدي؛ سبيدي؛ السوثو الشمالية
+    - authorised_value: nub
+      category: LANG
+      lib: اللغات النوبية
+      lib_opac: اللغات النوبية
+    - authorised_value: nwc
+      category: LANG
+      lib: النوارى الكلاسيكي؛ نيواري القديمة؛ بهاسا نيبال الكلاسيكية
+      lib_opac: النوارى الكلاسيكي؛ نيواري القديمة؛ بهاسا نيبال الكلاسيكية
+    - authorised_value: nya
+      category: LANG
+      lib: شيشيوا؛ شيوا؛ نيانجا
+      lib_opac: شيشيوا؛ شيوا؛ نيانجا
+    - authorised_value: nym
+      category: LANG
+      lib: نيامويزي
+      lib_opac: نيامويزي
+    - authorised_value: nyn
+      category: LANG
+      lib: النيانكول
+      lib_opac: النيانكول
+    - authorised_value: nyo
+      category: LANG
+      lib: النيورو
+      lib_opac: النيورو
+    - authorised_value: nzi
+      category: LANG
+      lib: النزيما
+      lib_opac: النزيما
+    - authorised_value: oci
+      category: LANG
+      lib: الأوكيتانية (بعد 1500)
+      lib_opac: الأوكيتانية (بعد 1500)
+    - authorised_value: oji
+      category: LANG
+      lib: الأوجيبوا
+      lib_opac: الأوجيبوا
+    - authorised_value: ori
+      category: LANG
+      lib: الأوريا
+      lib_opac: الأوريا
+    - authorised_value: orm
+      category: LANG
+      lib: الأورومو
+      lib_opac: الأورومو
+    - authorised_value: osa
+      category: LANG
+      lib: الأوساج
+      lib_opac: الأوساج
+    - authorised_value: oss
+      category: LANG
+      lib: الأوسيتيك
+      lib_opac: الأوسيتيك
+    - authorised_value: ota
+      category: LANG
+      lib: التركية العثمانية(1500-1928)
+      lib_opac: التركية العثمانية(1500-1928)
+    - authorised_value: oto
+      category: LANG
+      lib: لغات أوتومي
+      lib_opac: لغات أوتومي
+    - authorised_value: paa
+      category: LANG
+      lib: اللغات البابوانية
+      lib_opac: اللغات البابوانية
+    - authorised_value: pag
+      category: LANG
+      lib: بانجاسينان
+      lib_opac: بانجاسينان
+    - authorised_value: pal
+      category: LANG
+      lib: البهلوية
+      lib_opac: البهلوية
+    - authorised_value: pam
+      category: LANG
+      lib: بامبانجا؛ كامبابانجان
+      lib_opac: بامبانجا؛ كامبابانجان
+    - authorised_value: pan
+      category: LANG
+      lib: البنجابية
+      lib_opac: البنجابية
+    - authorised_value: pap
+      category: LANG
+      lib: البابيامينتو
+      lib_opac: البابيامينتو
+    - authorised_value: pau
+      category: LANG
+      lib: البالاوية
+      lib_opac: البالاوية
+    - authorised_value: peo
+      category: LANG
+      lib: الفارسية القديمة (400 قبل الميلاد - 600 ميلادية)
+      lib_opac: الفارسية القديمة (400 قبل الميلاد - 600 ميلادية)
+    - authorised_value: per
+      category: LANG
+      lib: الفارسية
+      lib_opac: الفارسية
+    - authorised_value: phi
+      category: LANG
+      lib: اللغات الفلبينية
+      lib_opac: اللغات الفلبينية
+    - authorised_value: phn
+      category: LANG
+      lib: الفينيقية
+      lib_opac: الفينيقية
+    - authorised_value: pli
+      category: LANG
+      lib: البالية
+      lib_opac: البالية
+    - authorised_value: pol
+      category: LANG
+      lib: البولندية
+      lib_opac: البولندية
+    - authorised_value: pon
+      category: LANG
+      lib: بونبيان
+      lib_opac: بونبيان
+    - authorised_value: por
+      category: LANG
+      lib: البرتغالية
+      lib_opac: البرتغالية
+    - authorised_value: pra
+      category: LANG
+      lib: لغات براكريت
+      lib_opac: لغات براكريت
+    - authorised_value: pro
+      category: LANG
+      lib: البروفنسالية؛ القديمة (حتى 1500)؛ الأكستانية، القديمة (حتى 1500)
+      lib_opac: البروفنسالية؛ القديمة (حتى 1500)؛ الأكستانية، القديمة (حتى 1500)
+    - authorised_value: pus
+      category: LANG
+      lib: البشتوية
+      lib_opac: البشتوية
+    - authorised_value: qaa-qtz
+      category: LANG
+      lib: محجوز للاستخدام المحلي
+      lib_opac: محجوز للاستخدام المحلي
+    - authorised_value: que
+      category: LANG
+      lib: الكيشوا
+      lib_opac: الكيشوا
+    - authorised_value: raj
+      category: LANG
+      lib: الراجاستانية
+      lib_opac: الراجاستانية
+    - authorised_value: rap
+      category: LANG
+      lib: رابا نوي
+      lib_opac: رابا نوي
+    - authorised_value: rar
+      category: LANG
+      lib: راروتونجان؛ جزر كوك الماورية
+      lib_opac: راروتونجان؛ جزر كوك الماورية
+    - authorised_value: roa
+      category: LANG
+      lib: اللغات الرومانسية
+      lib_opac: اللغات الرومانسية
+    - authorised_value: roh
+      category: LANG
+      lib: الرومانشية
+      lib_opac: الرومانشية
+    - authorised_value: rom
+      category: LANG
+      lib: الرومنية
+      lib_opac: الرومنية
+    - authorised_value: rum
+      category: LANG
+      lib: الرومانية؛ المولدافية؛ مولدوفا
+      lib_opac: الرومانية؛ المولدافية؛ مولدوفا
+    - authorised_value: run
+      category: LANG
+      lib: الرندي
+      lib_opac: الرندي
+    - authorised_value: rup
+      category: LANG
+      lib: الأرومانية؛ الأرومانية؛ المقدونية الرومانية
+      lib_opac: الأرومانية؛ الأرومانية؛ المقدونية الرومانية
+    - authorised_value: rus
+      category: LANG
+      lib: الروسية
+      lib_opac: الروسية
+    - authorised_value: sad
+      category: LANG
+      lib: السانداوي
+      lib_opac: السانداوي
+    - authorised_value: sag
+      category: LANG
+      lib: سانجو
+      lib_opac: سانجو
+    - authorised_value: sah
+      category: LANG
+      lib: ياكوت
+      lib_opac: ياكوت
+    - authorised_value: sai
+      category: LANG
+      lib: اللغات الهندية الأمريكية الجنوبية
+      lib_opac: اللغات الهندية الأمريكية الجنوبية
+    - authorised_value: sal
+      category: LANG
+      lib: لغات ساليشية
+      lib_opac: لغات ساليشية
+    - authorised_value: sam
+      category: LANG
+      lib: السامرية الآرامية
+      lib_opac: السامرية الآرامية
+    - authorised_value: san
+      category: LANG
+      lib: السنسكريتية
+      lib_opac: السنسكريتية
+    - authorised_value: sas
+      category: LANG
+      lib: الساساك
+      lib_opac: الساساك
+    - authorised_value: sat
+      category: LANG
+      lib: الصانتالية
+      lib_opac: الصانتالية
+    - authorised_value: scn
+      category: LANG
+      lib: الصقلية
+      lib_opac: الصقلية
+    - authorised_value: sco
+      category: LANG
+      lib: الأسكتلندية
+      lib_opac: الأسكتلندية
+    - authorised_value: sel
+      category: LANG
+      lib: السيلكب
+      lib_opac: السيلكب
+    - authorised_value: sem
+      category: LANG
+      lib: اللغات السامية
+      lib_opac: اللغات السامية
+    - authorised_value: sga
+      category: LANG
+      lib: الأيرلندية القديمة (حتى 900)
+      lib_opac: الأيرلندية القديمة (حتى 900)
+    - authorised_value: sgn
+      category: LANG
+      lib: لغات الإشارة
+      lib_opac: لغات الإشارة
+    - authorised_value: shn
+      category: LANG
+      lib: شان
+      lib_opac: شان
+    - authorised_value: sid
+      category: LANG
+      lib: سيدامو
+      lib_opac: سيدامو
+    - authorised_value: sin
+      category: LANG
+      lib: السنهالية
+      lib_opac: السنهالية
+    - authorised_value: sio
+      category: LANG
+      lib: لغات سيوان
+      lib_opac: لغات سيوان
+    - authorised_value: sit
+      category: LANG
+      lib: اللغات الصينية التبتية
+      lib_opac: اللغات الصينية التبتية
+    - authorised_value: sla
+      category: LANG
+      lib: اللغات السلافية
+      lib_opac: اللغات السلافية
+    - authorised_value: slo
+      category: LANG
+      lib: السلوفاكية
+      lib_opac: السلوفاكية
+    - authorised_value: slv
+      category: LANG
+      lib: السلوفينية
+      lib_opac: السلوفينية
+    - authorised_value: sma
+      category: LANG
+      lib: السامي الجنوبية
+      lib_opac: السامي الجنوبية
+    - authorised_value: sme
+      category: LANG
+      lib: السامي الشمالية
+      lib_opac: السامي الشمالية
+    - authorised_value: smi
+      category: LANG
+      lib: لغات السامي
+      lib_opac: لغات السامي
+    - authorised_value: smj
+      category: LANG
+      lib: لوله سامي
+      lib_opac: لوله سامي
+    - authorised_value: smn
+      category: LANG
+      lib: إيناري سامي
+      lib_opac: إيناري سامي
+    - authorised_value: smo
+      category: LANG
+      lib: الساموية
+      lib_opac: الساموية
+    - authorised_value: sms
+      category: LANG
+      lib: سكولت سامي
+      lib_opac: سكولت سامي
+    - authorised_value: sna
+      category: LANG
+      lib: الشونا
+      lib_opac: الشونا
+    - authorised_value: snd
+      category: LANG
+      lib: السندية
+      lib_opac: السندية
+    - authorised_value: snk
+      category: LANG
+      lib: السوننكية
+      lib_opac: السوننكية
+    - authorised_value: sog
+      category: LANG
+      lib: سوغديان
+      lib_opac: سوغديان
+    - authorised_value: som
+      category: LANG
+      lib: الصومالية
+      lib_opac: الصومالية
+    - authorised_value: son
+      category: LANG
+      lib: لغات السونغاي
+      lib_opac: لغات السونغاي
+    - authorised_value: sot
+      category: LANG
+      lib: السوتو، الجنوبية
+      lib_opac: السوتو، الجنوبية
+    - authorised_value: spa
+      category: LANG
+      lib: الأسبانية؛ القشتالية
+      lib_opac: الأسبانية؛ القشتالية
+    - authorised_value: srd
+      category: LANG
+      lib: السردينية
+      lib_opac: السردينية
+    - authorised_value: srn
+      category: LANG
+      lib: سرانان تونجو
+      lib_opac: سرانان تونجو
+    - authorised_value: srp
+      category: LANG
+      lib: الصربية
+      lib_opac: الصربية
+    - authorised_value: srr
+      category: LANG
+      lib: السرسرية
+      lib_opac: السرسرية
+    - authorised_value: ssa
+      category: LANG
+      lib: اللغات الصحراوية النيلية
+      lib_opac: اللغات الصحراوية النيلية
+    - authorised_value: ssw
+      category: LANG
+      lib: سوازي
+      lib_opac: سوازي
+    - authorised_value: suk
+      category: LANG
+      lib: السوكوما
+      lib_opac: السوكوما
+    - authorised_value: sun
+      category: LANG
+      lib: السودانية
+      lib_opac: السودانية
+    - authorised_value: sus
+      category: LANG
+      lib: السوسو
+      lib_opac: السوسو
+    - authorised_value: sux
+      category: LANG
+      lib: السومارية
+      lib_opac: السومارية
+    - authorised_value: swa
+      category: LANG
+      lib: السواحيلية
+      lib_opac: السواحيلية
+    - authorised_value: swe
+      category: LANG
+      lib: السويدية
+      lib_opac: السويدية
+    - authorised_value: syc
+      category: LANG
+      lib: السريانية الكلاسيكية
+      lib_opac: السريانية الكلاسيكية
+    - authorised_value: syr
+      category: LANG
+      lib: السريانية
+      lib_opac: السريانية
+    - authorised_value: tah
+      category: LANG
+      lib: التاهيتية
+      lib_opac: التاهيتية
+    - authorised_value: tai
+      category: LANG
+      lib: اللغات التايلندية
+      lib_opac: اللغات التايلندية
+    - authorised_value: tam
+      category: LANG
+      lib: التاميل
+      lib_opac: التاميل
+    - authorised_value: tat
+      category: LANG
+      lib: التتارية
+      lib_opac: التتارية
+    - authorised_value: tel
+      category: LANG
+      lib: التيلوغوية
+      lib_opac: التيلوغوية
+    - authorised_value: tem
+      category: LANG
+      lib: تيمني
+      lib_opac: تيمني
+    - authorised_value: ter
+      category: LANG
+      lib: تيرينو
+      lib_opac: تيرينو
+    - authorised_value: tet
+      category: LANG
+      lib: التيتومية
+      lib_opac: التيتومية
+    - authorised_value: tgk
+      category: LANG
+      lib: الطاجكستانية
+      lib_opac: الطاجكستانية
+    - authorised_value: tgl
+      category: LANG
+      lib: التاغالوغية
+      lib_opac: التاغالوغية
+    - authorised_value: tha
+      category: LANG
+      lib: التايلاندية
+      lib_opac: التايلاندية
+    - authorised_value: tib
+      category: LANG
+      lib: التبتية
+      lib_opac: التبتية
+    - authorised_value: tig
+      category: LANG
+      lib: التجرية
+      lib_opac: التجرية
+    - authorised_value: tir
+      category: LANG
+      lib: التيغرينية
+      lib_opac: التيغرينية
+    - authorised_value: tiv
+      category: LANG
+      lib: التيف
+      lib_opac: التيف
+    - authorised_value: tkl
+      category: LANG
+      lib: توكيلاو
+      lib_opac: توكيلاو
+    - authorised_value: tlh
+      category: LANG
+      lib: كلينجون (لغة اصطناعية)
+      lib_opac: كلينجون (لغة اصطناعية)
+    - authorised_value: tli
+      category: LANG
+      lib: التلينغيتية
+      lib_opac: التلينغيتية
+    - authorised_value: tmh
+      category: LANG
+      lib: التمشق
+      lib_opac: التمشق
+    - authorised_value: tog
+      category: LANG
+      lib: تونجا (نياسا)
+      lib_opac: تونجا (نياسا)
+    - authorised_value: ton
+      category: LANG
+      lib: تونغا (جزر تونغا)
+      lib_opac: تونغا (جزر تونغا)
+    - authorised_value: tpi
+      category: LANG
+      lib: توك بيسين
+      lib_opac: توك بيسين
+    - authorised_value: tsi
+      category: LANG
+      lib: التسيمشيان
+      lib_opac: التسيمشيان
+    - authorised_value: tsn
+      category: LANG
+      lib: التسوانية
+      lib_opac: التسوانية
+    - authorised_value: tso
+      category: LANG
+      lib: تسونغا
+      lib_opac: تسونغا
+    - authorised_value: tuk
+      category: LANG
+      lib: التركمانية
+      lib_opac: التركمانية
+    - authorised_value: tum
+      category: LANG
+      lib: تومبوكا
+      lib_opac: تومبوكا
+    - authorised_value: tup
+      category: LANG
+      lib: لغات توبي
+      lib_opac: لغات توبي
+    - authorised_value: tur
+      category: LANG
+      lib: التركية
+      lib_opac: التركية
+    - authorised_value: tut
+      category: LANG
+      lib: اللغات الألطائية
+      lib_opac: اللغات الألطائية
+    - authorised_value: tvl
+      category: LANG
+      lib: توفالو
+      lib_opac: توفالو
+    - authorised_value: twi
+      category: LANG
+      lib: التوي
+      lib_opac: التوي
+    - authorised_value: tyv
+      category: LANG
+      lib: التوفينية
+      lib_opac: التوفينية
+    - authorised_value: udm
+      category: LANG
+      lib: الأدمرتية
+      lib_opac: الأدمرتية
+    - authorised_value: uga
+      category: LANG
+      lib: الأوغاريتية
+      lib_opac: الأوغاريتية
+    - authorised_value: uig
+      category: LANG
+      lib: الأيغورية
+      lib_opac: الأيغورية
+    - authorised_value: ukr
+      category: LANG
+      lib: الأوكرانية
+      lib_opac: الأوكرانية
+    - authorised_value: umb
+      category: LANG
+      lib: أومبوندو
+      lib_opac: أومبوندو
+    - authorised_value: und
+      category: LANG
+      lib: غير محدد
+      lib_opac: غير محدد
+    - authorised_value: urd
+      category: LANG
+      lib: الأردية
+      lib_opac: الأردية
+    - authorised_value: uzb
+      category: LANG
+      lib: الأوزبكية
+      lib_opac: الأوزبكية
+    - authorised_value: vai
+      category: LANG
+      lib: الفاي
+      lib_opac: الفاي
+    - authorised_value: ven
+      category: LANG
+      lib: الفيندا
+      lib_opac: الفيندا
+    - authorised_value: vie
+      category: LANG
+      lib: الفيتنامية
+      lib_opac: الفيتنامية
+    - authorised_value: vol
+      category: LANG
+      lib: فولابوك
+      lib_opac: فولابوك
+    - authorised_value: vot
+      category: LANG
+      lib: الفوتيك
+      lib_opac: الفوتيك
+    - authorised_value: wak
+      category: LANG
+      lib: لغات واكشان
+      lib_opac: لغات واكشان
+    - authorised_value: wal
+      category: LANG
+      lib: ولايتا
+      lib_opac: ولايتا
+    - authorised_value: war
+      category: LANG
+      lib: الواراي
+      lib_opac: الواراي
+    - authorised_value: was
+      category: LANG
+      lib: واشو
+      lib_opac: واشو
+    - authorised_value: wel
+      category: LANG
+      lib: الويلزية
+      lib_opac: الويلزية
+    - authorised_value: wen
+      category: LANG
+      lib: اللغات الصربية
+      lib_opac: اللغات الصربية
+    - authorised_value: wln
+      category: LANG
+      lib: الولونية
+      lib_opac: الولونية
+    - authorised_value: wol
+      category: LANG
+      lib: الولوف
+      lib_opac: الولوف
+    - authorised_value: xal
+      category: LANG
+      lib: القلميقية؛ الأويرات
+      lib_opac: القلميقية؛ الأويرات
+    - authorised_value: xho
+      category: LANG
+      lib: زوسا
+      lib_opac: زوسا
+    - authorised_value: yao
+      category: LANG
+      lib: ياو
+      lib_opac: ياو
+    - authorised_value: yap
+      category: LANG
+      lib: اليابية
+      lib_opac: اليابية
+    - authorised_value: yid
+      category: LANG
+      lib: اليديشية
+      lib_opac: اليديشية
+    - authorised_value: yor
+      category: LANG
+      lib: اليوروبية
+      lib_opac: اليوروبية
+    - authorised_value: ypk
+      category: LANG
+      lib: لغات يوبيك
+      lib_opac: لغات يوبيك
+    - authorised_value: zap
+      category: LANG
+      lib: زابوتك
+      lib_opac: زابوتك
+    - authorised_value: zbl
+      category: LANG
+      lib: رموز بليس
+      lib_opac: رموز بليس
+    - authorised_value: zen
+      category: LANG
+      lib: زيناغا
+      lib_opac: زيناغا
+    - authorised_value: zgh
+      category: LANG
+      lib: الأمازيغية المغربية القياسية
+      lib_opac: الأمازيغية المغربية القياسية
+    - authorised_value: zha
+      category: LANG
+      lib: تشوانغ
+      lib_opac: تشوانغ
+    - authorised_value: znd
+      category: LANG
+      lib: لغات زاندي
+      lib_opac: لغات زاندي
+    - authorised_value: zul
+      category: LANG
+      lib: الزولو
+      lib_opac: الزولو
+    - authorised_value: zun
+      category: LANG
+      lib: زوني
+      lib_opac: زوني
+    - authorised_value: zxx
+      category: LANG
+      lib: لا يوجد محتوى لغوي؛ لا ينطبق
+      lib_opac: لا يوجد محتوى لغوي؛ لا ينطبق
+    - authorised_value: zza
+      category: LANG
+      lib: زازا؛ ديميلي؛ كيردكي؛ كازاكي
+      lib_opac: زازا؛ ديميلي؛ كيردكي؛ كازاكي
+    translatable:
+    - lib
+    - lib_opac
+- authorised_values:
+    multiline: []
+    rows:
+    - authorised_value: '000'
+      category: qualif
+      lib: وظيفة غير محددة
+      lib_opac: وظيفة غير محددة
+    - authorised_value: '005'
+      category: qualif
+      lib: ممثل
+      lib_opac: ممثل
+    - authorised_value: '010'
+      category: qualif
+      lib: محول
+      lib_opac: محول
+    - authorised_value: '015'
+      category: qualif
+      lib: وكالة تتيح إعادة الإنتاج
+      lib_opac: وكالة تتيح إعادة الإنتاج
+    - authorised_value: '018'
+      category: qualif
+      lib: محرك الصور
+      lib_opac: محرك الصور
+    - authorised_value: '020'
+      category: qualif
+      lib: مفسر الشروح
+      lib_opac: مفسر الشروح
+    - authorised_value: '030'
+      category: qualif
+      lib: منظم
+      lib_opac: منظم
+    - authorised_value: '040'
+      category: qualif
+      lib: فنان
+      lib_opac: فنان
+    - authorised_value: '050'
+      category: qualif
+      lib: محال إليه
+      lib_opac: محال إليه
+    - authorised_value: '060'
+      category: qualif
+      lib: الاسم المرتبط
+      lib_opac: الاسم المرتبط
+    - authorised_value: '062'
+      category: qualif
+      lib: المؤلف، منسوب
+      lib_opac: المؤلف، منسوب
+    - authorised_value: '065'
+      category: qualif
+      lib: بائع بالمزاد
+      lib_opac: بائع بالمزاد
+    - authorised_value: '070'
+      category: qualif
+      lib: المؤلف
+      lib_opac: المؤلف
+    - authorised_value: '072'
+      category: qualif
+      lib: المؤلف في الاقتباسات أو المقتطفات النصية
+      lib_opac: المؤلف في الاقتباسات أو المقتطفات النصية
+    - authorised_value: '075'
+      category: qualif
+      lib: مؤلف الكلمة الختامية،والخاتمة، وإشارة الناشر، إلخ.
+      lib_opac: مؤلف الكلمة الختامية،والخاتمة، وإشارة الناشر، إلخ.
+    - authorised_value: '080'
+      category: qualif
+      lib: مؤلف المقدمة، إلخ.
+      lib_opac: مؤلف المقدمة، إلخ.
+    - authorised_value: '090'
+      category: qualif
+      lib: مؤلف الحوار
+      lib_opac: مؤلف الحوار
+    - authorised_value: '100'
+      category: qualif
+      lib: سابقة بيبلوغرافية
+      lib_opac: سابقة بيبلوغرافية
+    - authorised_value: '110'
+      category: qualif
+      lib: 'الرابط: وكيل بريط مادة.'
+      lib_opac: 'الرابط: وكيل بريط مادة.'
+    - authorised_value: '120'
+      category: qualif
+      lib: مصمم ملزم
+      lib_opac: مصمم ملزم
+    - authorised_value: '130'
+      category: qualif
+      lib: مصمم الكتاب
+      lib_opac: مصمم الكتاب
+    - authorised_value: '140'
+      category: qualif
+      lib: مصمم غلاف الكتاب
+      lib_opac: مصمم غلاف الكتاب
+    - authorised_value: '150'
+      category: qualif
+      lib: مصمم رقعة الكتاب
+      lib_opac: مصمم رقعة الكتاب
+    - authorised_value: '160'
+      category: qualif
+      lib: بائع الكتب
+      lib_opac: بائع الكتب
+    - authorised_value: '170'
+      category: qualif
+      lib: خطاط
+      lib_opac: خطاط
+    - authorised_value: '180'
+      category: qualif
+      lib: رسام خرائط
+      lib_opac: رسام خرائط
+    - authorised_value: '190'
+      category: qualif
+      lib: رقيب
+      lib_opac: رقيب
+    - authorised_value: '195'
+      category: qualif
+      lib: مدير الكورال
+      lib_opac: مدير الكورال
+    - authorised_value: '200'
+      category: qualif
+      lib: مصمم رقصات
+      lib_opac: مصمم رقصات
+    - authorised_value: '202'
+      category: qualif
+      lib: مؤدي بالسيرك
+      lib_opac: مؤدي بالسيرك
+    - authorised_value: '205'
+      category: qualif
+      lib: مشارك
+      lib_opac: مشارك
+    - authorised_value: '206'
+      category: qualif
+      lib: جامع المواد الميدانية
+      lib_opac: جامع المواد الميدانية
+    - authorised_value: '207'
+      category: qualif
+      lib: ممثل كوميدي
+      lib_opac: ممثل كوميدي
+    - authorised_value: '210'
+      category: qualif
+      lib: معلق
+      lib_opac: معلق
+    - authorised_value: '212'
+      category: qualif
+      lib: معلق على نص مكتوب
+      lib_opac: معلق على نص مكتوب
+    - authorised_value: '220'
+      category: qualif
+      lib: مصرف
+      lib_opac: مصرف
+    - authorised_value: '230'
+      category: qualif
+      lib: ملحن
+      lib_opac: ملحن
+    - authorised_value: '233'
+      category: qualif
+      lib: مؤلف عمل مقتبس
+      lib_opac: مؤلف عمل مقتبس
+    - authorised_value: '236'
+      category: qualif
+      lib: ملحن عمل موسيقي رئيسي
+      lib_opac: ملحن عمل موسيقي رئيسي
+    - authorised_value: '240'
+      category: qualif
+      lib: منضد الحروف في المطبعة
+      lib_opac: منضد الحروف في المطبعة
+    - authorised_value: '245'
+      category: qualif
+      lib: كاتب المفهوم
+      lib_opac: كاتب المفهوم
+    - authorised_value: '250'
+      category: qualif
+      lib: موصل
+      lib_opac: موصل
+    - authorised_value: '255'
+      category: qualif
+      lib: استشاري مشروع
+      lib_opac: استشاري مشروع
+    - authorised_value: '257'
+      category: qualif
+      lib: مساهم
+      lib_opac: مساهم
+    - authorised_value: '260'
+      category: qualif
+      lib: مالك حقوق النشر
+      lib_opac: مالك حقوق النشر
+    - authorised_value: '270'
+      category: qualif
+      lib: مصحح
+      lib_opac: مصحح
+    - authorised_value: '273'
+      category: qualif
+      lib: أمين المعرض
+      lib_opac: أمين المعرض
+    - authorised_value: '275'
+      category: qualif
+      lib: راقص
+      lib_opac: راقص
+    - authorised_value: '280'
+      category: qualif
+      lib: مكرس
+      lib_opac: مكرس
+    - authorised_value: '290'
+      category: qualif
+      lib: مكرِس
+      lib_opac: مكرِس
+    - authorised_value: '295'
+      category: qualif
+      lib: مانح الدرجة
+      lib_opac: مانح الدرجة
+    - authorised_value: '300'
+      category: qualif
+      lib: مخرج
+      lib_opac: مخرج
+    - authorised_value: '303'
+      category: qualif
+      lib: مشغل الموسيقى (دي جي)
+      lib_opac: مشغل الموسيقى (دي جي)
+    - authorised_value: '305'
+      category: qualif
+      lib: مقدم الأطروحة
+      lib_opac: مقدم الأطروحة
+    - authorised_value: '310'
+      category: qualif
+      lib: موزع
+      lib_opac: موزع
+    - authorised_value: '320'
+      category: qualif
+      lib: مانح
+      lib_opac: مانح
+    - authorised_value: '330'
+      category: qualif
+      lib: مؤلف مشكوك فيه
+      lib_opac: مؤلف مشكوك فيه
+    - authorised_value: '340'
+      category: qualif
+      lib: محرر
+      lib_opac: محرر
+    - authorised_value: '350'
+      category: qualif
+      lib: نقاش
+      lib_opac: نقاش
+    - authorised_value: '355'
+      category: qualif
+      lib: الخلاصة
+      lib_opac: الخلاصة
+    - authorised_value: '360'
+      category: qualif
+      lib: مطبوع
+      lib_opac: مطبوع
+    - authorised_value: '365'
+      category: qualif
+      lib: خبير
+      lib_opac: خبير
+    - authorised_value: '370'
+      category: qualif
+      lib: مونتير الفيلم
+      lib_opac: مونتير الفيلم
+    - authorised_value: '380'
+      category: qualif
+      lib: مزور
+      lib_opac: مزور
+    - authorised_value: '385'
+      category: qualif
+      lib: المؤلف السابق المنسوب
+      lib_opac: المؤلف السابق المنسوب
+    - authorised_value: '390'
+      category: qualif
+      lib: المالك السابق
+      lib_opac: المالك السابق
+    - authorised_value: '395'
+      category: qualif
+      lib: المؤسس
+      lib_opac: المؤسس
+    - authorised_value: '400'
+      category: qualif
+      lib: ممول
+      lib_opac: ممول
+    - authorised_value: '405'
+      category: qualif
+      lib: مصمم الألعاب
+      lib_opac: مصمم الألعاب
+    - authorised_value: '407'
+      category: qualif
+      lib: مصارع
+      lib_opac: مصارع
+    - authorised_value: '410'
+      category: qualif
+      lib: فني جرافيك
+      lib_opac: فني جرافيك
+    - authorised_value: '420'
+      category: qualif
+      lib: مكرّم
+      lib_opac: مكرّم
+    - authorised_value: '430'
+      category: qualif
+      lib: أخصائي إضاءة
+      lib_opac: أخصائي إضاءة
+    - authorised_value: '440'
+      category: qualif
+      lib: رسام توضيحي
+      lib_opac: رسام توضيحي
+    - authorised_value: '445'
+      category: qualif
+      lib: رائد
+      lib_opac: رائد
+    - authorised_value: '450'
+      category: qualif
+      lib: حفار
+      lib_opac: حفار
+    - authorised_value: '460'
+      category: qualif
+      lib: الشخص الذي تجري مقابلته
+      lib_opac: الشخص الذي تجري مقابلته
+    - authorised_value: '470'
+      category: qualif
+      lib: مجري المقابلة
+      lib_opac: مجري المقابلة
+    - authorised_value: '475'
+      category: qualif
+      lib: جهة الإصدار
+      lib_opac: جهة الإصدار
+    - authorised_value: '480'
+      category: qualif
+      lib: مؤلف الأوبرا
+      lib_opac: مؤلف الأوبرا
+    - authorised_value: '490'
+      category: qualif
+      lib: مرخص له
+      lib_opac: مرخص له
+    - authorised_value: '500'
+      category: qualif
+      lib: مرخص
+      lib_opac: مرخص
+    - authorised_value: '510'
+      category: qualif
+      lib: طابع على الحجر
+      lib_opac: طابع على الحجر
+    - authorised_value: '520'
+      category: qualif
+      lib: شاعر غنائي
+      lib_opac: شاعر غنائي
+    - authorised_value: '530'
+      category: qualif
+      lib: نقاش المعدن
+      lib_opac: نقاش المعدن
+    - authorised_value: '535'
+      category: qualif
+      lib: ممثل صامت (مايم)
+      lib_opac: ممثل صامت (مايم)
+    - authorised_value: '540'
+      category: qualif
+      lib: شاشة
+      lib_opac: شاشة
+    - authorised_value: '545'
+      category: qualif
+      lib: موسيقي
+      lib_opac: موسيقي
+    - authorised_value: '550'
+      category: qualif
+      lib: راوي
+      lib_opac: راوي
+    - authorised_value: '552'
+      category: qualif
+      lib: كاتب العدل
+      lib_opac: كاتب العدل
+    - authorised_value: '555'
+      category: qualif
+      lib: خصم
+      lib_opac: خصم
+    - authorised_value: '557'
+      category: qualif
+      lib: منظم
+      lib_opac: منظم
+    - authorised_value: '560'
+      category: qualif
+      lib: المنشئ
+      lib_opac: المنشئ
+    - authorised_value: '570'
+      category: qualif
+      lib: آخر
+      lib_opac: آخر
+    - authorised_value: '580'
+      category: qualif
+      lib: صانع الورق
+      lib_opac: صانع الورق
+    - authorised_value: '582'
+      category: qualif
+      lib: مقدم طلب براءة الاختراع
+      lib_opac: مقدم طلب براءة الاختراع
+    - authorised_value: '584'
+      category: qualif
+      lib: مخترع براءة الاختراع
+      lib_opac: مخترع براءة الاختراع
+    - authorised_value: '587'
+      category: qualif
+      lib: حاصل على براءة اختراع
+      lib_opac: حاصل على براءة اختراع
+    - authorised_value: '590'
+      category: qualif
+      lib: مؤدي
+      lib_opac: مؤدي
+    - authorised_value: '595'
+      category: qualif
+      lib: مؤدي الأبحاث
+      lib_opac: مؤدي الأبحاث
+    - authorised_value: '600'
+      category: qualif
+      lib: مصور فوتوغرافي
+      lib_opac: مصور فوتوغرافي
+    - authorised_value: '605'
+      category: qualif
+      lib: مذيع
+      lib_opac: مذيع
+    - authorised_value: '610'
+      category: qualif
+      lib: طابعة
+      lib_opac: طابعة
+    - authorised_value: '620'
+      category: qualif
+      lib: طابعة اللوحات
+      lib_opac: طابعة اللوحات
+    - authorised_value: '630'
+      category: qualif
+      lib: منتج
+      lib_opac: منتج
+    - authorised_value: '640'
+      category: qualif
+      lib: مدقق لغوي
+      lib_opac: مدقق لغوي
+    - authorised_value: '650'
+      category: qualif
+      lib: الناشر
+      lib_opac: الناشر
+    - authorised_value: '651'
+      category: qualif
+      lib: مدير النشر
+      lib_opac: مدير النشر
+    - authorised_value: '655'
+      category: qualif
+      lib: محرك العرائس
+      lib_opac: محرك العرائس
+    - authorised_value: '660'
+      category: qualif
+      lib: مستلم الخطابات
+      lib_opac: مستلم الخطابات
+    - authorised_value: '665'
+      category: qualif
+      lib: منتج التسجيلة
+      lib_opac: منتج التسجيلة
+    - authorised_value: '670'
+      category: qualif
+      lib: مدير التسجيل
+      lib_opac: مدير التسجيل
+    - authorised_value: '672'
+      category: qualif
+      lib: ممزج
+      lib_opac: ممزج
+    - authorised_value: '673'
+      category: qualif
+      lib: رئيس فريق البحث
+      lib_opac: رئيس فريق البحث
+    - authorised_value: '677'
+      category: qualif
+      lib: عضو فريق البحث
+      lib_opac: عضو فريق البحث
+    - authorised_value: '675'
+      category: qualif
+      lib: مراجع
+      lib_opac: مراجع
+    - authorised_value: '678'
+      category: qualif
+      lib: مرمم
+      lib_opac: مرمم
+    - authorised_value: '680'
+      category: qualif
+      lib: مفكر
+      lib_opac: مفكر
+    - authorised_value: '690'
+      category: qualif
+      lib: كاتب السيناريو
+      lib_opac: كاتب السيناريو
+    - authorised_value: '695'
+      category: qualif
+      lib: مستشار علمي
+      lib_opac: مستشار علمي
+    - authorised_value: '700'
+      category: qualif
+      lib: ناسخ
+      lib_opac: ناسخ
+    - authorised_value: '705'
+      category: qualif
+      lib: نحات
+      lib_opac: نحات
+    - authorised_value: '710'
+      category: qualif
+      lib: أمين السر
+      lib_opac: أمين السر
+    - authorised_value: '720'
+      category: qualif
+      lib: مُوقع
+      lib_opac: مُوقع
+    - authorised_value: '721'
+      category: qualif
+      lib: مطرب
+      lib_opac: مطرب
+    - authorised_value: '723'
+      category: qualif
+      lib: راعي
+      lib_opac: راعي
+    - authorised_value: '725'
+      category: qualif
+      lib: هيئة المعايير
+      lib_opac: هيئة المعايير
+    - authorised_value: '726'
+      category: qualif
+      lib: مؤدي الحيل الخطرة
+      lib_opac: مؤدي الحيل الخطرة
+    - authorised_value: '727'
+      category: qualif
+      lib: مشرف الأطروحة
+      lib_opac: مشرف الأطروحة
+    - authorised_value: '730'
+      category: qualif
+      lib: مترجم
+      lib_opac: مترجم
+    - authorised_value: '735'
+      category: qualif
+      lib: مترجم صوتي
+      lib_opac: مترجم صوتي
+    - authorised_value: '740'
+      category: qualif
+      lib: مصمم الكتابة
+      lib_opac: مصمم الكتابة
+    - authorised_value: '750'
+      category: qualif
+      lib: منضد الحروف
+      lib_opac: منضد الحروف
+    - authorised_value: '753'
+      category: qualif
+      lib: المزود
+      lib_opac: المزود
+    - authorised_value: '755'
+      category: qualif
+      lib: مطرب
+      lib_opac: مطرب
+    - authorised_value: '760'
+      category: qualif
+      lib: نحات الخشب
+      lib_opac: نحات الخشب
+    - authorised_value: '770'
+      category: qualif
+      lib: كاتب المادة المرفقة
+      lib_opac: كاتب المادة المرفقة
+    translatable:
+    - lib
+    - lib_opac

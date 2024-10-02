@@ -1,0 +1,214 @@
+---
+staff_interface.pref:
+  استيثاق:
+  - - choices:
+        '0': السماح
+        '1': عدم السماح
+      pref: staffShibOnly
+    - للموظفين بتسجيل الدخول بوسائل أخرى غير shibboleth.
+  - - choices:
+        disabled: عدم تفعيل
+        enabled: تفعيل
+        enforced: إنفاذ
+      pref: TwoFactorAuthentication
+    - الاستيثاق الثنائي (2FA) للموظفين.
+  الخيارات:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: viewMARC
+    - للموظفين بعرض التسجيلات بصيغة مارك العادية على واجهة الموظف.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: viewLabeledMARC
+    - للموظفين عرض التسجيلات في نموذج مارك المسمى على واجهة الموظف.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: viewISBD
+    - الموظفين بعرض التسجيلات بصيغة تدوب على واجهة الموظف.
+  - - choices:
+        '0': عرض
+        '1': عدم عرض
+      pref: HidePatronName
+    - أسماء المستفيدين الذين لديهم مواد معارة أو في الحجز على صفحات التفاصيل أو شاشة
+      "وضع حجز".
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: showLastPatron
+    - رابط إلى آخر
+    - class: integer
+      pref: showLastPatronCount
+    - المستفيدين الذين تم البحث عنهم في واجهة الموظفين.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: intranetbookbag
+    - خيار السلة في واجهة الموظف.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: StaffDetailItemSelection
+    - مجموعة المادة في صفحة تفاصيل التسجيلة.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: UseWYSIWYGinSystemPreferences
+    - محرر WYSIWYG عند تحرير تفضيلات نظام HTML معينة.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: AudioAlerts
+    - تنبيهات صوتية للأحداث المحددة في قسم <a href="/cgi-bin/koha/admin/audio_alerts.pl">التنبيهات
+      الصوتية</a> من الإدارة.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: IntranetAddMastheadLibraryPulldown
+    - المكتبة بتحديد قائمة منسدلة في بحث رأس الموظفين.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: IntranetCatalogSearchPulldown
+    - حقل بحث منسدل لمربعات "بحث الفهرس".
+  المظهر:
+  - - 'عرض نتائج الاستناد في واجهة الموظفين باستخدام ورقة أنماط XSLT في: '
+    - class: file
+      pref: AuthorityXSLTResultsDisplay
+    - <br />خيارات:<ul><li>ضع مساراً لتعريف ملف xslt</li><li>ضع عنوان URL لورقة أنماط
+      خارجية محددة.</li></ul>{langcode} سيتم استبداله بلغة الواجهة الحالية و {authtypecode}
+      سيتم استبداله برمز نوع الاستناد
+  - - 'عرض محدد اللغة في '
+    - choices:
+        both: كل من الرأس والتذييل
+        footer: التذييل فقط
+        top: الأعلى
+      pref: StaffLangSelectorMode
+  - - استخدم ال
+    - choices: staff-templates
+      pref: template
+    - ثيمة في واجهة الموظف.
+  - - تقع واجهة الموظف في
+    - class: url
+      pref: staffClientBaseURL
+    - 'يجب أن يكون هذا عنوان URL كاملًا، يبدأ بـ http: // أو https: //. لا تقم بإدراج
+      شرطة مائلة في عنوان URL. (يجب ملء هذا بشكل صحيح حتى تعمل CAS و svc و load_testing.)'
+  - - استخدم نمط CSS
+    - class: url
+      pref: intranetstylesheet
+    - في كل الصفحات في واجهة الموظف، بدلاً من ملف css الافتراضي (يستخدم عند ترك هذا
+      الحقل فارغًا). قم فقط بإدخال اسم ملف أو مسار محلي كامل أو عنوان URL كامل يبدأ
+      بـ <code>http://</code> (إذا كان الملف موجودًا على خادم بعيد). يرجى ملاحظة أنه
+      إذا قمت فقط بإدخال اسم ملف ، يجب أن يكون الملف في الدليل الفرعي css لكل نسق
+      ولغة نشطة في دليل قوالب كوها. من المتوقع أن يبدأ المسار المحلي الكامل من جذر
+      مستند HTTP.
+  - - 'استخدم الجافاسكريبت التالي لطباعة الكعوب. راجع الوصف التفصيلي على  <a href=''https://wiki.koha-community.org/wiki/Setting_up_slip_printer_to_print_silently''>كوها
+      ويكي</a> وأخيراً إضافة فايرفوكس <a href=''https://github.com/edabg/jsprintsetup/wiki''>توثيق
+      jsPrintSetup</a>:'
+    - class: code
+      pref: IntranetSlipPrinterJS
+      syntax: javascript
+      type: textarea
+  - - 'قم بإدراج ال CSS التالي في جميع الصفحات في واجهة الموظف:'
+    - class: code
+      pref: IntranetUserCSS
+      syntax: css
+      type: textarea
+  - - قم بإدراج نمط CSS الإضافي
+    - class: file
+      pref: intranetcolorstylesheet
+    - لتخطي الإعدادات المحددة في النمط الافتراضي (اتركه فارغًا للتعطيل.) قم فقط بإدخال
+      اسم ملف أو مسار محلي كامل أو عنوان URL كامل يبدأ بـ <code>http://</code>  (إذا
+      كان الملف موجودًا على خادم بعيد ). يرجى ملاحظة أنه إذا قمت فقط بإدخال اسم ملف
+      ، يجب أن يكون الملف في الدليل الفرعي css لكل نسق ولغة نشطة في دليل قوالب كوها.
+      من المتوقع أن يبدأ المسار المحلي الكامل من جذر مستند HTTP.
+  - - استخدم إدراج ملفات من
+    - class: file
+      pref: intranet_includes
+    - الدليل في دليل القالب، بدلاً من <code>يحتوي على/</code>. (اتركه فارغاً للتعطيل)
+  - - 'اعرض ال HTML التالي في العمود الخاص به على الصفحة الرئيسية لواجهة الموظف:'
+    - class: code
+      pref: IntranetmainUserblock
+      syntax: text/html
+      type: textarea
+  - - 'عرض ال HTML التالي على يمين قائمة المزيد أعلى كل صفحة على واجهة الموظف (يجب
+      أن تكون قائمة روابط أو فارغة):'
+    - class: code
+      pref: IntranetNav
+      syntax: html
+      type: textarea
+  - - 'قم بإدراج الجافاسكريبت التالي في جميع الصفحات في واجهة الموظف:'
+    - class: code
+      pref: IntranetUserJS
+      syntax: javascript
+      type: textarea
+  - - استخدم الصورة في
+    - class: url
+      pref: IntranetFavicon
+    - للأيقونة المفضلة لواجهة الموظف. (يجب أن يكون هذا عنوان URL كامل، يبدأ ب<code>http://</code>.)
+  - - 'عرض القوائم في واجهة الموظف باستخدام نمط XSLT على: '
+    - class: file
+      pref: XSLTListsDisplay
+    - ‫<br />الخيارات:<ul><li>قم بإدخال"<a href="#" class="set_syspref" data-syspref="XSLTListsDisplay"
+      data-value="default">الافتراضي</a>" لورقة الأنماط الافتراضية</li><li>ضع مساراً
+      لتعريف ملف xslt </li><li>ضع عنوان URL لورقة أنماط خارجية محددة.</ li></ul> إذا
+      كان لديك عدة أنماط للغات المختلفة، سيتم استبدال النائب  {langcode} بلغة الواجهة
+      الحالية.
+  - - 'عرض النتائج في واجهة الموظف باستخدام نمط XSLT على: '
+    - class: file
+      pref: XSLTResultsDisplay
+    - '‫<br />Options:<ul><li>قم بإدخال "<ahref="#" class="set_syspref" data-syspref="XSLTResultsDisplay"
+      data-value="default">الافتراضي</a>" لورقة الأنماط الافتراضية</li><li>قم بوضع
+      مسار لتعريف ملف xslt</li><li>قم بوضع عنوان URL لورقة أنماط خارجية محددة.</li><li>NOTE:
+      يجب تفعيل التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=PassItemMarcToXSLT">PassItemMarcToXSLT</a>
+      إذا كانت ورقة أنماطك المخصصة تستخدم بيانات في حقول المادة</li></ul>إذا كان لديك
+      أوراق أنماط متعددة للغات مختلفة كعنصر نائب سيتم استبدال {langcode} بلغة الواجهة
+      الحالية.'
+  - - 'عرض التفاصيل في واجهة الموظف باستخدام نمط XSLT على: '
+    - class: file
+      pref: XSLTDetailsDisplay
+    - ‫<br />الخيارات:<ul><li>قم بإدخال"<a href="#" class="set_syspref" data-syspref="XSLTDetailsDisplay"
+      data-value="default">الافتراضي</a>" للنمط الافتراضي</li><li>ضع مساراً لتعريف
+      ملف xslt </li><li>ضع عنوان URL لنمط خارجي محدد.</ li></ul>إذا كان لديك عدة أنماط
+      للغات المختلفة، سيتم استبدال النائب  {langcode} بلغة الواجهة الحالية.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: DisplayIconsXSLT
+    - وصف وأيقونات نوع المادة، والتنسيق والجمهور في صفحات نتائج XSLT مارك21 والتفاصيل
+      في واجهة الموظف.
+  - - 'عرض URI في الحقل 856u كصورة على: '
+    - choices:
+        Both: كل من صفحة التفاصيل والنتائج
+        Details: صفحة التفاصيل فقط
+        OFF: لا صفحة التفاصيل ولا النتائج
+        Results: صفحة النتائج
+      pref: Display856uAsImage
+    - 'ملاحظة: يجب تشغيل خيار XSLT المقابل.'
+  - - إدراج النمط في
+    - class: url
+      pref: SlipCSS
+    - على كعوب الحجز والإصدار. (يجب أن يكون هذا عنوان URL كاملًا ، يبدأ بـ <code>http://</code>.)
+  - - 'عرض HTML التالي في القسم الخاص به أدنى الصفحة الرئيسية لنظام الإعارة الفرعي:'
+    - class: code
+      pref: IntranetCirculationHomeHTML
+      syntax: text/html
+      type: textarea
+  - - 'عرض HTML التالي في القسم الخاص به أدنى الصفحة الرئيسية لنظام التقارير الفرعي:'
+    - class: code
+      pref: IntranetReportsHomeHTML
+      syntax: text/html
+      type: textarea
+  - - عرض ال HTML التالي في صفحة تسجيل الدخول لواجهة الموظف
+    - class: code
+      pref: StaffLoginInstructions
+      syntax: text/html
+      type: textarea
+  - - choices:
+        '0': عدم تمييز
+        '1': تمييز
+      pref: StaffHighlightedWords
+      type: boolean
+    - كلمةً تم البحث عنها في صفحات نتائج البحث في واجهة الموظفين.

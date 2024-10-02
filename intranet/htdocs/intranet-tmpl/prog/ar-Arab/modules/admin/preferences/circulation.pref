@@ -1,0 +1,1403 @@
+---
+circulation.pref:
+  إدعاءات الإعادة:
+  - - عند تحديد إعارة بأنها "إدعاء إعادة"،
+    - choices:
+        ask: سؤال ما إذا كان يجب فرض رسم مادة ضائعة
+        charge: فرض رسم مادة ضائعة
+        no_charge: عدم فرض رسم مادة ضائعة
+      default: ask
+      pref: ClaimReturnedChargeFee
+    - .
+  - - Automatically resolve the claim and change the resolution to the <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=RETURN_CLAIM_RESOLUTION">RETURN_CLAIM_RESOLUTION</a>
+      authorized value
+    - choices: authval
+      pref: AutoClaimReturnStatusOnCheckin
+      source: RETURN_CLAIM_RESOLUTION
+    - upon check in.
+  - - Automatically resolve the claim and change the resolution to the <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=RETURN_CLAIM_RESOLUTION">RETURN_CLAIM_RESOLUTION</a>
+      authorized value
+    - choices: authval
+      pref: AutoClaimReturnStatusOnCheckout
+      source: RETURN_CLAIM_RESOLUTION
+    - upon check out.
+  - - استخدم قيمة الاستناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>
+    - choices: authval
+      pref: ClaimReturnedLostValue
+      source: LOST
+    - لتمثيل 'إدعاءات الإعادة'.
+  - - تنبيه موظفي المكتبة بأن المستفيد لديه ادعاءات إعادة زائدة عن الحد إذا قام المستفيد
+      بادعاء إعادة أكثر من
+    - class: integer
+      pref: ClaimReturnedWarningThreshold
+    - مواد.
+  - - قم بإزالة مطالبات الإعادة التي تم حلها الأقدم من
+    - class: integer
+      pref: CleanUpDatabaseReturnClaims
+    - يوماً.
+    - <span class="hint">هذا التفضيل قيد الاستخدام بواسطة الكرون cleanup_database.pl.</span>
+  استدعاءات:
+  - - ضع علامة على الاستدعاء كمشكلة إذا كان في انتظار الالتقاط لمدة
+    - pref: RecallsMaxPickUpDelay
+    - class: integer
+    - يوماً.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: UseRecalls
+    - تأكد من تهيئة <a href="/cgi-bin/koha/admin/smart-rules.pl"> قواعد الإعارة والغرامات
+      </a> للاستدعاءات بمجرد التفعيل.
+  الإعارة بالدفعة:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: BatchCheckouts
+    - الإعارات بالدفعة.
+  - - 'فئات المستفيد المسموح لها بالإعارة بالدفعة:'
+    - choices: patron-categories
+      class: multiple
+      pref: BatchCheckoutsValidCategories
+  الحجز الأكاديمي:
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: UseCourseReserves
+    - الحجز الأكاديمي.
+  الواجهة:
+  - - choices:
+        '0': إيقاف
+        '1': تنشيط
+      pref: CircSidebar
+    - شريط التصفح الجانبي في كل صفحات الإعارة.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: CircConfirmItemParts
+    - الموظفين بتأكيد أن كل أجزاء المادة موجودة عند الرد/الإعارة.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: AutoSwitchPatron
+    - the automatic redirection to another patron when a patron cardnumber is scanned
+      instead of an item barcode.
+    - This should not be enabled if you have overlapping patron cardnumbers and item
+      barcodes.
+  - - choices:
+        '0': عدم محاولة
+        '1': محاولة
+      pref: PatronAutoComplete
+    - تخمين المستفيد الذي يتم إدخاله أثناء كتابة بحث مستفيد للإعارة أو بحث المستفيد.
+    - يعيد فقط أول 10 نتائج في المرة.
+  - - choices:
+        EAN13: صيغة EAN-13 أو zero-padded UPC-A
+        OFF: عدم تنقيح
+        T-prefix: حذف الرقم الأول من نمط T-prefix
+        cuecat: التحويل من صيغة CueCat
+        libsuite8: التحويل من صيغة Libsuite8
+        whitespace: حذف المسافات من
+      pref: itemBarcodeInputFilter
+    - اأرقام الباركود للمواد الممسوحة ضوئيًا. ضع في اعتبارك أنه تتم إزالة أي مسافة
+      بيضاء بادئة أو لاحقة في الباركود قبل هذا المنقح.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: itemBarcodeFallbackSearch
+    - الاستخدام التلقائي لبحث الكلمة المفتاحية للفهرس إذا تم إدخال العبارة كباركود
+      قي صفحة الإعارة لم يؤدي إلى أي نتائج أثناء بحث باركود مادة.
+  - - ترتيب الإعارات السابقة في صفحة الإعارة من
+    - choices:
+        asc: الأقدم إلى الأحدث
+        desc: الأقدم إلى الأحدث
+      pref: previousIssuesDefaultSortOrder
+    - تاريخ الاستحقاق.
+  - - ترتيب إعارات اليوم في صفحة الإعارة من
+    - choices:
+        asc: الأحدث إلى الأقدم
+        desc: الأقدم إلى الأحدث
+      pref: todaysIssuesDefaultSortOrder
+      type: choice
+    - وقت الإعارة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: SpecifyDueDate
+    - للموظفين بتحديد تاريخ استحقاق للإعارة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: SpecifyReturnDate
+    - الموظفين لتحديد تاريخ إعادة للرد.
+  - - تحديد موعد للحجوزات المبكرة لمعالجتها
+    - class: integer
+      pref: HoldsToPullStartDate
+    - يوماً سابقاً. لاحظ أن تاريخ الانتهاء الافتراضي يتم التحكم به بواسطة التفضيل
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ConfirmFutureHolds">ConfirmFutureHolds</a>.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowAllMessageDeletion
+    - للموظفين بحذف الرسائل المضافة من المكتبات الأخرى.
+  - - عرض الـ
+    - class: integer
+      pref: numReturnedItemsToShow
+    - آخر المواد المعادة في شاشة الرد.
+  - - choices:
+        '0': عدم إخطار
+        '1': إخطار
+      pref: FineNotifyAtCheckin
+    - موظفي المكتبة لغرامات التأخير على المواد التي يقومون بردها إلى المكتبة.
+  - - choices:
+        '0': عدم إخطار
+        '1': إخطار
+      pref: WaitingNotifyAtCheckin
+    - موظفي المكتبة للحجوزات في الانتظار للمستفيدين الذين يقومون برد موادهم.
+  - - choices:
+        '0': Don't notify
+        '1': Notify
+      pref: WaitingNotifyAtCheckout
+    - librarians of waiting holds for the patron whose items they are checking out.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: FilterBeforeOverdueReport
+    - الموظفين لإختيار أي الإعارات يتم عرضها قبل تشغيل تقرير المتأخرات.
+  - - choices:
+        issueqslip: عرض أزرار طباعة الكعب السريعة ومسح الشاشة
+        issueslip: عرض أزرار طباعة الكعب ومسح الشاشة
+        no: عدم عرض زر مسح الشاشة
+      pref: DisplayClearScreenButton
+    - لمسح المستفيد الحالي من الشاشة في شاشة الإعارة.
+  - - choices:
+        '0': عدم التسجيل
+        '1': تسجيل
+      pref: RecordLocalUseOnReturn
+    - الاستخدام المحلي عند رد مادة لم يتم إصدارها.
+  - - عندما يتم تقديم حقل باركود فارغ في الإعارة
+    - choices:
+        clear: مسح الشاشة
+        ignore: do nothing
+        qslip: فتح نافذة طباعة الكعب السريعة
+        slip: فتح نافذة طباعة كعب
+      pref: CircAutoPrintQuickSlip
+    - .
+  - - تتضمن الأنماط في
+    - class: url
+      pref: NoticeCSS
+    - في الإخطارات. (يجب أن يكون هذا عنوان URL كامل، مبدوءاً بـ <code>http://</code>)
+  - - choices:
+        '0': عدم القيام
+        '1': القيام
+      pref: UpdateTotalIssuesOnCirc
+    - بتحديث إجمالي مجموع الإعارات للتسجيلة الببليوغرافية عند إعارة مادة ما (تحذير!
+      سيؤدي ذلك إلى زيادة الحمل على الخادم بشكل ملحوظ؛ إذا كنت مهتمًا بالأداء، قم
+      باستخدام كرون update_totalissues.pl لتحديث إجمالي عدد الإعارات).
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: ExportCircHistory
+    - خيار تصدير إعارات المستفيد.
+  - - 'يجب أن تستبعد الحقول التالية من تصدير ملفات CSV أو مارك (ISO 2709) لسجل إعارة
+      المستفيد:'
+    - pref: ExportRemoveFields
+    - '(قم بفصل الحقول بمسافة، مثال: 100a 200b 300c).'
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: ShowAllCheckins
+    - كل المواد في قائمة "المواد المردودة"، حتى المواد التي لم تتم إعارتها.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowCheckoutNotes
+    - للمستفيدين بتقديم ملاحظات حول المواد المعارة.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: UseCirculationDesks
+    - مكاتب الإعارة بالإعارة.
+  حزم المواد:
+  - - استخدم قيمة استناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>
+    - choices: authval
+      pref: BundleLostValue
+      source: LOST
+    - لتمثيل 'مفقود من الحزمة' عند الإعادة.
+  - - استخدم قيمة استناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN">NOT_LOAN</a>
+    - choices: authval
+      pref: BundleNotLoanValue
+      source: NOT_LOAN
+    - لتمثيل 'تمت الإضافة إلى الحزمة' عندما يتم إرفاق مادة بالحزمة.
+  سياسة الإعارة:
+  - - تأخير التحميل التلقائي لجدول الإعارات في صفحة الإعارات بنسبة
+    - class: integer
+      pref: LoadCheckoutsTableDelay
+    - ثانية عند تفعيل "عرض الإعارات دائماً تلقائياً".
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: OnSiteCheckoutAutoCheck
+    - الإعارة في الموقع افتراضياً إذا كانت آخر إعارة إعارة في الموقع.
+  - - choices:
+        '0': القيام بـ
+        '1': عدم القيام بـ
+      pref: AutoReturnCheckedOutItems
+    - يتطلب من المكتبيين تأكيد الإعارة يدويًا عندما تكون المواد معارة بالفعل إلى مستفيد
+      آخر.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowSetAutomaticRenewal
+    - للموظفين بوضع علامة على المواد للتجديد التلقائي في صفحة الإعارة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowTooManyOverride
+    - الموظفين بالتخطي وإعارة المواد حين يصل المستفيد إلى العدد الأقصى المسموح به
+      للإعارات.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowNotForLoanOverride
+    - للموظفين بتجاوز وإعارة المواد المحددة أنها ليست للإعارة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowRenewalLimitOverride
+    - للموظفين بتخطي حظر التجديد يدوياً وتجديد إعارة عندما تتخطى حد التجديد أو تكون
+      سابقة لأوانها بالنسبة لإعداد "لا تجديد قبل" في سياسة الإعارة أو تمت جدولتها
+      للتجديد التلقائي.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowRenewalOnHoldOverride
+    - للموظفين بتجديد المواد الموجودة في الحجز عن طريق تحديد تاريخ استحقاق يدويًا.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowItemsOnHoldCheckoutSIP
+    - إعارات المواد المحجوزة إلى شخص آخر عبر رسائل إعارة SIP.
+    - إذا كان مسموحاً، لا تقم بتوليد تحذير RESERVED.
+    - يسمح ذلك بالإعارات الذاتية لتلك المواد. عند استخدام صف الحجوزات، سيتم وضع علامة
+      "غير متاح" على المواد ذات الحجوزات في الانتظار إذا تم ضبط هذا التفضيل إلى "عدم
+      السماح".
+  - - choices:
+        '0': irculation.pref#AllowItemsOnHoldCheckoutSCO# عدم السماح
+        '1': irculation.pref#AllowItemsOnHoldCheckoutSCO# السماح
+      pref: AllowItemsOnHoldCheckoutSCO
+    - استعارة المواد محجوزة لشخص آخر في نظام SCO الفرعي. إذا تم السماح فلا تقم بتوليد
+      تحذيرات RESERVE_WAITING  و RESERVED . سوف يسمح هذا بالاستعارة الذاتي لتلك المواد.
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: AllFinesNeedOverride
+    - الموظفين بتجاوز جميع الغرامات يدويًا، حتى الغرامات الأقل من المحددة في تفضيل
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=noissuescharge">noissuescharge</a>.
+      سيؤدي تفعيل هذا التفضيل إلى حظر كل عمليات الإعارة للمستفيدين المدينين بغرامات
+      عبر نظام الإعارة الذاتية القائم على الويب وعبر SIP.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowFineOverride
+    - للموظفين بتخطي وإعارة المواد يدوياً إلى المستفيدين الذين يدينون في الغرامات
+      بأكثر من القيمة المحددة في تفضيل النظام <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=noissuescharge">noissuescharge</a>.
+  - - choices:
+        '0': عدم القيام
+        '1': القيام بـ
+      pref: AutomaticItemReturn
+    - نقل المواد تلقائياً إلى المكتبة الرئيسية عند ردها.
+  - - choices:
+        '0': عدم فرض
+        '1': فرض
+      pref: UseBranchTransferLimits
+    - قيود نقل بين المواقع على أساس
+    - choices:
+        ccode: رمز المجموعة
+        itemtype: نوع المادة
+      pref: BranchTransferLimitsType
+    - .
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: UseTransportCostMatrix
+    - منظومة قيمة النقل لحساب ملء الحجوزات الأمثل بين المكتبات.
+  - - استخدم التقويم وقواعد الإعارة الخاصة بـ
+    - choices:
+        ItemHomeLibrary: المكتبة التي تنتمي لها المادة.
+        PatronLibrary: المكتبة التي ينتمي إليها المستفيد.
+        PickupLibrary: المكتبة المسّجل دخولك منها.
+      pref: CircControl
+      type: choice
+  - - لتحديد ما إذا كان سيتم نقل المادة أو بقائها في المكتبة بعد الرد، استخدم قواعد
+      الإعارة الخاصة بـ
+    - choices:
+        CheckInLibrary: المكتبة التي تم رد المادة بها.
+        ItemHoldingLibrary: المكتبة التي تقتني المادة حالياً.
+        ItemHomeLibrary: المكتبة التي تنتمي لها المادة.
+      pref: CircControlReturnsBranch
+      type: choice
+  - - استخدام قواعد الإعارة والغرامات الخاصة بـ
+    - choices:
+        holdingbranch: المكتبة المقتنية للمادة (الفرع المقتني)
+        homebranch: مكتبة المادة الرئيسية (الفرع الرئيسي)
+      pref: HomeOrHoldingBranch
+      type: choice
+  - - السماح برد المواد
+    - choices:
+        anywhere: في أي مكتبة.
+        holdingbranch: في المكتبة التي تمت إعارة المادة منها فقط.
+        homebranch: في المكتبة التي تنتمي لها المادة فقط.
+        homeorholdingbranch: إما في المكتبة التي تنتمي لها المادة أو المكتبة التي
+          تمت إعارتها منها.
+      pref: AllowReturnToBranch
+      type: choice
+  - - لنتائج البحث في واجهة الموظف، عرض
+    - choices:
+        holdingbranch: المكتبة التي تحجز المادة.
+        homebranch: المكتبة التي تنتمي لها المادة.
+      pref: StaffSearchResultsDisplayBranch
+      type: choice
+  - - choices:
+        Calendar: استخدم التقويم لتخطي جميع أيام إغلاق المكتبة
+        Datedue: استخدم التقويم لتأخير تاريخ الاستحقاق إلى اليوم المفتوح التالي
+        Days: تجاهل التقويم
+        Dayweek: استخدم التقويم لتأخير تاريخ الاستحقاق إلى اليوم المفتوح التالي لمدد
+          الإعارة الأسبوعية، أو اليوم التالي
+      pref: useDaysMode
+    - عند حساب تاريخ الاستحقاق.
+  - - حساب "لا تجديد قبل" بناء على
+    - choices:
+        date: تاريخ.
+        exact_time: وقت محدد.
+      pref: NoRenewalBeforePrecision
+    - ذو صلة فقط بالإعارات المحسوبة بالأيام، الإعارات بالساعة لا تتأثر.
+  - - عند تجديد الإعارات، ، قم بتحدبد تاريخ الاستحقاق الجديد في
+    - choices:
+        date_due: تاريخ الاستحقاق القديم للإعارة.
+        now: التاريخ الحالي.
+      pref: RenewalPeriodBase
+  - - choices:
+        '0': عدم إرسال
+        '1': إرسال
+      pref: RenewalSendNotice
+    - إخطار تجديد وفقاً لتفضيلات مراسلة المستفيد لـ'إعارة المادة'.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: UnseenRenewals
+    - تجديدات لتسجيلها كـ"غير مرئية" بواسطة المكتبة، والحاسب مقابل حد التجديدات غير
+      المرئية للمستفيد.
+  - - منع المستفيدين من الحجز في الأوباك إذا كان لديهم أكثر من
+    - class: currency
+      pref: maxoutstanding
+    - '[% local_currency %] في الغرامات.'
+  - - عرض تحذير في شاشة "انتقالات للاستلام" عند عدم استلام النقل
+    - class: integer
+      pref: TransfersMaxDaysWarning
+    - بعد أيام قد تم إرسالها.
+  - - choices:
+        '0': منع
+        '1': عدم منع
+      pref: IssuingInProcess
+    - المستفيدين من استعارة مادة قد تتجاوز رسوم تأجيرها الحد.
+  - - 'تقييد المستفيدين بقيم الجمهور المستهدف التالية من إعارة المواد غير الملائمة:'
+    - pref: AgeRestrictionMarker
+    - 'على سبيل المثال، قم بإدخال كلمات مفتاحية للجمهور المستهدف مفصولة بعلامة |:
+      FSK | PEGI | Age(بدون مسافات بالقرب من |). تأكد من تخطيط القيود العمرية في تخطيط
+      كوها لمارك (e.g. 521$a). قيمة حقل مارك FSK 12 أو PEGI 12 قد تعني: يجب أن يبلغ
+      المستعير من العمر 12 عاماً على الأقل. اتركه فارغاً لعدم تطبيق أي قيد عمري.'
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AgeRestrictionOverride
+    - الموظفين للتحقق من مادة عليها تقييد العمر.
+  - - منع المستفيدين من استعارة المواد إذا كان لديهم أكثر من
+    - class: integer
+      pref: noissuescharge
+    - '[% local_currency %]في الغرامة.'
+  - - منع المستفيد من الإعارة إذا كان له كفلاء يدينون في الإجمالي بأكثر من
+    - class: integer
+      pref: NoIssuesChargeGuarantees
+    - '[% local_currency %] في الغرامات.'
+  - - منع المستفيد من الإعارة إذا كان له كفلاء يدينون في الإجمالي بأكثر من
+    - class: integer
+      pref: NoIssuesChargeGuarantorsWithGuarantees
+    - '[% local_currency %] في الغرامات.'
+  - - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      pref: ReturnBeforeExpiry
+    - المستفيدين بإعادة الكتب قبل انتهاء حسابهم (عن طريق قيد تواريخ الاستحقاق إلى
+      ما قبل تاريخ انتهاء المستفيد).
+  - - 'إرسال جميع الإخطارات كنسخة مخفية الوجهة إلى عنوان البريد الإلكتروني هذا:'
+    - class: email
+      pref: NoticeBcc
+  - - choices:
+        '0': تجاهل التقويم
+        '1': استخدم التقويم
+      pref: OverdueNoticeCalendar
+    - عند العمل خارج الفترة المحددة لإخطارات التأخير.
+  - - تنظيم وإرسال إخطارات التأخير باستخدام
+    - choices:
+        cron: خيار سطر الأوامر
+        item-homebranch: مكتبة المادة الرئيسية
+        item-issuebranch: مكتبة الإعارة
+        patron-homebranch: مكتبة المستفيد الرئيسية
+      pref: OverdueNoticeFrom
+    - .
+  - - يشمل حتى
+    - class: integer
+      pref: PrintNoticesMaxLines
+    - سطور المادة في إخطار تأخير مطبوع. إذا كان عدد المواد أكبر من هذا الرقم، سيختتم
+      الإخطار بتحذير يطلب من المستفيد التحقق من حساه على الإنترنت للحصول على قائمة
+      كاملة بالمواد المتأخرة. قم بضبطه إلى 0 لإدراج كل المواد المتأخرة في الإخطار،
+      بغض النظر عن عددها.
+  - - choices:
+        block: حظر
+        confirmation: طلب التأكيد
+        noblock: عدم حظر
+      pref: OverduesBlockCirc
+    - عند الإعارة إلى مستفيد لديه متأخرات قائمة.
+  - - 'عند إعارة مادة ذات رسوم تأجير، '
+    - choices:
+        '0': عدم طلب
+        '1': طلب
+      pref: RentalFeesCheckoutConfirmation
+    - للتأكيد.
+  - - افتراضياً، قيم بضبط قيمة <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>
+      للمادةإلى
+    - choices: authval
+      pref: DefaultLongOverdueLostValue
+      source: LOST
+    - عندما تكون المادة متأخرة لأكثر من
+    - class: integer
+      pref: DefaultLongOverdueDays
+    - يوماً.
+    - <br>تحذير— ستقوم هذه التفضيلات بتنشيط معالجة فقدان المادة تلقائيا. اترك هذه
+      الحقول خالية إذا لم تكن ترغب في تنشيط هذه الخاصية.
+    - '‫<br>مثال: [1] [30] يقوم بتعيين مادةإلى قيمة <a href=''/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST''>LOST</a>
+      1 حين تتأخر لأكثر من 30 يوماً.'
+    - <br>(تستخدم عندما يتم استدعاء نص  longoverdue.pl بدون --معامل مفقود)
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل الكرون <code>misc/cronjobs/longoverdue.pl</code>.
+      اطلب من مدير نظامك جدولته.
+  - - 'فرض رسم مادة ضائعة على حسابالمستفيد عندما تتغير قيمة <a href=''/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST''>LOST</a>
+      للمادة إلى:'
+    - choices: authval
+      pref: DefaultLongOverdueChargeValue
+      source: LOST
+    - <br>اترك هذ الحقل فارغاً إذا لم تكن ترغب في تغريم المستفيد عن المواد الضائعة.
+    - <br>(يستخدم عندما يتم استدعاء نص longoverdue.pl بدون --معامل التكلفة)
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل الكرون <code>misc/cronjobs/longoverdue.pl</code>.
+      اطلب من مدير نظامك جدولته.
+  - - عند استخدام عملية ضياع المادةالتلقائية، قم بتخطي المواد ذات قيم <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>
+      التي تطابق أي من
+    - pref: DefaultLongOverdueSkipLostStatuses
+    - .
+    - ‫<br>اترك هذا الحقل فارغاً إذا كنت لا تريد تخطي أي حالات <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>.
+    - '<br>تعيين إلى قائمة بقيم مفثولة بفاصلة، مثال: <em>5,6,7</em>.'
+  - - Set the default patron categories to receive overdues to
+    - choices: patron-categories
+      class: multiple
+      pref: DefaultLongOverduePatronCategories
+    - <br>Leave this field empty if you want to process overdues for all patron categories.
+    - <br>(Used when the longoverdue.pl script is called without the --category parameter)
+    - <br>WARNING — This preference will be active only if DefaultLongOverdueSkipPatronCategories
+      is empty.
+    - <br>
+    - Set the default patron categories to <i>not</i> receive overdues to
+    - choices: patron-categories
+      class: multiple
+      pref: DefaultLongOverdueSkipPatronCategories
+    - <br>Leave this field empty if you want to process overdues for all patron categories.
+    - <br>(Used when the longoverdue.pl script is called without the --skip-category
+      parameter)
+    - <br>WARNING - This preference overrides the DefaultLongOverduePatronCategories
+      preference, so the DefaultLongOverduePatronCategories filter will not take effect.
+    - <br><strong>NOTE:</strong> This system preference requires the <code>misc/cronjobs/longoverdue.pl</code>
+      cronjob. Ask your system administrator to schedule it.
+  - - 'الإعارة- سسياسة الإعارة الخارجية '
+    - choices:
+        alert: عرض رسالة
+        confirm: يتطلب التأكيد
+        nothing: لا تفعل أي شيء
+      pref: IssueLostItem
+    - .
+  - - 'عند إعارة مادة، '
+    - choices:
+        '0': عدم تسجيل
+        '1': تسجيل
+      pref: RecordStaffUserOnCheckout
+    - المستخدم الذي قام باستعارة المادة.
+  - - 'تحديد المواد بأنها عادت عند وضع علامة ضائعة عليها '
+    - multiple:
+        additem: عند فهرسة مادة
+        batchmod: من أداة تعديل المواد بالدفعة
+        claim_returned: عند وضع علامة تم إدعاء الإعادة على مادة
+        cronjob: من كرون longoverdue
+        moredetail: من تبويب المواد في نظام الفهرس الفرعي
+        onpayment: عند تلقي مدفوعات للمادة
+        pendingreserves: من قائمة 'حجوزات للسحب'
+      pref: MarkLostItemsAsReturned
+    - .
+  - - Update item status to
+    - choices: authval
+      pref: UpdateItemLostStatusWhenPaid
+      source: LOST
+    - when the outstanding balance is paid.
+  - - Update item status to
+    - choices: authval
+      pref: UpdateItemLostStatusWhenWriteoff
+      source: LOST
+    - when the outstanding balance is written off.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowMultipleIssuesOnABiblio
+    - المستفيدين بإعارة عدة مواد من نفس التسجيلة. (<strong>ملاحظة:</strong>سيؤثر ذلك
+      فقط على التسجيلات بدون اشتراك مرفق بها)
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OnSiteCheckouts
+    - خاصية الإعارات على الموقع.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: OnSiteCheckoutsForce
+    - الإعارة في الموقع لكل الحالات (حتى إذا كان المستفيد محظوراً، إلخ).
+  - - choices:
+        '0': عدم اعتبار
+        '1': اعتبار
+      pref: ConsiderOnSiteCheckoutsAsNormalCheckouts
+    - الإعارات في الموقع كإعارات عادية.
+    - عند التفعيل، سيتم عد الإعارات في الموقع نحو حد الإعارة للإعارات العادية. سيظل
+      حد الإعارة في الموقع مطبقاً للإعارات في الموقع.
+    - عند التعطيل، سيتم تحديد كلتي القيمتين بشكل منفصل.
+  - - choices:
+        '0': عدم تبديل
+        '1': تبديل
+      pref: SwitchOnSiteCheckouts
+    - irculation.pref#SwitchOnSiteCheckouts# الإعارات في الموقع إلى إعارات عاديةعند
+      الإعارة.
+  - - عند تأخر مادة معارة للمستفيد،
+    - choices:
+        allow: السماح بالتجديد.
+        block: حظر التجديد لجميع مواد المستفيد.
+        blockitem: حظر التجديد لهذه المادة فقط.
+      pref: OverduesBlockRenewing
+      type: choice
+  - - إذا كان المستفيد مدين بأكثر من قيمة <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACFineNoRenewals">OPACFineNoRenewals</a>،
+    - choices:
+        '0': السماح
+        '1': حظر
+      pref: OPACFineNoRenewalsBlockAutoRenew
+    - تجديداتها التلقائية.
+  - - إذا قام المستفيد بدفع كل الغرامات على مادة متأخرة تتراكم عليها الغرامات،
+    - choices:
+        '0': عدم تجديد
+        '1': تجديد
+      pref: RenewAccruingItemWhenPaid
+    - المادة تلقائياً. إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=RenewalPeriodBase">RenewalPeriodBase</a>
+      إلى "تاريخ الاستحقاق"، قد تظل المواد التي تم تجديدها متأخرة.
+  - - إذا قام المستفيد بدفع كل الغرامات على مادة متأخرة تتراكم عليها الغرامات في الأوباك
+      عبر برنامج دفع مساعد،
+    - choices:
+        '0': عدم تجديد
+        '1': تجديد
+      pref: RenewAccruingItemInOpac
+    - المادة تلقائياً. إذا تم ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=RenewalPeriodBase">RenewalPeriodBase</a>
+      إلى "تاريخ الاستحقاق"، قد تظل المواد التي تم تجديدها متأخرة.
+  - - class: code
+      pref: ItemsDeniedRenewal
+      syntax: text/x-yaml
+      type: textarea
+    - تعرييف القواعد المخصصة لمنع تجديد مواد محددة.
+    - <br />يمكن تسمية أي حقل في جدول المواد متبوعا بعلامة النقطتين ثم مسافة ثم
+    - قائمة من القيم بين قوسين مفصولة بفاصلات.
+    - 'على سبيل المثال:'
+    - '<br />code: [NEWFIC,NULL,DVD]'
+    - '<br />itype: [NEWBK,""]'
+    - ‫<br /> <strong>ملاحظة:</strong> يمكن استخدام كلمة 'لاغي' لحظر التجديد في الحقول
+      غير المعرفة، بينما سيؤدي المقطع الخالي "" إلى الحظر في حقل خالي (لكن معرف)
+    - <br /><strong>التهيئة:</strong> <a href='/cgi-bin/koha/admin/authorised_values.pl?searchfield=CCODE'>المجموعات
+      (CCODE)</a> | <a href='/cgi-bin/koha/admin/itemtypes.pl'>أنواع المواد</a>
+  - - class: code
+      pref: UpdateItemLocationOnCheckout
+      syntax: text/x-yaml
+      type: textarea
+    - هذه قائمة بأزواج القيم. القيمة الأولى متبوعة بعلامة نقطتين ثم القيمة الثانية.<br/><br/>
+    - أمثلة:<br/>
+    - 'PROC: FIC - يسبب تحديث أي مادة في موقع مركز المعالجة إلى موقع الأدب عند الرد.<br/>'
+    - 'FIC: GEN - يسبب تحديث أي مادة في موقع الأدب إلى موقع الأرفف العامة عند الرد.<br/>'
+    - '‫_BLANK_: FIC - يتسبب في تحديث مادة بدون موقع إلى موقع الخيال عند الإعارة.<br/>'
+    - 'FIC: _BLANK_ -يسبب تحديث أي مادة في موقع FIC إلى موقع خالي عند الرد.<br/>'
+    - '‫_ALL_: FIC - يتسبب في تحديث كل المواد إلى موقع الخيال عند الإعارة.<br/>'
+    - 'PROC: _PERM_ -يسبب تحديث المادة الموجودة في مركز المعالجة إلى موقعها الدائم.<br/><br/>'
+    - 'قاعدة عامة: إذا كانت قيمة الموقع الموجودة على يمين النقطتين (:) تطابق الموقع
+      الخالي للمادة، سيتم تحديثها لتطابق قيمة الموقع الموجودة على يسار النقطتين (:).<br/>'
+    - 'ملاحظة: PROC و CART هما قيمتان خاصتان، لهذين الموقعين يمكن أن يختلف الموقع
+      و الموقع الدائم، في كل الأحوال سيؤثر عليهما أي تحديث. المواد الموجودة في موقع
+      السلة سيتم إعادتها إلى موقعها الدائم عند الإعارة.<br/>'
+    - يستخدم المطصلح الخاص _BLANK_ على أي من جانبي القيمة لتحديث أو حذف الموقع من
+      المواد بدون موقع معيًن لها.<br/>
+    - يستخدم المصطلح الخاص_ALL_ على يمين النقطتين (:) للتأثير على جميع المواد، <strong>وتخطي
+      جميع القواعد.</strong>
+  - - class: code
+      pref: UpdateNotForLoanStatusOnCheckout
+      syntax: text/x-yaml
+      type: textarea
+    - هذه قائمة أزواج القيم. عند رد مادة، إذا كانت قيمة لا يعار الموجودة على اليسار
+      تطابق قيمة لا يعار الخاصة بالمواد
+    - 'سيتم تحديثه إلى القيمة الموجودة ناحية اليسار. على سبيل المثال:''-1: 0'' ستتسبب
+      في أن تكون المادة التي تم ضبطها إلى ''مطلوبة'' إلى أن تكون متاحة للإعارة الآن.'
+    - يجب أن يكون كل زوج من القيم على سطر منفصل.
+  - - When checking out an hourly loan that will be due after the library closes,
+    - choices:
+        close: shorten the loan period and set the checkout to be due at the library's
+          close time.
+        ignore: do not consider the library's opening hours.
+        open: extend the loan period and set the checkout to be due at the library's
+          open time.
+      pref: ConsiderLibraryHoursInCirculation
+  سياسة الحجوزات:
+  - - Default the holds ratio report to
+    - class: integer
+      pref: HoldRatioDefault
+    - .
+  - - في واجهة الموظف، قم بتقسيم صف الحجوزات إلى جداول منفصلة بواسطة
+    - choices:
+        branch: مكتبة الالتقاط
+        branch_itemtype: مكتبة الالتقاط ونوع المادة
+        itemtype: نوع مادة الحجز
+        nothing: لا شيء
+      pref: HoldsSplitQueue
+    - .
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: EnableItemGroupHolds
+    - ‫<br /><strong>ملاحظة:</strong> يتطلب هذا التفضيل ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=FinesMode">FinesMode</a>
+      إلى 'حساب وتغريم’.
+  - - إذا تم تقسيم صف الحجوزات، اعرض لموظفي المكتبة
+    - choices:
+        actual: الأولوية الفعلية، والتي قد تكون غير منظمة
+        virtual: أولويات 'افتراضية'، حيث يتم ترقيم كل مجموعة بشكل منفصل
+      pref: HoldsSplitQueueNumbering
+    - .
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: RealTimeHoldsQueue
+    - تحديث صف الحجوزات في الوقت الفعلي.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowHoldItemTypeSelection
+    - ملء الحجز لتحديده بنوع المادة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowRenewalIfOtherItemsAvailable
+    - المستفيد بتجديد مادة بحجوزات غير مملوءة إذا أمكن لمواد أخرى متاحة ملء هذا الحجز.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowHoldPolicyOverride
+    - للموظفين بتخطي سياسات الحجز عند وضع الحجوزات.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowHoldsOnDamagedItems
+    - بوضع طلبات الحجز وملؤها بالمواد التالفة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowHoldDateInFuture
+    - بوضع طلبات الحجز التي لا تدرج  في قائمة الانتظار حتى تاريخ قريب في المستقبل.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACAllowHoldDateInFuture
+    - للمستفيدين بوضع الحجوزات التي لا تدخل قائمة الانتظار حتى تاريخ محدد في المستقبل.
+      (<a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AllowHoldDateInFuture">AllowHoldDateInFuture</a>
+      يجب أيضا تفعيله).
+  - - عند وضع حجز من الأوباك
+    - choices:
+        '': بدون تواريخ للحجز
+        both: كلاً من تواريخ الحجز
+        end: تاريخ انتهاء الحجز
+        start: تاريخ بدء الحجز
+      pref: OPACMandatoryHoldDates
+    - إلزامي.
+    - ‫<br><strong>ملاحظة:</strong> خيار تاريخ بدء الحجز يكون فعالاً فقط ويظهر في
+      نموذج الحجز عند تفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AllowHoldDateInFuture">AllowHoldDateInFuture</a>
+      و <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACAllowHoldDateInFuture">OPACAllowHoldDateInFuture</a>.
+  - - تأكيد طلبات الحجز المستقبلية ( في موعد أقصاه
+    - class: integer
+      pref: ConfirmFutureHolds
+    - يوماً من الآن) في وقت الرد. لاحظ أن عدد الأيام هذا سيتم استخدامه أيضاً في حساب
+      تاريخ الانتهاء الافتراضي لتقرير حجوزات للسحب. لكنه لا يتدخل مع إصدار، تجديد،
+      أو نقل المواد.
+  - - التحقق من القاعدة من
+    - choices:
+        ItemHomeLibrary: مكتبة المادة الرئيسية
+        PatronLibrary: مكتبة المستفيد الرئيسية
+      pref: ReservesControlBranch
+    - لمعرفة إذا كان بمقدور المستفيد وضع حجز على المادة.
+  - - تحديد الحجز كمشكلة إذا كان في الانتظار لأكثر من
+    - class: integer
+      pref: ReservesMaxPickUpDelay
+    - أيام.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: ExpireReservesMaxPickUpDelay
+    - الحجوزات لتنتهي تلقائياً إذا لم يتم التقاطها خلال الفترة الزمنية المحددة في
+      التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ReservesMaxPickUpDelay">ReservesMaxPickUpDelay</a>
+      <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل الكرون <code>misc/cronjobs/holds/cancel_expired_holds.pl</code>.
+      اطلب من مدير النظام جدولته
+    - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: ExpireReservesAutoFill
+    - ملء الحجز التالي تلقائياً باستخدام المادة.
+    - إرسال إشعارًا عبر البريد الإلكتروني بالحجز الجديد المملوء بمادة ملغاة إلى
+    - class: email
+      pref: ExpireReservesAutoFillEmail
+    - . إذا لم يتم تحديد عنوان هنا، فسيتم إرسال البريد الإلكتروني إلى عنوان الرد الخاص
+      بالمكتبة.
+    - ‫<br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/holds/auto_unsuspend_holds.pl</code>.
+      اطلب من مدير نظامك جدولته
+  - - عند استخدام a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ExpireReservesMaxPickUpDelay">ExpireReservesMaxPickUpDelay</a>،
+      قم بتغريم المستفيد الذي يسمح بانتهاء حجزه الموجود في الانتظار بقيمة
+    - class: currency
+      pref: ExpireReservesMaxPickUpDelayCharge
+    - .
+  - - يجب أن تعطي قائمة انتظار الحجوزات الأولوية لملء الحجز عن طريق مطابقة المكتبة
+      الرئيسية للمستفيد مع مادة ذات مطابقة
+    - choices:
+        holdingbranch: المكتبة المقتنية للمادة (الفرع المقتني)
+        homebranch: مكتبة المادة الرئيسية (الفرع الرئيسي)
+      pref: HoldsQueuePrioritizeBranch
+      type: choice
+  - - استيفاء الحجوزات باستخدام مواد من المكتبات
+    - class: multi
+      pref: StaticHoldsQueueWeight
+    - (كرموز للفرع, منفصلة بفاصلات; إذا ترك خاليا, يستخدم كل المكتبات)
+    - حين تكون
+    - choices:
+        '0': مفتوحة أو مغلقة
+        '1': مفتوحة
+      pref: HoldsQueueSkipClosed
+    - choices:
+        '0': بهذا الترتيب.
+        '1': بترتيب عشوائي.
+      pref: RandomizeHoldsQueueWeight
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/holds/auto_unsuspend_holds.pl</code>.
+      اطلب من مدير نظامك جدولته.
+    - ''
+  - - choices:
+        '0': عدم السماح (مع الفروع المستقلة)
+        '1': السماح
+      pref: canreservefromotherbranches
+    - لمستخدم من مكتبة بوضع حجز على مادة من مكتبة أخرى
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACAllowUserToChooseBranch
+    - لمستخدم باختيار مكتبة لالتقاط حجز منها.
+  - - 'السماح للمستخدمين بتغيير المكتبة لالتقاط حجز لهذه الحالات:'
+    - multiple:
+        intransit: في النقل
+        pending: في الانتظار
+        suspended: معلق
+      pref: OPACAllowUserToChangeBranch
+  - - choices:
+        '0': قم تلقائياً
+        '1': لا تقم تلقائياً
+      pref: ReservesNeedReturns
+    - تحديد العثور على حجز وفي الانتظار عند وضع حجز على مادة محددة وتم رد هذه المادة
+      بالفعل.
+  - - يمكن للمستفيدين الوصول إلى الحد الأقصى البالغ
+    - class: integer
+      pref: maxreserves
+    - حجزاً مرة واحدة (اتركه فارغًا أو اضبطه على 0 للتعطيل). قد يتم تطبيق حدود إضافية
+      بناءً على قواعد الإعارة.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: emailLibrarianWhenHoldIsPlaced
+    - إرسال بريد إلكتروني إلى مكتبة المستفيد كلما تم وضع طلب الحجز.
+    - 'سيتم استخدام عنوان البريد الإلكتروني الأول من هذه القائمة: الرد على المكتبة،
+      البريد الإلكتروني للمكتبة، <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ReplytoDefault''>ReplytoDefault</a>
+      , <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress''>KohaAdminEmailAddress</a>.'
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: DisplayMultiPlaceHold
+    - القدرة على وضع الحجوزات على عدة تسجيلات ببليوغرافية من نتائج البحث
+  - - choices:
+        '0': Don't enable
+        '1': Enable
+      pref: DisplayMultiItemHolds
+    - the ability to place holds on different items at the same time in staff interface
+      and OPAC.
+  - - choices:
+        '0': عدم نقل
+        '1': نقل
+      pref: TransferWhenCancelAllWaitingHolds
+    - المواد عند إلغاء جميع الحجوزات في الانتظار.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AutoResumeSuspendedHolds
+    - تعليق مقتنيات إلى أن تستأنف تلقائيا باستخدام الموعد المحدد.
+    - <br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/holds/auto_unsuspend_holds.pl</code>.
+      اطلب من مدير نظامك جدولته.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: SuspendHoldsIntranet
+    - حجوزات للتعليق من واجهة الموظف.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: SuspendHoldsOpac
+    - الحجوزات التي ستعلَّق من الأوباك.
+  - - عند استخدام <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ExpireReservesMaxPickUpDelay">ExpireReservesMaxPickUpDelay</a>,
+    - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: ExpireReservesOnHolidays
+    - بإالغاء الحجوزات المنتهية في أيام إغلاق المكتبة حسب التقويم.
+  - - choices:
+        '0': تجاهل التقويم
+        '1': استخدم التقويم
+      pref: ExcludeHolidaysFromMaxPickUpDelay
+    - عند حساب الحد الأقصى لمدة تأخر التقاط الحجز.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: decreaseLoanHighHolds
+    - الحد من فترة الاستعارة إلى
+    - class: integer
+      pref: decreaseLoanHighHoldsDuration
+    - يومًا للمواد الأكثر طلبًا بأكثر من
+    - class: integer
+      pref: decreaseLoanHighHoldsValue
+    - حجوزات
+    - choices:
+        dynamic: فوق عدد المواد القابلة للحجز في التسجيلة
+        static: في التسجيلة
+      pref: decreaseLoanHighHoldsControl
+    - '. تجاهل المواد ذات الحالات التالية عند عد المواد:'
+    - multiple:
+        damaged: تالفة
+        itemlost: ضائعة
+        notforloan: لا تعار
+        withdrawn: مسحوبة
+      pref: decreaseLoanHighHoldsIgnoreStatuses
+    - 'ملاحظة: يمكن أيضاً ضبط فترة الإعارة المخفضة في شروط الإعارة وستقوم عندها بالكتابة
+      فوق الإعداد الموجود هنا.'
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AllowHoldsOnPatronsPossessions
+    - للمستفيد بوضع حجز على تسجيلة حين يكون لدى المستفيد بالفعل مادة واحدة أو أكثر
+      معارة مرفقة بتلك التسجيلة.
+  - - choices:
+        '0': عدم منح
+        '1': منح
+      pref: LocalHoldsPriority
+    - أولوية ملء الحجوزات للمستفيدين الذين
+    - choices:
+        HomeLibrary: المكتبة الرئيسية
+        PickupLibrary: مكتبة الالتقاط
+      pref: LocalHoldsPriorityPatronControl
+    - تطابق المادة
+    - choices:
+        holdingbranch: المكتبة المقتنية
+        homebranch: المكتبة الرئيسية
+      pref: LocalHoldsPriorityItemControl
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: OPACHoldsIfAvailableAtPickup
+    - للمستفيدين بوضع حجز في مواقع الالتقاط (المكتبات) المتاح بها المادة..
+  - - 'فئات المستفيد غير المتأثرة بـالتفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=OPACHoldsIfAvailableAtPickup">OPACHoldsIfAvailableAtPickup</a>::'
+    - choices: patron-categories
+      class: multiple
+      pref: OPACHoldsIfAvailableAtPickupExceptions
+  - - choices:
+        allow: السماح بوضع علامة مفقود على المواد
+        allow_and_notify: السماح بوضع علامة ضائعة على المواد وإخطار المستفيد
+        do_not_allow: عدم السماح بوضع علامة مفقود على المواد
+      pref: CanMarkHoldsToPullAsLost
+    - من صفحة 'حجوزات للسحب'. يجب تعريف القيم التي سيتم تطبيقها في <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=UpdateItemWhenLostFromHoldList">UpdateItemWhenLostFromHoldList</a>..
+  - - قائمة بالقيم لتحديث قيم مادة بها عندما يتم الإشارة إليها كـ <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>
+      من صفحة 'حجوزات للسحب'.
+    - 'مثال: "itemlost: 1" لتعيين items.itemlost إلى 1 حين تتم الإشارة إلى المادة
+      بأنها <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOST">LOST</a>.
+      (يتطلب <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CanMarkHoldsToPullAsLost">CanMarkHoldsToPullAsLost</a>)'
+    - pref: UpdateItemWhenLostFromHoldList
+      syntax: text/x-yaml
+      type: textarea
+  - - choices:
+        '0': عدم تعيين
+        '1': تعيين
+      default: 0
+      pref: DefaultHoldExpirationdate
+    - تاريخ الانتهاء الافتراضي للحجوزات تلقائيًا.
+    - عند التفعيل، قم بتعيين تاريخ الانتهاء
+    - class: integer
+      default: 0
+      pref: DefaultHoldExpirationdatePeriod
+    - choices:
+        days: يوماً
+        months: شهراً
+        years: عاماً
+      default: days
+      pref: DefaultHoldExpirationdateUnitOfTime
+    - من تاريخ الحجز.
+  - - عند وضع الحجز عبر واجهة الموظفين، قم بتعيين الموقع الافتراضي للالتقاط إلى
+    - choices:
+        holdingbranch: مكتبة المادة المقتنية
+        homebranch: مكتبة المادة الرئيسية
+        loggedinlibrary: المكتبة المسجل منها الدخول
+      default: loggedinlibrary
+      pref: DefaultHoldPickupLocation
+    - .
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AutomaticCheckinAutoFill
+    - بملء الحجوزات تلقائياً بعد ردها تلقائياً.
+    - ‫<br><strong>ملاحظة:</strong> يتطلب هذا التفضيل كرون<code>misc/cronjobs/automatic_checkin.pl</code>.
+      اطلب من مدير نظامك جدولته.
+  سياسة الرد:
+  - - choices:
+        '0': عدم حصر
+        '1': حصر
+      pref: TrapHoldsOnOrder
+    - مواد ليست للإعارة لكن قابلة للحجز ( notforloan < 0 ) لملء الحجوزات.
+  - - لا تقم مطلقاً بقيد المواد ذات قيمة استناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN">'لا
+      تعار'</a> من
+    - class: integer
+      pref: SkipHoldTrapOnNotForLoanValue
+    - لملء الحجوزات.
+    - (قائمة بقيم استناد <a href='/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN'>لا
+      تعار</a>
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: HoldsAutoFill
+    - ملء الحجوزات تلقائيا بدلًا من الطلب من موظف المكتبة.
+  - - choices:
+        '0': استيفاء
+        '1': عدم استيفاء
+      pref: HoldsNeedProcessingSIP
+    - الحجوزات تلقائياً عند إعادة مادة مطابقة عبر بروتوكول SIP.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: HoldsAutoFillPrintSlip
+    - عرض مربع كعب الحجز تلقائيًا للحجوزات التي يتم ملؤها تلقائيًا.
+  - - choices:
+        '0': عدم حظر
+        '1': حظر
+      pref: BlockReturnOfWithdrawnItems
+    - إعادة المواد التي تم سحبها.
+  - - choices:
+        '0': عدم حظر
+        '1': حظر
+      pref: BlockReturnOfLostItems
+    - إعادة المواد الضائعة.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: CalculateFinesOnReturn
+    - حساب وتحديث رسوم التأخير عند إعادة مادة.
+    - <br /><strong>ملاحظة:</strong> إذا كنت تقوم بالإعارات بالساعة فعليك تفعيل هذا.
+    - <br /><strong>ملاحظة:</strong> يتطلب هذا التفضيل ضبط التفضيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=FinesMode">FinesMode</a>
+      إلى 'حساب وتغريم'
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      pref: CalculateFinesOnBackdate
+    - حساب وتحديث رسوم التأخير عند إعادة مادة بتاريخ إعادة بأثر رجعي.
+  - - class: code
+      pref: UpdateItemLocationOnCheckin
+      syntax: text/x-yaml
+      type: textarea
+    - هذه قائمة بأزواج القيم. القيمة الأولى متبوعة بعلامة نقطتين ثم القيمة الثانية.
+    - القيم الصالحة هي <a href='/cgi-bin/koha/admin/authorised_values.pl?searchfield=LOC'>LOC</a>
+      قيم الاستناد، _BLANK_، و_PERM_، و_ALL_.<br><br>
+    - أمثلة:<br/>
+    - 'PROC: FIC - يسبب تحديث أي مادة في موقع مركز المعالجة إلى موقع الأدب عند الرد.<br/>'
+    - 'fC: GEN - يسبب تحديث أي مادة في موقع الأدب إلى موقع الأرفف العامة عند الرد.<br/>'
+    - '_BLANK_: FIC - يتسبب في تحديث مادة بدون موقع إلى موقع الخيال عند الرد.<br/>'
+    - 'fC: _BLANK_ -يسبب تحديث أي مادة في موقع FIC إلى موقع خالي عند الرد.<br/>'
+    - '_ALL_: FIC - يتسبب في تحديث كل المواد إلى موقع الخيال عند الرد.<br/>'
+    - 'PROC: _PERM_ -يسبب تحديث المادة الموجودة في مركز المعالجة إلى موقعها الدائم.<br/><br/>'
+    - 'قاعدة عامة: إذا كانت قيمة الموقع الموجودة على يمين النقطتين (:) تطابق الموقع
+      الخالي للمادة، سيتم تحديثها لتطابق قيمة الموقع الموجودة على يسار النقطتين (:).<br/>'
+    - 'ملاحظة: PROC و CART هما قيمتان خاصتان، لهذين الموقعين يمكن أن يختلف الموقع
+      و الموقع الدائم، في كل الأحوال سيؤثر عليهما أي تحديث. المواد الموجودة في موقع
+      السلة سيتم إعادتها إلى موقعها الدائم عند الإعارة.<br/>'
+    - يستخدم المصطلح الخاص _BLANK_ على أي من جانبي القيمة لتحديث أو حذف الموقع من
+      المواد بدون موقع معيًن لها.<br/>
+    - يستخدم المصطلح الخاص_ALL_ على يمين النقطتين (:) للتأثير على جميع المواد، <strong>وتخطي
+      جميع القواعد.</strong>
+  - - class: code
+      pref: UpdateNotForLoanStatusOnCheckin
+      syntax: text/x-yaml
+      type: textarea
+    - هذه قائمة بأنواع المواد وأزواج القيم.<br/><br/>
+    - <strong>أمثلة:</strong><br/>
+    - UpdateNotForLoanStatusOnCheckin# _ALL_:<br/>
+    - '&nbsp-1: 0<br/><br/>'
+    - CR:<br/>
+    - '&nbsp1: 0<br/><br/>'
+    - BK:<br/>
+    - '&nbsp-1: ONLYMESSAGE<br/><br/>'
+    - عند رد مادة، إذا كان نوع المادة يطابق CR، عندما تتطابق القيمة الموجودة على اليسار
+      (1) مع قيمة المادة غير المخصصة للإعارة، سيتم تحديثها إلى القيمة الموجودة على
+      اليمين.<br/><br/> يتم استخدام المصطلح الخاص _ALL_ على الجانب الأيسر من النقطتين
+      (:) للتأثير على جميع أنواع المواد، <strong>لا يتخطى هذا جميع القواعد الأخرى</strong><br/><br/>
+    - يجب تحديد كل نوع مادة في سطر منفصل على الجانب الأيسر من النقطتين (:).<br/>يجب
+      إدراج كل زوج من القيم غير المخصصة للإعارة، لنوع المادة هذا، في أسطر منفصلة أسفل
+      نوع المادة، يتم وضع مسافة بادئة لكل منها بمسافة بادئة<br/><br/>
+    - القيم الصالحة هي <a href='/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN'>NOT_LOAN</a>
+      قيم استناد وONLYMESSAGE.<br/><br/>
+    - 'يمكن استخدام ONLYMESSAGE لإظهار وصف ليس الإعارة فقط. على سبيل المثال ''-1:
+      ONLYMESSAGE''<br/><br/>/>'
+  - - choices:
+        '0': عدم إخفاء
+        '1': إخفاء
+      pref: HidePersonalPatronDetailOnCirculation
+    - رقم هاتف المستفيد، عنوان البريد الإلكتروني، العنوان المادي، والمدينة في صفحة
+      الإعارة.
+  - - choices:
+        '0': عدم حظر
+        '1': حظر
+      pref: TransfersBlockCirc
+    - الموظفين من الاستمرار في رد المواد عند تحفيز النقل.
+  - - choices:
+        '0': عدم القيام
+        '1': القيام بـ
+      pref: AutomaticConfirmTransfer
+    - بتأكيد نقل تلقائياً عند تجاهل النافذة دون النقر على 'نعم'.
+  - - choices:
+        '0': عدم تخزين
+        '1': تخزين
+      default: 0
+      pref: StoreLastBorrower
+    - آخر مستفيد لإعادة مادة. هذا الإعداد مستقل عن تفضيلات <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=opacreadinghistory">opacreadinghistory</a>
+      و <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AnonymousPatron">AnonymousPatron</a>.
+  سياسة الغرامات:
+  - - choices:
+        ignoreCalendar: تجاهل التقويم
+        noFinesWhenClosed: استخدم التقويم
+      pref: finesCalendar
+      type: choice
+    - عند حساب فترة الغرامات.
+  - - choices:
+        ignoreCalendar: تجاهل التقويم
+        noSuspensionsWhenClosed: استخدم التقويم
+      pref: SuspensionsCalendar
+      type: choice
+    - عند حساب فترة انتهاء صلاحية التعليق.
+  - - choices:
+        off: عدم حساب
+        production: حساب وتقاضي
+      pref: finesMode
+      type: choice
+    - الغرامات (أثناء تشغيل <code>misc/cronjobs/fines.pl</code>).
+    - <br><strong>ملاحظة:</strong> إذا تم تشغيل الكرون cronjobs/fines.pl، سيتم حساب
+      الغرامات المتراكمة والنهائية عند تشغيل الكرون، وسيتم إنهاء تراكم الغرامات عند
+      إعادة المادة. إذا تم تفعيل <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CalculateFinesOnReturn">CalculateFinesOnReturn</a>،
+      سيتم حساب الغرامات النهائية عند إعادة المادة.<br/>
+    - choices:
+        '0': عدم فرض
+        '1': فرض
+      pref: ChargeFinesOnClosedDays
+      type: choice
+    - في أيام الإغلاق. إذا لم يقم كرون set the fines.pl بتوليد غرامات عند تشغيله في
+      الأيام المحددة على أنها مغلقة في التقويم.
+  - - عند إعادة مادة ضائعة، قم بتطبيق قواعد الاسترداد المعرفة في
+    - choices:
+        CheckinLibrary: مكتبة الرد.
+        ItemHoldingBranch: مكتبة المادة المقتنية.
+        ItemHomeBranch: مكتبة المادة الرئيسية.
+      pref: RefundLostOnReturnControl
+  - - choices:
+        '0': عدم إدراج
+        '1': إدراج
+      pref: FinesIncludeGracePeriod
+    - فترة السماح عند حساب الغرامة للمواد المتأخرة.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: WhenLostForgiveFine
+    - الغرامات على المادة عند ضياعها.
+  - - عدم رد أموال رسوم المادة الضائعة إذا تم رد المادة فيما يزيد عن
+    - class: integer
+      pref: NoRefundOnLostReturnedItemsAge
+    - يوماً بعد الإشارة إلى ضياعها.
+  - - choices:
+        '0': عدم فرض
+        '1': فرض
+      pref: WhenLostChargeReplacementFee
+    - سعر الاستبدال عند فقدان المستفيد لمادة.
+  - - فرض رسم حجز
+    - choices:
+        any_time_is_collected: أي وقت يتم التقاط الحجز به.
+        any_time_is_placed: أي وقت تم وضع الحجز به.
+        not_always: فقط إذا كانت جميع المواد معارة وكانت التسجيلة بها حجز واحد على
+          الأقل بالفعل.
+      pref: HoldFeeMode
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      pref: useDefaultReplacementCost
+    - تكلفة الاستبدال الافتراضية المعرفة لنوع المادة.
+  - - 'النص ليتم تسجيله في عمود ''ملاحظة''، في جدول ''سطور الحساب'' عند تطبيق رسم
+      المعالجة (المعرف في نوع المادة):'
+    - class: code
+      pref: ProcessingFeeNote
+      type: textarea
+  طلبات المقال:
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: ArticleRequests
+    - المستفيدين لوضع طلبات المقال.
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: ArticleRequestsOpacHostRedirection
+    - إعادة التوجيه من طفل إلى مضيف بناءً على MARC21 773$w عندما لا يكون لدى الطفل
+      مواد عند طلب مقالات في الأوباك.
+  - - choices:
+        always: عرض دائماً
+        calc: استخدم اللوغاريتم لعرض أو إخفاء
+      pref: ArticleRequestsLinkControl
+    - روابط طلب المقال في نتائج البحث.
+  - - 'للتسجيلات القابلة للطلب على مستوى التسجيلة أو على مستوى المادة، اجعل الحقول
+      التالية إلزامية:'
+    - multiple:
+        author: المؤلف
+        chapters: الفصول
+        date: التاريخ
+        issue: العدد
+        pages: الصفحات
+        title: العنوان
+        volume: المجلد
+      pref: ArticleRequestsMandatoryFields
+    - ''
+  - - 'للتسجيلات القابلة للطلب على مستوى التسجيلة فقط، اجعل الحقول التالية إلزامية:'
+    - multiple:
+        author: المؤلف
+        chapters: الفصول
+        date: التاريخ
+        issue: العدد
+        pages: الصفحات
+        title: العنوان
+        volume: المجلد
+      pref: ArticleRequestsMandatoryFieldsRecordOnly
+    - ''
+  - - 'للتسجيلات القابلة للطلب على مستوى المادة فقط، اجعل الحقول التالية إلزامية:'
+    - multiple:
+        author: المؤلف
+        chapters: الفصول
+        date: التاريخ
+        issue: العدد
+        pages: الصفحات
+        title: العنوان
+        volume: المجلد
+      pref: ArticleRequestsMandatoryFieldsItemOnly
+    - ''
+  - - 'تنسيقات طلبات المقالات التالية مدعومة:'
+    - pref: ArticleRequestsSupportedFormats
+    - '(الخيارات الصالحة حاليًا: PHOTOCOPY و SCAN. قم بالفصل بين التنسيقات المدعومة
+      بواسطة شريط عمودي. يتم تحديد أول تنسيق مدرج افتراضيًا حين تقوم بالطلب عبر الأوباك.)'
+  قيود المستفيد:
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: PatronRestrictionTypes
+    - بتحديد نوع قيد المستفيد عند التطبيق يدوياً.
+  - - choices:
+        '0': عدم تراكم
+        '1': تراكم
+      pref: CumulativeRestrictionPeriods
+    - فترات القيد.
+  - - عند إعادة المواد
+    - choices:
+        no: عدم القيام بـ
+        when_no_overdue: إذا لم يكن لدى المستفيد أي مواد متأخرة متبقية
+        when_no_overdue_causing_debarment: إذا لم يكن لدى المستفيد أي مواد متبقية
+          تسبب الحظر
+      pref: AutoRemoveOverduesRestrictions
+      type: choice
+    - إزالة قيد OVERDUES الناتج عن الإخطارات المرسلة.الفرق بين إزالة القيد في حالة
+      عدم وجود أي مواد متأخرة متبقية والقيام بذلك فقط عندما تؤدي أي من المواد إلى
+      الحظر هو أنالخيار الأخير سيحترم فترات السماح المحتملة لقواعد التأخر في الاستحقاق
+      أيضًا على الإعادات وليس فقط عند توليد إخطارات تأخير.
+  - - إذا كان المستفيد مقيداً،
+    - choices:
+        '0': السماح
+        '1': حظر
+      pref: RestrictionBlockRenewing
+    - تجديد المواد من واجهة الموظف وعبر الكرون <code>misc/cronjobs/automatic_renewals.pl</code>.
+  - - choices:
+        '0': عدم إرسال بريد إلكتروني إلى
+        '1': إرسال بريد إلكتروني إلى
+      pref: EmailPatronWhenHoldIsPlaced
+    - المستفيد عند قيامه بوضع حجز.
+  نظام الإعارة الذاتية الفرعي:
+  - - 'إدارج الجافاسكريبت التالي في كل الصفحات في الإعارة الذاتية القائمة على الويب:'
+    - class: code
+      pref: SCOUserJS
+      syntax: javascript
+      type: textarea
+  - - 'إدراج ال CSS  التالي في كل الصفحات في الإعارة الذاتية القائمة على الويب:'
+    - class: code
+      pref: SCOUserCSS
+      syntax: css
+      type: textarea
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SCOLoadCheckoutsByDefault
+    - قائمة المستفيد من الإعارات الحالية افتراضياً عند تسجيل الدخول إلى نظام الإعارة
+      الذاتية الفرعي.
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: ShowPatronImageInWebBasedSelfCheck
+    - صور المستفيد (إذا تمت إضافة واحدة) حين استخدام الإعارة الذاتية على الويب.
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: WebBasedSelfCheck
+    - 'نظام الإعارة الذاتية على الويب (متوفر في: /cgi-bin/koha/sco/sco-main.pl)'
+  - - يمكن للمستفيدين تسجيل الدخول إلى نظام الإعارة الذاتية على الويب بواسطة
+    - choices:
+        '0': رقم البطاقة
+        '1': اسم المستخدم وكلمة المرور
+      pref: SelfCheckoutByLogin
+    - '</a> ملاحظة: إذا كنت تستخدم ''cardnumber'' و AutoSelfCheckAllowed، فيجب عليك
+      تعيين SelfCheckAllowByIPRanges لمنع الهجمات للحصول على معلومات المستفيد خارج
+      المكتبة.'
+  - - قم بإنهاء جلسة تسجيل دخول المستفيد الحالية في نظام اإعارة الذاتي على الويب بعد
+    - class: integer
+      pref: SelfCheckTimeout
+    - ثوان.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: SCOAllowCheckin
+    - للمستفيدين بإعادة المواد من خلال نظام إعارة على الويب.
+  - - choices:
+        '0': عدم السماح
+        '1': السماح
+      pref: AutoSelfCheckAllowed
+    - لنظام الإعارة الذاتية على الويب بتسجيل الدخول تلقائياً بتسجيل دخول الموظف هذا
+    - pref: AutoSelfCheckID
+    - وكلمة المرور هذه
+    - class: password
+      pref: AutoSelfCheckPass
+    - .
+    - 'ملاحظة: أي مستفيد يتم إدخاله هنا لن يتمكن من تسجيل الدخول إلى الأوباك.'
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      pref: SelfCheckReceiptPrompt
+    - نافذة حوار طباعة الإيصال المنبثقة عند انتهاء الإعارة الذاتية.
+  - - 'السماح بالوصول إلى الإعارة الذاتية من عناوين الIP التالية:'
+    - class: short
+      pref: SelfCheckAllowByIPRanges
+    - (اتركه خاليا. استخدم نطاقات أو عناوين IP بسيطة مفصولة بمسافات، مثل <code>192.168.1.1
+      192.168.0.0/24</code>.)
+  - - 'Patron categories allowed to check out in a batch while logged into the self
+      checkout system:'
+    - choices: patron-categories
+      class: multiple
+      pref: SCOBatchCheckoutsValidCategories
+  نظام الالتقاط الجانبي الفرعي:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: CurbsidePickup
+    - نظام المرابطين بالمنزل الفرعي.
+  نظام الرد الذاتي الفرعي:
+  - - choices:
+        '0': عدم تفعيل
+        '1': تفعيل
+      pref: SelfCheckInModule
+    - 'نظام الرد الذاتي الفرعي المستقل (متاح في: /cgi-bin/koha/sci/sci-main.pl)'
+  - - إعادة ضبط شاشة الرد الذاتي الحالية بعد
+    - class: integer
+      pref: SelfCheckInTimeout
+    - ثوانٍ.
+  - - 'إدارج ال CSS التالي في جميع شاشات الرد الذاتي:'
+    - class: code
+      pref: SelfCheckInUserCSS
+      syntax: css
+      type: textarea
+  - - 'إدارج الجافاسكريبت التالي في جميع شاشات الرد الذاتي:'
+    - class: code
+      pref: SelfCheckInUserJS
+      syntax: javascript
+      type: textarea
+  نظام المرابطة بالمنزل الفرعي:
+  - - choices:
+        '0': تعطيل
+        '1': قم بتفعيل
+      pref: HouseboundModule
+    - نظام المرابطين بالمنزل الفرعي.
+  نظام تدوير المخزون الفرعي:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: StockRotation
+    - نظام تدوير المخزون الفرعي.
+  ‫ SIP2:
+  - - استخدم التخطيطات التالية لتحديد sort_bin للمادة المعادة.<br/>
+    - يجب أن يكون التخطيط بصيغة 'branchcode:item field:comparator:item field value:sort
+      bin number'، بتخطيط واحد لكل سطر. <br/>
+    - '''branchcode'' هو الموقع الذي يتم فيه إجراء الرد (أي الفرع المخصص لمستخدم SIP)<br/>'
+    - '''حقل المادة '' هو عمود قاعدة بيانات في جدول المواد<br/>'
+    - '''comparator'' هو موع المقارنة، القيم الممكنة هي: eq,<,<=,>,>=,ne<br/>'
+    - '''item field value'' هي القيمة المطلوب مقارنتها بالقيمة الموجودة في ''item
+      field'' المحدد<br/>'
+    - '''فرز سلة الفرز'' هو قيمة الإعادة المتوقعة في الحقل CL لاستجابة SIP لمادة تطابق
+      القاعدة<br/><br/>'
+    - ثلاثية مقارنة الحقل، 'item field:comparator:item field value', قابلة للتكرار
+      ضمن سطر واحد للسماح بحالات أكثر تعقيدًا
+    - 'ملاحظة: تحديد ''item_field_value'' ببادئة ''\$'' واسم حقل مادة سيستخدم قيمة
+      الحقل في المادة للمقارنة:<br/>'
+    - أي \$holdingbranch<br/></br>
+    - أمثلة:<br/>
+    - ‫ CPL:itype:eq:BOOK:1 - سيقوم بإعادة سلة الفرز 1 لمادة بنوع المادة 'BOOK' إلى
+      CPL.<br/>
+    - CPL:itemcallnumber:<:339.6:3 - سيتم إرجاع سلة الفرز 3 لمادة برقم استدعاء أقل
+      من 339.6 تم إرجاعه إلى CPL.<br/>
+    - CPL:homebranch:ne:\$holdingbranch:X - سيتم إرجاع سلة الفرز 'X' للمادة الذي تم
+      إرجاعه إلى CPL حيث لا يساوي الفرع المقتني الفرع الرئيسي (أي أي مادة تنتمي إلى
+      فرع مختلف عن CPL).<br/ >
+    - CPL:itype:eq:BOOK:ccode:eq:TEEN:5 - سيتم إرجاع حاوية الفرز 5 لمادة من نوع المادة
+      'BOOK' وccode  'TEEN' الذي يتم إرجاعه إلى CPL.
+    - class: long
+      pref: SIP2SortBinMapping
+      type: textarea
+  - - استخدام
+    - choices:
+        '0': الفرع الرئيسي
+        '1': الموقع_الدائم
+      pref: UseLocationAsAQInSIP
+    - لحقل AQ في بروتوكول SIP.
+  - - choices:
+        '0': عدم إرسال
+        '1': إرسال
+      pref: SIP2AddOpacMessagesToScreenMessage
+    - برسائل مستفيد الأوباك في حقل رسالة شاشة SIP2.

@@ -1,0 +1,192 @@
+[% USE raw %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF ( TOTAL ) %]
+ [% t("Results") | html %] &rsaquo;
+ [% END %]
+ [% t("Upload patron images") | html %] &rsaquo;
+ [% t("Tools") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="tools_picture-upload" class="tools">
+
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'patron-search-header.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/tools/tools-home.pl">الأدوات</a>
+ [% END %]
+ [% IF ( TOTAL ) %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/tools/picture-upload.pl">تحميل صور مستفيد</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>نتائج</span>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تحميل صور مستفيد</span>
+ [% END %]
+ [% END # /IF TOTAL %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% IF ( TOTAL ) %]
+ [% IF ( ERRORS ) %]
+ [% IF ( TCOUNTS ) %]
+ <div class="dialog alert">
+ <h1>تم تحميل صورةالمستفيد مع وجود بعض الأخطاء</h1>
+ </div>
+ [% ELSE %]
+ <div class="dialog alert">
+ <h1>فشل تحميل صورة المستفيد</h1>
+ </div>
+ [% END %]
+ [% ELSE %]
+ <div class="dialog message">
+ <h1>تم تحميل صورة المستفيد بنجاح</h1>
+ </div>
+ [% END %]
+ <div class="page-section">
+ <ul class="data">
+ <li>إكتمال فك الضغط</li>
+ <li>[% TOTAL | html %] تم مسح المسارات ضوئياً.</li>
+ <li>[% HANDLED | html %] تمت معالجة المسارات.</li>
+ </ul>
+
+ [% FOREACH COUNT IN COUNTS %]
+ <table>
+ <caption>نتائج</caption>
+ <thead>
+ <tr><th>إسم الملف</th><th>رقم البطاقة</th><th>النتيجة</th></tr>
+ </thead>
+ <tbody>
+ [% IF ( COUNT.TCOUNTS ) %]<li>[% COUNT.TCOUNTS | html %] صورة تم نقلها إلى قاعدة البيانات:</li>[% END %]
+ [% FOREACH filename IN COUNT.filenames %]
+ <tr>
+ <td>[% filename.source | html %]</td>
+ <td><a href="/cgi-bin/koha/circ/circulation.pl?findborrower=[% filename.cardnumber | url %]">[% filename.cardnumber | html %]</a></td>
+ <td>
+ [% IF ( filename.filerrors ) %]
+ [% FOREACH filerror IN filename.filerrors %]
+ [% IF ( filerror.DBERR ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن قاعدة البيانات أعادت خطأً. يرجى الرجوع إلى سجل الخطأ للمزيد من التفاصيل.[% ELSIF ( filerror.IMGEXISTS ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن هذا المستفيد غير موجود في قاعدة البيانات. [% ELSIF ( filerror.MIMERR ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن تنسيق الصورة غير معروف. [% ELSIF ( filerror.CORERR ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن ملف الصورة تالف. [% ELSIF ( filerror.OPNERR ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن كوها لم يتمكن من فتح الصورة للقراءة. [% ELSIF ( filerror.OVRSIZ ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن حجم ملف الصورة كبير جداً ( انظر المساعدة عبر الإنترنت للحد الأقصى المسموح به للحجم).[% ELSIF ( filerror.CRDFIL ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة ([% filerror.CRDFIL | html %] مفقود). [% ELSIF ( filerror.CARDNUMBER_DOES_NOT_EXIST ) %]<strong>خطأ:</strong> لم يتم استيراد الصورة لأن هذا المستفيد غير موجود في قاعدة البيانات. [% ELSE %]<strong>خطأ:</strong> لم يتم استيراد الصورة بسبب خطأ غير معروف. يرجى الرجوع إلى سجل الخطأ للمزيد من التفاصيل [% END %] [% END %] [% ELSE %]تم الاستيراد بنجاح . [% END %]</td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ [% END %]
+ </div> <!-- /.page-section -->
+ <div class="page-section">
+ <ul>
+ [% IF ( borrowernumber ) %]
+ <li><a id="member" href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% borrowernumber | html %]">العودة إلى تفاصيل المستفيد</a></li>
+ [% ELSE %]
+ <li><a id="uploadmore" href="/cgi-bin/koha/tools/picture-upload.pl">تحميل صور أخرى</a></li>
+ <li><a id="doneupload" href="/cgi-bin/koha/tools/tools-home.pl">العودة إلى الأدوات</a></li>
+ [% END %]
+ </ul>
+ </div> <!-- /.page-section -->
+ [% ELSE %]
+ <h1>تحميل صور مستفيد</h1>
+ [% IF ( ERRORS ) %]
+ <div class="dialog alert">
+ [% FOREACH ERROR IN ERRORS %]
+ [% IF ( ERROR.NOTZIP ) %]<li><strong>لا يبدو أن ملف التحميل ملف مضغوط. امتداد الملف ليس '.zip'.</strong></li>
+ [% ELSIF ( ERROR.NOWRITETEMP ) %]<li><strong>هذا البرنامج النصي  ليس قادرا على إنشاء / الكتابة إلى الدليل المؤقت اللازم.</strong></li>
+ [% ELSIF ( ERROR.EMPTYUPLOAD ) %]<li><strong>يبدو أن ملف التحميل فارغًا.</strong></li>
+ [% ELSIF ( ERROR.OPNLINK ) %]<li><strong>لا يمكن فتح [% ERROR.OPNLINK | html %] للقراءة.<br />يرجى التأكد من وجودها.</strong></li>
+ [% ELSIF ( ERROR.OPNIMG ) %]<li><strong>لا يمكن فتح [% ERROR.OPNIMG | html %] للقراءة.<br />يرجى التأكد من وجودها.</strong></li>
+ [% ELSIF ( ERROR.DELERR ) %]<li><strong>حقل التحديد غير معرف أو ضائع.<br />يرجى التأكد من أنك تستخدم علامة اقتباس فردية أو مفتاح tap.</strong></li>
+ [% ELSIF ( ERROR.UZIPFAIL ) %]<li><strong>[% ERROR.UZIPFAIL | html %]فشلت عملية فك الضغط.<br />يرجى التحقق من سلامة الملف المضغوط وإعادة المحاولة.</strong></li>
+ [% ELSE %]<li><strong>[% ERROR.CORERR | html %] حدث خطأ غير معروف.<br />يرجى مراجعة سجل الأخطاء لمزيد من التفاصيل.</strong></li>[% END %]
+ [% END %]
+ </div>
+ [% END %]
+ <form method="post" action="/cgi-bin/koha/tools/picture-upload.pl" enctype="multipart/form-data" id="upload_form">
+ <fieldset class="rows">
+ <p><strong>ملاحظة :</strong> PNG, GIF, JPEG, XPM هي التنسيقات المدعومة فقط. الحد الأقصى لحجم الصور هو 2 ميجابايت.</p>
+ <ol class="radio">
+ <li>
+ <label for="zipfile"><input type="radio" id="zipfile" name="filetype" value="zip" checked="checked" /> ملف مضغوط</label></li>
+ <li>
+ <label for="image">
+ [% IF ( filetype == 'image' ) %]<input type="radio" id="image" name="filetype" value="image" checked="checked" />[% ELSE %]<input type="radio" id="image" name="filetype" value="image" />[% END %] ملف صورة</label>
+ </li>
+ [% IF ( filetype == 'image' ) %]
+ <li id="cardnum">
+ [% ELSE %]
+ <li id="cardnum" style="display: none">
+ [% END %]
+ <label for="cardnumber">قم بإدخال رقم بطاقة مستفيد: </label>
+ <input type="text" id="cardnumber" name="cardnumber" value="[% cardnumber | html %]" size="15" />
+ <span class="required">مطلوب</span>
+ </li>
+ <li class="required">
+ <label for="uploadfile">اختر ملف للتحميل: </label>
+ <input type="file" id="uploadfile" name="uploadfile" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-Upload" />
+ <input class="btn btn-primary" type="submit" value="تحميل" />
+ <a href="/cgi-bin/koha/tools/tools-home.pl" class="cancel">إلغاء</a>
+ </fieldset>
+ </form>
+[% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'tools-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/tools-menu.js") | $raw %]
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+ <script>
+        $(document).ready(function() {
+            $("#zipfile").click(function(){
+                $("#cardnum").hide();
+            });
+            $("#image").click(function(){
+                $("#cardnum").show();
+            });
+            $( "#upload_form" ).validate({
+                rules: {
+                    cardnumber: {
+                        required: {
+                            depends: function(element) {
+                                return $("#image").is(":checked");
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

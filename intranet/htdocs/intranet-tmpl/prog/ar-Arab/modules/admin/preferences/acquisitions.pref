@@ -1,0 +1,182 @@
+---
+acquisitions.pref:
+  سياسة:
+  - - إنشاء مادة عند
+    - choices:
+        cataloguing: فهرسة التسجيلة.
+        ordering: وضع طلبية.
+        receiving: استلام طلبية.
+      pref: AcqCreateItem
+    - هذا هو الافتراضي فقط، ويمكن تغييره لكل سلة.
+  - - 'أعمدة قاعدة البيانات <a href=''http://schema.koha-community.org/__VERSION__/tables/items.html''
+      target=''blank''> التالية </a> يجب أن تكون فريدة في المادة:'
+    - pref: UniqueItemFields
+      source: items
+      type: modalselect
+  - - عند إغلاق أو إعادة فتح سلة،
+    - choices:
+        '1': اطلب التأكيد دائماً.
+        '2': لا تطلب التأكيد.
+      default: 1
+      pref: BasketConfirmations
+  - - choices:
+        '0': عدم السماح بـ
+        '1': السماح بـ
+      pref: CancelOrdersInClosedBaskets
+    - إلغاء سطور طبية في السلال المغلقة.
+  - - عرض السلال
+    - choices:
+        all: في النظام، بغض النظر عن المالك.
+        branch: من مكتبة الموظف.
+        user: تم إنشائه وإدارته بواسطة الموظف.
+      pref: AcqViewBaskets
+  - - عرض العملات باستخدام التنسيق التالي
+    - choices:
+        CH: 360'000.00 (الصين)
+        FR: 360 000,00 (فرنسا)
+        US: 360,000.00 (الولايات المتحدة)
+      pref: CurrencyFormat
+  - - معدلات الضرائب هي
+    - pref: TaxRates
+    - قم بالإدخال باستخدام بصيغة رقمية، 0.12 لـ 12% . سيتم تحديد المادة الأولى في
+      القائمة افتراضياً. لأكثر من قيمة واحدة، افصل بـواسطة علامة | (عمود).
+    - ‫<br/><strong>ملاحظة:</strong> لن تقبل قاعدة البيانات سوى قيم تصل إلى دقةتصل
+      إلى 4 أرقام عشرية، وسيتم تقريب القيم الإضافية.
+    - <br/><strong>ملاحظة:</strong> قد تحتاج معلومات معدل ضريبة المزودإلى التحديث
+      إذا تمت إزالة قيم معدل الضريبة.
+  - - choices:
+        '0': استبعاد
+        '1': إدراج
+      pref: CalculateFundValuesIncludingTax
+    - الضريبة في قيم التمويل المحسوبة (المنفق، المطلوب). لاحظ أن هذه القاعدة تنطبق
+      على كافة البائعين بغض النظر عن تهيئتهم
+  - - choices:
+        '0': عدم تنبيه
+        '1': تنبيه
+      pref: AcqWarnOnDuplicateInvoice
+    - عندما يحاول موظف المكتبة إنشاء فاتورة برقم متكرر.
+  - - 'عند استلام المواد، قم بتحديث حقولها الفرعية إذا تم إنشائها أثناء وضع طلبية
+      (مثال: o=5|a="bar foo"):'
+    - pref: AcqItemSetSubfieldsWhenReceived
+  - - 'عند إلغاء الاستلام، قم بتحديث حقول المادة الفرعية إذا تم إنشائها أثناء وضع
+      طلبية (مثال: o=5|a="bar foo"):'
+    - pref: AcqItemSetSubfieldsWhenReceiptIsCancelled
+  - - choices:
+        '0': عدم القيام
+        '1': القيام
+      pref: AcqEnableFiles
+    - تفعيل إمكانية تحميل وإرفاق الملفات التعسفية إلى الفواتير.
+  - - قم بضبط قيم التخطيط لسطر الطلبية الجديد المنشأ من تسجيلة مارك في ملف مجهز.
+    - pref: MarcFieldsToOrder
+      syntax: text/x-yaml
+      type: textarea
+    - '<p>يمكنك استخدام الحقول التالية: السعر، سعر الاستبدال، الكمية، رمز_الميزانية،
+      الخصم، الفرز1، الفرز2</p>'
+    - '<p>على سبيل المثال:<br/>السعر: 947$a|947$c<br/>الكمية: 969$h<br/>رمز الميزانية:
+      922$a</p>'
+  - - ضبط قيم التخطيط لتسجيلات المواد الجديدة المنشأة من تسجيلة مارك في ملف مجهز.
+    - pref: MarcItemFieldsToOrder
+      syntax: text/x-yaml
+      type: textarea
+    - 'You can use the following fields: homebranch, holdingbranch, itype, nonpublic_note,
+      public_note, loc, ccode, notforloan, uri, copyno, price, replacementprice, itemcallnumber,
+      coded_location_qualifier, barcode, and enumchron. Special fields: quantity and
+      budget_code'
+    - '<br/>For example:<br/>holdingbranch: 975$b<br/>itype: 975$9|975$z'
+    - <p>إذا كان هناك حقل مفقود أو لم يتم تعيينه، فسيتم فحص <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=MarcFieldsToOrder">MarcFieldsToOrder</a>
+      واستخدامه لهذا الحقل (باستثناء الكمية).</p>
+  - - choices:
+        '0': عدم إرسال
+        '1': إرسال
+      default: no
+      pref: ClaimsBccCopy
+    - نسخة عمياء (BCC) للمستخدم مسجل الدخول عند إرسال إخطارات مطالبة بتزويد أو دورية.
+  - - احتفظ بمقترحات الشراء المقبولة أو المرفوضة لمدة
+    - class: integer
+      pref: PurgeSuggestionsOlderThan
+    - 'يومًا. مثال: [30] تقوم بضبط تنقيح المقترحات الأقدم من 30 يومًا.'
+    - <br><strong>تنبيه:</strong>اترك هذا الحقل خاليًا إذا كنت لا ترغب في تفعيل هذه
+      الخاصية التلقائية.
+    - <br><strong>ملاحظة</strong> يتطلب هذا التفضيل كرون <code>misc/cronjobs/purge_suggestions.pl</code>.
+      اطلب من مدير نظامك جدولته.
+  - - choices:
+        '': عدم تقريب
+        nearest_cent: تقريب
+      default: ''
+      pref: OrderPriceRounding
+    - إلى أقرب سنت<br>
+    - يحدد ما إذا كان يجب استخدام قيم كاملة الدقة أم مقربة في حسابات الأسعار.
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: no
+      pref: UseACQFrameworkForBiblioRecords
+    - الإطار 'ACQ' لحقول التسجيلات الببليوغرافية.
+  - - 'اختر عنوان البريد الإلكتروني الذي سيتم إرسال مقترحات الشراء الجديدة إليه: '
+    - choices:
+        '0': لا شيء
+        BranchEmailAddress: عنوان البريد الإلكتروني للمكتبة
+        EmailAddressForSuggestions: emailAddressForSuggestions
+        KohaAdminEmailAddress: kohaAdminEmailAddress
+      default: 0
+      pref: EmailPurchaseSuggestions
+    - '‫<br>إذا قمت باختيار <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=EmailAddressForSuggestions">EmailAddressForSuggestions</a>
+      يجب عليك إدخال عنوان بريد إلكتروني صالح:'
+    - class: email
+      pref: EmailAddressForSuggestions
+  - - Use the from email address
+    - class: email
+      pref: AcquisitionsDefaultEmailAddress
+    - when sending acquisitions order and claim notices.
+    - '<br>If left empty, it will fall back to the first defined address in the following
+      list: library email, <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress">KohaAdminEmailAddress</a>.'
+  - - استخدم عنوان البريد الإلكتروني الرد على
+    - class: email
+      pref: AcquisitionsDefaultReplyTo
+    - عند إرسال طلبيات التزويد وإخطارات المطالبات.
+    - '‫acquisitions.pref#AcquisitionsDefaultReplyTo# <br>إذا ترك فارغاً، فسوف يعود
+      إلى العنوان المحدد الأول في القائمة التالية: الرد على المكتبة، البريد الإلكتروني
+      للمكتبة، <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=ReplytoDefault">ReplytoDefault</a>,
+      <a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=KohaAdminEmailAddress">KohaAdminEmailAddress</a>.'
+  طباعة:
+  - - استخدام ال
+    - choices:
+        pdfformat::layout1page: الإنجليزية 2-صفحة
+        pdfformat::layout2pages: الإنجليزية 2-صفحة
+        pdfformat::layout2pagesde: الألمانية 2-صفحة
+        pdfformat::layout3pages: الإنجليزية 3-صفحة
+        pdfformat::layout3pagesfr: الفرنسية 3-صفحة
+      pref: OrderPdfFormat
+    - مخطط عند طباعة مجموعات السلة.
+  - - choices:
+        '0': Don't
+        '1': Do
+      pref: PlaceHoldsOnOrdersFromSuggestions
+    - place a hold when ordering from a suggestion.
+  - - 'Text to be used above the order table in the English 1-page order PDF file.
+      Note: Press enter to add line breaks to your sentence.'
+    - <br><strong>NOTE:</strong> To prevent the bottom of your text from being cut
+      off by the order table please do not save more than 3 lines of text in this
+      system preference.</span>
+    - pref: 1PageOrderPDFText
+      type: textarea
+  ‫eDIFACT:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      default: no
+      pref: EDIFACT
+    - تبادل الرسائل EDIFACT لعمليات التزويد
+  - - choices:
+        automatic: القيام بـ
+        manual: عدم القيام بـ
+      default: no
+      pref: EdifactInvoiceImport
+    - استيراد ملفات رسائل فواتير EDIFACT تلقائياً عند تنزيلها.
+  - - 'تخطيط حقل رمز تسلسل (GIR:LSQ) إلى '
+    - choices:
+        ccode: المجموعة
+        location: الموقع
+      default: location
+      pref: EdifactLSQ
+    - في المواد.

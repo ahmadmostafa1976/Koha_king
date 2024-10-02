@@ -1,0 +1,284 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE KohaDates %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Plugins") | html %] &rsaquo;
+ [% IF ( method == 'tool' ) %]
+ [% t("Tools") | html %]
+ [% ELSE %]
+ [% t("Administration") | html %]
+ [% END %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="plugins_plugins_home" class="plugins">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ [% IF ( method == 'tool' ) %]
+ <a href="/cgi-bin/koha/tools/tools-home.pl">الأدوات</a>
+ [% ELSE %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>برامج مساعدة</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+ <h1>برامج مساعدة</h1>
+
+ <div class="details">
+
+ [% IF ( CAN_user_plugins_manage ) %]
+ <div class="btn-toolbar" id="toolbar">
+ [% IF ( !plugins_restricted ) %]
+ <a href="/cgi-bin/koha/plugins/plugins-upload.pl" id="upload_plugin" class="btn btn-default"><i class="fa fa-upload"></i> تحميل برنامج مساعد</a>
+ [% END %]
+
+ <div class="btn-group">
+ <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa-solid fa-eye"></i> عرض البرامج الإضافية بواسطة الرتبة <span class="caret"></span></button>
+ <ul class="dropdown-menu">
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl">عرض كل البرامج الإضافية</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=report">عرض برامج التقارير الإضافية</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=tool">عرض برامج الأدوات الإضافية</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=to_marc">عرض برامج تحويل مارك الإضافية</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=opac_online_payment">عرض برامج الدفع على الإنترنت الإضافية</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=intranet_catalog_biblio_enhancements">البرامج المساعدة لتحسين عرض التسجيلة الببليوغرافية لواجهة الموظفين</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=ill_availability_services">عرض برامج إتاحة الإعارة البينية المساعدة</a></li>
+ <li><a href="/cgi-bin/koha/plugins/plugins-home.pl?method=ill_backend">View ILL backend plugins</a></li>
+ </ul>
+ </div>
+
+ [% IF can_search %]
+ <div class="btn-group">
+ <form method="get" class="form-inline" id="plugin-search-form">
+ <div class="form-group">
+ <div class="input-group">
+ <input class="form-control" id="plugin-repo-search" name="plugin-search" placeholder="بحث عن برامج مساعدة" type="text" value="[% search_term | html %]" />
+ <div class="input-group-btn">
+ <button class="btn btn-default" type="button" id="plugin-search-button"><i class="fa fa-search"></i></button>
+ </div>
+ </div>
+ </div>
+ </form>
+ </div>
+ [% END %]
+ </div>
+ [% END %]
+
+ [% IF search_results %]
+ <h2>بحث النتائج</h2>
+ <div class="page-section">
+ <table class="table table-striped">
+ <thead>
+ <tr>
+ <th>الاسم</th>
+ <th>الوصف</th>
+ <th>المؤسسة</th>
+ <th>أحدث إصدارة</th>
+ <th>&nbsp;</th>
+ </tr>
+ </thead>
+
+ [% FOREACH sr IN search_results %]
+ <tr>
+ <td><a href="[% sr.result.html_url | url %]" target="_new">[% sr.result.name | html %]</a></td>
+ <td>[% sr.result.description | html %]</td>
+ <td>[% sr.repo.name | html %]</td>
+ <td>[% sr.result.tag_name | html %]</td>
+ <td><a class="btn btn-default btn-sm btn-install-plugin" href="/cgi-bin/koha/plugins/plugins-upload.pl?op=Upload&uploadfile=[% sr.result.install_name | uri %]&uploadlocation=[% sr.result.install_url | uri %]"><i class="fa fa-download"></i> تثبيت</a></td>
+ </tr>
+ [% END %]
+ </table>
+ </div><!-- /.page-section -->
+ [% END %]
+
+ [% UNLESS ( plugins ) %]
+ [% UNLESS ( method ) %]
+ <div class="dialog message">لم يتم تثبيت أي برامج مساعدة</div>
+ [% ELSE %]
+ [% IF method == 'tool' %]
+ <div class="dialog message">لم يتم تثبيت أي برامج مساعدة لاستخدامها كاداة</div>
+ [% ELSIF method == 'report' %]
+ <div class="dialog message">لم يتم تثبيت أي برامج فرعية يمكنها إنشاء تقرير</div>
+ [% ELSIF method == 'to_marc' %]
+ <div class="dialog message">لم يتم تثبيت أي برامج إضافية لتحويل الملفات إلى تسجيلات مارك</div>
+ [% ELSIF method == 'opac_online_payment' %]
+ <div class="dialog message">لم يتم تثبيت أي برامج إضافية لمعالجة عمليات الدفع على الانترنت عبر الفهرس العام</div>
+ [% ELSIF method == 'intranet_catalog_biblio_enhancements' %]
+ <div class="dialog message">لم يتم تثبيت أي برامج مساعدة يمكنها تحسين التسجيلات الببليوغرافية في واجهة الموظفين</div>
+ [% ELSIF method == 'ill_availability_services' %]
+ <div class="dialog message">لم يتم تثبيت أي برامج مساعدة يمكنها إظهار نتائج توفر إعارات بينية</div>
+ [% ELSIF method == 'ill_backend' %]
+ <div class="dialog message">No ILL backend plugins are installed</div>
+ [% ELSE %]
+ <div class="dialog message">نوع برنامج مساعد غير معروف <em>[% method | html %]</em></div>
+ [% END %]
+ [% END %]
+ [% ELSE %]
+ <div class="page-section">
+ <table id="installed_plugins">
+ <thead>
+ <tr>
+ <th>الاسم</th>
+ <th>الوصف</th>
+ <th>مؤلف</th>
+ <th>إصدار البرنامج المساعد</th>
+ <th>الحد الأدنى لإصدار كوها</th>
+ <th>الحد الأقصى لإصدار كوها</th>
+ <th>آخر تحديث</th>
+ <th>حالة</th>
+ [% IF ( CAN_user_plugins_configure || CAN_user_plugins_manage || CAN_user_plugins_report || CAN_user_plugins_tool || CAN_user_plugins_admin ) %]
+ <th class="noExport NoSort">الإجراءات</th>
+ [% END %]
+ </tr>
+ </thead>
+
+ [% FOREACH plugin IN plugins %]
+ [% IF plugin.error %]
+ <tr class="warn">
+ <td>
+ <strong>[% plugin.name | html %]</strong>
+ <span class="label label-warning">أخطاء</span>
+ </td>
+ [% IF ( CAN_user_plugins_configure || CAN_user_plugins_manage || CAN_user_plugins_report || CAN_user_plugins_tool ) %]
+ <td colspan="8">حدث خطأ أثناء محاولة تحميل البرنامج المساعد</td>
+ [% ELSE %]
+ <td colspan="8">حدث خطأ أثناء محاولة تحميل البرنامج المساعد</td>
+ [% END %]
+ </tr>
+ [% ELSE %]
+ <tr>
+ <td>
+ <strong>[% plugin.metadata.name | html %]</strong>
+ </td>
+ <td>
+ [% plugin.metadata.description | html %]
+
+ [% IF ( plugin.metadata.minimum_version && koha_version < plugin.metadata.minimum_version ) %]
+ <div class="dialog alert">
+ تحذير: تمت كتابة هذا البرنامج المساعد لإصدار أحدث من كوها. قم باستخدامه على مسؤوليتك الخاصة. </div>
+ [% END %]
+
+ [% IF ( plugin.metadata.maximum_version && koha_version > plugin.metadata.maximum_version ) %]
+ <div class="dialog alert">
+ تحذير: تمت كتابة هذا البرنامج المساعد لإصدار أقدم من كوها. قم باستخدامه على مسؤوليتك الخاصة. </div>
+ [% END %]
+ </td>
+ <td>[% plugin.metadata.author | html %]</td>
+ <td>[% plugin.metadata.version | html %]</td>
+ <td>[% plugin.metadata.minimum_version | html %]</td>
+ <td>[% plugin.metadata.maximum_version | html %]</td>
+ <td>[% plugin.metadata.date_updated | $KohaDates %]</td>
+ <td>
+ [% IF ( plugin.is_enabled ) %]
+ <span class="bg-success">مفعل</span>
+ [% ELSE %]
+ <span class="bg-warning">معطّل</span>
+ [% END %]
+ </td>
+ [% IF ( CAN_user_plugins_configure || CAN_user_plugins_manage || CAN_user_plugins_report || CAN_user_plugins_tool ) %]
+ <td class="actions">
+ <div class="btn-group dropup">
+ <a class="btn btn-default btn-xs dropdown-toggle" id="pluginactions[% plugin.class | html %]" role="button" data-toggle="dropdown" href="#">
+ الإجراءات <b class="caret"></b>
+ </a>
+ <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="pluginactions[% plugin.class | html %]">
+ [% IF ( CAN_user_plugins_report ) %]
+ [% IF plugin.can('report') %]
+ <li><a href="/cgi-bin/koha/plugins/run.pl?class=[% plugin.class | uri %]&method=report"><i class="fa fa-table fa-fw"></i> تشغيل التقرير</a></li>
+ [% END %]
+ [% END %]
+
+ [% IF ( CAN_user_plugins_tool ) %]
+ [% IF plugin.can('tool') %]
+ <li><a href="/cgi-bin/koha/plugins/run.pl?class=[% plugin.class | uri %]&method=tool"><i class="fa fa-wrench fa-fw"></i> أداة تشغيل</a></li>
+ [% END %]
+ [% END %]
+
+ [% IF ( CAN_user_plugins_admin ) %]
+ [% IF plugin.can('admin') %]
+ <li><a href="/cgi-bin/koha/plugins/run.pl?class=[% plugin.class | uri %]&method=admin"><i class="fa fa-wrench fa-fw"></i> Run admin tool</a></li>
+ [% END %]
+ [% END %]
+
+ [% IF ( CAN_user_plugins_configure ) %]
+ [% IF plugin.can('configure') %]
+ <li><a href="/cgi-bin/koha/plugins/run.pl?class=[% plugin.class | uri %]&method=configure"><i class="fa fa-cog fa-fw"></i> تهيئة</a></li>
+ [% END %]
+ [% END %]
+ [% IF ( CAN_user_plugins_manage ) %]
+ <li><a class="uninstall_plugin" data-plugin-name="[% plugin.metadata.name | html %]" href="/cgi-bin/koha/plugins/plugins-uninstall.pl?class=[% plugin.class | html %]"><i class="fa fa-trash-can fa-fw"></i> الغاء تثبيت</a></li>
+ [% IF ( plugin.is_enabled ) %]
+ <li><a class="enable_plugin" data-plugin-name="[% plugin.metadata.name | html %]" href="/cgi-bin/koha/plugins/plugins-enable.pl?class=[% plugin.class | html %]&method=disable"><i class="fa fa-pause fa-fw"></i> تعطيل</a></li>
+ [% ELSE %]
+ <li><a class="enable_plugin" data-plugin-name="[% plugin.metadata.name | html %]" href="/cgi-bin/koha/plugins/plugins-enable.pl?class=[% plugin.class | html %]&method=enable"><i class="fa fa-play fa-fw"></i> تفعيل</a></li>
+ [% END %]
+ [% END %]
+ </ul>
+ </div>
+ </td>
+ [% END %]
+ </tr>
+ [% END %]
+ [% END %]
+ </table>
+ </div><!-- /.page-section -->
+ [% END %]
+ </div>
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% IF ( method == 'tool' ) %]
+ [% INCLUDE 'tools-menu.inc' %]
+ [% ELSE %]
+ [% INCLUDE 'admin-menu.inc' %]
+ [% END %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/tools-menu.js") | $raw %]
+ [% INCLUDE 'calendar.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+        $(document).ready(function(){
+            $(".uninstall_plugin").on("click", function(){
+                $(".dropdown").removeClass("open");
+                var plugin_name = $(this).data("plugin-name");
+                return confirmDelete( _("هل أنت متأكد من أنك تريد الغاء تثبيت الإضافة المدمجة %s؟").format( plugin_name ) );
+            });
+
+            $("#plugin-search-button").on("click", function(){
+                $("#plugin-search-form").submit();
+            });
+
+            KohaTable("installed_plugins", {
+                "paginate": false
+            });
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

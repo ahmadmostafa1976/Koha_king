@@ -1,0 +1,55 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Download list") | html %] &rsaquo;
+ [% t("Lists") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="lists_downloadshelf" class="lists" style="padding:1em;">
+
+[% FOR m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'unauthorized' %]
+ <span>ليس لديك صلاحية عرض هذه القائمة.</span>
+ [% CASE 'does_not_exist' %]
+ <span>هذه القائمة غير موجودة.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+[% END %]
+
+
+
+[% IF ( format ) %]
+ <p>يجب أن يبدأ التحميل تلقائياً.</p>
+[% ELSE %]
+<div id="export" class="detailtagcell">
+<form method="get" action="/cgi-bin/koha/virtualshelves/downloadshelf.pl">
+ <fieldset class="rows">
+ <legend><h1>تنزيل القائمة</h1></legend>
+ <ol><li>
+ <label for="format">تنسيق: </label>
+ <select name="format" id="format">
+ <option value="">-- إختر تنسيق--</option>
+ <option value="iso2709">مارك</option>
+ <option value="ris">RIS</option>
+ <option value="bibtex">BibTex</option>
+ [% FOREACH csv_profile IN csv_profiles %]
+ <option value="[% csv_profile.export_format_id | html %]">CSV - [% csv_profile.profile | html %]</option>
+ [% END %]
+ </select>
+ </li></ol>
+ </fieldset>
+ <fieldset class="action"><input type="hidden" name="shelfid" value="[% shelfid | html %]" />
+ <input class="btn btn-primary" name="save" type="submit" value="حفظ" /> <a class="cancel close" href="#">إلغاء</a>
+ </fieldset>
+ </form>
+
+[% END %]
+</body>
+</html>

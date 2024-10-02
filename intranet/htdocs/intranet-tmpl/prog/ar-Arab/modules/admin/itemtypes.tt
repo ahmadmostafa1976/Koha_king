@@ -1,0 +1,571 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE Branches %]
+[% USE AuthorisedValues %]
+[% USE Price %]
+[% USE TablesSettings %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op == 'add_form' %]
+ [% IF ( itemtype ) %]
+ [% tx("Modify item type '{item_type}'", { item_type = itemtype.itemtype }) | html %]
+ [% ELSE %]
+ [% t("New item type") | html %]
+ [% END %] &rsaquo;
+ [% END %]
+ [% IF op == 'delete_confirm' %]
+ [% IF ( total ) %]
+ [% tx("Cannot delete item type '{item_type}'", { item_type = itemtype.itemtype }) | html %]
+ [% ELSE %]
+ [% tx("Confirm deletion of item type '{item_type}'?", { item_type = itemtype.itemtype }) | html %]
+ [% END %] &rsaquo;
+ [% END %]
+ [% IF op == 'cud-delete_confirmed' %]
+ [% t("Data deleted") | html %] &rsaquo;
+ [% END %]
+ [% t("Item types") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% FILTER collapse %]
+ <style>
+        fieldset.rows div.toptabs li {
+            clear: none;
+            margin-right:.4em;
+            padding-bottom: 0;
+            width: auto;
+        }
+        .itemtype-icons {
+            display: flex;
+            flex-wrap: wrap;
+            clear: both;
+        }
+        .itemtype-icons label {
+            float: none;
+            width: auto;
+        }
+    </style>
+[% END %]
+</head>
+
+<body id="admin_itemtypes" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'prefs-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+
+ [% IF op == 'add_form' || op == 'delete_confirm' || op == 'delete_confirmed' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/itemtypes.pl">أنواع المادة</a>
+ [% END %]
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% IF itemtype %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Modify item type '{item_type}'", { item_type = itemtype.itemtype }) | html %]
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>نوع مادة جديد</span>
+ [% END %]
+ [% END %]
+ [% END %]
+
+ [% IF op == 'delete_confirm' %]
+ [% IF total %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Cannot delete item type '{item_type}'", { item_type = itemtype.itemtype }) | html %]
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Confirm deletion of item type '{item_type}'?", { item_type = itemtype.itemtype }) | html %]
+ [% END %]
+ [% END %]
+ [% END %]
+
+ [% IF op == 'delete_confirmed' %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تم حذف البيانات</span>
+ [% END %]
+ [% END %]
+
+ [% IF op == 'list' %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>أنواع المادة</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% IF op == 'list' %]<div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="newitemtype" href="/cgi-bin/koha/admin/itemtypes.pl?op=add_form"><i class="fa fa-plus"></i> نوع مادة جديد</a>
+</div>[% END %]
+
+[% FOREACH m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'error_on_update' %]
+ <span>لقد حدث خطأ أثناء تحديث نوع المادة هذا. قد تكون القيمة موجودة بالفعل.</span>
+ [% CASE 'error_on_insert' %]
+ <span>حدث خطأ عند إدراج نوع المادة هذا. ربما تكون القيمة موجودة بالفعل.</span>
+ [% CASE 'error_on_delete' %]
+ <span>حدث خطأ أثناء حذف نوع المادة هذا. تحقق من السجلات للتفاصيل.</span>
+ [% CASE 'success_on_update' %]
+ <span>تم تحديث نوع المادة بنجاح.</span>
+ [% CASE 'success_on_insert' %]
+ <span>تم إدخال نوع المادة بنجاح.</span>
+ [% CASE 'success_on_delete' %]
+ <span>تم حذف نوع المادة بنجاح.</span>
+ [% CASE 'already_exists' %]
+ <span>نوع المادة موجود بالفعل.</span>
+ [% CASE 'cannot_be_deleted' %]
+ <span>لا يمكن حذف نوع المادة هذا. <p><strong>هذه التسجيلة قيد الاستخدام</strong>الحذف غير ممكن .</p></span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+[% END %]
+
+
+[% IF op == 'add_form' %]
+ [% IF itemtype %]
+ <h1>[% tx("Modify item type '{item_type}'", { item_type = itemtype.itemtype }) | html %]</h1>
+ [% ELSE %]
+ <h1>نوع مادة جديد</h1>
+ [% END %]
+ <form action="/cgi-bin/koha/admin/itemtypes.pl" name="Aform" method="post" id="itemtypeentry">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add_validate" />
+ <fieldset class="rows">
+ <ol>
+ [% IF itemtype %]
+ <li>
+ <input type="hidden" name="is_a_modif" value="1" />
+ <span class="label">نوع المادة: </span> <input type="hidden" name="itemtype" value="[% itemtype.itemtype | html %]" />
+ [% itemtype.itemtype | html %]
+ </li>
+ [% ELSE %]
+ <li>
+ <label for="itemtype" class="required">نوع المادة: </label>
+ <input type="text" id="itemtype" name="itemtype" size="10" maxlength="10" required="required" class="focus" /> <span class="required">مطلوب</span>
+ </li>
+ [% END %]
+ <li>
+ <label for="parent_type">نوع المادة الأصلي: </label>
+ [% IF !is_a_parent && parent_types %]
+ <select name="parent_type" id="parent_type">
+ <option value="">لا شيء</option>
+ [% FOREACH pt IN parent_types %]
+ [% IF parent_type == pt.itemtype %]
+ <option value="[% pt.itemtype | html %]" selected="selected">[% pt.description | html %]</option>
+ [% ELSE %]
+ <option value="[% pt.itemtype | html %]">[% pt.description | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ [% ELSIF is_a_parent %]
+ <input type="text" id="parent_type" value="[% parent_type | html %]" name="parent_type" size="10" maxlength="10" disabled/>
+ <p>أصل لنوع آخر، لا يمكن أن يكون له أصل</p>
+ [% ELSE %]
+ <input type="text" id="parent_type" value="[% parent_type | html %]" name="parent_type" size="10" maxlength="10" disabled/>
+ <p>لا توجد أنواع أصلية متاحة</p>
+ [% END %]
+ <div class="hint">تعريف نوع أصلي لتطبيق حدود الإعارة لكل الأنواع الفرعية كما هو محدد في صفحة قواعد الإعارة.</div>
+ </li>
+ <li>
+ <label for="description" class="required">الوصف: </label>
+ <input type="text" id="description" name="description" size="48" value="[% itemtype.description | html %]" required="required" /> <span class="required">مطلوب</span>
+ [% IF can_be_translated %]
+ <a href="/cgi-bin/koha/admin/localization.pl?entity=itemtypes&code=[% itemtype.itemtype | uri %]" rel="gb_page_center[600,500]" title="ترجمة نوع المادة [% itemtype.itemtype | html %]"><i class="fa-solid fa-pencil" aria-hidden="true"></i> ترجم إلى لغات أخرى</a>
+ [% END %]
+ </li>
+ <li>
+ <label for="searchcategory">بحث الفئة: </label>
+ <select id="searchcategory" name="searchcategory">
+ <option value="">لا شيء</option>
+ [% FOREACH cat IN searchcategory %]
+ [% IF cat.authorised_value == itemtype.searchcategory %]
+ <option value="[% cat.authorised_value | html %]" selected="selected">
+ [% cat.lib | html %]
+ </option>
+ [% ELSE %]
+ <option value="[% cat.authorised_value | html %]" >
+ [% cat.lib | html %]
+ </option>
+ [% END %]
+ [% END %]
+ </select>
+ <div class="hint">
+ [% IF ( CAN_user_parameters_manage_auth_values ) %]
+ <span>الخيارات معرّفة بواسطة قيمة الاستناد <a target="_blank" href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=ITEMTYPECAT">ITEMTYPECAT</a>.</span>
+ [% ELSE %]
+ <span>الخيارات معرّفة بواسطة قيمة الاستناد ITEMTYPECAT.</span>
+ [% END %]
+ </div>
+ </li>
+ [% IF ( Koha.Preference('noItemTypeImages') && Koha.Preference('OpacNoItemTypeImages') ) %]
+ <li>
+ <span class="label">صورة: </span>صور نوع المادة معطَّلة. لتفعيلها، قم بإيقاف الـ <a href="/cgi-bin/koha/admin/preferences.pl?op=search&amp;searchfield=noItemTypeImages">تفضيل النظام noItemTypeImages أو OpacNoItemTypeImages</a>
+ </li>
+ [% END %]
+ </ol>
+
+ [% UNLESS Koha.Preference('noItemTypeImages') && Koha.Preference('OpacNoItemTypeImages') %]
+ [% INCLUDE 'admin-icon-selection.inc' context = "itemtype" %]
+ [% END %]
+
+ <ol class="oladditemtype">
+ <li>
+ <label for="hideinopac">إخفاء في الأوباك: </label>
+ [% IF ( itemtype.hideinopac ) %]
+ <input type="checkbox" id="hideinopac" name="hideinopac" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="hideinopac" name="hideinopac" value="1" />
+ [% END %]
+ <span class="hint">عند التحديد، سيتم إخفاء المواد من هذا النوع كمنقحات في بحث الأوباك المتقدم.</span>
+ </li>
+ <li>
+ <label for="notforloan">ليس للإعارة: </label>
+ [% IF itemtype.notforloan %]
+ <input type="checkbox" id="notforloan" name="notforloan" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="notforloan" name="notforloan" value="1" />
+ [% END %]
+ <span class="hint">عند التحديد، لا يمكن إعارة أي مادة من هذا النوع. عند عدم التحديد، كل المواد من هذا النوع يمكن إعارتها إلا إذا تم ضبط ليس للإعارة لمادة محددة.</span>
+ </li>
+ <li>
+ <label for="automatic_checkin">الرد التلقائي: </label>
+ [% IF itemtype.automatic_checkin %]
+ <input type="checkbox" id="automatic_checkin" name="automatic_checkin" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="automatic_checkin" name="automatic_checkin" value="1" />
+ [% END %]
+ <span class="hint">إذا تم تحديده، فسيتم رد المادة تلقائيًا بمجرد وصولها إلى تاريخ استحقاقها. تتطلب هذه الميزة <code>misc/cronjobs/automatic_checkin.pl</code> كرون. اطلب من مدير النظام الخاص بك أن يقوم بجدولته.</span>
+ </li>
+ <li>
+ <label for="rentalcharge">رسم التأجير: </label>
+ <input type="text" id="rentalcharge" name="rentalcharge" size="10" value="[% itemtype.rentalcharge | $Price on_editing => 1 %]" min="0" />
+ <div class="hint">يتم فرض الرسم مرة واحدة كل إعارة/تجديد لكل مادة</div>
+ </li>
+ <li>
+ <label for="rentalcharge_daily">رسم التأجير اليومي: </label>
+ <input type="text" id="rentalcharge_daily" name="rentalcharge_daily" size="10" value="[% itemtype.rentalcharge_daily | $Price on_editing => 1 %]" min="0" />
+ <div class="hint">يتم فرض الرسم على الإعارة/التجديد عن كل يوم بين تاريخ الإعارة/التجديد وتاريخ الاستحقاق للإعارات المحددة بالأيام.</div>
+ </li>
+ <li>
+ <label for="rentalcharge_daily_calendar">التأجير اليومي باستخدام التقويم: </label>
+ [% IF itemtype.rentalcharge_daily_calendar %]
+ <input type="checkbox" id="rentalcharge_daily_calendar" name="rentalcharge_daily_calendar" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="rentalcharge_daily_calendar" name="rentalcharge_daily_calendar" value="1" />
+ [% END %]
+ <span class="hint">عند التحديد، سيتم حساب الرسوم اليومية باستخدام التقويم لإقصاء العطلات. في حالة عدم التحديد، سيتم حساب الرسم بناء على عدد الأيام حتى يوم الاستحقاق مباشرةً.</span>
+ </li>
+ <li>
+ <label for="rentalcharge_hourly">رسم التأجير بالساعة: </label>
+ <input type="text" id="rentalcharge_hourly" name="rentalcharge_hourly" size="10" value="[% itemtype.rentalcharge_hourly | $Price on_editing => 1 %]" min="0" />
+ <div class="hint">يتم فرض الرسم على الإعارة/التجديد عن كل ساعة بين تاريخ الإعارة/التجديد وتاريخ الاستحقاق للإعارات المحددة بالساعات.</div>
+ </li>
+ <li>
+ <label for="rentalcharge_hourly_calendar">التأجير بالساعة باستخدام التقويم: </label>
+ [% IF itemtype.rentalcharge_hourly_calendar %]
+ <input type="checkbox" id="rentalcharge_hourly_calendar" name="rentalcharge_hourly_calendar" checked="checked" value="1" />
+ [% ELSE %]
+ <input type="checkbox" id="rentalcharge_hourly_calendar" name="rentalcharge_hourly_calendar" value="1" />
+ [% END %]
+ <span class="hint">عند التحديد، سيتم حساب الرسوم بالساعة باستخدام التقويم لإقصاء العطلات. في حالة عدم التحديد، سيتم حساب الرسم بناء على عدد الساعات حتى وقت الاستحقاق مباشرةً.</span>
+ </li>
+ <li>
+ <label for="defaultreplacecost">تكلفة الاستبدال الافتراضية: </label>
+ <input type="text" id="defaultreplacecost" name="defaultreplacecost" size="10" value="[% itemtype.defaultreplacecost | $Price on_editing => 1 %]" min="0" />
+ </li>
+ <li>
+ <label for="processfee">رسم المعالجة (عند الفقد): </label>
+ <input type="text" id="processfee" name="processfee" size="10" value="[% itemtype.processfee | $Price on_editing => 1 %]" min="0" />
+ </li>
+ <li>
+ <label for="checkinmsg">رسالة الرد: </label>
+ <textarea id="checkinmsg" name="checkinmsg" cols="55" rows="5">[% itemtype.checkinmsg | html %]</textarea>
+ </li>
+ <li>
+ <label for="checkinmsgtype">نوع رسالة الرد: </label>
+ <select id="checkinmsgtype" name="checkinmsgtype">
+ [% IF itemtype.checkinmsgtype == 'message' %]
+ <option value="message" selected="selected">رسالة</option>
+ [% ELSE %]
+ <option value="message">رسالة</option>
+ [% END %]
+ [% IF itemtype.checkinmsgtype == 'alert' %]
+ <option value="alert" selected="selected">تنبيه</option>
+ [% ELSE %]
+ <option value="alert">تنبيه</option>
+ [% END %]
+ </select>
+ </li>
+ <li>
+ <label for="sip_media_type">SIP نوع الوسائط: </label>
+ <select id="sip_media_type" name="sip_media_type">
+ <option value=""></option>
+ [% FOREACH a IN AuthorisedValues.Get('SIP_MEDIA_TYPE') %]
+ [% IF a.authorised_value == itemtype.sip_media_type %]
+ <option value="[% a.authorised_value | html %]" selected="selected">[% a.lib | html %]</option>
+ [% ELSE %]
+ <option value="[% a.authorised_value | html %]">[% a.lib | html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+ <li><label for="branches">حد المكتبة: </label>
+ <select id="branches" name="branches" multiple size="10">
+ <option value="">كل المكتبات</option>
+ [% PROCESS options_for_libraries libraries => Branches.all( selected => itemtype.get_library_limits, unfiltered => 1, do_not_select_my_library => 1 ) %]
+ </select>
+ <div class="hint">قم بتحديد 'كل المكتبات' إذا كانت جميع المكتبات تستخدم نوع المادة هذا. وإلا فقم بتحديد المكتبات المحددة التي تستخدم نوع المادة هذا.</div>
+ </li>
+ <li>
+ <label for="summary">ملخص: </label>
+ <textarea id="summary" name="summary" cols="55" rows="5">[% itemtype.summary | html %]</textarea>
+ <div class="hint">ثم بإدخال ملخص ليقوم بالكتابة على الملخص الافتراضي في قوائم نتائج البحث على سبيل المثال: نوع مادة موقع إلكتروني : </div>
+ <div class="hint"><strong>&lt;a href="[856u]"&gt;open site&lt;/a&gt;</strong> سيظهر الرابط مباشرة تحت العنوان</div>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ التغييرات" />
+ <a href="/cgi-bin/koha/admin/itemtypes.pl" class="cancel">إلغاء</a>
+ </fieldset>
+ </form>
+[% END %]
+
+[% IF op == 'delete_confirm' %]
+ <div class="dialog alert">
+ <h1>[% tx("Are you sure you want to delete item type '{item_type}'?", { item_type = itemtype.itemtype }) | html %]</h1>
+ <table>
+ <tr>
+ <th scope="row">نوع المادة</th>
+ <td>[% itemtype.itemtype | html %]</td>
+ </tr>
+ <tr><th scope="row">الوصف</th><td>[% itemtype.translated_description | html %]</td></tr>
+ [% UNLESS Koha.Preference('noItemTypeImages') && Koha.Preference('OpacNoItemTypeImages') %]
+ <tr>
+ <th scope="row">صورة</th>
+ <td>
+ [% SET image_location = itemtype.image_location('intranet') %]
+ [% IF image_location %]<img src="[% image_location | html %]" alt="" />[% END %]
+ </td>
+ </tr>
+ [% END %]
+ <tr><th scope="row">رسم التأجير</th><td>[% itemtype.rentalcharge | $Price %]</td></tr>
+ </table>
+ <form action="/cgi-bin/koha/admin/itemtypes.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-delete_confirmed" /><input type="hidden" name="itemtype" value="[% itemtype.itemtype | html %]" />
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> نعم، قم بحذف نوع هذه المادة</button>
+ </form>
+ <form action="/cgi-bin/koha/admin/itemtypes.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <button type="submit" class="deny"><i class="fa fa-fw fa-times"></i> لا ، لا تقم بالحذف</button>
+ </form>
+ </div>
+[% END %]
+
+[% IF op == 'list' %]
+ <h1>أنواع المادة</h1>
+ [% IF itemtypes %]
+ <div class="page-section">
+ <table id="table_item_type">
+ <thead>
+ [% UNLESS Koha.Preference('noItemTypeImages') && Koha.Preference('OpacNoItemTypeImages') %]<th class="noExport">صورة</th>[% END %]
+ <th>الوصف</th>
+ <th>رمز</th>
+ <th>الرمز الأصلي</th>
+ <th>بحث الفئة</th>
+ <th>لا يعار</th>
+ <th>إخفاء في الأوباك</th>
+ <th>رسم التأجير</th>
+ <th>رسم التأجير اليومي</th>
+ <th>رسم التأجير بالساعة</th>
+ <th>تكلفة الاستبدال الافتراضية</th>
+ <th>رسم المعالجة (عند الضياع)</th>
+ <th>رسالة الرد</th>
+ <th>حدود المكتبة</th>
+ <th>الرد التلقائي</th>
+ <th class="noExport NoSort">الإجراءات</th>
+ </thead>
+ [% FOREACH itemtype IN itemtypes %]
+ <tr>
+ [% UNLESS Koha.Preference('noItemTypeImages') && Koha.Preference('OpacNoItemTypeImages') %]
+ <td>
+ [% SET image_location = itemtype.image_location('intranet') %]
+ [% IF image_location %]<img src="[% image_location | html %]" alt="" />[% ELSE %]&nbsp;[% END %]
+ </td>
+ [% END %]
+ <td>
+ [% IF itemtype.parent_type %]
+ [% IF itemtype.parent.translated_descriptions.size %]
+ [% itemtype.parent.description | html %] <span>(الافتراضي)</span><br/>
+ [% ELSE %]
+ [% itemtype.parent.description | html %]
+ [% END %]
+ </br>
+ [% IF itemtype.translated_descriptions.size %]
+ [% itemtype.description | html %] <span>(الافتراضي)</span><br/>
+ [% FOR description IN itemtype.translated_descriptions %]
+ [% IF description.translation == itemtype.translated_description %]
+ -- <strong>[% description.translation | html %]</strong>
+ [% ELSE %]
+ -- [% description.translation | html %] ([% description.lang | html %])
+ [% END %]
+ <br/>
+ [% END %]
+ [% ELSE %]
+ -- [% itemtype.description | html %]
+ [% END %]
+ [% ELSE %]
+ [% IF itemtype.translated_descriptions.size %]
+ [% itemtype.description | html %] <span>(الافتراضي)</span><br/>
+ [% FOR description IN itemtype.translated_descriptions %]
+ [% IF description.translation == itemtype.translated_description %]
+ <strong>[% description.translation | html %]</strong>
+ [% ELSE %]
+ [% description.translation | html %] ([% description.lang | html %])
+ [% END %]
+ <br/>
+ [% END %]
+ [% ELSE %]
+ [% itemtype.description | html %]
+ [% END %]
+ [% END %]
+ </td>
+ <td>
+ <a href="/cgi-bin/koha/admin/itemtypes.pl?op=add_form&amp;itemtype=[% itemtype.itemtype | uri %]">
+ [% itemtype.itemtype | html %]
+ </a>
+ </td>
+ <td>
+ [% itemtype.parent_type | html %]
+ </td>
+ <td>[% AuthorisedValues.GetByCode( 'ITEMTYPECAT', itemtype.searchcategory ) | html %]</td>
+ <td>[% IF ( itemtype.notforloan ) %]نعم[% ELSE %]&nbsp;[% END %]</td>
+ <td>[% IF ( itemtype.hideinopac ) %]نعم[% ELSE %]&nbsp;[% END %]</td>
+ <td>
+ [% UNLESS ( itemtype.notforloan ) %]
+ [% itemtype.rentalcharge | $Price %]
+ [% END %]
+ </td>
+ <td>
+ [% UNLESS ( itemtype.notforloan ) %]
+ [% itemtype.rentalcharge_daily | $Price %]
+ [% END %]
+ </td>
+ <td>
+ [% UNLESS ( itemtype.notforloan ) %]
+ [% itemtype.rentalcharge_hourly | $Price %]
+ [% END %]
+ </td>
+
+ <td>[% itemtype.defaultreplacecost | $Price %]</td>
+ <td>[% itemtype.processfee | $Price %]</td>
+ <td>[% itemtype.checkinmsg | html_line_break | $raw %]</td>
+ <td>
+ [% SET library_limits = itemtype.library_limits %]
+ [% IF library_limits.count > 0 %]
+ [% library_str = "" %]
+ [% FOREACH library IN library_limits %]
+ [%- IF loop.first -%]
+ [% library_str = library.branchname _ " (" _ library.branchcode _ ")" %]
+ [% ELSE %]
+ [% library_str = library_str _ "\n" _ library.branchname _ " (" _ library.branchcode _ ")" %]
+ [% END %]
+ [% END %]
+ <span class="library_limitation" title="[% library_str | html %]">
+ [% IF library_limits.count > 1 %]
+ <span>[% library_limits.count | html %] حدود المكتبة</span>
+ [% ELSE %]
+ <span>[% library_limits.count | html %] حد المكتبة</span>
+ [% END %]
+ [% ELSE %]
+ <span>بدون حد</span>
+ [% END %]
+ </td>
+ <td>[% IF ( itemtype.automatic_checkin ) %]نعم[% ELSE %]&nbsp;[% END %]</td>
+ <td class="actions">
+ <a href="/cgi-bin/koha/admin/itemtypes.pl?op=add_form&amp;itemtype=[% itemtype.itemtype | uri %]" class="btn btn-default btn-xs"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a href="/cgi-bin/koha/admin/itemtypes.pl?op=delete_confirm&amp;itemtype=[% itemtype.itemtype | uri %]" class="btn btn-default btn-xs"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ </table>
+ </div>
+ [% ELSE %]
+ <div class="dialog message">لاتوجد أنواع مواد معرفة</div>
+ [% END %]
+[% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'greybox.inc' %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+         $(document).ready(function() {
+            var table_settings = [% TablesSettings.GetTableSettings( 'admin', 'itemtypes', 'table_item_type', 'json' ) | $raw %];
+            [% IF ( Koha.Preference('noItemTypeImages') && Koha.Preference('OpacNoItemTypeImages') ) %]
+                table_settings['columns'].shift(); // Remove item type image column from configuration
+            [% END %]
+
+            $(document).ready(function() {
+                KohaTable("table_item_type", {
+                "pagingType": "full"
+                }, table_settings);
+            });
+
+            $( "#itemtypeentry" ).validate({
+                rules: {
+                    itemtype: { required: true },
+                    description: { required: true },
+                    rentalcharge: { number: true },
+                    rentalcharge_hourly: { number: true },
+                    defaultreplacecost: { number: true },
+                    processfee: { number: true }
+                }
+            });
+            $("#itemtype").on("blur",function(){
+                toUC(this);
+            });
+            $(".library_limitation").tooltip();
+            if( $("#icons .tab-pane.active").length < 1 ){
+                $("#icons a:first").tab("show");
+            }
+         });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

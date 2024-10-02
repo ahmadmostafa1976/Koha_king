@@ -1,0 +1,36 @@
+[% USE raw %]
+[% USE AdditionalContents %]
+[% SET OpacSuppressionMessage = AdditionalContents.get( location => "OpacSuppressionMessage", lang => lang, library => branchcode || default_branch ) %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>
+ التسجيلة محظورة &rsaquo; [% IF ( LibraryNameTitle ) %] [% LibraryNameTitle | html %] [% ELSE %] كوها أونلاين [% END %] الفهرس </title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% BLOCK cssinclude %][% END %]
+</head>
+[% INCLUDE 'bodytag.inc' bodyid='opac-blocked' %]
+[% INCLUDE 'masthead.inc' %]
+<div class="main">
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تسجيلة محظورة</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+
+ <div class="container-fluid">
+ <div class="row justify-content-center">
+ <div class="col-md-10 col-lg-6">
+ <div id="opac-blocked-message" class="maincontent">
+ <h1>محظور</h1>
+ <p>ليس لديك صلاحية لعرض هذه التسجيلة.</p>
+ [% IF ( OpacSuppressionMessage ) %]
+ <div id="opacsuppressionmessage">
+ [% PROCESS koha_news_block news => OpacSuppressionMessage %]
+ </div>
+ [% END %]
+ </div>
+ </div>
+ </div>
+ </div>
+
+[% INCLUDE 'opac-bottom.inc' %]
+[% BLOCK jsinclude %][% END %]

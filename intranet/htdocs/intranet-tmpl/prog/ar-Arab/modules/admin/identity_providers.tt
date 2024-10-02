@@ -1,0 +1,577 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Branches %]
+[% USE Categories %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op == 'add_form' %]
+ [% t("New identity provider") | html %] &rsaquo;
+ [% ELSIF op == 'edit_form' %]
+ [% tx("Modify identity provider '{id_provider}'", {id_provider = identity_provider.code}) | html %] &rsaquo;
+ [% END %]
+ [% t("Identity providers") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_identity_providers" class="admin">
+[% INCLUDE 'header.inc' %]
+[% INCLUDE 'prefs-admin-search.inc' %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/identity_providers.pl">موفرى الهوية</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>موفر هوية جديد</span>
+ [% END %]
+
+ [% ELSIF op == 'edit_form' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/identity_providers.pl">موفرى الهوية</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% tx("Modify identity provider '{id_provider}'", {id_provider = identity_provider.code}) | html %]
+ [% END %]
+
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>موفرى الهوية</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% FOREACH m IN messages %]
+ <div class="dialog [% m.type | html %]" id="identity_provider_action_result_dialog">
+ [% SWITCH m.code %]
+ [% CASE 'error_on_update' %]
+ <span>حدث خطأ أثناء محاولة فتح موفر الهوية للتحرير. المعرف الذي تم تمريره غير صالح.</span>
+ [% CASE 'error_on_insert' %]
+ <span>حدث خطأ أثناء إضافة نطاق موفر هوية جديد. يرجى التحقق من السجلات للتفاصيل.</span>
+ [% CASE 'success_on_update' %]
+ <span>تم تحديث موفر الهوية بنجاح.</span>
+ [% CASE 'success_on_insert' %]
+ <div>تمت إضافة موفر الهوية بنجاح.</div>
+ <div>سوف تحتاج إلى إعادة تشغيل كوها حتى يعمل موفر الخدمة.</div>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+[% END %]
+
+ <div class="dialog message" id="identity_provider_delete_success" style="display: none;"></div>
+ <div class="dialog alert"   id="identity_provider_delete_error"   style="display: none;"></div>
+
+[% IF op == 'add_form' %]
+ <h1>موفر هوية جديد</h1>
+
+ <form action="/cgi-bin/koha/admin/identity_providers.pl" id="add" name="add" class="validated" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add" />
+ <fieldset class="rows">
+ <legend id="identity_provider_basic">التهيئة الأساسية</legend>
+ <ol>
+ <li>
+ <label for="code" class="required">رمز: </label>
+ <input type="text" name="code" id="code" size="60" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ <div class="hint">الرمز الذي يحدد موفر الخدمة هذا. يسمح فقط بالأحرف الأبجدية والأرقام وعلامة "_"</div>
+ </li>
+ <li>
+ <label for="description" class="required">الوصف: </label>
+ <input type="text" name="description" id="description" size="60" class="required" required="required" />
+ <span class="required">مطلوب</span>
+ <div class="hint">اسم سهل الاستخدام لموفر الخدمة هذا</div>
+ </li>
+ <li>
+ <label for="protocol">بروتوكول: </label>
+ <select name="protocol" id="protocol">
+ <option value="OAuth">OAuth</option>
+ <option value="OIDC">OIDC</option>
+ <!-- Not implemented yet
+ <option value="LDAP">LDAP</option>
+ <option value="CAS">CAS</option>
+ -->
+ </select>
+ <div class="hint">اختر البروتوكول الذي يستخدمه موفر الهوية الخارجي هذا</div>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend id="identity_provider_advanced">التهيئة المتقدمة</legend>
+ <ol>
+ <li>
+ <label for="config" class="required json">التهيئة: </label>
+ <textarea name="config" id="config" class="required" cols="75" rows="10"></textarea>
+ <span class="required">مطلوب</span>
+ <div class="hint">تهيئة مقدم الخدمة الرئيسية. <button class="more btn btn-ligth" data-target="config"><i class="fa fa-caret-down"></i> المزيد</button></div>
+ <div class="hint more-config" style="display: none">
+ <div>تختلف هذه التهيئة لكل بروتوكول.</div>
+ <div>يوصى بإضافة التهيئة الافتراضية، ثم استبدالها بالقيم المناسبة</div>
+ </div>
+ <div class="hint">
+ <button class="btn btn-ligth defaults" data-default-target="config" id="default-config">إضافة تهيئة OAuth الافتراضية</button>
+ </div>
+ </li>
+ <li>
+ <label for="mapping" class="required json">تخطيط: </label>
+ <textarea name="mapping" id="mapping" class="required" cols="75" rows="10"></textarea>
+ <span class="required">مطلوب</span>
+ <div class="hint">تخطيط نتيجة الموفر لحقول مستفيد كوها. <button class="more btn btn-ligth" data-target="mapping"><i class="fa fa-caret-down"></i> المزيد</button></div>
+ <div class="hint more-mapping" style="display: none">
+ <div>يوصى بإضافة التخطيط الافتراضي، ثم تعديله ليناسب استجابة هذا الموفر</div>
+ <div>تمثل المفاتيح حقول كوها، وتمثل القيم المفاتيح في نتيجة الموفر</div>
+ <div>بالنسبة للقيم المتداخلة في نتائج مقدم الخدمة، يمكنك استخدام فصل النقاط.</div>
+ <div>على سبيل المثال: <i>الاسم الأول: "users.0.name"</i> سيطابق سمة 'الاسم' للكائن الأول في المصفوفة المسماة 'المستخدمين'، ويضعها في حقل 'الاسم الأول'</div>
+ <div>إذا كنت تخطط لاستخدام ميزة التسجيل التلقائي، إما أن <i>معرّف المستخدم</i> أو <i>رقم البطاقة</i> يجب أن يكون موجوداً في هذا التخطيط</div>
+ </div>
+ <div class="hint">
+ <button class="btn btn-ligth defaults" data-default-target="mapping" id="default-mapping">إضافة تعيين OAuth الافتراضي</button>
+ </div>
+ </li>
+ <li>
+ <label for="matchpoint">نقطة التطابق: </label>
+ <select name="matchpoint" id="matchpoint">
+ <option value="email">البريد الإلكتروني</option>
+ <option value="userid">معرّف المستخدم</option>
+ <option value="cardnumber">رقم البطاقة</option>
+ </select>
+ <div class="hint">حقل مستفيد كوها الذي سيتم استخدامه لمطابقة مستخدم الموفر مع</div>
+ <div class="hint">يجب أن يكون موجوداً في التخطيط</div>
+ </li>
+ <li>
+ <label for="icon_url">عنوان URL للأيقونة: </label>
+ <input type="text" name="icon_url" id="icon_url" size="60" />
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend id="identity_provider_domain">تهيئة النطاق</legend>
+ <ol>
+ <li>
+ <label for="domain" class="required">النطاق: </label>
+ <input type="text" name="domain" id="domain" class="required" size="60" />
+ <span class="required">مطلوب</span>
+ <div class="hint">استخدم &ast; لأي نطاق. يمكنك إضافة نطاقات جديدة لاحقًا في صفحة المسؤول المخصصة.</div>
+ </li>
+ <li>
+ <label for="default_library_id">المكتبة الافتراضية: </label>
+ <select id="default_library_id" name="default_library_id" class="mandatory">
+ [% PROCESS options_for_libraries libraries => Branches.all( unfiltered => 1, do_not_select_my_library => 1 ) %]
+ </select>
+ <span class="required">مطلوب</span>
+ <div class="hint">استخدم هذه المكتبة للمستفيد عند التسجيل التلقائي</div>
+ </li>
+ <li>
+ <label for="default_category_id">الفئة الافتراضية: </label>
+ [% SET categories = Categories.all() %]
+ <select name="default_category_id" id="default_category_id" class="mandatory">
+ [% FOREACH category IN categories %]
+ <option value="[% category.categorycode | html %]">[% category.description | html %]</option>
+ [% END %]
+ </select>
+ <span class="required">مطلوب</span>
+ <div class="hint">استخدم هذه الفئة للمستفيد عند التسجيل التلقائي</div>
+ </li>
+ <li>
+ <label for="allow_opac">السماح للأوباك: </label>
+ <select name="allow_opac" id="allow_opac">
+ <option value="1">نعم</option>
+ <option value="0" selected="selected">لا</option>
+ </select>
+ <div class="hint">السماح بالوصول للأوباك للمستخدمين من هذا النطاق بتسجيل الدخول باستخدام موفر الهوية هذا.</div>
+ </li>
+ <li>
+ <label for="allow_staff">السماح للموظفين: </label>
+ <select name="allow_staff" id="allow_staff">
+ <option value="1">نعم</option>
+ <option value="0" selected="selected">لا</option>
+ </select>
+ <div class="hint">السماح للموظفين بالوصول إلى المستخدمين من هذا النطاق لتسجيل الدخول باستخدام موفر الهوية هذا.</div>
+ </li>
+ <li>
+ <label for="auto_register">تسجيل تلقائي: </label>
+ <select name="auto_register" id="auto_register">
+ <option value="1">نعم</option>
+ <option value="0" selected="selected">لا</option>
+ </select>
+ <div class="hint">السماح للمستخدمين بالتسجيل التلقائي عند تسجيل الدخول.</div>
+ </li>
+ <li>
+ <label for="update_on_auth">تحديث عند تسجيل الدخول: </label>
+ <select name="update_on_auth" id="update_on_auth">
+ <option value="1">نعم</option>
+ <option value="0" selected="selected">لا</option>
+ </select>
+ <div class="hint">تحديث بيانات المستخدم عند تسجيل الدخول.</div>
+ </ol>
+ </fieldset>
+
+ <fieldset class="action">
+ <input type="submit" value="تقديم" />
+ <a class="cancel" href="/cgi-bin/koha/admin/identity_providers.pl">إلغاء</a>
+ </fieldset>
+ </form>
+
+[% END %]
+
+[% IF op == 'edit_form' %]
+ <h1>[% tx("Modify identity provider '{id_provider}'", {id_provider = identity_provider.code}) | html %]</h1>
+
+ <form action="/cgi-bin/koha/admin/identity_providers.pl" id="edit_save" name="edit_save" class="validated" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-edit_save" />
+ <input type="hidden" name="identity_provider_id" value="[%- identity_provider.identity_provider_id | html -%]" />
+ <fieldset class="rows">
+ <legend id="identity_provider_basic">التهيئة الأساسية</legend>
+ <ol>
+ <li>
+ <label for="code" class="required">رمز: </label>
+ <input type="text" name="code" id="code" size="60" class="required" required="required" value="[%- identity_provider.code | html -%]"/>
+ <span class="required">مطلوب</span>
+ <div class="hint">الرمز الذي يحدد موفر الخدمة هذا. يسمح فقط بالأحرف الأبجدية والأرقام وعلامة "_"</div>
+ </li>
+ <li>
+ <label for="description" class="required">الوصف: </label>
+ <input type="text" name="description" id="description" size="60" class="required" required="required" value="[%- identity_provider.description | html -%]"/>
+ <span class="required">مطلوب</span>
+ <div class="hint">اسم سهل الاستخدام لموفر الخدمة هذا</div>
+ </li>
+ <li>
+ <label for="protocol">بروتوكول: </label>
+ <select name="protocol" id="protocol">
+ [% IF identity_provider.protocol == 'OAuth' %]
+ <option value="OAuth" selected="selected">OAuth</option>
+ <option value="OIDC">OIDC</option>
+ <!-- Not implemented yet
+ <option value="LDAP">LDAP</option>
+ <option value="CAS">CAS</option>
+ -->
+ [% ELSE %]
+ <option value="OAuth">OAuth</option>
+ <option value="OIDC" selected="selected">OIDC</option>
+ <!-- Not implemented yet
+ <option value="LDAP">LDAP</option>
+ <option value="CAS">CAS</option>
+ -->
+ [% END %]
+ </select>
+ <div class="hint">اختر البروتوكول الذي يستخدمه موفر الهوية الخارجي هذا</div>
+ </li>
+ </ol>
+ </fieldset>
+
+ <fieldset class="rows">
+ <legend id="identity_provider_advanced">التهيئة المتقدمة</legend>
+ <ol>
+ <li>
+ <label for="config" class="required json">التهيئة: </label>
+ <textarea name="config" id="config" class="required" cols="75" rows="10">[%- identity_provider.config | html -%]</textarea>
+ <span class="required">مطلوب</span>
+ <div class="hint">تهيئة مقدم الخدمة الرئيسية. <button class="more btn btn-ligth" data-target="config"><i class="fa fa-caret-down"></i> المزيد</button></div>
+ <div class="hint more-config" style="display: none">
+ <div>تختلف هذه التهيئة لكل بروتوكول.</div>
+ <div>يوصى بإضافة التهيئة الافتراضية، ثم استبدالها بالقيم المناسبة</div>
+ </div>
+ <div class="hint">
+ <button class="btn btn-ligth defaults" data-default-target="config" id="default-config">إضافة تهيئة [%- identity_provider.protocol | html -%] الافتراضية</button>
+ </div>
+ </li>
+ <li>
+ <label for="mapping" class="required json">تخطيط: </label>
+ <textarea name="mapping" id="mapping" class="required" cols="75" rows="10">[%- identity_provider.mapping | html -%]</textarea>
+ <span class="required">مطلوب</span>
+ <div class="hint">تخطيط نتيجة الموفر لحقول مستفيد كوها. <button class="more btn btn-ligth" data-target="mapping"><i class="fa fa-caret-down"></i> المزيد</button></div>
+ <div class="hint more-mapping" style="display: none">
+ <div>يوصى بإضافة التخطيط الافتراضي، ثم تعديله ليناسب استجابة هذا الموفر</div>
+ <div>تمثل المفاتيح حقول كوها، وتمثل القيم المفاتيح في نتيجة الموفر</div>
+ <div>بالنسبة للقيم المتداخلة في نتائج مقدم الخدمة، يمكنك استخدام فصل النقاط.</div>
+ <div>على سبيل المثال: <i>الاسم الأول: "users.0.name"</i> سيطابق سمة 'الاسم' للكائن الأول في المصفوفة المسماة 'المستخدمين'، ويضعها في حقل 'الاسم الأول'</div>
+ <div>إذا كنت تخطط لاستخدام ميزة التسجيل التلقائي، إما أن <i>معرّف المستخدم</i> أو <i>رقم البطاقة</i> يجب أن يكون موجوداً في هذا التخطيط</div>
+ </div>
+ <div class="hint">
+ <button class="btn btn-ligth defaults" data-default-target="mapping" id="default-mapping">إضافة تخطيط [%- identity_provider.protocol | html -%] افتراضي</button>
+ </div>
+ </li>
+ <li>
+ <label for="matchpoint">نقطة التطابق: </label>
+ <select name="matchpoint" id="matchpoint">
+ [%- IF identity_provider.matchpoint == 'email'      -%]
+ <option value="email" selected="selected">البريد الإلكتروني</option>
+ [%- ELSE -%]
+ <option value="email">البريد الإلكتروني</option>
+ [%- END -%]
+ [%- IF identity_provider.matchpoint == 'userid'     -%]
+ <option value="userid" selected="selected">معرّف المستخدم</option>
+ [%- ELSE -%]
+ <option value="userid">معرّف المستخدم</option>
+ [%- END -%]
+ [%- IF identity_provider.matchpoint == 'cardnumber' -%]
+ <option value="cardnumber" selected="selected">رقم البطاقة</option>
+ [%- ELSE -%]
+ <option value="cardnumber">رقم البطاقة</option>
+ [%- END -%]
+ </select>
+ <div class="hint">حقل مستفيد كوها الذي سيتم استخدامه لمطابقة مستخدم الموفر مع</div>
+ <div class="hint">يجب أن يكون موجوداً في التخطيط</div>
+ </li>
+ <li>
+ <label for="icon_url">عنوان URL للأيقونة: </label>
+ <input type="text" name="icon_url" id="icon_url" size="60"  value="[%- identity_provider.icon_url | html -%]"/>
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input type="submit" value="تقديم" />
+ <a class="cancel" href="/cgi-bin/koha/admin/identity_providers.pl">إلغاء</a>
+ </fieldset>
+ </form>
+
+[% END %]
+
+[% IF op == 'list' %]
+
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="new_identity_provider" href="/cgi-bin/koha/admin/identity_providers.pl?op=add_form"><i class="fa fa-plus"></i> موفر هوية جديد</a>
+ </div>
+
+ <h1>موفرى الهوية</h1>
+ <div class="page-section">
+ <table id="identity_providers">
+ <thead>
+ <tr>
+ <th>رمز</th>
+ <th>الوصف</th>
+ <th>بروتوكول</th>
+ <th data-class-name="actions noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ </table>
+ </div>
+[% END %]
+
+ <div id="delete_confirm_modal" class="modal" tabindex="-1" role="dialog" aria-labelledby="delete_confirm_modal_label" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button type="button" class="closebtn" data-dismiss="modal" aria-hidden="true">×</button>
+ <h3 id="delete_confirm_modal_label">تأكيد حذف موفر الهوية</h3>
+ </div>
+ <div class="modal-body">
+ <div id="delete_confirm_dialog"></div>
+ </div>
+ <div class="modal-footer">
+ <a href="#" class="btn btn-default" id="delete_confirm_modal_button" role="button" data-toggle="modal">حذف</a>
+ <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">إغلاق</button>
+ </div>
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </div> <!-- #delete_confirm_modal -->
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'datatables.inc' %]
+ <script>
+        $(document).ready(function() {
+
+            var identity_providers_url = '/api/v1/auth/identity_providers';
+            window.identity_providers = $("#identity_providers").kohaTable({
+                "ajax": {
+                    "url": identity_providers_url
+                },
+                'language': {
+                    'emptyTable': '<div class="dialog message">'+_("لم يتم تعريف أي موفر هوية.")+'</div>'
+                },
+                "columnDefs": [ {
+                    "targets": [0,1,2],
+                    "render": function (data, type, row, meta) {
+                        if ( type == 'display' ) {
+                            if ( data != null ) {
+                                return data.escapeHtml();
+                            }
+                            else {
+                                return "Default";
+                            }
+                        }
+                        return data;
+                    }
+                } ],
+                "columns": [
+                    {
+                        "data": "code",
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "description",
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": "protocol",
+                        "searchable": true,
+                        "orderable": true
+                    },
+                    {
+                        "data": function( row, type, val, meta ) {
+                            var result = '<a class="btn btn-default btn-xs" role="button" href="/cgi-bin/koha/admin/identity_providers.pl?op=edit_form&amp;identity_provider_id='+ encodeURIComponent(row.identity_provider_id) +'"><i class="fa-solid fa-pencil" aria-hidden="true"></i> '+_("تحرير")+'</a>'+"\n";
+                            result += '<a class="btn btn-default btn-xs delete_identity_provider" role="button" href="#" data-toggle="modal" data-target="#delete_confirm_modal" data-auth-provider-id="'+ encodeURIComponent(row.identity_provider_id) +'" data-auth-provider-code="'+ encodeURIComponent(row.code.escapeHtml()) +'"><i class="fa fa-trash-can" aria-hidden="true"></i> '+_("حذف")+'</a>'+"\n";
+                            result += '<a class="btn btn-default btn-xs edit_domains" role="button" href="/cgi-bin/koha/admin/identity_providers.pl?domain_ops=1&amp;identity_provider_id='+ encodeURIComponent(row.identity_provider_id) +'"><i class="fa fa-cog" aria-hidden="true"></i> '+_("أدر النطاقات")+'</a>';
+                            return result;
+                        },
+                        "searchable": false,
+                        "orderable": false
+                    }
+                ],
+                createdRow: function (row, data, dataIndex) {
+                    if ( data.debug ) {
+                        $(row).addClass('debug');
+                    }
+                },
+            });
+
+            $('#identity_providers').on( "click", '.delete_identity_provider', function () {
+                var identity_provider_id   = $(this).data('auth-provider-id');
+                var identity_provider_code = decodeURIComponent($(this).data('auth-provider-code'));
+
+                $("#delete_confirm_dialog").html(
+                    _("أنت على وشك حذف موفر هوية '%s'.").format(identity_provider_code)
+                );
+                $("#delete_confirm_modal_button").data('auth-provider-id', identity_provider_id);
+                $("#delete_confirm_modal_button").data('auth-provider-code', identity_provider_code);
+            });
+
+            $("#delete_confirm_modal_button").on( "click", function () {
+
+                var identity_provider_id   = $(this).data('auth-provider-id');
+                var identity_provider_code = $(this).data('auth-provider-code');
+
+                $.ajax({
+                    method: "DELETE",
+                    url: identity_providers_url+"/"+identity_provider_id
+                }).success(function() {
+                    window.identity_providers.api().ajax.reload(function (data) {
+                        $("#identity_provider_action_result_dialog").hide();
+                        $("#identity_provider_delete_success").html(_("تم حذف الخادم '%s' بنجاح.").format(identity_provider_code)).show();
+                    });
+                }).fail(function () {
+                    $("#identity_provider_delete_error").html(_("خطأ أثناء حذف الخادم '%s'. يرجى التحقق من السجلات للتفاصيل.").format(identity_provider_code)).show();
+                }).done(function () {
+                    $("#delete_confirm_modal").modal('hide');
+                });
+            });
+
+            $.validator.addMethod('json', function(value, element) {
+                if (this.optional(element) && value === '') return true;
+                try {
+                    JSON.parse(value)
+                } catch (error) {
+                    return false;
+                }
+                return true;
+            }, _("ليس ملف JSON صالح"));
+
+            $.validator.addMethod('alphanum', function(value, element) {
+                if (this.optional(element) && value === '') return true;
+                return /^[a-zA-Z0-9_]+$/.test(value);
+            }, _("يجب أن تحتوي القيمة على أحرف أبجدية أو أرقام أو علامة '_'"));
+
+            $('#config, #mapping').each(function() {
+                $(this).rules('add', {
+                    required: true,
+                    json: true
+                });
+            });
+
+            $('button.more').on('click', function(event) {
+                event.preventDefault();
+                var target = $(this).hide().data('target');
+                $('.more-'+target).show();
+            });
+
+            $('#code').rules('add', {
+                alphanum: true,
+                required: true
+            });
+
+            var defaults = {
+                OIDC: {
+                    config: {
+                        key: "<enter client id>",
+                        secret: "<enter client secret>",
+                        well_known_url: "<enter openid configuration endpoint>",
+                        scope: "openid email"
+                    },
+                    mapping: {
+                        email: "email",
+                        firstname: "given_name",
+                        surname: "family_name"
+                    }
+                },
+                OAuth: {
+                    config: {
+                        key: "<enter client id>",
+                        secret: "<enter client secret>",
+                        authorize_url: "<enter authorization endpoint>",
+                        token_url: "<enter token endpoint>",
+                        userinfo_url: "<enter user info endpoint (optional)>",
+                        scope: "email"
+                    },
+                    mapping: {
+                        email: "email",
+                        firstname: "given_name",
+                        surname: "family_name"
+                    }
+                }
+            };
+
+            $('#protocol').on('change', function() {
+                var protocol = $(this).val();
+                $('#default-config').html(_("إضافة تهيئة %s الافتراضية").format(protocol));
+                $('#default-mapping').html(_("إضافة تخطيط %s افتراضي").format(protocol));
+            });
+
+            $('button.defaults').on('click', function(event) {
+                event.preventDefault();
+                var target = $(this).data('defaultTarget');
+                if($('#'+target).val() !== '' && !confirm(_("هل أنت متأكد من أنك تريد استبدال محتويات %s الحالية؟").format(target))) {
+                    return;
+                }
+                var protocol = $('#protocol').val();
+                $('#'+target).val(JSON.stringify(defaults[protocol][target], null, 2));
+            })
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

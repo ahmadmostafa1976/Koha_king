@@ -1,0 +1,152 @@
+---
+authorities.pref:
+  أداة الربط:
+  - - استخدام ال
+    - choices:
+        Default: الافتراضي
+        FirstMatch: أول تطابق
+        LastMatch: آخر تطابق
+      default: Default
+      pref: LinkerModule
+    - نظام الرابط الفرعي لمطابقة الرؤوس للتسجيلات الإستنادية.
+  - - 'قم بضبط الخيارات التالية لرابط الاستناد:'
+    - class: multi
+      pref: LinkerOptions
+    - (فصل الخيارات بواسطة |).
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام
+      default: yes
+      pref: LinkerRelink
+    - إعادة ربط الرؤوس التي سبق وتم ربطها بتسجيلات الاستناد.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      default: no
+      pref: LinkerKeepStale
+    - الحفاظ على الروابط الموجودة إلى التسجيلات الإستنادية للرؤوس التي لا يستطيع الرابط
+      العثور على مطابقة لها.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام
+      default: no
+      pref: CatalogModuleRelink
+    - بإعادة ربط الرؤوس التي سبق وتم ربطها عند حفظ التسجيلات في نظام الفهرسة الفرعي
+      تلقائياً (يتطلب <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AutoLinkBiblios'>AutoLinkBiblios</a>).
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      default: no
+      pref: AutoLinkBiblios
+    - محاولة ربط العناوين تلقائيًا عند حفظ التسجيلات في نظام الفهرسة الفرعي،مع اتباع
+      <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=LinkerRelink'>LinkerRelink</a>
+      and <a href='/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=CatalogModuleRelink'>CatalogModuleRelink</a>
+      لتحرير التسجيلات.
+  - - choices:
+        '0': عدم القيام بـ
+        '1': القيام بـ
+      default: no
+      pref: LinkerConsiderThesaurus
+    - قارن المصدر لرؤوس 6XX بمصدر المكنز لتسجيلات الاستناد عند الربط. قد يتطلب تفعيل
+      هذا التفضيل إعادة الفهرسة،وقد يؤدي إلى إنشاء تسجيلات استناد جديدة إذا تم تفعيل
+      AutoCreateAuthorities.
+  عام:
+  - - choices:
+        '0': عدم عرض
+        '1': عرض
+      default: no
+      pref: AuthDisplayHierarchy
+    - التسلسلات الهرمية لمصطلح أشمل/ مصطلح أضيق عند عرض الاستنادات.
+  - - استخدم النص التالي لتحرير كيفية تحكم تسجيلات الاستناد في الحقول الببليوغرافية
+      المرفقة (ومن الممكن أيضا الحقل الفرعي $2).<br>
+    - 'يتم تخطي السطور التي تبدأ بعلامة التعليق (#). يجب أن يكون كل سطر بالشكل: (marc21|unimarc),
+      tag, ind1:(auth1|auth2|some_value), ind2:(auth1|auth2|thesaurus|some_value).<br>'
+    - يشير auth1 و auth2 هنا إلى مؤشرات تسجيلة الاستناد، الوسم هو رقم الحقل الببليوغرافي
+      أو علامة النجمة (*)، و some_value هي قيمة ثابتة (حرف واحد).<br>
+    - يشير مكنز خيار مارك21 إلى المؤشرات اليتي يتحكم بها حقل الاستناد 008/11 و 040$f.
+    - pref: AuthorityControlledIndicators
+      type: textarea
+  - - عند تحرير التسجيلات،
+    - choices:
+        '0': عدم إلزام
+        '1': إلزام
+      default: yes
+      pref: RequireChoosingExistingAuthority
+    - للمفهرسين بالإشارة إلى الاستنادات الحالية. إذا تم التعيين إلى عدم، فيمكن للمفهرسين
+      إدخال المصطلحات غير الخاضعة للتحكم يدوياً في الحقول الخاضعة للتحكم
+  - - عند تحرير التسجيلات،
+    - choices:
+        '0': عدم توليد
+        '1': توليد
+      default: yes
+      pref: AutoCreateAuthorities
+    - التسجيلات الإستنادية المفقودة (يجب ضبط التفضيل (<a href="/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=RequireChoosingExistingAuthority">RequireChoosingExistingAuthority</إلى"لا
+      يتطلب" ليكون للتأثيرات فاعلية).
+  - - عند تعديل تسجيلة الاستناد، لا تقم بتحديث التسجيلات الببليوغرافية المرفقة إذا
+      تجاوز العدد
+    - default: 50
+      pref: AuthorityMergeLimit
+    - تسجيلات. (أعلى هذا الحد، سيقوم كرون merge_authority بدمجها)
+    - <br><strong>ملاحظة</strong> يتطلب هذا التفضيل كرون  <code>misc/cronjobs/merge_authorities.pl</code>.
+      اطلب من مدير نظامك جدولته.
+  - - 'استخدم النص التالي لمحتويات حقل تحكم استناد مارك21 008 الموضع 06-39 (عناصر
+      بيانات الطول الثابت). لا تقم بإدراج التاريخ (الموضع 00-05):'
+    - class: code
+      default: '|| aca||aabn           | a|a     d'
+      pref: MARCAuthorityControlField008
+      type: textarea
+  - - choices:
+        '0': عدم استخدام
+        '1': استخدام
+      default: yes
+      pref: UseAuthoritiesForTracings
+    - أرقام تسجيلة الاستناد بدلا من من المقاطع النصية لعمليات البحث من تعقب الموضوع.
+  - - استخدم النص التالي لمحتويات حقل استناد يونيمارك 100 الموضع 08-35 (عناصر بيانات
+      الطول الثابت). لا تقم بإدراج التاريخ (الموضع 00-07)
+    - class: code
+      default: afrey50      ba0
+      pref: UNIMARCAuthorityField100
+      type: textarea
+  - - عند تحديث التسجيلات الببليوغرافية من تسجيلة استناد مرفقة ("دمج")، قم بالتعامل
+      مع حقول التسجيلة الببليوغرافية ذات الصلة في
+    - choices:
+        loose: سائب
+        strict: مقيد
+      default: loose
+      pref: AuthorityMergeMode
+    - في وضع التقييد يتم حذف الحقول الفرعية التي لا يتم العثور عليها في تسجيلة الاستناد.
+      الوضع السائب سوف يحتفظ بها. الوضع السائب هو ما يتم اختياره غالبا ولا يزال هو
+      الافتراضي.
+  - - 'استخدم النص التالي كقيمة افتراضيةلحقل 667$a في تسجيلات استناد مارك21 (يجب ألا
+      يتطلب <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=RequireChoosingExistingAuthority''>RequireChoosingExistingAuthority</a>
+      ويجب أن يسمح بـ <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AutoCreateAuthorities''>AutoCreateAuthorities</a>):'
+    - class: code
+      default: Machine generated authority record
+      pref: GenerateAuthorityField667
+      type: textarea
+  - - 'استخدم النص التالي كقيمة افتراضيةللحقل 670$a من تسجيلات استناد مارك21 (يجب
+      ألا يتطلب <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=RequireChoosingExistingAuthority''>RequireChoosingExistingAuthority</a>
+      ويجب أن يسمح بـ <a href=''/cgi-bin/koha/admin/preferences.pl?op=search&searchfield=AutoCreateAuthorities''>AutoCreateAuthorities</a>):'
+    - class: code
+      default: Work cat.
+      pref: GenerateAuthorityField670
+      type: textarea
+  - - عند عرض تفاصيل الاستناد، قم بضبط الافتراضي إلى
+    - choices:
+        '0': ‫0XX
+        '1': ‫1XX
+        '2': ‫2XX
+        '3': ‫3XX
+        '4': ‫4XX
+        '5': ‫5XX
+        '6': ‫6XX
+        '7': ‫7XX
+        '8': ‫8XX
+        '9': ‫9XX
+      default: '0'
+      pref: DefaultAuthorityTab
+    - إذا لم يكن التبويب المحدد موجوداً، سيتم ضبط افتراضي العرض إلى التبويب الأول.
+  - - عرض حقول/حقول مارك الفرعية
+    - pref: AdditionalFieldsInZ3950ResultAuthSearch
+    - 'في عمود ''حقول إضافية'' من نتائج بحث Z39.50 (استخدم الفاصلة كعلامة محددة، مثال:
+      "<code>001, 035$a</code>")'

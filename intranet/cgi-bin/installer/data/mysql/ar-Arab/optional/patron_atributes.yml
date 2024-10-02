@@ -1,0 +1,17 @@
+---
+description:
+- 'أنواع سمات المستفيد المفيدة:'
+- '* SHOW_BCODE - عرض الباركود في مدرجات مواد شاشة ملخص المستفيد'
+tables:
+- borrower_attribute_types:
+    multiline: []
+    rows:
+    - authorised_value_category: YES_NO
+      code: SHOW_BCODE
+      description: عرض الباركود في قوائم مواد شاشة الملخص
+      opac_display: 1
+      repeatable: 0
+      staff_searchable: 0
+      unique_id: 0
+    translatable:
+    - description

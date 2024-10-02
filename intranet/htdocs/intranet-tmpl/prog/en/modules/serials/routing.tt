@@ -1,0 +1,182 @@
+[% USE raw %]
+[% USE KohaDates %]
+[% SET footerjs = 1 %]
+[% PROCESS 'i18n.inc' %]
+[% PROCESS 'patron-search.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% IF ( op ) %]Create routing list[% ELSE %]Edit routing list[% END %] &rsaquo; [% title | html %] &rsaquo; Serials &rsaquo; Koha</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+<body id="ser_routing" class="ser">
+[% WRAPPER 'header.inc' %]
+    [% INCLUDE 'serials-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+    [% WRAPPER breadcrumbs %]
+        [% WRAPPER breadcrumb_item %]
+            <a href="/cgi-bin/koha/serials/serials-home.pl">Serials</a>
+        [% END %]
+        [% UNLESS ( blocking_error ) %]
+            [% WRAPPER breadcrumb_item %]
+                <a href="/cgi-bin/koha/serials/subscription-detail.pl?subscriptionid=[% subscriptionid | uri %]"><em>[% title | html %]</em></a>
+            [% END %]
+            [% WRAPPER breadcrumb_item bc_active= 1 %]
+                [% IF ( op ) %]
+                    <span>Create routing list</span>
+                [% ELSE %]
+                    <span>Edit routing list</span>
+                [% END %]
+            [% END %]
+        [% END # UNLESS blocking_error %]
+    [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+    <div class="row">
+        <div class="col-sm-10 col-sm-push-2">
+            <main>
+                [% INCLUDE 'messages.inc' %]
+
+[% IF ( op ) %]
+<h1>Create routing list for <em>[% title | html %]</em></h1>
+[% ELSE %]
+<h1>Edit routing list for <em>[% title | html %]</em></h1>
+[% END %]
+
+<form method="post" action="routing.pl">
+    [% INCLUDE 'csrf-token.inc' %]
+<input type="hidden" name="op" value="cud-save" />
+<input type="hidden" name="subscriptionid" value="[% subscriptionid | html %]" />
+<fieldset class="rows">
+	<ol>
+		<li><label for="date_selected">Issue: </label>
+<select name="date_selected" id="date_selected">
+    [% FOREACH date IN dates %]
+        [% IF ( date.selected ) %]
+            <option value="[% date.serialseq | html %] ([% date.publisheddate | html %])" selected="selected">[% date.serialseq | html %] ([% date.publisheddate | $KohaDates %])</option>
+        [% ELSE %]
+            <option value="[% date.serialseq | html %] ([% date.publisheddate | html %])">[% date.serialseq | html %] ([% date.publisheddate | $KohaDates %])</option>
+        [% END %]
+[% END %]
+</select> [% issue | html %]</li>
+
+<li>
+    <span class="label">Recipients:</span>
+    [% IF memberloop %]
+        <table style="clear:none;margin:0;">
+            <tr><th>Name</th>
+                <th>Rank</th>
+                <th>Delete</th>
+            </tr>
+            [% USE m_loop = iterator(memberloop) %]
+            [% FOREACH member IN m_loop %]
+            <tr><td>[% member.name | html %]</td>
+                <td>
+                    <select name="itemrank" class="itemrank" data-subscriptionid="[% subscriptionid | html %]" data-routingid="[% member.routingid | html %]">
+                    [% rankings = [1 .. m_loop.size] %]
+                    [% SET cur_rank = loop.count() %]
+                    [% FOREACH r IN rankings %]
+                        [% IF r == cur_rank %]
+                          <option selected="selected" value="[% r | html %]">[% r | html %]</option>
+                        [% ELSE %]
+                          <option value="[% r | html %]">[% r | html %]</option>
+                        [% END %]
+                    [% END %]
+                    </select>
+                </td>
+                <td><a class="btn btn-default btn-xs" href="/cgi-bin/koha/serials/routing.pl?routingid=[% member.routingid | html %]&amp;subscriptionid=[% subscriptionid | html %]&amp;op=delete"><i class="fa fa-trash-can"></i> Delete</a></td>
+            </tr>
+            [% END %]
+        </table>
+    [% END %]
+    <input type="hidden" id="new_recipients" name="new_recipients" value="">
+
+    <p style="margin-left:10em;">
+        <a href="#patron_search_modal" id="add_recipients" data-toggle="modal"><i class="fa fa-plus"></i> Add recipients</a>
+        [% IF memberloop %]
+            <a href="/cgi-bin/koha/serials/routing.pl?subscriptionid=[% subscriptionid | uri %]&amp;op=delete"><i class="fa fa-trash-can"></i> Delete all</a>
+        [% END %]
+    </p>
+</li>
+
+	<li><label for="notes">Notes:</label><textarea name="notes" id="notes" rows="3" cols="50">[% routingnotes | html %]</textarea></li>
+	</ol>
+
+</fieldset>
+<fieldset class="action"><input type="submit" name="submit" class="btn btn-primary" value="Save" /></fieldset>
+</form>
+
+            </main>
+        </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+        <div class="col-sm-2 col-sm-pull-10">
+            <aside>
+                [% INCLUDE 'serials-menu.inc' %]
+            </aside>
+        </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+     </div> <!-- /.row -->
+[% MACRO jsinclude BLOCK %]
+    <script>
+        $(document).ready(function(){
+            $(".itemrank").on("change",function(){
+                var subscriptionid = $(this).data("subscriptionid");
+                var routingid = $(this).data("routingid");
+                reorder_item( subscriptionid, routingid, $(this).val());
+            });
+        });
+        function reorder_item(sid,rid,rank){
+            var mylocation = 'reorder_members.pl?subscriptionid='+sid+'&routingid='+rid+'&rank='+rank;
+            window.location.href=mylocation;
+        }
+
+        function add_user(borrowernumber) {
+            let users = $("#new_recipients").val().split(':');
+            if ( !users.includes(borrowernumber) ) {
+                users.push(borrowernumber);
+            }
+            users = [...new Set(users)]; // unique
+            $("#new_recipients").val(users.filter(Number).join(':')); // remove empty and join
+        }
+
+    </script>
+
+    [% INCLUDE 'select2.inc' %]
+    [% SET columns = ['cardnumber','name','category','branch','action'] %]
+    [% PROCESS patron_search_modal columns => columns, modal_title => t("Add recipients") %]
+    [% PROCESS patron_search_js columns => columns, actions => ["add"], preview_on_name_click => 1 %]
+
+    <script>
+        $(document).on(
+            "hidden.bs.modal",
+            "#patron_search_modal",
+            add_new_recipients);
+
+        function add_new_recipients(e){
+            e.preventDefault();
+            let borrowernumbers = $("#new_recipients").val();
+            if(!borrowernumbers.length > 0) {
+                return;
+            }
+            $.ajax({
+                data: {
+                    subscriptionid: [% subscriptionid | html %],
+                    borrowernumbers,
+                    op: 'cud-add_new_recipients',
+                    csrf_token: $('meta[name="csrf-token"]').attr('content'),
+                },
+                type: 'POST',
+                url: '/cgi-bin/koha/serials/routing.pl',
+                success: function (data) {
+                    document.location.href = '/cgi-bin/koha/serials/routing.pl?subscriptionid=[% subscriptionid | uri %]';
+                    return false;
+                },
+                error: function (data) {
+                    alert(data);
+                },
+            });
+        }
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

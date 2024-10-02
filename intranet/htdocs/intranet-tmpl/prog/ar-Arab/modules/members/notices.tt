@@ -1,0 +1,205 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Koha %]
+[% USE AuthorisedValues %]
+[% USE Branches %]
+[% USE KohaDates %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Sent notices for") | html %] [% INCLUDE 'patron-title.inc' no_html = 1 %]
+ [% t("Patrons") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+<style>
+    .notice { display: none; }
+</style>
+</head>
+
+<body id="pat_notices" class="pat">
+ [% WRAPPER 'header.inc' %]
+ [% INCLUDE 'patron-search-header.inc' %]
+[% END %]
+
+ [% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/members-home.pl">المستفيدين</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% borrowernumber | uri %]">
+ [% INCLUDE 'patron-title.inc' %]
+ </a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>الإخطارات المرسلة</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+ [% END #/ WRAPPER sub-header.inc %]
+
+ <div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% INCLUDE 'members-toolbar.inc' %]
+ <h1>الإخطارات المرسلة لـ [% INCLUDE 'patron-title.inc' %]</h1>
+
+ [% IF ( QUEUED_MESSAGES ) %]
+ <div class="page-section">
+ <table id="noticestable">
+ <thead>
+ <tr>
+ <th>الإخطار</th>
+ <th>نوع</th>
+ <th>حالة</th>
+ <th>تم التحديث في</th>
+ <th>وقت الإنشاء</th>
+ <th>ملاحظة التسليم</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH QUEUED_MESSAGE IN QUEUED_MESSAGES %]
+ <tr>
+ <td>
+ <a class="notice-title" data-noticeid="[% QUEUED_MESSAGE.message_id | html %]" href="/cgi-bin/koha/members/notices.pl?borrowernumber=[% borrowernumber | uri %]&amp;noticeid=[% QUEUED_MESSAGE.message_id | uri %]">[% QUEUED_MESSAGE.subject | html %]</a>
+ <iframe class="notice" id="notice[% QUEUED_MESSAGE.message_id | html %]" srcdoc="[% QUEUED_MESSAGE.html_content | html %]"></iframe>
+ </td>
+ <td>
+ [% IF ( QUEUED_MESSAGE.message_transport_type == 'email' ) %]<span>بريد إلكتروني</span>
+ [% ELSIF ( QUEUED_MESSAGE.message_transport_type == 'print' ) %]<span>طباعة</span>
+ [% ELSIF ( QUEUED_MESSAGE.message_transport_type == 'feed' ) %]<span>تلقيمة</span>
+ [% ELSIF ( QUEUED_MESSAGE.message_transport_type == 'sms' ) %]<span>رسالة نصية قصيرة</span>
+ [% ELSE %][% QUEUED_MESSAGE.message_transport_type | html %][% END %]
+ </td>
+ <td>
+ [% IF ( QUEUED_MESSAGE.status == 'sent' ) %]<span>تم الإرسال</span>
+ [% ELSIF ( QUEUED_MESSAGE.status == 'pending' ) %]<span>في الانتظار</span>
+ [% ELSIF ( QUEUED_MESSAGE.status == 'failed' ) %]<span>فشل</span>
+ [% ELSIF ( QUEUED_MESSAGE.status == 'deleted' ) %]<span>تم الحذف</span>
+ [% ELSE %][% QUEUED_MESSAGE.status | html %][% END %]
+ [% IF ( QUEUED_MESSAGE.status != 'pending' ) %]
+ <div class="notice">
+ <form id="resend_notice[% QUEUED_MESSAGE.message_id | html %]" action="/cgi-bin/koha/members/notices.pl?borrowernumber=[% borrowernumber | html %]" method="POST">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-resend_notice" />
+ <input type="hidden" name="borrowernumber" value="[% borrowernumber | html %]" />
+ <input type="hidden" name="message_id" value="[% QUEUED_MESSAGE.message_id | html %]" />
+ </form>
+ </div>
+ [% END %]
+ </td>
+ <td data-order="[% QUEUED_MESSAGE.updated_on | html %]">[% QUEUED_MESSAGE.updated_on | $KohaDates  with_hours => 1 %]</td>
+ <td data-order="[% QUEUED_MESSAGE.time_queued | html %]">[% QUEUED_MESSAGE.time_queued | $KohaDates  with_hours => 1 %]</td>
+ <td>
+ [% IF ( QUEUED_MESSAGE.failure_code ) %]
+ [% IF ( QUEUED_MESSAGE.failure_code == "INVALID_BORNUMBER" ) %]<span class="clearfix">رقم مستعير غير صالح [% borrowernumber | html %]</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'NO_EMAIL' ) %]<span class="clearfix">تعذر العثور على عنوان بريد إلكتروني لهذا المستفيد</span>
+ [% ELSIF (matches = QUEUED_MESSAGE.failure_code.match('INVALID_EMAIL:(\w+)') ) %]<span class="clearfix">تم العثور على عنوان بريد إلكتروني [% matches.0 | html %] غير صالح [% borrowernumber | html %]</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'NO_FROM' ) %]<span class="clearfix">عنوان البريد الإلكتروني للراسل مفقود</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'MISSING_SMS' ) %]<span class="clearfix">رقم الرسائل القصيرة مفقود</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'DUPLICATE_MESSAGE' ) %]<span class="clearfix">الرسالة مكررة</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'NO_NOTES' ) %]<span class="clearfix">لا توجد ملاحظات من برنامج تشغيل الرسائل القصيرة</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'SMS_SEND_DRIVER_MISSING' ) %]<span class="clearfix">The SMS driver could not be loaded</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == 'SENDMAIL' ) %]<span class="clearfix">فشل بريد إلكتروني لم تتم معالجته، تحقق من السجلات للحصول على مزيد من التفاصيل</span>
+ [% ELSIF ( QUEUED_MESSAGE.failure_code == "UNKNOWN_ERROR" ) %]<span class="clearfix">خطأ غير معروف</span>
+ [% ELSE %]
+ <span class="clearfix">Message failed to send with the following error: [% QUEUED_MESSAGE.failure_code | html %]</span>
+ [% END %]
+ [% END %]
+ [% IF ( QUEUED_MESSAGE.status == 'sent' ) %]
+ [% IF ( QUEUED_MESSAGE.from_address ) %]
+ <span class="clearfix"><span class="label">من:</span> [% QUEUED_MESSAGE.from_address | html %]</span>
+ [% END %]
+ [% IF ( QUEUED_MESSAGE.to_address ) %]
+ <span class="clearfix"><span class="label">إلى:</span> [% QUEUED_MESSAGE.to_address | html %]</span>
+ [% END %]
+ [% IF ( QUEUED_MESSAGE.cc_address ) %]
+ <span class="clearfix"><span class="label">CC:</span> [% QUEUED_MESSAGE.cc_address | html %]</span>
+ [% END %]
+ [% END %]
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div> <!-- /.page-section -->
+ [% ELSE %]
+ <div class="dialog message">لا يوجد تسجيلة في أي الرسائل التي تم إرسالها إلى هذا المستفيد.</div>
+ [% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'circ-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+ <!-- Modal -->
+ <div class="modal" id="noticeModal" tabindex="-1" aria-labelledby="noticeModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button aria-label="إغلاق" class="closebtn" data-dismiss="modal" type="button">
+ <span aria-hidden="true">&times;</span>
+ </button>
+ <h5 class="modal-title" id="noticeModalLabel">الإخطار</h5>
+ </div>
+ <div class="modal-body">
+ ...
+ </div>
+ <div class="modal-footer">
+ <button type="button" id="resend-notice" class="btn btn-default" style="display:none"><i class="fa-solid fa-rotate" aria-hidden="true"></i> إعادة إرسال</button>
+ <button type="button" class="btn btn-default deny cancel" data-dismiss="modal"><i class="fa fa-times"></i> إغلاق</button>
+ </div>
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </div> <!-- /.modal -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'datatables.inc' %]
+ <script>
+        $(document).ready(function() {
+            $("#noticestable").dataTable($.extend(true, {}, dataTablesDefaults, {
+                "order": [[ 3, "desc" ]],
+                "pagingType": "full"
+            }));
+
+            $("#noticestable").on("click", ".notice-title", function(e){
+                e.preventDefault();
+                var title = $(this).text();
+                var noticeid = $(this).data("noticeid");
+                var body = $("#notice" + noticeid ).attr("srcdoc");
+                if( $("#resend_notice" + noticeid ).length ){
+                    $("#resend-notice").show();
+                }
+                $("#resend-notice").data("noticeid", noticeid );
+                $("#noticeModalLabel").text( title );
+                $("#noticeModal .modal-body").html( body );
+                $("#noticeModal").modal("show");
+            });
+
+            $("#resend-notice").on("click", function(e){
+                e.preventDefault();
+                var noticeid = $(this).data("noticeid");
+                $("#resend_notice" + noticeid ).submit();
+            });
+
+            $("#noticeModal").on("hide.bs.modal", function(){
+                $("#resend-notice").removeData("noticeid").hide();
+                $("#noticeModalLabel").text("");
+                $("#noticeModal .modal-body").html("");
+            });
+        });
+    </script>
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

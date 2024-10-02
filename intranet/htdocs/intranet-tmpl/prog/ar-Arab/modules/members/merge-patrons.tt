@@ -1,0 +1,341 @@
+[% USE raw %]
+[% USE Asset %]
+[% USE Branches %]
+[% USE Categories %]
+[% USE KohaDates %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("Merge patron records") | html %] &rsaquo;
+ [% t("Patrons") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% FILTER collapse %]
+ <style>
+        ins {
+            background-color: #e6ffe6;
+        }
+        del {
+            background-color: #ffe6e6;
+        }
+        .col0,
+        .col1 {
+            display: none;
+        }
+        .col3 ins,
+        .col2 del {
+            display: none;
+        }
+        #col-label,
+        .col2,
+        .col3 {
+            border-right: 1px solid #EEE;
+            flex-grow: 1;
+            margin-right:1em;
+        }
+        #col-label {
+            font-family: monospace;
+        }
+        #col-label div {
+            white-space: none;
+        }
+        .compare {
+            display: flex;
+        }
+        .modal-lg {
+            width: 90%;
+        }
+    </style>
+[% END %]
+</head>
+<body id="pat_merge" class="pat">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'patron-search-header.inc' %]
+[% END %]
+
+[% BLOCK display_names %]
+ [% SWITCH rs %]
+ [% CASE 'Accountline'           %]<span>سطور الحساب</span>
+ [% CASE 'ArticleRequest'        %]<span>طلبات المقال</span>
+ [% CASE 'BorrowerAttribute'     %]<span>سمات المستفيد الموسعة</span>
+ [% CASE 'BorrowerDebarment'     %]<span>قيود المستفيد</span>
+ [% CASE 'BorrowerFile'          %]<span>ملفات المستفيدين</span>
+ [% CASE 'BorrowerModification'  %]<span>طلبات تعديل المستفيد</span>
+ [% CASE 'ClubEnrollment'        %]<span>اشتراكات النادي</span>
+ [% CASE 'Issue'                 %]<span>الإعارات</span>
+ [% CASE 'ItemsLastBorrower'     %]<span>وضع علامة كآخر مستعير للمادة</span>
+ [% CASE 'Linktracker'           %]<span>نقرات الرابط التي تم تتبعها</span>
+ [% CASE 'Message'               %]<span>رسائل المستفيد</span>
+ [% CASE 'MessageQueue'          %]<span>إخطارات المستفيد</span>
+ [% CASE 'OldIssue'              %]<span>الإعارات السابقة</span>
+ [% CASE 'OldReserve'            %]<span>حجوزات مملوءة</span>
+ [% CASE 'Rating'                %]<span>تقييمات</span>
+ [% CASE 'Reserve'               %]<span>الحجوزات الحالية</span>
+ [% CASE 'Review'                %]<span>مراجعات</span>
+ [% CASE 'Statistic'             %]<span>إحصائيات</span>
+ [% CASE 'SearchHistory'         %]<span>عمليات البحث التاريخية</span>
+ [% CASE 'Suggestion'            %]<span>مقترحات الشراء</span>
+ [% CASE 'TagAll'                %]<span>الوسوم</span>
+ [% CASE 'Virtualshelfcontent'   %]<span>إدراج المواد</span>
+ [% CASE 'Virtualshelfshare'     %]<span>مشاركات القائمة</span>
+ [% CASE 'Virtualshelve'         %]<span>قوائم</span>
+ [% CASE %][% rs | html %]
+ [% END %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/members/members-home.pl">المستفيدين</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>دمج تسجيلات المستفيد</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2">
+ [% INCLUDE 'messages.inc' %]
+ <h1>دمج تسجيلات المستفيد</h1>
+
+ [% IF op == 'show' %]
+ [% IF patrons.count > 1 %]
+ [% IF ( patrons.count == 2 ) %]
+ <div id="toolbar" class="btn-toolbar">
+ <div class="btn-group">
+ <button class="btn btn-default" id="compare_patrons">
+ <i class="fa fa-arrows-h"></i> قارن المستفيدين </button>
+ </div>
+ </div>
+ [% END %]
+
+ <p>حدد مستفيد للاحتفاظ به. سيتم نقل البيانات من المستفيدين الآخرين إلى تسجيلة هذا المستفيد بينما سيتم حذف تسجيلات المستفيدين الآخرين.</p>
+
+ <form method="post" action="merge-patrons.pl" id="patron-merge-form">
+ [% INCLUDE 'csrf-token.inc' %]
+ <table id="patron-merge-table" class="datatable">
+ <thead>
+ <tr>
+ <th>&nbsp;</th>
+ <th>بطاقة</th>
+ <th>الاسم</th>
+ <th>تاريخ الميلاد</th>
+ <th>فئة</th>
+ <th>المكتبة</th>
+ <th>تنتهي في</th>
+ </tr>
+ </thead>
+
+ <tbody>
+ [% FOREACH p IN patrons %]
+ <tr>
+ <td><input class="keeper" type="radio" name="keeper" value="[% p.id | html %]" data-borrowernumber="[% p.id | html %]" id="keeper_[% p.id | html %]" /></td>
+ <td>
+ <label for="keeper_[% p.id | html %]">
+ <strong>[% p.cardnumber | html %]</strong>
+ </label>
+ </td>
+ <td>
+ <a target="_blank" href="/cgi-bin/koha/members/moremember.pl?borrowernumber=[% p.borrowernumber | uri %]">
+ [% INCLUDE 'patron-title.inc' patron = p %]
+ <i class="fa-solid fa-window-restore"></i>
+ </a>
+ </td>
+ <td>[% p.dateofbirth | $KohaDates %]</td>
+ <td>[% Categories.GetName( p.categorycode ) | html %] ([% p.categorycode | html %])</td>
+ <td>[% Branches.GetName( p.branchcode ) | html %]</td>
+ <td>[% p.dateexpiry | $KohaDates %]</td>
+ [% END %]
+ </tbody>
+ </table>
+
+ <fieldset class="action">
+ [% FOREACH p IN patrons %]
+ <input type="hidden" name="id" value="[% p.id | html %]" />
+ [% END %]
+ <input type="hidden" name="op" value="cud-merge" />
+ <input class="btn btn-primary" id="merge-patrons" type="submit" value="دمج المستفيدين" />
+ [% PROCESS 'members-patron-selections.inc' id="patron-merge-form" %]
+ </fieldset>
+
+ [% ELSE %]
+ <div class="dialog alert">خطأ: يجب تحديد مستفيدين اثنين أو أكثر للدمج</div>
+ [% END %]
+ </form>
+ [% ELSIF op == 'cud-merge' %]
+ <h4>نتائج</h4>
+ [% IF error %]
+ [% IF error == 'INVALID_KEEPER' %]
+ <div class="dialog alert">لقد فشل الدمج! المستفيد الذي قررت الاحتفاظ به غير صالح.</div>
+ [% ELSE %]
+ <div class="dialog alert">لقد فشل الدمج! تم الإبلاغ عن حدوث الخطأ التالي: [% error | html %].</div>
+ [% END %]
+ [% ELSIF !results.merged.keys.size %]
+ <div class="dialog alert">لم يتم العثور على مستفيدين صالحين للدمج.</div>
+ [% ELSE %]
+ <p>
+ تم دمج تسجيلات المستفيد في <a href="moremember.pl?borrowernumber=[% keeper.id | uri %]">[% INCLUDE 'patron-title.inc' patron = keeper %]</a>
+ </p>
+
+ [% FOREACH pair IN results.merged.pairs %]
+ [% SET patron = pair.value.patron %]
+
+ <h5>[% INCLUDE 'patron-title.inc' %]</h5>
+
+ [% FOREACH r IN pair.value.updated.pairs %]
+ [% SET name = r.key %]
+ [% SET count = r.value %]
+ [% IF count %]
+ <p>
+ <span>[% count | html %] [% PROCESS display_names rs = name %] تم نقله.</span>
+ [% IF name == 'Reserve' %]
+ <strong>يوصى بالتحقق من وجود حجوزات متكررة وحلها نظرًا للدمج.</strong>
+ [% END %]
+ </p>
+ [% END %]
+ [% END %]
+ [% END %]
+ [% END %]
+
+ [% UNLESS error %]
+ <a class="btn btn-default" href="moremember.pl?borrowernumber=[% keeper.id | html %]">عرض تسجيلة المستفيد</a>
+ [% END %]
+ [% END %]
+ </div>
+ </div>
+
+ <!-- Modal -->
+ <div class="modal" id="compareModal" tabindex="-1" role="dialog" aria-labelledby="compareModalLabel">
+ <div class="modal-dialog modal-lg" role="document">
+ <div class="modal-content">
+ <div class="modal-header">
+ <button aria-label="إغلاق" class="closebtn" data-dismiss="modal" type="button"><span aria-hidden="true">&times;</span></button>
+ <h4 class="modal-title" id="compareModalLabel">قارن المستفيدين للدمج</h4>
+ </div>
+ <div class="modal-body">
+ <div class="compare">
+ <div id="col-label">
+ <div><strong>الاسم:</strong></div>
+ <div><strong>الحروف الأولى:</strong></div>
+ <div><strong>اسم آخر:</strong></div>
+ <div><strong>المكتبة:</strong></div>
+ <div><strong>رقم البطاقة:</strong></div>
+ <div><strong>فئة:</strong></div>
+ <br />
+ <div><strong>سطر العنوان 1:</strong></div>
+ <div><strong>سطر العنوان 2:</strong></div>
+ <div><strong>المدينة:</strong></div>
+ <div><strong>المحافظة:</strong></div>
+ <div><strong>الرمز البريدى:</strong></div>
+ <div><strong>البلد:</strong></div>
+ <br />
+ <div><strong>تاريخ التسجيل:</strong></div>
+ <div><strong>تاريخ التجديد:</strong></div>
+ <div><strong>تاريخ الانتهاء:</strong></div>
+ <div><strong>تاريخ الميلاد:</strong></div>
+ <div><strong>مقيدة:</strong></div>
+ <div><strong>البريد الكتروني الأساسي:</strong></div>
+ <div><strong>بريد إلكتروني ثانوي:</strong></div>
+ <div><strong>رقم الهاتف الأساسي:</strong></div>
+ <div><strong>رقم هاتف ثانوي:</strong></div>
+ <div><strong>هاتف آخر:</strong></div>
+ <div><strong>النوع:</strong></div>
+ <div><strong>تم التحديث في:</strong></div>
+ <div><strong>اسم المستخدم:</strong></div>
+ </div>
+
+ [% FOREACH p IN patrons %]
+ <div id="col-[% p.borrowernumber | html %]-orig"class="col[% loop.index | html %]">
+<!-- <pre> block is unindented to avoid unwanted whitespace -->
+<pre>
+[% IF ( p.surname ) %][% p.surname | html %], [% p.firstname | html %][% ELSE %]-[% END %]
+[% IF ( p.initials ) %][% p.initials | html %][% ELSE %]-[% END %]
+[% IF ( p.othernames ) %][% p.othernames | html %][% ELSE %]-[% END %]
+[% IF ( p.branchcode ) %][% p.branchcode | html %][% ELSE %]-[% END %]
+[% IF ( p.cardnumber ) %][% p.cardnumber | html %][% ELSE %]-[% END %]
+[% IF ( p.categorycode ) %][% p.categorycode | html %][% ELSE %]-[% END %]
+
+[% IF ( p.address ) %][% p.address | html %][% ELSE %]-[% END %]
+[% IF ( p.address2 ) %][% p.address2 | html %][% ELSE %]-[% END %]
+[% IF ( p.city ) %][% p.city | html %][% ELSE %]-[% END %]
+[% IF ( p.state ) %][% p.state | html %][% ELSE %]-[% END %]
+[% IF ( p.zipcode ) %][% p.zipcode | html %][% ELSE %]-[% END %]
+[% IF ( p.country ) %][% p.country | html %][% ELSE %]-[% END %]
+
+[% IF ( p.dateenrolled ) %][% p.dateenrolled | html %][% ELSE %]-[% END %]
+[% IF ( p.date_renewed ) %][% p.date_renewed | html %][% ELSE %]-[% END %]
+[% IF ( p.dateexpiry ) %][% p.dateexpiry | html %][% ELSE %]-[% END %]
+[% IF ( p.dateofbirth ) %][% p.dateofbirth | html %][% ELSE %]-[% END %]
+[% IF ( p.debarred ) %][% p.debarred | html %][% ELSE %]-[% END %]
+[% IF ( p.email ) %][% p.email | html %][% ELSE %]-[% END %]
+[% IF ( p.emailpro ) %][% p.emailpro | html %][% ELSE %]-[% END %]
+[% IF ( p.phone ) %][% p.phone | html %][% ELSE %]-[% END %]
+[% IF ( p.phonepro ) %][% p.phonepro | html %][% ELSE %]-[% END %]
+[% IF ( p.mobile ) %][% p.mobile | html %][% ELSE %]-[% END %]
+[% IF ( p.sex ) %][% p.sex | html %][% ELSE %]-[% END %]
+[% IF ( p.updated_on ) %][% p.updated_on | html %][% ELSE %]-[% END %]
+[% IF ( p.userid ) %][% p.userid | html %][% ELSE %]-[% END %]
+</pre>
+ </div>
+ [% END %]
+ [% FOREACH p IN patrons %]
+ <div id="col-[% p.borrowernumber | html %]-diff" class="col[% ( loop.index + 2 ) | html %]"><pre></pre></div>
+ [% END %]
+ </div>
+ </div>
+ <div class="modal-footer">
+ <button type="button" class="btn btn-default" id="submit-merge-form"><i class="fa fa-compress" aria-hidden="true"></i> دمج المستفيدين</button>
+ <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> إغلاق</button>
+ </div>
+ </div> <!-- /.modal-content -->
+ </div> <!-- /.modal-dialog -->
+ </div> <!-- /#compareModal -->
+
+[% MACRO jsinclude BLOCK %]
+ [% INCLUDE 'str/members-menu.inc' %]
+ [% Asset.js("js/members-menu.js") | $raw %]
+ [% Asset.js("js/members-patron-selections.js") | $raw %]
+ [% Asset.js("lib/jsdiff/jsdiff.min.js") | $raw %]
+ <script>
+    $(document).ready(function() {
+        var controls = $("#merge-patrons, #compare_patrons");
+        controls.prop('disabled', true);
+        $('#patron-merge-table').on('change', 'input', function() {
+            if ( $('.keeper:checked').length > 0 ) {
+                controls.prop('disabled', false);
+            } else {
+                controls.prop('disabled', true);
+            }
+        });
+
+        $("#compare_patrons").on("click", function(e){
+            e.preventDefault();
+            $("#compareModal").modal("show");
+        });
+
+        $("#compareModal").on("shown.bs.modal", function(){
+            /* Find which column is the basis for merging */
+            var col0 = $(".keeper:checked").data("borrowernumber");
+            var col1 = $(".keeper:not(:checked)").data("borrowernumber");
+            /* Get the original patron data for comparison */
+            var diff1 = $("#col-" + col0 + "-orig pre").text();
+            var diff2 = $("#col-" + col1 + "-orig pre").text();
+
+            var diffs = diffString(diff2, diff1);
+            /* Load the diff HTML in the empty columns */
+            $(".col2 pre, .col3 pre").html(diffs);
+        });
+
+        $("#submit-merge-form").on("click", function(){
+            $("#patron-merge-form").submit();
+        });
+    });
+
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

@@ -1,0 +1,67 @@
+[% USE raw %]
+[% USE Koha %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title> [% IF ( typeissue ) %]اشترك في تنبيه الاشتراكات [% ELSIF ( typeissuecancel ) %] قم بإلغاء اشتراكك في تنبيه الاشتراكات [% END %] &rsaquo; [% IF ( LibraryNameTitle ) %][% LibraryNameTitle | html %][% ELSE %]كوها أونلاين[% END %] الفهرس</title>
+[% INCLUDE 'doc-head-close.inc' %]
+[% BLOCK cssinclude %][% END %]
+</head>
+[% INCLUDE 'bodytag.inc' bodyid='opac-alert-subscribe' %]
+[% INCLUDE 'masthead.inc' %]
+
+ <div class="main">
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/opac-detail.pl?biblionumber=[% biblionumber | uri %]">تفاصيل لـ [% bibliotitle | html %]</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ [% IF ( typeissue ) %]
+ <span>الاشتراك في تنبيهات الاشتراك</span>
+ [% ELSIF ( typeissuecancel ) %]
+ <span>إلغاء الاشتراك من تنبيه الاشتراك</span>
+ [% END %]
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+
+ <div class="container-fluid">
+ <div class="row">
+ <div class="col order-first order-md-first order-lg-2">
+ <div id="useralertsubscribe" class="maincontent">
+ <h1>تنبيهات الاشتراكات</h1>
+ [% IF ( typeissue ) %]
+ <h2>الاشتراك في تنبيهات الاشتراك</h2>
+ <form action="opac-alert-subscribe.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <p>هل ترغب في تلقي بريد إلكتروني عند وصول عدد جديد لهذا الاشتراك؟</p>
+ <h3>[% bibliotitle | html %]</h3>
+ [% IF ( notes ) %]<p>[% notes | html %]</p>[% END %]
+ <input type="hidden" name="subscriptionid" value="[% subscriptionid | html %]">
+ <input type="hidden" name="referer" value="[% referer | html %]">
+ <input type="hidden" name="biblionumber" value="[% biblionumber | html %]">
+ <input type="hidden" name="op" value="cud-alert_confirmed">
+ <input class="btn btn-primary" type="submit" value="نعم">
+ <a class="cancel" href="opac-serial-issues.pl?biblionumber=[% biblionumber | html %]" >لا</a>
+ </form>
+ [% END %]
+ [% IF ( typeissuecancel ) %]
+ <h2>إلغاء الاشتراك من تنبيه الاشتراك</h2>
+ <form action="opac-alert-subscribe.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <p>يرجى تأكيد عدم رغبتك في عدم استلام رسائل عبر البريد الإلكتروني عند وصول عدد جديد لهذا الاشتراك.</p>
+ <h3>[% bibliotitle | html %]</h3>
+ [% IF ( notes ) %]<p>[% notes | html %]</p>[% END %]
+ <input type="hidden" name="subscriptionid" value="[% subscriptionid | html %]">
+ <input type="hidden" name="referer" value="[% referer | html %]">
+ <input type="hidden" name="biblionumber" value="[% biblionumber | html %]">
+ <input type="hidden" name="op" value="cud-cancel_confirmed">
+ <input class="btn btn-primary" type="submit" value="نعم">
+ <a href="opac-serial-issues.pl?biblionumber=[% biblionumber | uri %]" class="cancel">لا</a>
+ </form>
+ [% END %]
+ </div> <!-- / #useralertsubscribe -->
+ </div> <!-- / .span10/12 -->
+ </div> <!-- / .row -->
+ </div> <!-- / .container-fluid -->
+ </div> <!-- / .main -->
+
+[% INCLUDE 'opac-bottom.inc' %]
+[% BLOCK jsinclude %][% END %]

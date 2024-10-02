@@ -1,0 +1,53 @@
+---
+description:
+- أنواع الائتمان المستخدمة في كوها
+tables:
+- account_credit_types:
+    multiline: []
+    rows:
+    - can_be_added_manually: '0'
+      code: OVERPAYMENT
+      description: استرداد المدفوعات الزائدة
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: PAYMENT
+      description: المدفوعات
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: WRITEOFF
+      description: شطب
+      is_system: '1'
+    - can_be_added_manually: '1'
+      code: FORGIVEN
+      description: معفو عنه
+      is_system: '1'
+    - can_be_added_manually: '1'
+      code: CREDIT
+      description: رصيد دائن
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: DISCOUNT
+      description: يتم تطبيق خصم على غرامة المستفيدين
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: REFUND
+      description: استرداد الأموال
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: LOST_FOUND
+      description: رد رسم المادة الضائعة
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: PURCHASE
+      description: شراء
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: CANCELLATION
+      description: إلغاء
+      is_system: '1'
+    - can_be_added_manually: '0'
+      code: PROCESSING_FOUND
+      description: استرداد رسوم معالجة مادة ضائعة
+      is_system: '1'
+    translatable:
+    - description

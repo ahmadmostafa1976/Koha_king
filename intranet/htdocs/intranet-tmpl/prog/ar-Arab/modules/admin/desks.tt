@@ -1,0 +1,236 @@
+[% USE raw %]
+[% USE Branches %]
+[% USE Asset %]
+[% PROCESS 'i18n.inc' %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% IF op =='add_form' %]
+ [% IF desk.desk_id %]
+ [% t("Modify desk") | html %]
+ [% ELSE %]
+ [% t("New desk") | html %]
+ [% END %] &rsaquo;
+ [% ELSE %]
+ [% IF op == 'delete_confirm' %]
+ [% t("Confirm deletion of desk") | html %] &rsaquo;
+ [% END %]
+ [% END %]
+ [% t("Desks") | html %] &rsaquo;
+ [% t("Administration") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="admin_desks" class="admin">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'desks-admin-search.inc' %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/admin-home.pl">الإدارة</a>
+ [% END %]
+
+ [% IF op == 'add_form' || op == 'delete_confirm' %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/admin/desks.pl">مكاتب</a>
+ [% END %]
+ [% ELSE %]
+ [% WRAPPER breadcrumb_item bc_active = 1 %]
+ <span>مكاتب</span>
+ [% END %]
+ [% END %]
+
+ [% IF op == 'add_form' %]
+ [% WRAPPER breadcrumb_item bc_active = 1 %]
+ [% IF desk.desk_id %]
+ <span>تعديل مكتب</span>
+ [% ELSE %]
+ <span>مكتب جديد</span>
+ [% END %]
+ [% END %]
+
+ [% ELSIF op == 'delete_confirm' %]
+ [% WRAPPER breadcrumb_item bc_active = 1 %]
+ <span>تأكيد حذف المكتب</span>
+ [% END %]
+
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+[% FOR m IN messages %]
+ <div class="dialog [% m.type | html %]">
+ [% SWITCH m.code %]
+ [% CASE 'error_on_update' %]
+ <span>حدث خطأ أثناء تحديث هذا المكتب. قد يكون موجوداً بالفعل.</span>
+ [% CASE 'error_on_insert' %]
+ <span>حدث خطأ أثناء إضافة هذا المكتب. قد يكون معرف المكتب موجوداً بالفعل.</span>
+ [% CASE 'error_on_delete' %]
+ <span>حدث خطأ أثناء حذف هذا المكتب. تحقق من السجلات للتفاصيل.</span>
+ [% CASE 'success_on_update' %]
+ <span>تم تحديث المكتب بنجاح.</span>
+ [% CASE 'success_on_insert' %]
+ <span>تمت إضافة المكتب بنجاح.</span>
+ [% CASE 'success_on_delete' %]
+ <span>تم حذف المكتب بنجاح.</span>
+ [% CASE 'already_exists' %]
+ <span>هذا المكتب موجود بالفعل.</span>
+ [% CASE %]
+ <span>[% m.code | html %]</span>
+ [% END %]
+ </div>
+[% END %]
+
+[% IF op == 'add_form' %]
+ [% IF desk %]
+ <h1>تعديل مكتب</h1>
+ [% ELSE %]
+ <h1>مكتب جديد</h1>
+ [% END %]
+
+ <form action="/cgi-bin/koha/admin/desks.pl" name="Aform" method="post" class="validated">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-add_validate" />
+ <input type="hidden" name="desk_id" value="[% desk.desk_id | html %]" />
+
+ <fieldset class="rows">
+ <ol>
+ [% IF desk %]
+ <li><span class="label">معرف المكتب: </span>[% desk.desk_id | html %]</li>
+ [% END %]
+ <li>
+ <label for="desk_name" class="required">مكتب: </label>
+ <input type="text" name="desk_name" id="desk_name" size="80" maxlength="100" value="[% desk.desk_name | html %]" required="required" class="required" /> <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="branchcode" class="required">المكتبة: </label>
+ <select id="branchcode" name="branchcode" required="required">
+ <option value=""></option>
+ [% FOREACH branch IN branches %]
+ [% IF desk %]
+ [% IF (desk.branchcode == branch.branchcode) %]
+ <option value="[% branch.branchcode|html %]" selected="selected">[% branch.branchname|html %]</option>
+ [% END%]
+ [% ELSE %]
+ [% IF (Branches.GetLoggedInBranchcode == branch.branchcode) %]
+ <option value="[% branch.branchcode|html %]" selected="selected">[% branch.branchname|html %]</option>
+ [% END%]
+ <option value="[% branch.branchcode|html %]">[% branch.branchname|html %]</option>
+ [% END %]
+ [% END %]
+ </select>
+ </li>
+
+ </ol>
+ </fieldset>
+
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="تقديم" />
+ <a class="cancel" href="/cgi-bin/koha/admin/desks.pl">إلغاء</a>
+ </fieldset>
+ </form>
+[% END %]
+
+[% IF op == 'delete_confirm' %]
+ <div class="dialog alert">
+ <h1>حذف المكتب"[% desk.desk_name | html %]"؟</h1>
+ <table>
+ <tr><th>معرف المكتب</th>
+ <td>[% desk.desk_id | html %]</td>
+ </tr>
+ <tr><th>مكتب</th>
+ <td>[% desk.desk_name | html %]</td>
+ </tr>
+ <tr><th>المكتبة</th>
+ <td>[% Branches.GetName( desk.branchcode ) | html %]</td>
+ </tr>
+ </table>
+ <form action="/cgi-bin/koha/admin/desks.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-delete_confirmed" />
+ <input type="hidden" name="desk_id" value="[% desk.desk_id | html %]" />
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> نعم, إحذف</button>
+ </form>
+ <form action="/cgi-bin/koha/admin/desks.pl" method="get">
+ <button type="submit" class="deny"><i class="fa fa-fw fa-times"></i> لا ، لا تقم بالحذف</button>
+ </form>
+ </div>
+[% END %]
+
+[% IF op == 'list' %]
+
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="newdesk" href="/cgi-bin/koha/admin/desks.pl?op=add_form"><i class="fa fa-plus"></i> مكتب جديد</a>
+ </div>
+
+ <h1>مكاتب</h1>
+ [% IF searchfield %]
+ <span>جاري البحث: [% searchfield | html %]</span>
+ [% END %]
+
+ [% IF desks.count %]
+ <div class="page-section">
+ <table id="table_desks">
+ <thead>
+ <tr>
+ <th>معرف المكتب</th>
+ <th>مكتب</th>
+ <th>المكتبة</th>
+ <th class="NoSort noExport">إجراء</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH desk IN desks %]
+ <tr>
+ <td>[% desk.desk_id | html %]</td>
+ <td>[% desk.desk_name | html %]</td>
+ <td>[% Branches.GetName( desk.branchcode ) | html %]</td>
+ <td class="actions">
+ <a class="btn btn-default btn-xs" href="/cgi-bin/koha/admin/desks.pl?op=add_form&amp;desk_id=[% desk.desk_id | html %]"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a class="btn btn-default btn-xs" href="/cgi-bin/koha/admin/desks.pl?op=delete_confirm&amp;desk_id=[% desk.desk_id | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div> <!-- /.page-section -->
+ [% ELSE %]
+ <div class="dialog message">
+ لا توجد أي مكاتب معرفة. <a href="/cgi-bin/koha/admin/desks.pl?op=add_form">إنشاء مكتب جديد</a>.
+ </div>
+ [% END %]
+[% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'admin-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ [% Asset.js("js/admin-menu.js") | $raw %]
+ [% INCLUDE 'datatables.inc' %]
+ [% INCLUDE 'columns_settings.inc' %]
+ <script>
+        $(document).ready(function() {
+            KohaTable("table_desks", {
+                "order": [[ 1, "asc" ]]
+            });
+        });
+    </script>
+[% END %]
+[% INCLUDE 'intranet-bottom.inc' %]

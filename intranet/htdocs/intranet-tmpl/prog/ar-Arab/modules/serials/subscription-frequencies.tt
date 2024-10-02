@@ -1,0 +1,250 @@
+[% USE raw %]
+[% SET footerjs = 1 %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>التواترات &rsaquo; الدوريات &rsaquo;كوها</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="ser_subscription_frequencies" class="ser">
+[% WRAPPER 'header.inc' %]
+ [% INCLUDE 'serials-search.inc' %]
+[% END %]
+
+[% BLOCK translate_frequnit %]
+[%  SWITCH frequnit %]
+[%   CASE 'day'   %]<span> يوم</span>
+[%   CASE 'week'  %]<span> أسبوعاً</span>
+[%   CASE 'month' %]<span> شهراً</span>
+[%   CASE 'year'  %]<span> عاماً</span>
+[%  END %]
+[% END %]
+
+[% WRAPPER 'sub-header.inc' %]
+ [% WRAPPER breadcrumbs %]
+ [% WRAPPER breadcrumb_item %]
+ <a href="/cgi-bin/koha/serials/serials-home.pl">الدوريات</a>
+ [% END %]
+ [% WRAPPER breadcrumb_item bc_active= 1 %]
+ <span>تواترات</span>
+ [% END %]
+ [% END #/ WRAPPER breadcrumbs %]
+[% END #/ WRAPPER sub-header.inc %]
+
+<div class="main container-fluid">
+ <div class="row">
+ <div class="col-sm-10 col-sm-push-2">
+ <main>
+ [% INCLUDE 'messages.inc' %]
+
+ [% IF (new or modify) %]
+ [% IF (new) %]
+ <h1>تواتر جديد</h1>
+ [% ELSE %]
+ <h1>تحرير التواتر: [% description | html %]</h1>
+ [% END %]
+ <form action="/cgi-bin/koha/serials/subscription-frequencies.pl" id="add_frequency_form" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ [% IF (modify) %]
+ <input type="hidden" name="id" value="[% id | html %]" />
+ <input type="hidden" name="op" value="cud-savemod" />
+ [% ELSE %]
+ <input type="hidden" name="op" value="cud-savenew" />
+ [% END %]
+ <fieldset class="rows">
+ <ol>
+ <li>
+ <label class="required" for="description">الوصف: </label>
+ <input type="text" id="description" name="description" value="[% description | html %]" class="required" required="required" /> <span class="required">مطلوب</span>
+ </li>
+ <li>
+ <label for="unit">وحدة: </label>
+ <select id="unit" name="unit">
+ <option value="">لا شيء</option>
+ [% FOREACH unit IN units_loop %]
+ [% IF (unit.selected) %]
+ <option selected="selected" value="[% unit.val | html %]">
+ [% ELSE %]
+ <option value="[% unit.val | html %]">
+ [% END %]
+ [% PROCESS translate_frequnit frequnit=unit.val %]
+ </option>
+ [% END %]
+ </select>
+ </li>
+ <li><span class="hint">ملاحظة: يجب أن يكون أحد الحقلين التاليين مساو لـ 1</span></li>
+ <li>
+ <label for="issuesperunit">عدد لكل وحدة: </label>
+ [% IF (new) %]
+ <input type="text" id="issuesperunit" name="issuesperunit" value="1" size="3" />
+ [% ELSE %]
+ <input type="text" id="issuesperunit" name="issuesperunit" value="[% issuesperunit | html %]" size="3" />
+ [% END %]
+ </li>
+ <li>
+ <label for="unitsperissue">وحدات لكل عدد: </label>
+ [% IF (new) %]
+ <input type="text" id="unitsperissue" name="unitsperissue" value="1" size="3" />
+ [% ELSE %]
+ <input type="text" id="unitsperissue" name="unitsperissue" value="[% unitsperissue | html %]" size="3" />
+ [% END %]
+ </li>
+ <li>
+ <label for="displayorder">عرض الطلبية: </label>
+ <input type="text" id="displayorder" name="displayorder" value="[% displayorder | html %]" size="3" />
+ </li>
+ </ol>
+ </fieldset>
+ <fieldset class="action">
+ <input class="btn btn-primary" type="submit" value="حفظ" />
+ <a href="/cgi-bin/koha/serials/subscription-frequencies.pl" class="cancel">إلغاء</a>
+ </fieldset>
+ </form>
+ [% ELSE %]
+
+ <div id="toolbar" class="btn-toolbar">
+ <a class="btn btn-default" id="newfrequency" href="/cgi-bin/koha/serials/subscription-frequencies.pl?op=new"><i class="fa fa-plus"></i> تواتر جديد</a>
+ </div>
+
+ <h1>تواترات</h1>
+ [% IF still_used %]
+ <div class="dialog alert">
+ <p>
+ لا يزال هذا التواتر مستخدما بواسطة[% subscriptions.size | html %] الاشتراكات. هل لا زلت ترغب في حذفه؟ </p>
+ <p><a href="#" id="show_blocking_subs">عرض الاشتراكات</a></p>
+ <ul id="blocking_subs" style="display:none">
+ [% FOREACH sub IN subscriptions %]
+ <li style="list-style-type:none">
+ <a href="/cgi-bin/koha/serials/subscription-detail.pl?subscriptionid=[% sub.subscriptionid | uri %]">[% sub.title | html %]</a>
+ </li>
+ [% END %]
+ </ul>
+
+ <form action="/cgi-bin/koha/serials/subscription-frequencies.pl" method="post">
+ [% INCLUDE 'csrf-token.inc' %]
+ <input type="hidden" name="op" value="cud-del" />
+ <input type="hidden" name="confirm" value="1" />
+ <input type="hidden" name="frequencyid" value="[% frequencyid | html %]" />
+ <button type="submit" class="approve"><i class="fa fa-fw fa-check"></i> نعم, إحذف</button>
+ </form>
+ <form action="/cgi-bin/koha/serials/subscription-frequencies.pl" method="get">
+ <button type="submit" class="deny"><i class="fa fa-fw fa-times"></i> لا ، لا تقم بالحذف</button>
+ </form>
+ </div>
+ [% END %]
+
+ [% IF (frequencies_loop.size) %]
+ <div class="page-section">
+ <table id="frequenciest">
+ <thead>
+ <tr>
+ <th>الوصف</th>
+ <th>وحدة</th>
+ <th>عدد لكل وحدة</th>
+ <th>وحدات لكل عدد</th>
+ <th>عرض الطلبية</th>
+ <th class="noExport">الإجراءات</th>
+ </tr>
+ </thead>
+ <tbody>
+ [% FOREACH frequency IN frequencies_loop %]
+ <tr>
+ <td>[% frequency.description | html %]</td>
+ <td>[% PROCESS translate_frequnit frequnit=frequency.unit %]</td>
+ <td>[% frequency.issuesperunit | html %]</td>
+ <td>[% frequency.unitsperissue | html %]</td>
+ <td>[% frequency.displayorder | html %]</td>
+ <td class="actions">
+ <a class="btn btn-default btn-xs" href="/cgi-bin/koha/serials/subscription-frequencies.pl?op=modify&frequencyid=[% frequency.id | html %]"><i class="fa-solid fa-pencil" aria-hidden="true"></i> تحرير</a>
+ <a class="delete_frequency btn btn-default btn-xs" href="/cgi-bin/koha/serials/subscription-frequencies.pl?op=del&frequencyid=[% frequency.id | html %]"><i class="fa fa-trash-can"></i> حذف</a>
+ </td>
+ </tr>
+ [% END %]
+ </tbody>
+ </table>
+ </div> <!-- /.page-section -->
+ [% ELSE %]
+ <p>لا يوجد تواتر معرّف.</p>
+ [% END %]
+ [% END %]
+
+ </main>
+ </div> <!-- /.col-sm-10.col-sm-push-2 -->
+
+ <div class="col-sm-2 col-sm-pull-10">
+ <aside>
+ [% INCLUDE 'serials-menu.inc' %]
+ </aside>
+ </div> <!-- /.col-sm-2.col-sm-pull-10 -->
+ </div> <!-- /.row -->
+
+[% MACRO jsinclude BLOCK %]
+ <script>
+        function confirmDelete() {
+            return confirm(_("هل أنت متأكد من أنك تريد حذف تواتر هذا الاشتراك؟"));
+        }
+
+        function check_form() {
+            var description = $("#description").val();
+            var unit = $("#unit").val();
+            var issuesperunit = $("#issuesperunit").val();
+            var unitsperissue = $("#unitsperissue").val();
+            var alert_msg = _("بعض الحقول غير صحيحة:") + "\n";
+            var errors = 0;
+
+            if(description.length == 0) {
+                alert_msg += "\t - " + _("الوصف مطلوب");
+                errors ++;
+            }
+            if(unit.length > 0) {
+                if(isNaN(issuesperunit) || issuesperunit == 0) {
+                    alert_msg += "\n\t - " + _("الإعداد لكل وحدة مطلوب")
+                        + " " + _("(يجب أن يكون رقماً أكبر من 0)");
+                    errors ++;
+                }
+                if(isNaN(unitsperissue) || unitsperissue == 0) {
+                    alert_msg += "\n\t - " + _("وحدات لكل عدد مطلوبة")
+                        + " " + _("(يجب أن يكون رقماً أكبر من 0)");
+                    errors ++;
+                }
+                if(issuesperunit > 1 && unitsperissue > 1) {
+                    alert_msg += "\n\t - " + _("أحد "عدد بالوحدة" و "وحدات بالعدد" يجب أن يساوي 1");
+                    errors ++;
+                }
+            }
+
+            if(errors == 0) {
+                return true;
+            }
+
+            alert(alert_msg);
+            return false;
+        }
+
+        $(document).ready(function() {
+            $("#issuesperunit").change(function() {
+                var value = $(this).val();
+                if(!isNaN(value) && value > 1) {
+                    $("#unitsperissue").val(1);
+                }
+            });
+            $("#unitsperissue").change(function() {
+                var value = $(this).val();
+                if(!isNaN(value) && value > 1) {
+                    $("#issuesperunit").val(1);
+                }
+            });
+            $(".delete_frequency").on("click",function(){
+                return confirmDelete();
+            });
+            $("#add_frequency_form").on("submit",function(){
+                return check_form();
+            });
+            $("#show_blocking_subs").on("click",function(e){
+                e.preventDefault();
+                $("#blocking_subs").show();
+            });
+        });
+    </script>
+[% END %]
+
+[% INCLUDE 'intranet-bottom.inc' %]

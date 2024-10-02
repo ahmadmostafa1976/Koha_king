@@ -1,0 +1,18 @@
+---
+‫patrons.pref:
+  الواجهة:
+  - - choices:
+        '0': تعطيل
+        '1': تفعيل
+      pref: PreservationModule
+    - نظام الحفظ الفرعي
+  - - استخدم قيمة استناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN">NOT_LOAN</a>
+    - choices: authval
+      pref: PreservationNotForLoanWaitingListIn
+      source: NOT_LOAN
+    - للتطبيق على المواد المضافة إلى قائمة الانتظار.
+  - - استخدم قيمة الاستناد <a href="/cgi-bin/koha/admin/authorised_values.pl?searchfield=NOT_LOAN">NOT_LOAN</a>
+    - choices: authval
+      pref: PreservationNotForLoanDefaultTrainIn
+      source: NOT_LOAN
+    - للتطبيق على المواد المضافة إلى القطار.

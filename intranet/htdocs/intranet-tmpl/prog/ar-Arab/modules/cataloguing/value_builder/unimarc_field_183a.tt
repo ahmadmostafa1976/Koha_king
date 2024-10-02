@@ -1,0 +1,420 @@
+[% USE raw %]
+[% PROCESS 'i18n.inc' %]
+[% INCLUDE 'doc-head-open.inc' %]
+<title>[% FILTER collapse %]
+ [% t("UNIMARC field 183a builder") | html %] &rsaquo;
+ [% t("Cataloguing") | html %] &rsaquo;
+ [% t("Koha") | html %]
+[% END %]</title>
+[% INCLUDE 'doc-head-close.inc' %]
+</head>
+
+<body id="cat_unimarc_field_183a" class="cat value_builder">
+
+ <h3>باني حقل يونيمارك 183a</h3>
+ <form method="get" name="f_pop" action="">
+ <div class="page-section">
+ <table>
+ <tr>
+ <td>
+ <select name="f1" id="f1">
+ <optgroup label="نواقل سمعية">
+ [% IF ( f1 == "sg" ) %]
+ <option value="sg" selected="selected">sg - خرطوشة سمعية</option>
+ [% ELSE %]
+ <option value="sg">sg - خرطوشة سمعية</option>
+ [% END %]
+
+ [% IF ( f1 == "sb" ) %]
+ <option value="sb" selected="selected">sb - شريط سمعي</option>
+ [% ELSE %]
+ <option value="sb">sb - شريط سمعي</option>
+ [% END %]
+
+ [% IF ( f1 == "se" ) %]
+ <option value="se" selected="selected">se - إسطوانة سمعية</option>
+ [% ELSE %]
+ <option value="se">se - إسطوانة سمعية</option>
+ [% END %]
+
+ [% IF ( f1 == "sd" ) %]
+ <option value="sd" selected="selected">sd - audio disc</option>
+ [% ELSE %]
+ <option value="sd">sd - audio disc</option>
+ [% END %]
+
+ [% IF ( f1 == "si" ) %]
+ <option value="si" selected="selected">si - بكرة مسار صوت</option>
+ [% ELSE %]
+ <option value="si">si - بكرة مسار صوت</option>
+ [% END %]
+
+ [% IF ( f1 == "sq" ) %]
+ <option value="sq" selected="selected">sq - لفافة سمعية</option>
+ [% ELSE %]
+ <option value="sq">sq - لفافة سمعية</option>
+ [% END %]
+
+ [% IF ( f1 == "sw" ) %]
+ <option value="sw" selected="selected">sw - بكرة سلك سمعي</option>
+ [% ELSE %]
+ <option value="sw">sw - بكرة سلك سمعي</option>
+ [% END %]
+
+ [% IF ( f1 == "ss" ) %]
+ <option value="ss" selected="selected">ss - كاسيت سمعي</option>
+ [% ELSE %]
+ <option value="ss">ss - كاسيت سمعي</option>
+ [% END %]
+
+ [% IF ( f1 == "st" ) %]
+ <option value="st" selected="selected">st - بكرة شريط سمعي</option>
+ [% ELSE %]
+ <option value="st">st - بكرة شريط سمعي</option>
+ [% END %]
+
+ [% IF ( f1 == "sz" ) %]
+ <option value="sz" disabled="disabled" selected="selected">sz - ناقل سمعي آخر</option>
+ [% ELSE %]
+ <option value="sz" >sz - ناقل سمعي آخر</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل الحاسوب">
+ [% IF ( f1 == "ck" ) %]
+ <option value="ck" selected="selected">ck - بطاقة حاسوب</option>
+ [% ELSE %]
+ <option value="ck">ck - بطاقة حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "cb" ) %]
+ <option value="cb" selected="selected">cb -خرطوشة شريحة حاسوب</option>
+ [% ELSE %]
+ <option value="cb">cb -خرطوشة شريحة حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "cd" ) %]
+ <option value="cd" selected="selected">cd - قرص حاسوب</option>
+ [% ELSE %]
+ <option value="cd">cd - قرص حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "ce" ) %]
+ <option value="ce" selected="selected">ce - خرطوشة قرص حاسوب</option>
+ [% ELSE %]
+ <option value="ce">ce - خرطوشة قرص حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "ca" ) %]
+ <option value="ca" selected="selected">ca - خرطوشة شريط حاسوب</option>
+ [% ELSE %]
+ <option value="ca">ca - خرطوشة شريط حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "cf" ) %]
+ <option value="cf" selected="selected">cf - شريط كاسيت حاسوب</option>
+ [% ELSE %]
+ <option value="cf">cf - شريط كاسيت حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "ch" ) %]
+ <option value="ch" selected="selected">ch - بكرة شريط حاسوب</option>
+ [% ELSE %]
+ <option value="ch">ch - بكرة شريط حاسوب</option>
+ [% END %]
+
+ [% IF ( f1 == "cr" ) %]
+ <option value="cr" selected="selected">cr - مورد على الإنترنت</option>
+ [% ELSE %]
+ <option value="cr">cr - مورد على الإنترنت</option>
+ [% END %]
+
+ [% IF ( f1 == "cz" ) %]
+ <option value="cz" selected="selected">cz - نواقل حاسوب أخرى</option>
+ [% ELSE %]
+ <option value="cz">cz - نواقل حاسوب أخرى</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل ميكروفورم">
+ [% IF ( f1 == "ha" ) %]
+ <option value="ha" selected="selected">ha - فتحة بطاقة</option>
+ [% ELSE %]
+ <option value="ha">ha - فتحة بطاقة</option>
+ [% END %]
+
+ [% IF ( f1 == "he" ) %]
+ <option value="he" selected="selected">he - ميكروفيش</option>
+ [% ELSE %]
+ <option value="he">he - ميكروفيش</option>
+ [% END %]
+
+ [% IF ( f1 == "hf" ) %]
+ <option value="hf" selected="selected">hf - ميكروفيش كاسيت</option>
+ [% ELSE %]
+ <option value="hf">hf - ميكروفيش كاسيت</option>
+ [% END %]
+
+ [% IF ( f1 == "hb" ) %]
+ <option value="hb" selected="selected">hb - خرطوشة ميكروفيلم</option>
+ [% ELSE %]
+ <option value="hb">hb - خرطوشة ميكروفيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "hc" ) %]
+ <option value="hc" selected="selected">hc - ميكروفيلم كاسيت</option>
+ [% ELSE %]
+ <option value="hc">hc - ميكروفيلم كاسيت</option>
+ [% END %]
+
+ [% IF ( f1 == "hd" ) %]
+ <option value="hd" selected="selected">hd - بكرة ميكروفيلم</option>
+ [% ELSE %]
+ <option value="hd">hd - بكرة ميكروفيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "hj" ) %]
+ <option value="hj" selected="selected">hj - لفافة ميكروفيلم</option>
+ [% ELSE %]
+ <option value="hj">hj - لفافة ميكروفيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "hh" ) %]
+ <option value="hh" selected="selected">hh - شريط ميكروفيلم</option>
+ [% ELSE %]
+ <option value="hh">hh - شريط ميكروفيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "hg" ) %]
+ <option value="hg" selected="selected">hg - ميكروأوباك</option>
+ [% ELSE %]
+ <option value="hg">hg - ميكروأوباك</option>
+ [% END %]
+
+ [% IF ( f1 == "hz" ) %]
+ <option value="hz" selected="selected">hz - نواقل ميكروفورم أخرى</option>
+ [% ELSE %]
+ <option value="hz">hz - نواقل ميكروفورم أخرى</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل مجهرية">
+ [% IF ( f1 == "pp" ) %]
+ <option value="pp" selected="selected">pp - شريحة مجهرية</option>
+ [% ELSE %]
+ <option value="pp">pp - شريحة مجهرية</option>
+ [% END %]
+
+ [% IF ( f1 == "pz" ) %]
+ <option value="pz" selected="selected">pz - ناقل مجهري آخر</option>
+ [% ELSE %]
+ <option value="pz">pz - ناقل مجهري آخر</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل صور مسقطة">
+ [% IF ( f1 == "mc" ) %]
+ <option value="mc" selected="selected">mc - خرطوشة فيلم</option>
+ [% ELSE %]
+ <option value="mc">mc - خرطوشة فيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "mf" ) %]
+ <option value="mf" selected="selected">mf -فيلم كاسيت</option>
+ [% ELSE %]
+ <option value="mf">mf -فيلم كاسيت</option>
+ [% END %]
+
+ [% IF ( f1 == "mr" ) %]
+ <option value="mr" selected="selected">mr - بكرة فيلم</option>
+ [% ELSE %]
+ <option value="mr">mr - بكرة فيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "mo" ) %]
+ <option value="mo" selected="selected">mo - لفافة فيلم</option>
+ [% ELSE %]
+ <option value="mo">mo - لفافة فيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "gd" ) %]
+ <option value="gd" selected="selected">gd - قسيمة فيلم</option>
+ [% ELSE %]
+ <option value="gd">gd - قسيمة فيلم</option>
+ [% END %]
+
+ [% IF ( f1 == "gf" ) %]
+ <option value="gf" selected="selected">gf - شريط سينمائي</option>
+ [% ELSE %]
+ <option value="gf">gf - شريط سينمائي</option>
+ [% END %]
+
+ [% IF ( f1 == "gc" ) %]
+ <option value="gc" selected="selected">gc - خرطوشة شريط سينمائي</option>
+ [% ELSE %]
+ <option value="gc">gc - خرطوشة شريط سينمائي</option>
+ [% END %]
+
+ [% IF ( f1 == "gt" ) %]
+ <option value="gt" selected="selected">gt - شفافية علوية</option>
+ [% ELSE %]
+ <option value="gt">gt - شفافية علوية</option>
+ [% END %]
+
+ [% IF ( f1 == "gs" ) %]
+ <option value="gs" selected="selected">gs - شريحة</option>
+ [% ELSE %]
+ <option value="gs">gs - شريحة</option>
+ [% END %]
+
+ [% IF ( f1 == "mz" ) %]
+ <option value="mz" selected="selected">mz - ناقل صور مسقطة آخر</option>
+ [% ELSE %]
+ <option value="mz">mz - ناقل صور مسقطة آخر</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل مجسمة">
+ [% IF ( f1 == "eh" ) %]
+ <option value="eh" selected="selected">eh - بطاقة مجسمة</option>
+ [% ELSE %]
+ <option value="eh">eh - بطاقة مجسمة</option>
+ [% END %]
+
+ [% IF ( f1 == "es" ) %]
+ <option value="es" selected="selected">es - قرص مجسم</option>
+ [% ELSE %]
+ <option value="es">es - قرص مجسم</option>
+ [% END %]
+
+ [% IF ( f1 == "ez" ) %]
+ <option value="ez" selected="selected">ez - ناقل مجسم آخر</option>
+ [% ELSE %]
+ <option value="ez">ez - ناقل مجسم آخر</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل بدون وسيط">
+ [% IF ( f1 == "no" ) %]
+ <option value="no" selected="selected">no - بطاقة</option>
+ [% ELSE %]
+ <option value="no">no - بطاقة</option>
+ [% END %]
+
+ [% IF ( f1 == "nn" ) %]
+ <option value="nn" selected="selected">nn - مخطط قلاب</option>
+ [% ELSE %]
+ <option value="nn">nn - مخطط قلاب</option>
+ [% END %]
+
+ [% IF ( f1 == "na" ) %]
+ <option value="na" selected="selected">na - لفافة</option>
+ [% ELSE %]
+ <option value="na">na - لفافة</option>
+ [% END %]
+
+ [% IF ( f1 == "nb" ) %]
+ <option value="nb" selected="selected">nb - ورقة</option>
+ [% ELSE %]
+ <option value="nb">nb - ورقة</option>
+ [% END %]
+
+ [% IF ( f1 == "nc" ) %]
+ <option value="nc" selected="selected">nc - مجلد</option>
+ [% ELSE %]
+ <option value="nc">nc - مجلد</option>
+ [% END %]
+
+ [% IF ( f1 == "nr" ) %]
+ <option value="nr" selected="selected">nr - كائن</option>
+ [% ELSE %]
+ <option value="nr">nr - كائن</option>
+ [% END %]
+
+ [% IF ( f1 == "nz" ) %]
+ <option value="nz" selected="selected">nz - ناقل غير وسيط آخر</option>
+ [% ELSE %]
+ <option value="nz">nz - ناقل غير وسيط آخر</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل فيديو">
+ [% IF ( f1 == "vc" ) %]
+ <option value="vc" selected="selected">vc - خرطوشة فيديو</option>
+ [% ELSE %]
+ <option value="vc">vc - خرطوشة فيديو</option>
+ [% END %]
+
+ [% IF ( f1 == "vf" ) %]
+ <option value="vf" selected="selected">vf - فيديوكاسيت</option>
+ [% ELSE %]
+ <option value="vf">vf - فيديوكاسيت</option>
+ [% END %]
+
+ [% IF ( f1 == "vd" ) %]
+ <option value="vd" selected="selected">vd - قرص فيديو</option>
+ [% ELSE %]
+ <option value="vd">vd - قرص فيديو</option>
+ [% END %]
+
+ [% IF ( f1 == "vr" ) %]
+ <option value="vr" selected="selected">vr - بكرة شريط فيديو</option>
+ [% ELSE %]
+ <option value="vr">vr - بكرة شريط فيديو</option>
+ [% END %]
+
+ [% IF ( f1 == "vz" ) %]
+ <option value="vz" selected="selected">vz - ناقل فيديو آخر</option>
+ [% ELSE %]
+ <option value="vz">vz - ناقل فيديو آخر</option>
+ [% END %]
+ </optgroup>
+
+ <optgroup label="نواقل غير محددة">
+ [% IF ( f1 == "zu" ) %]
+ <option value="zu" selected="selected">zu - غير محدد</option>
+ [% ELSE %]
+ <option value="zu">zu - غير محدد</option>
+ [% END %]
+ </optgroup>
+
+ </select>
+ </td>
+ </tr>
+ </table>
+ </div> <!-- /.page-section -->
+
+ <nav class="navbar navbar-default navbar-fixed-bottom">
+ <div class="container-fluid">
+ <fieldset class="action">
+ <input class="btn btn-primary" onclick="submitMyForm();" type="button" value="حفظ" />
+ <button class="btn btn-default close_window">إلغاء</button>
+ </fieldset>
+ </div>
+ </nav>
+
+ </form>
+
+<script>
+
+   function submitMyForm() {
+        var doc   = opener.document;
+        var field = doc.getElementById("[% index | html %]");
+        subfield();
+
+        function subfield() {
+            const tag = $(field).closest('.tag');
+            const sub = tag.find('[id*="tag_183_subfield_2_"]');
+            if ( field != 'undefined' ) {
+                sub[0].value = "RDAcarrier";
+            }
+            return subfield;
+        }
+
+        field.value = document.f_pop.f1.value;
+        window.close();
+        return false;
+    }
+</script>
+
+[% INCLUDE 'popup-bottom.inc' %]
