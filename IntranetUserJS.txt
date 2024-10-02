@@ -1,0 +1,104 @@
+//BEGIN re-logo the staff client
+//All pages-url for logo https://nekls.org/wp-content/uploads/2018/03/nekls_next_logo.png
+$("#header_search").before('<div id="newlogo" style="float: left; padding: 10px; height: 88;"><a href="/cgi-bin/koha/mainpage.pl"><img src="http://65.1.1.194/opac-tmpl/bootstrap/images/pageHeaderLogoImage_ar.png" height="60" width="60"><p style="font-size: 60%; color:#fff;">A service of King Abdulaziz Library</p></a></div>');
+
+$(document).ready(function(){
+  // Autocomplete for 260 $a (Place of Publication)
+  $( '[id^="tag_260_subfield_a"]' ).autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: "/cgi-bin/koha/cataloguing/ysearch.pl", // Same backend endpoint
+        dataType: "json",
+        data: {
+          term: request.term,
+          table: "biblioitems", // Same table as before
+          field: "place"        // Change this based on the subfield (e.g., place of publication)
+        },
+        success: function(data) {
+          response( $.map( data, function( item ) {
+            return {
+              label: item.fieldvalue,  // Display value in dropdown
+              value: item.fieldvalue   // Set value in input
+            };
+          }));
+        }
+      });
+    },
+    minLength: 1, // Minimum characters to trigger autocomplete
+  });
+
+  // Autocomplete for 260 $b (Publisher)
+  $( '[id^="tag_260_subfield_b"]' ).autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: "/cgi-bin/koha/cataloguing/ysearch.pl",
+        dataType: "json",
+        data: {
+          term: request.term,
+          table: "biblioitems",
+          field: "publisher" // Adjusted to the publisher subfield
+        },
+        success: function(data) {
+          response( $.map( data, function( item ) {
+            return {
+              label: item.fieldvalue,
+              value: item.fieldvalue
+            };
+          }));
+        }
+      });
+    },
+    minLength: 1,
+  });
+
+  // Autocomplete for 260 $c (Date of Publication)
+  $( '[id^="tag_260_subfield_c"]' ).autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: "/cgi-bin/koha/cataloguing/ysearch.pl",
+        dataType: "json",
+        data: {
+          term: request.term,
+          table: "biblioitems",
+          field: "date" // Adjusted to the date subfield
+        },
+        success: function(data) {
+          response( $.map( data, function( item ) {
+            return {
+              label: item.fieldvalue,
+              value: item.fieldvalue
+            };
+          }));
+        }
+      });
+    },
+    minLength: 1,
+  });
+});
+
+$(document).ready(function(){
+  // Autocomplete for 250 $a (Edition Statement)
+  $( '[id^="tag_250_subfield_a"]' ).autocomplete({
+    source: function(request, response) {
+      $.ajax({
+        url: "/cgi-bin/koha/cataloguing/ysearch.pl", // Same endpoint as before
+        dataType: "json",
+        data: {
+          term: request.term,
+          table: "biblioitems", // Table containing the bibliographic data
+          field: "edition"      // The 'edition' field for the 250 $a subfield
+        },
+        success: function(data) {
+          response( $.map( data, function( item ) {
+            return {
+              label: item.fieldvalue,  // Display in the dropdown
+              value: item.fieldvalue   // Value to insert into the input field
+            };
+          }));
+        }
+      });
+    },
+    minLength: 1, // Minimum characters to start autocomplete
+  });
+});
+
